@@ -64,7 +64,8 @@ public class PlayerControlls : MonoBehaviour
         if (controller.isGrounded)
             doubleJumped = false;
 
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y, transform.eulerAngles.z);
+        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y, transform.eulerAngles.z);
     }
 
     bool doubleJumped = false;
