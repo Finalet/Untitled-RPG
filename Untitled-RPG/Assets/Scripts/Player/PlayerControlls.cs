@@ -7,16 +7,23 @@ public class PlayerControlls : MonoBehaviour
 {
     [Header("Movement")]
     public float currentSpeed = 0;
-    public float walkSpeed = 5;
-    public float runSpeed = 10;
-    public float jumpHeight = 10;
+    public float walkSpeed = 1;
     public bool toggleRunning = false;
+    public bool isRunning;
+    public bool isSprinting;
     public bool isIdle;
+    public bool isCrouch;
+
+    float sprintingDirection;
+    float desiredSprintingDirection;
 
     [Header("Jumping")]
     public bool airDash;
+    public float jumpHeight = 10;
+    public float jumpDistance = 10;
     public float gravity = -12;
     float velocityY;
+    public float velocityX;
     Vector3 velocity;
 
     [Header("Dash & Air dash")]
@@ -30,25 +37,30 @@ public class PlayerControlls : MonoBehaviour
     CharacterController controller;
     Camera playerCamera;
 
-    bool leftAltPressed;
     Vector3 lastCamRotation;
 
     [Header("Animations")]
-    public Animator animator;
+    Animator animator;
     public Transform leftFoot;
     public Transform rightFoot;
 
-    public float InputDirection;
-    public float lastInputDirection;
-    float InputMagnitude;
-    float RotationDirection;
 
-    public float x;
-
+    bool dashed;
+    bool doubleJumped = false;
+    
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
         playerCamera = Camera.main;
+
+        prevPos = transform.position;
+    }
+
+    Vector3 prevPos;
+    void CalculateCurrentSpeed () {
+        currentSpeed = Vector3.Magnitude(transform.position - prevPos) * 500;
+        prevPos = transform.position;
     }
 
     void Update()
@@ -57,45 +69,73 @@ public class PlayerControlls : MonoBehaviour
         DashCoolDown();
         Animations();
 
+        CalculateCurrentSpeed();
+
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
 
-        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical")) 
+        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical")) {
             isIdle = true;
-        else
+        } else {
             isIdle = false;
+        }
     }
 
+    Vector3 forward;
+    Vector3 side;
     void Movement()
     {
-        x = velocity.x;
-
-
-        if (Input.GetButton("Run"))
-        {
-            if (!toggleRunning)
-                currentSpeed = runSpeed;
-            else
-                currentSpeed = walkSpeed;
-        } else
-        {
-            if (toggleRunning)
-                currentSpeed = runSpeed;
-            else
-                currentSpeed = walkSpeed;
+        if (!isIdle) {
+                if (Input.GetButton("Run"))
+            {
+                if (!toggleRunning)
+                    isRunning = true;
+                else
+                    isSprinting = true;
+            } else if (Input.GetButtonUp("Run"))
+            {
+                if (toggleRunning) {
+                    isSprinting = false;
+                } else {
+                    isRunning = false;
+                }
+            } else {
+                if (toggleRunning){
+                    isRunning = true;
+                } else {
+                    isRunning = false;
+                }
+            }
+        } else {
+            isSprinting = false;
         }
 
+
+ 
         velocityY += gravity * Time.deltaTime;
         velocityY = Mathf.Clamp(velocityY, gravity * 3, -gravity * 3);
         
         dashVector = dashMultiplier * (transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal") );
 
+        if (isSprinting) {
+            forward = velocityX * transform.forward;
+            side = Vector3.zero;
+        } else {
+            forward = velocityX * transform.forward * Input.GetAxis("Vertical");
+            side = velocityX * transform.right * Input.GetAxis("Horizontal");
+        }
+        
+
+        velocity = Vector3.up * velocityY + forward + side;
+        controller.Move(velocity * Time.deltaTime); 
+
+        /*
         velocity = currentSpeed * (transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal") + dashVector) + Vector3.up * velocityY;
 
         if (Input.GetButton("Horizontal") && Input.GetButton("Vertical"))
             velocity = velocity / 1.4f;
+        */
 
-        controller.Move(velocity * Time.deltaTime);
 
         if (Input.GetButtonDown("Jump"))
             Jump();
@@ -103,26 +143,46 @@ public class PlayerControlls : MonoBehaviour
         if (Input.GetButtonDown("Dash"))
             Dash();
 
+        if (Input.GetButtonDown("Crouch"))
+            Crouch();
+
         if (dashMultiplier >= 0)
             dashMultiplier -= 7.5f * Time.deltaTime;
 
         if (controller.isGrounded)
         {
             doubleJumped = false;
-            AirDashed = false;
         }
 
         if (Input.GetKeyDown(KeyCode.LeftAlt)) {
-            leftAltPressed = true;
             lastCamRotation = playerCamera.transform.eulerAngles;
         } else if (Input.GetKeyUp(KeyCode.LeftAlt)) {
-            leftAltPressed = false;
             playerCamera.transform.eulerAngles = lastCamRotation;
         }
             
+        if (!Input.GetKey(KeyCode.LeftAlt)) {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y + sprintingDirection, transform.eulerAngles.z);
+        }
 
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y, transform.eulerAngles.z);
+        if (isSprinting) {
+            if (InputDirection > 0) {
+                sprintingDirection = InputDirection;
+            } else {
+                sprintingDirection = 360 + InputDirection;
+            }
+        } else {
+            sprintingDirection = 0;
+        }
     }
+
+    [Header("Animations variables")]
+    float InputDirection;
+    float lastInputDirection;
+    float InputMagnitude;
+    float RotationDirection;
+    float isRunningFloat;
+    float isSprintingFloat;
+    
 
     void Animations() {;
         if (!isIdle) {
@@ -131,34 +191,66 @@ public class PlayerControlls : MonoBehaviour
 
             CheckWhichFootIsUp();
             
-            animator.speed = 1;
+            animator.speed = walkSpeed;
 
         } else {
             InputDirection = lastInputDirection;
 
              if (RotationDirection > 5 || RotationDirection < -5)
-                animator.speed = 1 + Mathf.Abs(RotationDirection / 100);
+                animator.speed = (1 + Mathf.Abs(RotationDirection / 100));
             else 
-                animator.speed = 1;
+                animator.speed = walkSpeed;
         }
 
-        InputMagnitude = Mathf.Clamp01( Mathf.Abs(Input.GetAxis("Horizontal")) + Mathf.Abs(Input.GetAxis("Vertical")) );
-        animator.SetFloat("InputMagnitude", InputMagnitude);
-       
+        InputMagnitudeFunc();
+        animator.SetFloat("InputMagnitude", InputMagnitude);    
         animator.SetFloat("InputDirection", InputDirection);
 
 
-        if (Input.GetAxis("Mouse X") == 0) {
+        if (!Input.GetKey(KeyCode.LeftAlt)) {
+            if (Input.GetAxis("Mouse X") == 0) {
+                if (RotationDirection > 0.1f) 
+                    RotationDirection -= Time.deltaTime * 50;
+                else if (RotationDirection < -0.1f)
+                    RotationDirection += Time.deltaTime * 50;
+            } else {
+                RotationDirection += Input.GetAxis("Mouse X");
+            }
+            RotationDirection = Mathf.Clamp(RotationDirection, -45, 45);       
+        } else {
             if (RotationDirection > 0.1f) 
                 RotationDirection -= Time.deltaTime * 50;
-            else if (RotationDirection < -0.1f)
+            else if (RotationDirection < -0.1f) {
                 RotationDirection += Time.deltaTime * 50;
-        } else {
-            RotationDirection += Input.GetAxis("Mouse X");
+            }
         }
-        RotationDirection = Mathf.Clamp(RotationDirection, -45, 45);       
-
         animator.SetFloat("RotationDirection", RotationDirection);
+
+        if (isRunning) {
+            isRunningFloat += Time.deltaTime * 5;
+        } else {
+            isRunningFloat -= Time.deltaTime * 5;
+        }
+        isRunningFloat = Mathf.Clamp01(isRunningFloat);
+        animator.SetFloat("isRunning", isRunningFloat);
+
+        if (isSprinting) {
+            isSprintingFloat = 1;
+        } else {
+            isSprintingFloat = 0;
+        }
+        animator.SetFloat("isSprinting", isSprintingFloat);
+
+        animator.SetBool("Idle", isIdle);
+        animator.SetBool("isCrouch", isCrouch);
+    }
+
+    void InputMagnitudeFunc () {
+        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical")) {
+            InputMagnitude = 1;
+        } else {
+            InputMagnitude = 0;
+        }
     }
 
     void CheckWhichFootIsUp() {
@@ -168,24 +260,36 @@ public class PlayerControlls : MonoBehaviour
             animator.SetBool("IsRightLegUp", false);
         }
     }
-
-    bool doubleJumped = false;
+    
     void Jump ()
     {
         if (controller.isGrounded)
         {
+            animator.SetTrigger("Jump");
             velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
+            velocityX = jumpDistance * Mathf.Abs(currentSpeed/3);
+            animator.applyRootMotion = false;
+            StartCoroutine(DetectLanding());
         } else
         { 
             if (airDash && !doubleJumped)
             {
                 doubleJumped = true;
-                AirDash();
+                // Double Jump
             }
         }
     }
 
-    bool dashed;
+    IEnumerator DetectLanding () {
+        yield return new WaitForSeconds(0.1f);
+        while (!controller.isGrounded) {
+            yield return null;
+        }
+        velocityX = 0;
+        animator.applyRootMotion = true;
+        animator.SetTrigger("Landed");
+    }
+
     void Dash ()
     {
         if (!dashed && controller.isGrounded)
@@ -208,13 +312,7 @@ public class PlayerControlls : MonoBehaviour
 
     }
 
-    bool AirDashed;
-    void AirDash ()
-    {
-        if (!AirDashed && !controller.isGrounded)
-        {
-            AirDashed = true;
-            dashMultiplier = airDashDistance;
-        }
+    void Crouch() {
+        isCrouch = !isCrouch;
     }
 }
