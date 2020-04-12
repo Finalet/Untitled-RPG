@@ -19,11 +19,11 @@ public class PlayerControlls : MonoBehaviour
 
     [Header("Jumping")]
     public bool airDash;
-    public float jumpHeight = 10;
-    public float jumpDistance = 10;
-    public float gravity = -12;
+    public float jumpHeight = 2;
+    public float jumpDistance = 1.5f;
+    public float gravity = -50;
     float velocityY;
-    public float velocityX;
+    float velocityX;
     Vector3 velocity;
 
     [Header("Dash & Air dash")]
@@ -44,6 +44,8 @@ public class PlayerControlls : MonoBehaviour
     public Transform leftFoot;
     public Transform rightFoot;
 
+    float baseHeight;
+    float baseColliderCenterY;
 
     bool dashed;
     bool doubleJumped = false;
@@ -55,6 +57,9 @@ public class PlayerControlls : MonoBehaviour
         playerCamera = Camera.main;
 
         prevPos = transform.position;
+
+        baseHeight = controller.height;
+        baseColliderCenterY = controller.center.y;
     }
 
     Vector3 prevPos;
@@ -90,7 +95,7 @@ public class PlayerControlls : MonoBehaviour
             {
                 if (!toggleRunning)
                     isRunning = true;
-                else
+                else if (!isCrouch)
                     isSprinting = true;
             } else if (Input.GetButtonUp("Run"))
             {
@@ -110,7 +115,13 @@ public class PlayerControlls : MonoBehaviour
             isSprinting = false;
         }
 
-
+        if(isCrouch) {
+            controller.height = 1.1f;
+            controller.center = new Vector3(controller.center.x, 0.6f, controller.center.z);
+        } else {
+            controller.height = baseHeight;
+            controller.center = new Vector3(controller.center.x, baseColliderCenterY, controller.center.z);
+        }
  
         velocityY += gravity * Time.deltaTime;
         velocityY = Mathf.Clamp(velocityY, gravity * 3, -gravity * 3);
@@ -128,14 +139,6 @@ public class PlayerControlls : MonoBehaviour
 
         velocity = Vector3.up * velocityY + forward + side;
         controller.Move(velocity * Time.deltaTime); 
-
-        /*
-        velocity = currentSpeed * (transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal") + dashVector) + Vector3.up * velocityY;
-
-        if (Input.GetButton("Horizontal") && Input.GetButton("Vertical"))
-            velocity = velocity / 1.4f;
-        */
-
 
         if (Input.GetButtonDown("Jump"))
             Jump();
@@ -263,7 +266,7 @@ public class PlayerControlls : MonoBehaviour
     
     void Jump ()
     {
-        if (controller.isGrounded)
+        if (controller.isGrounded && !isCrouch)
         {
             animator.SetTrigger("Jump");
             velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
@@ -313,6 +316,11 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void Crouch() {
-        isCrouch = !isCrouch;
+        if (controller.isGrounded)
+            isCrouch = !isCrouch;
+    }
+
+    public void SprintOff () {
+        isSprinting = false;
     }
 }
