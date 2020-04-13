@@ -6,8 +6,8 @@ public class CandleFlickering : MonoBehaviour
 {
     Light lightSource;
 
-    public float flickerSpeed = 1;
-    public float flickerIntensity = 1;
+    public float flickerSpeed = 10;
+    public float flickerIntensity = 0.3f;
 
     float baseIntensity;
     float newIntensity;

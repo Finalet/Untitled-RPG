@@ -9,10 +9,14 @@ public class PlayerControlls : MonoBehaviour
     public float currentSpeed = 0;
     public float walkSpeed = 1;
     public bool toggleRunning = false;
+
+    [Header("State")]
+    public bool isIdle;
     public bool isRunning;
     public bool isSprinting;
-    public bool isIdle;
     public bool isCrouch;
+    public bool isJumping;
+    public bool isAttacking;
 
     float sprintingDirection;
     float desiredSprintingDirection;
@@ -34,7 +38,7 @@ public class PlayerControlls : MonoBehaviour
     float dashMultiplier;
     Vector3 dashVector;
 
-    CharacterController controller;
+    public CharacterController controller;
     Camera playerCamera;
 
     Vector3 lastCamRotation;
@@ -49,7 +53,7 @@ public class PlayerControlls : MonoBehaviour
 
     bool dashed;
     bool doubleJumped = false;
-    
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -95,7 +99,7 @@ public class PlayerControlls : MonoBehaviour
             {
                 if (!toggleRunning)
                     isRunning = true;
-                else if (!isCrouch)
+                else if (!isCrouch && !isAttacking)
                     isSprinting = true;
             } else if (Input.GetButtonUp("Run"))
             {
@@ -176,6 +180,9 @@ public class PlayerControlls : MonoBehaviour
         } else {
             sprintingDirection = 0;
         }
+
+        if (isAttacking)
+            SprintOff();
     }
 
     [Header("Animations variables")]
@@ -269,6 +276,7 @@ public class PlayerControlls : MonoBehaviour
         if (controller.isGrounded && !isCrouch)
         {
             animator.SetTrigger("Jump");
+            isJumping = true;
             velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
             velocityX = jumpDistance * Mathf.Abs(currentSpeed/3);
             animator.applyRootMotion = false;
@@ -290,6 +298,7 @@ public class PlayerControlls : MonoBehaviour
         }
         velocityX = 0;
         animator.applyRootMotion = true;
+        isJumping = false;
         animator.SetTrigger("Landed");
     }
 
