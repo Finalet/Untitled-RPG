@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControlls : MonoBehaviour
 {
+    public static PlayerControlls instance;
+
     [Header("Movement")]
     public float currentSpeed = 0;
     public float walkSpeed = 1;
@@ -17,6 +19,7 @@ public class PlayerControlls : MonoBehaviour
     public bool isCrouch;
     public bool isJumping;
     public bool isAttacking;
+    public bool isWeaponOut;
 
     float sprintingDirection;
     float desiredSprintingDirection;
@@ -30,16 +33,12 @@ public class PlayerControlls : MonoBehaviour
     float velocityX;
     Vector3 velocity;
 
-    [Header("Dash & Air dash")]
-    public float dashDistance = 5;
-    public float dashCoolDownTime = 2;
-    float dashCoolDownTimer = 0;
-    public float airDashDistance = 5;
-    float dashMultiplier;
-    Vector3 dashVector;
+    [Header("Additional")]
+    public Vector3 additional;
+    
 
-    public CharacterController controller;
-    Camera playerCamera;
+    [System.NonSerialized] public CharacterController controller;
+    [System.NonSerialized] public Camera playerCamera;
 
     Vector3 lastCamRotation;
 
@@ -53,6 +52,11 @@ public class PlayerControlls : MonoBehaviour
 
     bool dashed;
     bool doubleJumped = false;
+
+    void Awake() {
+        if (instance == null) 
+            instance = this;
+    }
 
     void Start()
     {
@@ -75,7 +79,6 @@ public class PlayerControlls : MonoBehaviour
     void Update()
     {
         Movement();
-        DashCoolDown();
         Animations();
 
         CalculateCurrentSpeed();
@@ -83,11 +86,13 @@ public class PlayerControlls : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
 
-        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical")) {
+        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) {
             isIdle = true;
         } else {
             isIdle = false;
         }
+
+        isWeaponOut = GetComponent<WeaponsController>().isWeaponOut;
     }
 
     Vector3 forward;
@@ -129,8 +134,6 @@ public class PlayerControlls : MonoBehaviour
  
         velocityY += gravity * Time.deltaTime;
         velocityY = Mathf.Clamp(velocityY, gravity * 3, -gravity * 3);
-        
-        dashVector = dashMultiplier * (transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal") );
 
         if (isSprinting) {
             forward = velocityX * transform.forward;
@@ -141,20 +144,14 @@ public class PlayerControlls : MonoBehaviour
         }
         
 
-        velocity = Vector3.up * velocityY + forward + side;
+        velocity = Vector3.up * velocityY + forward + side + additional;
         controller.Move(velocity * Time.deltaTime); 
 
         if (Input.GetButtonDown("Jump"))
             Jump();
 
-        if (Input.GetButtonDown("Dash"))
-            Dash();
-
         if (Input.GetButtonDown("Crouch"))
             Crouch();
-
-        if (dashMultiplier >= 0)
-            dashMultiplier -= 7.5f * Time.deltaTime;
 
         if (controller.isGrounded)
         {
@@ -181,8 +178,9 @@ public class PlayerControlls : MonoBehaviour
             sprintingDirection = 0;
         }
 
-        if (isAttacking)
+        if (isAttacking) {
             SprintOff();
+        }
     }
 
     [Header("Animations variables")]
@@ -300,28 +298,6 @@ public class PlayerControlls : MonoBehaviour
         animator.applyRootMotion = true;
         isJumping = false;
         animator.SetTrigger("Landed");
-    }
-
-    void Dash ()
-    {
-        if (!dashed && controller.isGrounded)
-        {
-            dashCoolDownTimer = dashCoolDownTime;
-            dashed = true;
-            dashMultiplier = dashDistance;
-        }
-    }
-
-    void DashCoolDown()
-    {
-        if (dashCoolDownTimer >= 0)
-        {
-            dashCoolDownTimer -= Time.deltaTime;
-        } else if (dashMultiplier < 0)
-        {
-            dashed = false;
-        }
-
     }
 
     void Crouch() {

@@ -49,8 +49,10 @@ public class CameraControll : MonoBehaviour
 
         RaycastHit hit;
         if (Physics.Linecast(Player.transform.position + offset, transform.position, out hit)) {
-            if (hit.transform.tag != "Player")
+            if (hit.transform.tag != "Player" && !hit.collider.isTrigger) {
                 transform.position = new Vector3(hit.point.x + hit.normal.x * 0.2f, hit.point.y, hit.point.z + hit.normal.z * 0.2f);
+                //print(hit.transform.name);
+            }
         }
     }
 }

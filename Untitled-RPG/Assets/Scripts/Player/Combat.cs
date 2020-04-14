@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class Combat : MonoBehaviour
 {
+    public int currentSkillDamage;
+
     PlayerControlls playerControlls;
     Animator animator;
-    Weapons weapons;
+    WeaponsController weapons;
 
-    public float baseComboTimer;
-    public float comboTimer;
+    [SerializeField]float baseComboTimer;
+    [SerializeField]float comboTimer;
 
     float animatorLayerWeight;
 
+    int comboCount;
+    float hitID;
+
     void Start() {
-        weapons = GetComponent<Weapons>();
+        weapons = GetComponent<WeaponsController>();
         playerControlls = GetComponent<PlayerControlls>();    
         animator = GetComponent<Animator>();
     }
@@ -25,21 +30,14 @@ public class Combat : MonoBehaviour
         if (!playerControlls.isJumping && weapons.isWeaponOut) {
             Attacks();
         }
-
-        animator.SetBool("isAttacking", playerControlls.isAttacking);
     }
 
-    public Animation anim;
+    bool canHit;
     void Attacks() {
-
         if (Input.GetButton("Fire1")) {
-            playerControlls.isAttacking = true;
+            animator.SetBool("KeepAttacking", true);
+            currentSkillDamage = 10;
             comboTimer = baseComboTimer;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            animator.CrossFade("Attacks.DoubleSword.Skill1", 0.25f);
-            playerControlls.isAttacking = true;
         }
     }
 
@@ -47,7 +45,23 @@ public class Combat : MonoBehaviour
         if (comboTimer >= 0) {
             comboTimer -= Time.deltaTime;
         } else {
-            playerControlls.isAttacking = false;
+            animator.SetBool("KeepAttacking", false);
+        } 
+    }
+
+    void OnTriggerStay(Collider other) {
+        if (other.gameObject.GetComponent<Enemy>() != null && canHit) {
+            other.GetComponent<Enemy>().GetHit(PlayerControlls.instance.GetComponent<Combat>().currentSkillDamage, hitID);
         }
+    }
+    void generateHitID () {
+        canHit = true;
+        Invoke("CantHit", 0.1f);
+        float x = Random.Range(-150.00f, 150.00f);
+        print(x);
+        hitID = x;
+    }
+    void CantHit () {
+        canHit = false;
     }
 }
