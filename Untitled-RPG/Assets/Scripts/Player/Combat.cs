@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Combat : MonoBehaviour
 {
-    public int currentSkillDamage;
+    public int baseAttackDamage;
 
     PlayerControlls playerControlls;
     Animator animator;
@@ -17,6 +17,7 @@ public class Combat : MonoBehaviour
 
     int comboCount;
     float hitID;
+    float prevHitID;
 
     void Start() {
         weapons = GetComponent<WeaponsController>();
@@ -34,9 +35,8 @@ public class Combat : MonoBehaviour
 
     bool canHit;
     void Attacks() {
-        if (Input.GetButton("Fire1")) {
+        if (Input.GetButton("Fire1") && !playerControlls.isRolling) {
             animator.SetBool("KeepAttacking", true);
-            currentSkillDamage = 10;
             comboTimer = baseComboTimer;
         }
     }
@@ -51,17 +51,32 @@ public class Combat : MonoBehaviour
 
     void OnTriggerStay(Collider other) {
         if (other.gameObject.GetComponent<Enemy>() != null && canHit) {
-            other.GetComponent<Enemy>().GetHit(PlayerControlls.instance.GetComponent<Combat>().currentSkillDamage, hitID);
+            other.GetComponent<Enemy>().GetHit(damage(), hitID);
+            if (prevHitID != hitID) {
+                UseOrRestoreStamina(-10);
+                prevHitID = hitID;
+            }
         }
     }
     void generateHitID () {
-        canHit = true;
         Invoke("CantHit", 0.1f);
         float x = Random.Range(-150.00f, 150.00f);
-        print(x);
         hitID = x;
+        canHit = true;
     }
+
     void CantHit () {
         canHit = false;
     }
+    int damage () {
+        return Mathf.RoundToInt(Random.Range(baseAttackDamage*0.7f, baseAttackDamage*1.3f));
+    }
+
+    public void GetHitOrHealed (int damage) {
+        GetComponent<Characteristics>().HP -= damage;
+    }
+    public void UseOrRestoreStamina (int amount) {
+        GetComponent<Characteristics>().Stamina -= amount;
+    }
+
 }

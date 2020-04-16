@@ -18,24 +18,29 @@ public class PlayerControlls : MonoBehaviour
     public bool isSprinting;
     public bool isCrouch;
     public bool isJumping;
+    public bool isRolling;
     public bool isAttacking;
     public bool isWeaponOut;
+    public bool isGrounded;
 
     float sprintingDirection;
-    float desiredSprintingDirection;
+    float rollDirection;
 
     [Header("Jumping")]
-    public bool airDash;
     public float jumpHeight = 2;
     public float jumpDistance = 1.5f;
     public float gravity = -50;
-    float velocityY;
-    float velocityX;
+    public float velocityY;
+    public float fwd;
+    public float independentFromInputFwd;
+    public float sideways;
     Vector3 velocity;
-
-    [Header("Additional")]
-    public Vector3 additional;
     
+    Vector3 forward;
+    Vector3 side;
+
+    [Header("Rolling")]
+    public float rollDistance;    
 
     [System.NonSerialized] public CharacterController controller;
     [System.NonSerialized] public Camera playerCamera;
@@ -50,8 +55,7 @@ public class PlayerControlls : MonoBehaviour
     float baseHeight;
     float baseColliderCenterY;
 
-    bool dashed;
-    bool doubleJumped = false;
+    bool rolled;
 
     void Awake() {
         if (instance == null) 
@@ -72,7 +76,7 @@ public class PlayerControlls : MonoBehaviour
 
     Vector3 prevPos;
     void CalculateCurrentSpeed () {
-        currentSpeed = Vector3.Magnitude(transform.position - prevPos) * 500;
+        currentSpeed = Vector3.Magnitude(transform.position - prevPos) * 120;
         prevPos = transform.position;
     }
 
@@ -80,8 +84,6 @@ public class PlayerControlls : MonoBehaviour
     {
         Movement();
         Animations();
-
-        CalculateCurrentSpeed();
 
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
@@ -95,12 +97,25 @@ public class PlayerControlls : MonoBehaviour
         isWeaponOut = GetComponent<WeaponsController>().isWeaponOut;
     }
 
-    Vector3 forward;
-    Vector3 side;
+    void FixedUpdate() {
+        CalculateCurrentSpeed();
+    }
+
     void Movement()
     {
+        isGrounded = IsGrounded();
+
+        if (Input.GetButtonDown("Jump"))
+            Jump();
+
+        if (Input.GetButtonDown("Crouch"))
+            Crouch();
+
+        if (Input.GetButtonDown("Roll"))
+            Roll();
+
         if (!isIdle) {
-                if (Input.GetButton("Run"))
+            if (Input.GetButton("Run"))
             {
                 if (!toggleRunning)
                     isRunning = true;
@@ -108,12 +123,14 @@ public class PlayerControlls : MonoBehaviour
                     isSprinting = true;
             } else if (Input.GetButtonUp("Run"))
             {
-                if (toggleRunning) {
+                if (toggleRunning && !isRolling) {
                     isSprinting = false;
                 } else {
                     isRunning = false;
                 }
             } else {
+                if (!isRolling)
+                    isSprinting = false;
                 if (toggleRunning){
                     isRunning = true;
                 } else {
@@ -135,28 +152,16 @@ public class PlayerControlls : MonoBehaviour
         velocityY += gravity * Time.deltaTime;
         velocityY = Mathf.Clamp(velocityY, gravity * 3, -gravity * 3);
 
-        if (isSprinting) {
-            forward = velocityX * transform.forward;
+        if (isSprinting || isRolling) {
+            forward = fwd * transform.forward;
             side = Vector3.zero;
         } else {
-            forward = velocityX * transform.forward * Input.GetAxis("Vertical");
-            side = velocityX * transform.right * Input.GetAxis("Horizontal");
+            forward = transform.forward * fwd * Input.GetAxis("Vertical") + independentFromInputFwd * transform.forward;
+            side = transform.right * sideways * Input.GetAxis("Horizontal");
         }
-        
 
-        velocity = Vector3.up * velocityY + forward + side + additional;
+        velocity = Vector3.up * velocityY + forward + side;
         controller.Move(velocity * Time.deltaTime); 
-
-        if (Input.GetButtonDown("Jump"))
-            Jump();
-
-        if (Input.GetButtonDown("Crouch"))
-            Crouch();
-
-        if (controller.isGrounded)
-        {
-            doubleJumped = false;
-        }
 
         if (Input.GetKeyDown(KeyCode.LeftAlt)) {
             lastCamRotation = playerCamera.transform.eulerAngles;
@@ -164,9 +169,7 @@ public class PlayerControlls : MonoBehaviour
             playerCamera.transform.eulerAngles = lastCamRotation;
         }
             
-        if (!Input.GetKey(KeyCode.LeftAlt)) {
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y + sprintingDirection, transform.eulerAngles.z);
-        }
+        UpdateRotation();
 
         if (isSprinting) {
             if (InputDirection > 0) {
@@ -182,6 +185,13 @@ public class PlayerControlls : MonoBehaviour
             SprintOff();
         }
     }
+
+    void UpdateRotation () {
+        if (!Input.GetKey(KeyCode.LeftAlt)) {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y + sprintingDirection + rollDirection, transform.eulerAngles.z);
+        }
+    }
+
 
     [Header("Animations variables")]
     float InputDirection;
@@ -269,43 +279,75 @@ public class PlayerControlls : MonoBehaviour
         }
     }
     
+    float jumpDis;
     void Jump ()
     {
-        if (controller.isGrounded && !isCrouch)
+        if (isGrounded && !isCrouch)
         {
             animator.SetTrigger("Jump");
             isJumping = true;
+            jumpDis = jumpDistance * Mathf.Abs(currentSpeed/3);
             velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
-            velocityX = jumpDistance * Mathf.Abs(currentSpeed/3);
+            fwd += jumpDis;
+            sideways += jumpDis;
             animator.applyRootMotion = false;
             StartCoroutine(DetectLanding());
-        } else
-        { 
-            if (airDash && !doubleJumped)
-            {
-                doubleJumped = true;
-                // Double Jump
-            }
-        }
+        } 
     }
 
     IEnumerator DetectLanding () {
         yield return new WaitForSeconds(0.1f);
-        while (!controller.isGrounded) {
+        while (!isGrounded) {
             yield return null;
         }
-        velocityX = 0;
+        fwd -= jumpDis;
+        sideways -= jumpDis;
         animator.applyRootMotion = true;
         isJumping = false;
         animator.SetTrigger("Landed");
     }
 
     void Crouch() {
-        if (controller.isGrounded)
+        if (isGrounded)
             isCrouch = !isCrouch;
     }
 
     public void SprintOff () {
         isSprinting = false;
+    }
+
+    float rollDis;
+    void Roll() {
+        if (isAttacking)
+            return;
+
+        if (!isRolling) {
+            isRolling = true;
+            if (InputDirection > 0 && !isSprinting && !isIdle) {
+                rollDirection = InputDirection;
+            } else if (!isSprinting && !isIdle) {
+                rollDirection = 360 + InputDirection;
+            } 
+            UpdateRotation();
+            animator.SetTrigger("Roll");
+            rollDis = rollDistance * Mathf.Abs(currentSpeed/6);
+            fwd += rollDis;
+            sideways += rollDis;
+        }
+    }
+    public void StopRoll() {
+        isRolling = false;
+        fwd -= rollDis;
+        sideways -= rollDis;
+        rollDirection = 0;
+    }
+
+    bool IsGrounded () {
+        Debug.DrawRay(transform.position + Vector3.up * 0.1f, -Vector3.up * 0.15f, Color.red);
+        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, -Vector3.up, 0.15f)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

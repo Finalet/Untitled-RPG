@@ -40,7 +40,7 @@ public class Skill : MonoBehaviour
         print("Used skill " + skillName + ". Cool down " + coolDown + " seconds");
         coolDownTimer = coolDown;
         playerControlls.isAttacking = true;
-        playerControlls.GetComponent<Combat>().currentSkillDamage = baseDamage; //Adjust later to characteristics
+        playerControlls.GetComponent<Combat>().UseOrRestoreStamina(staminaRequired);
     }
 
     public virtual void Update() {

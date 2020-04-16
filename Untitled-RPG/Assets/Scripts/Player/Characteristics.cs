@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Characteristics : MonoBehaviour
 {
@@ -24,8 +25,10 @@ public class Characteristics : MonoBehaviour
 
     int statsRatio = 2;
     [Header("Stats regeneration")]
-    public int HealthPointsPerSecond; 
     public bool canRegenerateHealth; 
+    public int HealthPointsPerSecond; 
+    public bool canRegenerateStamina; 
+    public int StaminaPerSecond; 
 
     void Awake() {
         StatsCalculations();
@@ -39,11 +42,15 @@ public class Characteristics : MonoBehaviour
     void Update() {
         StatsCalculations();
         regenerateHealth();
+        regenerateStamina();
     }
 
     void StatsCalculations () {
         maxHP = 1000 + strength / statsRatio;
         maxStamina = 300 + agility / statsRatio;
+
+        HP = Mathf.Clamp(HP ,-10, maxHP);
+        Stamina = Mathf.Clamp(Stamina, -10, maxStamina);
 
         meleeAttack = 0 + strength / statsRatio;
         rangedAttack = 0 + agility / statsRatio;
@@ -60,6 +67,17 @@ public class Characteristics : MonoBehaviour
                 hpTimer = 0.1f;
             } else {
                 hpTimer -= Time.deltaTime;
+            }
+        }
+    }
+    float staminaTimer = 1;
+    void regenerateStamina() {
+        if (canRegenerateStamina && Stamina < maxStamina) {
+            if (staminaTimer <= 0) {
+                Stamina += StaminaPerSecond/10;
+                staminaTimer = 0.1f;
+            } else {
+                staminaTimer -= Time.deltaTime;
             }
         }
     }

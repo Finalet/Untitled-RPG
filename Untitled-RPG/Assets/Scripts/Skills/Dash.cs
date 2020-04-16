@@ -28,22 +28,24 @@ public class Dash : Skill
     IEnumerator Using () {
         yield return new WaitForSeconds (castingTime + totalAttackTime * startAttackTime);
         canHit = true;
-        Vector3 dashVec = playerControlls.transform.forward * dashDistance;
-        playerControlls.additional += dashVec;
+        playerControlls.independentFromInputFwd += dashDistance;
         yield return new WaitForSeconds (totalAttackTime * (stopAttackTime - startAttackTime));
-        playerControlls.additional -= dashVec;
+        playerControlls.independentFromInputFwd -= dashDistance;
         canHit = false;
     }
 
+    int damage () {
+        return Mathf.RoundToInt(Random.Range(baseDamage*0.7f, baseDamage*1.3f));
+    }    
+
     void OnTriggerStay(Collider other) {
         if (other.gameObject.GetComponent<Enemy>() != null && canHit) {
-            other.GetComponent<Enemy>().GetHit(PlayerControlls.instance.GetComponent<Combat>().currentSkillDamage, hitID);
+            other.GetComponent<Enemy>().GetHit(damage(), hitID);
         }
     }
 
     float generateHitID () {
         float x = Random.Range(-100.00f, 100.00f);
-        print(x);
         return x;
     }
 }
