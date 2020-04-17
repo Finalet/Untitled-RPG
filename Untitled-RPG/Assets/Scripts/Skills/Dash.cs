@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Dash : Skill
 {
-    List<Enemy> enemiesInRange;
-
     [Header("Custom Vars")]
     public float dashDistance;
 
@@ -16,6 +14,12 @@ public class Dash : Skill
             print(skillName +" is still cooling down. " + Mathf.RoundToInt(coolDownTimer) + " seconds left.");
             return;
         }
+        if (playerControlls.GetComponent<Characteristics>().Stamina < staminaRequired) {
+            print("Not enough stamina");
+            return;
+        }
+        if (!playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isUsingSkill)
+            return;
 
         base.Use();
         animator.CrossFade("Attacks.DoubleSwords.Dash", 0.25f);

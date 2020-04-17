@@ -28,7 +28,8 @@ public class Characteristics : MonoBehaviour
     public bool canRegenerateHealth; 
     public int HealthPointsPerSecond; 
     public bool canRegenerateStamina; 
-    public int StaminaPerSecond; 
+    public int baseStaminaPerSecond; 
+    int StaminaPerSecond; 
 
     void Awake() {
         StatsCalculations();
@@ -49,8 +50,8 @@ public class Characteristics : MonoBehaviour
         maxHP = 1000 + strength / statsRatio;
         maxStamina = 300 + agility / statsRatio;
 
-        HP = Mathf.Clamp(HP ,-10, maxHP);
-        Stamina = Mathf.Clamp(Stamina, -10, maxStamina);
+        HP = Mathf.Clamp(HP, 0, maxHP);
+        Stamina = Mathf.Clamp(Stamina, 0, maxStamina);
 
         meleeAttack = 0 + strength / statsRatio;
         rangedAttack = 0 + agility / statsRatio;
@@ -72,7 +73,13 @@ public class Characteristics : MonoBehaviour
     }
     float staminaTimer = 1;
     void regenerateStamina() {
-        if (canRegenerateStamina && Stamina < maxStamina) {
+        if (PlayerControlls.instance.isSprinting) {
+            StaminaPerSecond = -20;
+        } else {
+            StaminaPerSecond = baseStaminaPerSecond;
+        }
+
+        if (canRegenerateStamina) {
             if (staminaTimer <= 0) {
                 Stamina += StaminaPerSecond/10;
                 staminaTimer = 0.1f;
@@ -81,4 +88,12 @@ public class Characteristics : MonoBehaviour
             }
         }
     }
+
+    public void GetHitOrHealed (int damage) {
+        HP -= damage;
+    }
+    public void UseOrRestoreStamina (int amount) {
+        Stamina -= amount;
+    }
+
 }

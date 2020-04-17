@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Skill : MonoBehaviour
 {
     public string skillName;
     public string description;
+    public Sprite icon;
     [Tooltip("From what tree the skill is")] public SkillTree skillTree; 
     public SkillType skillType; 
     public int staminaRequired;
@@ -37,10 +39,15 @@ public class Skill : MonoBehaviour
     }
 
     public virtual void Use() {
-        print("Used skill " + skillName + ". Cool down " + coolDown + " seconds");
+        playerControlls.isUsingSkill = true;
         coolDownTimer = coolDown;
         playerControlls.isAttacking = true;
-        playerControlls.GetComponent<Combat>().UseOrRestoreStamina(staminaRequired);
+        playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
+        Invoke("usingSkill", totalAttackTime);
+    }
+
+    void usingSkill () {
+        playerControlls.isUsingSkill = false;
     }
 
     public virtual void Update() {

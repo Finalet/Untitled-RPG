@@ -26,9 +26,9 @@ public class CanvasScript : MonoBehaviour
     }
 
     void DisplayHPandStamina () {
-        healthBar.fillAmount = (float)characteristics.HP/characteristics.maxHP;
+        healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.HP/characteristics.maxHP, 0.1f);
         healthBar.transform.GetChild(0).GetComponent<Text>().text = characteristics.HP.ToString();
-        staminaBar.fillAmount = (float)characteristics.Stamina/characteristics.maxStamina;
+        staminaBar.fillAmount = Mathf.Lerp(staminaBar.fillAmount, (float)characteristics.Stamina/characteristics.maxStamina, 0.1f);
         staminaBar.transform.GetChild(0).GetComponent<Text>().text = characteristics.Stamina.ToString();
     }
 }

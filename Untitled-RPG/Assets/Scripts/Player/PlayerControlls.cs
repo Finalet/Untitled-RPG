@@ -11,6 +11,7 @@ public class PlayerControlls : MonoBehaviour
     public float currentSpeed = 0;
     public float walkSpeed = 1;
     public bool toggleRunning = false;
+    public int staminaReqToRoll = 50;
 
     [Header("State")]
     public bool isIdle;
@@ -22,6 +23,7 @@ public class PlayerControlls : MonoBehaviour
     public bool isAttacking;
     public bool isWeaponOut;
     public bool isGrounded;
+    public bool isUsingSkill;
 
     float sprintingDirection;
     float rollDirection;
@@ -129,8 +131,9 @@ public class PlayerControlls : MonoBehaviour
                     isRunning = false;
                 }
             } else {
-                if (!isRolling)
+                if (!isRolling) {
                     isSprinting = false;
+                }
                 if (toggleRunning){
                     isRunning = true;
                 } else {
@@ -138,7 +141,8 @@ public class PlayerControlls : MonoBehaviour
                 }
             }
         } else {
-            isSprinting = false;
+            if (!isRolling)
+                isSprinting = false;
         }
 
         if(isCrouch) {
@@ -318,22 +322,22 @@ public class PlayerControlls : MonoBehaviour
 
     float rollDis;
     void Roll() {
-        if (isAttacking)
+        if (isAttacking || isRolling || GetComponent<Characteristics>().Stamina < staminaReqToRoll) {
             return;
-
-        if (!isRolling) {
-            isRolling = true;
-            if (InputDirection > 0 && !isSprinting && !isIdle) {
-                rollDirection = InputDirection;
-            } else if (!isSprinting && !isIdle) {
-                rollDirection = 360 + InputDirection;
-            } 
-            UpdateRotation();
-            animator.SetTrigger("Roll");
-            rollDis = rollDistance * Mathf.Abs(currentSpeed/6);
-            fwd += rollDis;
-            sideways += rollDis;
         }
+
+        GetComponent<Characteristics>().UseOrRestoreStamina(staminaReqToRoll);
+        isRolling = true;
+        if (InputDirection > 0 && !isSprinting && !isIdle) {
+            rollDirection = InputDirection;
+        } else if (!isSprinting && !isIdle) {
+            rollDirection = 360 + InputDirection;
+        } 
+        UpdateRotation();
+        animator.SetTrigger("Roll");
+        rollDis = rollDistance * Mathf.Abs(currentSpeed/6);
+        fwd += rollDis;
+        sideways += rollDis;
     }
     public void StopRoll() {
         isRolling = false;

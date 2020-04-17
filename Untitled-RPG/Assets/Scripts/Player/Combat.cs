@@ -53,7 +53,7 @@ public class Combat : MonoBehaviour
         if (other.gameObject.GetComponent<Enemy>() != null && canHit) {
             other.GetComponent<Enemy>().GetHit(damage(), hitID);
             if (prevHitID != hitID) {
-                UseOrRestoreStamina(-10);
+                GetComponent<Characteristics>().UseOrRestoreStamina(-10);
                 prevHitID = hitID;
             }
         }
@@ -71,12 +71,4 @@ public class Combat : MonoBehaviour
     int damage () {
         return Mathf.RoundToInt(Random.Range(baseAttackDamage*0.7f, baseAttackDamage*1.3f));
     }
-
-    public void GetHitOrHealed (int damage) {
-        GetComponent<Characteristics>().HP -= damage;
-    }
-    public void UseOrRestoreStamina (int amount) {
-        GetComponent<Characteristics>().Stamina -= amount;
-    }
-
 }
