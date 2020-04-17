@@ -286,17 +286,17 @@ public class PlayerControlls : MonoBehaviour
     float jumpDis;
     void Jump ()
     {
-        if (isGrounded && !isCrouch)
-        {
-            animator.SetTrigger("Jump");
-            isJumping = true;
-            jumpDis = jumpDistance * Mathf.Abs(currentSpeed/3);
-            velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
-            fwd += jumpDis;
-            sideways += jumpDis;
-            animator.applyRootMotion = false;
-            StartCoroutine(DetectLanding());
-        } 
+        if (!isGrounded || isCrouch || isRolling) {
+            return;
+        }
+        animator.SetTrigger("Jump");
+        isJumping = true;
+        jumpDis = jumpDistance * Mathf.Abs(currentSpeed/3);
+        velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
+        fwd += jumpDis;
+        sideways += jumpDis;
+        animator.applyRootMotion = false;
+        StartCoroutine(DetectLanding());
     }
 
     IEnumerator DetectLanding () {

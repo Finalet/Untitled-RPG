@@ -10,7 +10,11 @@ public class Enemy : MonoBehaviour
     public string enemyName;
     public int health;
 
-    public bool isWalking;
+    public float playerDetectRadius;
+    public Transform idlePosition;
+
+    bool isWalking;
+    public bool isDead;
 
     float prevHitID;
 
@@ -26,6 +30,9 @@ public class Enemy : MonoBehaviour
     }
 
     void Update() {
+        if (isDead)
+            return;
+
         if (health <= 0) {
             Die();
         }
@@ -33,28 +40,52 @@ public class Enemy : MonoBehaviour
     }
 
     void Movement() {
+
         animator.SetBool("isWalking", isWalking);
         agent.destination = target.position;
         agent.nextPosition = transform.position;
 
-        if (agent.remainingDistance > agent.stoppingDistance)
+        UpdateTarget();
+
+        if (agent.remainingDistance > agent.stoppingDistance) {
             isWalking = true;
-        else 
+        } else {
             isWalking = false;
+            FaceTarget();
+        }
+    }
+
+    void UpdateTarget () {
+        if (Vector3.Distance(transform.position, PlayerControlls.instance.transform.position) <= playerDetectRadius) {
+            target = PlayerControlls.instance.transform;
+        } else {
+            target = idlePosition;
+        }
     }
 
     Vector3 position;
     void OnAnimatorMove ()
     {
         position = animator.rootPosition;
-        position.y = agent.nextPosition.y;
+        //position.y = agent.nextPosition.y; //Enable to ingore gravity
         transform.position = position;
+    } 
+
+    void FaceTarget () {
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+    }
+
+    void OnDrawGizmosSelected() {
+        Gizmos.DrawWireSphere(transform.position, playerDetectRadius);   
     }
 
     public virtual void GetHit(int damage, float hitID) {
-        if (hitID == prevHitID)
+        if (hitID == prevHitID || isDead)
             return;
 
+        animator.Play("GetHit.GetHit", animator.GetLayerIndex("GetHIt"), 0);
         prevHitID = hitID;
         health -= damage;
         DisplayDamageNumber (damage);
@@ -62,8 +93,11 @@ public class Enemy : MonoBehaviour
     }
 
     public virtual void Die() {
-        print("Died");
-        Destroy(gameObject);
+        isDead = true;
+        animator.CrossFade("GetHit.Die", 0.25f);
+        GetComponent<Collider>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+        Destroy(gameObject, 10f);
     }
 
     void DisplayDamageNumber(int damage) {
