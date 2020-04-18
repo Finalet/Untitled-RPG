@@ -8,6 +8,7 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     public string enemyName;
+    public int maxHealth;
     public int health;
 
     public float playerDetectRadius;
@@ -23,6 +24,7 @@ public class Enemy : MonoBehaviour
     Transform target;
 
     void Start() {
+        health = maxHealth;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         target = PlayerControlls.instance.gameObject.transform;
@@ -37,6 +39,15 @@ public class Enemy : MonoBehaviour
             Die();
         }
         Movement();
+    }
+
+    void Gravity () {
+        if (!GetComponent<Rigidbody>().useGravity)
+            return;
+
+        RaycastHit hit;
+        if (!Physics.Raycast(transform.position + Vector3.up * 0.1f, -Vector3.up, out hit, 0.15f))
+            position.y = transform.position.y - 10 * Time.deltaTime;
     }
 
     void Movement() {
@@ -67,7 +78,7 @@ public class Enemy : MonoBehaviour
     void OnAnimatorMove ()
     {
         position = animator.rootPosition;
-        //position.y = agent.nextPosition.y; //Enable to ingore gravity
+        Gravity();
         transform.position = position;
     } 
 
@@ -85,11 +96,10 @@ public class Enemy : MonoBehaviour
         if (hitID == prevHitID || isDead)
             return;
 
-        animator.Play("GetHit.GetHit", animator.GetLayerIndex("GetHIt"), 0);
         prevHitID = hitID;
+        animator.Play("GetHit.GetHit", animator.GetLayerIndex("GetHIt"), 0);
         health -= damage;
         DisplayDamageNumber (damage);
-        print ("Got damaged by " + damage + "HP. " + health + " HP left.");
     }
 
     public virtual void Die() {
