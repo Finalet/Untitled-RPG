@@ -8,6 +8,7 @@ public class AssetHolder : MonoBehaviour
     
     public TextMeshProUGUI ddText;
     public Canvas canvas;
+    public Camera PlayersCamera;
 
     void Awake() {
         if (instance == null)

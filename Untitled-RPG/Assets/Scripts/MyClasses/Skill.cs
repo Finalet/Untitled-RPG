@@ -30,7 +30,7 @@ public class Skill : MonoBehaviour
     public bool canHit;
 
     public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
-    public enum SkillType {Damaging, Healing };
+    public enum SkillType {Damaging, Healing, Buff };
 
     void Start() {
         hitCollider = GetComponent<Collider>();

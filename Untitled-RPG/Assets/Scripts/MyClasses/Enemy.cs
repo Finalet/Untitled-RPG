@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     public int health;
 
     public float playerDetectRadius;
-    public Transform idlePosition;
+    public Transform spawner;
 
     bool isWalking;
     public bool isDead;
@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
         if (Vector3.Distance(transform.position, PlayerControlls.instance.transform.position) <= playerDetectRadius) {
             target = PlayerControlls.instance.transform;
         } else {
-            target = idlePosition;
+            target = spawner;
         }
     }
 
@@ -107,6 +107,7 @@ public class Enemy : MonoBehaviour
         animator.CrossFade("GetHit.Die", 0.25f);
         GetComponent<Collider>().enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
+        spawner.GetComponent<EnemySpawner>().listOfAllEnemies.Remove(gameObject);
         Destroy(gameObject, 10f);
     }
 

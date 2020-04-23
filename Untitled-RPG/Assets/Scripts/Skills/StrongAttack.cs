@@ -12,7 +12,7 @@ public class StrongAttack : Skill
             return;
         }
         if (playerControlls.GetComponent<Characteristics>().Stamina < staminaRequired) {
-            print("Not enough stamina");
+            CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
         if (!playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isUsingSkill)

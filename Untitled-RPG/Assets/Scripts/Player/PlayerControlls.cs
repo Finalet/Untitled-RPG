@@ -322,7 +322,11 @@ public class PlayerControlls : MonoBehaviour
 
     float rollDis;
     void Roll() {
-        if (isAttacking || isRolling || GetComponent<Characteristics>().Stamina < staminaReqToRoll) {
+        if (isAttacking || isRolling) {
+            return;
+        }
+        if (GetComponent<Characteristics>().Stamina < staminaReqToRoll) {
+            CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
 
@@ -335,9 +339,10 @@ public class PlayerControlls : MonoBehaviour
         } 
         UpdateRotation();
         animator.SetTrigger("Roll");
-        rollDis = rollDistance * Mathf.Abs(currentSpeed/6);
+        rollDis = rollDistance + Mathf.Abs(currentSpeed/6);
         fwd += rollDis;
         sideways += rollDis;
+        print (sideways);
     }
     public void StopRoll() {
         isRolling = false;

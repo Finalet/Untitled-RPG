@@ -12,6 +12,9 @@ public class CanvasScript : MonoBehaviour
     public Image healthBar;
     public Image staminaBar;
 
+    [Header("Overall UI")]
+    public TextMeshProUGUI warningText;
+
     [Header("Enemy")]
     public Image enemyHealthBar;
     public TextMeshProUGUI enemyName;
@@ -45,7 +48,7 @@ public class CanvasScript : MonoBehaviour
             enemyName.gameObject.SetActive(true);
         }
         enemyHealthBar.transform.GetChild(0).GetComponent<Image>().fillAmount = healthFillAmount;
-        enemyName.text = name;
+        enemyName.text = name.Replace("(Clone)", "");
     }
     public void StopDisplayEnemyInfo () {
         if (enemyHealthBar.gameObject.activeInHierarchy) {
@@ -53,5 +56,30 @@ public class CanvasScript : MonoBehaviour
         } else if (enemyName.gameObject.activeInHierarchy) {
             enemyName.gameObject.SetActive(false);
         }
+    }
+    float warningTextAlpha;
+    IEnumerator warning;
+    public void DisplayWarning(string text) {
+        warning = WarningTextIenum(text);
+        if (warning != null)
+            StartCoroutine(warning);   
+    }
+    IEnumerator WarningTextIenum (string text){
+        warningText.text = text;
+        warningText.gameObject.SetActive(true);
+        while (warningText.color.a <= 1) {
+            warningTextAlpha += Time.deltaTime * 5;
+            warningText.color = new Color(warningText.color.r, warningText.color.g, warningText.color.b, warningTextAlpha);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        yield return new WaitForSeconds(2);
+        while (warningText.color.a >= 0) {
+            warningTextAlpha -= Time.deltaTime * 5;
+            warningText.color = new Color(warningText.color.r, warningText.color.g, warningText.color.b, warningTextAlpha);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        warningText.text = null;
+        warningText.gameObject.SetActive(false);
+        warning = null;
     }
 }
