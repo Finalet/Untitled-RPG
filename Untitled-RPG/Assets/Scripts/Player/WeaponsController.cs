@@ -14,13 +14,17 @@ public class WeaponsController : MonoBehaviour
     public bool isRightHandEquiped;
     public bool isDualHands;
 
+    public GameObject LeftHandEquipement;
+    public GameObject RightHandEquipement;
+
     void Start () {
         animator = GetComponent<Animator>();
+        DisableTrails();
     }
 
     bool started;
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Tab)) {
+        if (Input.GetKeyDown(KeyCode.H)) {
             if (isWeaponOut && !started)
                 StartCoroutine(Sheathe());
             else if (!isWeaponOut && !started)
@@ -127,5 +131,14 @@ public class WeaponsController : MonoBehaviour
         }
         
         started = false;
+    }
+
+    public void EnableTrails() {
+        LeftHandEquipement.GetComponentInChildren<ParticleSystem>().Play();
+        RightHandEquipement.GetComponentInChildren<ParticleSystem>().Play();
+    }
+    public void DisableTrails() {
+        LeftHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
+        RightHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
     }
 }

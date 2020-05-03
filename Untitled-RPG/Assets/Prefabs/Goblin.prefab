@@ -71,8 +71,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3546369989262499929}
   - component: {fileID: 3546369989270179729}
-  - component: {fileID: 3546369989262933055}
-  - component: {fileID: 3546369989262933054}
+  - component: {fileID: -3720162969272832960}
+  - component: {fileID: 1326702835891782521}
   - component: {fileID: 3546369989262933053}
   - component: {fileID: 3546369989262933052}
   m_Layer: 0
@@ -90,7 +90,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3546369989262933049}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.391, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3546369989262499957}
@@ -122,7 +122,21 @@ Animator:
   m_HasTransformHierarchy: 0
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!54 &3546369989262933055
+--- !u!136 &-3720162969272832960
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3546369989262933049}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.95, z: 0}
+--- !u!54 &1326702835891782521
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,24 +148,10 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &3546369989262933054
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3546369989262933049}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!195 &3546369989262933053
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -190,8 +190,10 @@ MonoBehaviour:
   maxHealth: 3000
   health: 0
   playerDetectRadius: 10
-  idlePosition: {fileID: 0}
+  staticEnemy: 0
+  spawner: {fileID: 0}
   isDead: 0
+  TargetDamagePercentage: 0
 --- !u!1 &3546369989262933063
 GameObject:
   m_ObjectHideFlags: 0

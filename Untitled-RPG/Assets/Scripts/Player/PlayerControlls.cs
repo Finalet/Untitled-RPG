@@ -9,7 +9,8 @@ public class PlayerControlls : MonoBehaviour
 
     [Header("Movement")]
     public float currentSpeed = 0;
-    public float walkSpeed = 1;
+    public float baseWalkSpeed;
+    float walkSpeed;
     public bool toggleRunning = false;
     public int staminaReqToRoll = 50;
 
@@ -71,6 +72,7 @@ public class PlayerControlls : MonoBehaviour
         playerCamera = Camera.main;
 
         prevPos = transform.position;
+        walkSpeed = baseWalkSpeed;
 
         baseHeight = controller.height;
         baseColliderCenterY = controller.center.y;
@@ -103,6 +105,7 @@ public class PlayerControlls : MonoBehaviour
         CalculateCurrentSpeed();
     }
 
+    bool staminaRanOutFromSprinting;
     void Movement()
     {
         isGrounded = IsGrounded();
@@ -121,12 +124,13 @@ public class PlayerControlls : MonoBehaviour
             {
                 if (!toggleRunning)
                     isRunning = true;
-                else if (!isCrouch && !isAttacking)
-                    isSprinting = true;
+                else if (!isCrouch && !isAttacking && !isRolling && !staminaRanOutFromSprinting)
+                    isSprinting = true; //Start sprinting
             } else if (Input.GetButtonUp("Run"))
             {
                 if (toggleRunning && !isRolling) {
                     isSprinting = false;
+                    staminaRanOutFromSprinting = false;
                 } else {
                     isRunning = false;
                 }
@@ -143,6 +147,11 @@ public class PlayerControlls : MonoBehaviour
         } else {
             if (!isRolling)
                 isSprinting = false;
+        }
+
+        if(GetComponent<Characteristics>().Stamina <= 0) {
+            isSprinting = false;
+            staminaRanOutFromSprinting = true;
         }
 
         if(isCrouch) {
@@ -191,8 +200,10 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void UpdateRotation () {
-        if (!Input.GetKey(KeyCode.LeftAlt)) {
+        if (!Input.GetKey(KeyCode.LeftAlt) && !PeaceCanvas.instance.anyPanelOpen) {
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y + sprintingDirection + rollDirection, transform.eulerAngles.z);
+        } else {
+            RotationDirection = 0;
         }
     }
 
@@ -205,8 +216,12 @@ public class PlayerControlls : MonoBehaviour
     float isRunningFloat;
     float isSprintingFloat;
     
+    void Animations() {
+        if ( (InputDirection == 90 || InputDirection == -90) && isRunning && !isSprinting)
+            walkSpeed = baseWalkSpeed * 1.2f;
+        else 
+            walkSpeed = baseWalkSpeed;
 
-    void Animations() {;
         if (!isIdle) {
             InputDirection = Mathf.Atan2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * Mathf.Rad2Deg;
             lastInputDirection = InputDirection;
@@ -286,7 +301,7 @@ public class PlayerControlls : MonoBehaviour
     float jumpDis;
     void Jump ()
     {
-        if (!isGrounded || isCrouch || isRolling) {
+        if (!isGrounded || isCrouch || isRolling || isAttacking) {
             return;
         }
         animator.SetTrigger("Jump");
@@ -342,7 +357,6 @@ public class PlayerControlls : MonoBehaviour
         rollDis = rollDistance + Mathf.Abs(currentSpeed/6);
         fwd += rollDis;
         sideways += rollDis;
-        print (sideways);
     }
     public void StopRoll() {
         isRolling = false;

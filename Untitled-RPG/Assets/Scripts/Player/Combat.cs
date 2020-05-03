@@ -5,10 +5,14 @@ using UnityEngine;
 public class Combat : MonoBehaviour
 {
     public int baseAttackDamage;
+    public int actualAttackDamage;
 
     PlayerControlls playerControlls;
     Animator animator;
     WeaponsController weapons;
+    BoxCollider basicAttackCollider;
+    Vector3 baseColliderSize;
+    WeaponsController weaponsController;
 
     [SerializeField]float baseComboTimer;
     [SerializeField]float comboTimer;
@@ -23,6 +27,8 @@ public class Combat : MonoBehaviour
         weapons = GetComponent<WeaponsController>();
         playerControlls = GetComponent<PlayerControlls>();    
         animator = GetComponent<Animator>();
+        basicAttackCollider = GetComponent<BoxCollider>();
+        baseColliderSize = basicAttackCollider.size;
     }
 
     void Update() {
@@ -35,10 +41,24 @@ public class Combat : MonoBehaviour
 
     bool canHit;
     void Attacks() {
-        if (Input.GetButton("Fire1") && !playerControlls.isRolling) {
+        if (Input.GetButton("Fire1") && !playerControlls.isRolling && !PeaceCanvas.instance.anyPanelOpen) {
             animator.SetBool("KeepAttacking", true);
             playerControlls.isAttacking = true;
             comboTimer = baseComboTimer;
+        }
+
+        AttackSpeed();
+        actualAttackDamage = Mathf.RoundToInt( baseAttackDamage * (float)GetComponent<Characteristics>().meleeAttack/100f);
+    }
+    public void moveFwdAttack () {
+        StartCoroutine(moveCoroutine());
+    }
+    IEnumerator moveCoroutine() {
+        float timer = 0.1f;
+        while (timer > 0) {
+            playerControlls.GetComponent<CharacterController>().Move(transform.forward * Time.fixedDeltaTime * 10);
+            timer -= Time.fixedDeltaTime;
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
     }
 
@@ -58,8 +78,9 @@ public class Combat : MonoBehaviour
                 prevHitID = hitID;
             }
         }
-    }
-    void generateHitID () {
+    } 
+
+    void Hit () {
         Invoke("CantHit", 0.1f);
         float x = Random.Range(-150.00f, 150.00f);
         hitID = x;
@@ -68,8 +89,17 @@ public class Combat : MonoBehaviour
 
     void CantHit () {
         canHit = false;
+        basicAttackCollider.size = baseColliderSize;
     }
     int damage () {
-        return Mathf.RoundToInt(Random.Range(baseAttackDamage*0.7f, baseAttackDamage*1.3f));
+        return Mathf.RoundToInt(Random.Range(actualAttackDamage*0.85f, actualAttackDamage*1.15f));
+    }
+
+    public void IncreaseCollider() {
+        basicAttackCollider.size += Vector3.right;
+    }
+
+    void AttackSpeed () {
+        animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeedPercentage);
     }
 }

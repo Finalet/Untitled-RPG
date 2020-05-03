@@ -12,10 +12,13 @@ public class Enemy : MonoBehaviour
     public int health;
 
     public float playerDetectRadius;
+    public bool staticEnemy;
     public Transform spawner;
 
     bool isWalking;
     public bool isDead;
+    public bool isKnockedDown;
+    public bool canGetHit = true;
 
     float prevHitID;
 
@@ -23,40 +26,47 @@ public class Enemy : MonoBehaviour
     NavMeshAgent agent;
     Transform target;
 
-    void Start() {
+    [Header("Adjustements from debuffs")]
+    public float TargetSkillDamagePercentage;
+
+    public virtual void Start() {
+        canGetHit = true;
         health = maxHealth;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        target = PlayerControlls.instance.gameObject.transform;
-        agent.updatePosition = false;
+        if (!staticEnemy)
+            agent.updatePosition = false;
     }
 
-    void Update() {
+    public virtual void Update() {
         if (isDead)
             return;
 
         if (health <= 0) {
             Die();
         }
-        Movement();
-    }
 
-    void Gravity () {
-        if (!GetComponent<Rigidbody>().useGravity)
-            return;
+        if (!staticEnemy && !isKnockedDown)
+            Movement();
 
-        RaycastHit hit;
-        if (!Physics.Raycast(transform.position + Vector3.up * 0.1f, -Vector3.up, out hit, 0.15f))
-            position.y = transform.position.y - 10 * Time.deltaTime;
+        //Creates collision between enemies, but makes kinematic when interacting with player to stop him from applying force.
+        if (isDead || isKnockedDown) {
+            GetComponent<Rigidbody>().isKinematic = true;
+        } else {
+            if (Vector3.Distance(transform.position, PlayerControlls.instance.transform.position) <= 1.5f)
+                GetComponent<Rigidbody>().isKinematic = true;
+            else 
+                GetComponent<Rigidbody>().isKinematic = false; 
+        }
     }
 
     void Movement() {
+        UpdateTarget();
 
         animator.SetBool("isWalking", isWalking);
         agent.destination = target.position;
         agent.nextPosition = transform.position;
 
-        UpdateTarget();
 
         if (agent.remainingDistance > agent.stoppingDistance) {
             isWalking = true;
@@ -78,7 +88,6 @@ public class Enemy : MonoBehaviour
     void OnAnimatorMove ()
     {
         position = animator.rootPosition;
-        Gravity();
         transform.position = position;
     } 
 
@@ -93,23 +102,48 @@ public class Enemy : MonoBehaviour
     }
 
     public virtual void GetHit(int damage, float hitID) {
-        if (hitID == prevHitID || isDead)
+        if (hitID == prevHitID || isDead || !canGetHit)
             return;
 
         prevHitID = hitID;
-        animator.Play("GetHit.GetHit", animator.GetLayerIndex("GetHIt"), 0);
-        health -= damage;
-        DisplayDamageNumber (damage);
+        if (!staticEnemy && !isKnockedDown) animator.Play("GetHit.GetHit", animator.GetLayerIndex("GetHit"), 0);
+        int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
+        health -= actualDamage;
+        DisplayDamageNumber (actualDamage);
+        gameObject.SendMessage("CustomGetHit", actualDamage, SendMessageOptions.DontRequireReceiver);
     }
 
     public virtual void Die() {
         isDead = true;
         animator.CrossFade("GetHit.Die", 0.25f);
         GetComponent<Collider>().enabled = false;
-        GetComponent<Rigidbody>().isKinematic = true;
         spawner.GetComponent<EnemySpawner>().listOfAllEnemies.Remove(gameObject);
         Destroy(gameObject, 10f);
     }
+
+    public virtual void GetKnockedDown() {
+        if (!isDead)
+            StartCoroutine(KnockedDown());
+    }
+    IEnumerator KnockedDown () {
+        if (!staticEnemy) animator.Play("GetHit.KnockDown");
+        isKnockedDown = true;
+        float timer = 3;
+        while (timer>0) {
+            timer -= Time.fixedDeltaTime;
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            if (isDead)
+                yield break;
+        }
+        canGetHit = false;
+        if (!staticEnemy) {
+            animator.Play("GetHit.GetUp");
+            yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(animator.GetLayerIndex("GetHit")).Length);
+            isKnockedDown = false;
+            canGetHit = true;
+        }
+    }
+
 
     void DisplayDamageNumber(int damage) {
         TextMeshProUGUI ddText = Instantiate(AssetHolder.instance.ddText);

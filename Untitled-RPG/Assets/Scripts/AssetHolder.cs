@@ -9,6 +9,9 @@ public class AssetHolder : MonoBehaviour
     public TextMeshProUGUI ddText;
     public Canvas canvas;
     public Camera PlayersCamera;
+    public GameObject dragDisplayObject;
+
+    public GameObject[] Skills;
 
     void Awake() {
         if (instance == null)

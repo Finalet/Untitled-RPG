@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class Characteristics : MonoBehaviour
 {
+
+    public static Characteristics instance;
+
     [Header("Main")]
     public int maxHP;
     public int maxStamina;
@@ -13,15 +16,16 @@ public class Characteristics : MonoBehaviour
     [Header("Stats")]
     public int strength;
     public int agility;
-    public int intelligence;
+    public int intellect;
     [Header("Attacks")]
-    public int meleeAttack;
-    public int rangedAttack;
-    public int magicPower;
-    public int healingPower;
-    public int defense;
+    public int meleeAttack; public float meleeMultiplier;
+    public int rangedAttack; public float rangedMultiplier;
+    public int magicPower; public float magicPowerMultiplier;
+    public int healingPower; public float healingPowerMultiplier;
+    public int defense; public float defenseMultiplier;
     [Header("Misc")]
     public int castingTime;
+    public float attackSpeedPercentage; public float attackSpeedPercentageAdjustement;
 
     int statsRatio = 2;
     [Header("Stats regeneration")]
@@ -31,13 +35,25 @@ public class Characteristics : MonoBehaviour
     public int baseStaminaPerSecond; 
     int StaminaPerSecond; 
 
+    public GameObject buffIcon;
+
     void Awake() {
+        if (instance == null)
+            instance = this;
+
         StatsCalculations();
     }
 
     void Start() {
         HP = maxHP;
         Stamina = maxStamina;
+
+        meleeMultiplier = 1;
+        rangedMultiplier = 1;
+        magicPowerMultiplier = 1;
+        healingPowerMultiplier = 1;
+        defenseMultiplier= 1;
+
     }
 
     void Update() {
@@ -48,16 +64,18 @@ public class Characteristics : MonoBehaviour
 
     void StatsCalculations () {
         maxHP = 1000 + strength / statsRatio;
-        maxStamina = 300 + agility / statsRatio;
+        maxStamina = 1000 + agility / statsRatio;
 
         HP = Mathf.Clamp(HP, 0, maxHP);
         Stamina = Mathf.Clamp(Stamina, 0, maxStamina);
 
-        meleeAttack = 0 + strength / statsRatio;
-        rangedAttack = 0 + agility / statsRatio;
-        magicPower = 0 + intelligence / statsRatio;
-        healingPower = 0 + intelligence / statsRatio;
-        defense = 0 + strength / statsRatio + agility / statsRatio;
+        meleeAttack = Mathf.RoundToInt( (strength / statsRatio) * meleeMultiplier);
+        rangedAttack = Mathf.RoundToInt( (agility / statsRatio) * rangedMultiplier);
+        magicPower = Mathf.RoundToInt( (intellect / statsRatio) * magicPowerMultiplier);
+        healingPower = Mathf.RoundToInt( (intellect / statsRatio) * healingPowerMultiplier);
+        defense = Mathf.RoundToInt( (strength / statsRatio + agility / statsRatio) * defenseMultiplier);
+
+        attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement;
     }
 
     float hpTimer = 1;
@@ -74,7 +92,7 @@ public class Characteristics : MonoBehaviour
     float staminaTimer = 1;
     void regenerateStamina() {
         if (PlayerControlls.instance.isSprinting) {
-            StaminaPerSecond = -20;
+            StaminaPerSecond = -40;
         } else {
             StaminaPerSecond = baseStaminaPerSecond;
         }
@@ -94,6 +112,24 @@ public class Characteristics : MonoBehaviour
     }
     public void UseOrRestoreStamina (int amount) {
         Stamina -= amount;
+    }
+
+    public void AddBuff(Skill skill) {
+        if (skill.name == "Rage") {
+            float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
+            meleeMultiplier += buffIncrease/100;
+            attackSpeedPercentageAdjustement += buffIncrease/100;
+            GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
+            icon.GetComponent<BuffIcon>().skill = skill;
+        }
+    }
+
+    public void RemoveBuff(Skill skill) {
+        if (skill.name == "Rage") {
+            float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
+            meleeMultiplier -= buffIncrease/100;
+            attackSpeedPercentageAdjustement -= buffIncrease/100;
+        }
     }
 
 }

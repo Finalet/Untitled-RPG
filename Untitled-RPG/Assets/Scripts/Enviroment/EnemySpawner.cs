@@ -25,9 +25,11 @@ public class EnemySpawner : MonoBehaviour
     } 
 
     void Spawn () {
-        GameObject en = Instantiate(enemy, transform.position, Quaternion.identity);
+        Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-5f, 5f), transform.position.y, transform.position.z + Random.Range(-5f, 5f) );
+        GameObject en = Instantiate(enemy, spawnPos, Quaternion.identity);
         en.GetComponent<Enemy>().spawner = transform;
         listOfAllEnemies.Add(en);
+        particles.transform.position = spawnPos;
         particles.Play();
     }
 }

@@ -11,17 +11,15 @@ public class LookingTarget : MonoBehaviour
     public float distanceToTarget;
 
     RaycastHit hit;
+    Ray ray;
     void Update()
     {
-        Quaternion rot = Quaternion.Euler(0, transform.rotation.y - 90, 0);
-        Vector3 vec = rot * transform.right;
-
-        if (Physics.Raycast(PlayerControlls.instance.transform.position + Vector3.up, vec, out hit, viewDistance)){
+        if (Physics.Raycast(transform.position, transform.forward, out hit, viewDistance)){
             target = hit.transform.gameObject;
             Enemy en = target.GetComponent<Enemy>();
             if (en != null) {
                 targetIsEnemy = true;
-                CanvasScript.instance.DisplayEnemyInfo(en.name, (float)en.health/en.maxHealth);
+                CanvasScript.instance.DisplayEnemyInfo(en.enemyName, (float)en.health/en.maxHealth);
                 distanceToTarget = Vector3.Distance(en.gameObject.transform.position, gameObject.transform.position);
             } else {
                 target = null;
