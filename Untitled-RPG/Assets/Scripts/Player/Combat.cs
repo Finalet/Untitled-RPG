@@ -102,4 +102,8 @@ public class Combat : MonoBehaviour
     void AttackSpeed () {
         animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeedPercentage);
     }
+
+    public void StoneHitAttack() {
+        gameObject.GetComponentInChildren<StoneHit>().ApplyDamage();
+    }
 }

@@ -34,7 +34,7 @@ public class Skill : MonoBehaviour
     public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
     public enum SkillType {Damaging, Healing, Buff };
 
-    void Start() {
+    public virtual void Start() {
         hitCollider = GetComponent<Collider>();
         playerControlls = PlayerControlls.instance.GetComponent<PlayerControlls>();
         animator = PlayerControlls.instance.GetComponent<Animator>();

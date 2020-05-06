@@ -44,8 +44,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 1.5, z: 3.7867827}
-  m_Center: {x: 0, y: 0.79999995, z: 2.0433915}
+  m_Size: {x: 1.5, y: 1.5, z: 0.5}
+  m_Center: {x: 0, y: 0.79999995, z: 1.22}
 --- !u!114 &-3347108865819886065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,11 +60,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Stonehit
   description: Hits the ground, knocking down enemies in front.
-  icon: {fileID: 21300000, guid: 2f3d56e3ebbd86a46b51f627932e9fe0, type: 3}
+  icon: {fileID: 21300000, guid: ab11242105de05d40b9742cf3740779d, type: 3}
   skillTree: 0
   skillType: 0
   staminaRequired: 200
-  baseDamage: 1000
+  baseDamage: 2000
   actualDamage: 0
   coolDown: 10
   coolDownTimer: 0
@@ -100,7 +100,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8962092676790311249}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: -0.7, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5484616456500327379}
@@ -8711,10 +8711,10 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 1
+    radiusScale: 12
     collidesWith:
       serializedVersion: 2
-      m_Bits: 4294967295
+      m_Bits: 512
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -8729,11 +8729,11 @@ ParticleSystem:
     collisionShape3: {fileID: 0}
     collisionShape4: {fileID: 0}
     collisionShape5: {fileID: 0}
-    inside: 1
+    inside: 2
     outside: 0
     enter: 0
     exit: 0
-    radiusScale: 1
+    radiusScale: 12
   SubModule:
     serializedVersion: 2
     enabled: 0

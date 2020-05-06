@@ -19,6 +19,7 @@ public class CanvasScript : MonoBehaviour
     [Header("Enemy")]
     public Image enemyHealthBar;
     public TextMeshProUGUI enemyName;
+    public TextMeshProUGUI enemyHealth;
 
     Characteristics characteristics;
 
@@ -42,7 +43,7 @@ public class CanvasScript : MonoBehaviour
         staminaBar.transform.GetChild(0).GetComponent<Text>().text = characteristics.Stamina.ToString();
     }
 
-    public void DisplayEnemyInfo (string name, float healthFillAmount) {
+    public void DisplayEnemyInfo (string name, float healthFillAmount, int health) {
         if (!enemyHealthBar.gameObject.activeInHierarchy) {
             enemyHealthBar.gameObject.SetActive(true);
         } else if (!enemyName.gameObject.activeInHierarchy) {
@@ -50,6 +51,10 @@ public class CanvasScript : MonoBehaviour
         }
         enemyHealthBar.transform.GetChild(0).GetComponent<Image>().fillAmount = Mathf.Lerp(enemyHealthBar.transform.GetChild(0).GetComponent<Image>().fillAmount, healthFillAmount, 0.1f);
         enemyName.text = name;
+        if (enemyName.text != "Training Dummy")
+            enemyHealth.text = health.ToString();
+        else 
+            enemyHealth.text = "";
     }
     public void StopDisplayEnemyInfo () {
         if (enemyHealthBar.gameObject.activeInHierarchy) {

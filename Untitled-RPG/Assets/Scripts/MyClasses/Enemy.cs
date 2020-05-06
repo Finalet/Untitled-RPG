@@ -117,16 +117,17 @@ public class Enemy : MonoBehaviour
         isDead = true;
         animator.CrossFade("GetHit.Die", 0.25f);
         GetComponent<Collider>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
         spawner.GetComponent<EnemySpawner>().listOfAllEnemies.Remove(gameObject);
         Destroy(gameObject, 10f);
     }
 
     public virtual void GetKnockedDown() {
-        if (!isDead)
+        if (!isDead && !staticEnemy)
             StartCoroutine(KnockedDown());
     }
     IEnumerator KnockedDown () {
-        if (!staticEnemy) animator.Play("GetHit.KnockDown");
+        animator.Play("GetHit.KnockDown");
         isKnockedDown = true;
         float timer = 3;
         while (timer>0) {
@@ -136,12 +137,10 @@ public class Enemy : MonoBehaviour
                 yield break;
         }
         canGetHit = false;
-        if (!staticEnemy) {
-            animator.Play("GetHit.GetUp");
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(animator.GetLayerIndex("GetHit")).Length);
-            isKnockedDown = false;
-            canGetHit = true;
-        }
+        animator.Play("GetHit.GetUp");
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(animator.GetLayerIndex("GetHit")).Length);
+        isKnockedDown = false;
+        canGetHit = true;
     }
 
 
