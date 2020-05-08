@@ -1,0 +1,135 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Characteristics : MonoBehaviour
+{
+
+    public static Characteristics instance;
+
+    [Header("Main")]
+    public int maxHP;
+    public int maxStamina;
+    public int HP;
+    public int Stamina;
+    [Header("Stats")]
+    public int strength;
+    public int agility;
+    public int intellect;
+    [Header("Attacks")]
+    public int meleeAttack; public float meleeMultiplier;
+    public int rangedAttack; public float rangedMultiplier;
+    public int magicPower; public float magicPowerMultiplier;
+    public int healingPower; public float healingPowerMultiplier;
+    public int defense; public float defenseMultiplier;
+    [Header("Misc")]
+    public int castingTime;
+    public float attackSpeedPercentage; public float attackSpeedPercentageAdjustement;
+
+    int statsRatio = 2;
+    [Header("Stats regeneration")]
+    public bool canRegenerateHealth; 
+    public int HealthPointsPerSecond; 
+    public bool canRegenerateStamina; 
+    public int baseStaminaPerSecond; 
+    int StaminaPerSecond; 
+
+    public GameObject buffIcon;
+
+    void Awake() {
+        if (instance == null)
+            instance = this;
+
+        StatsCalculations();
+    }
+
+    void Start() {
+        HP = maxHP;
+        Stamina = maxStamina;
+
+        meleeMultiplier = 1;
+        rangedMultiplier = 1;
+        magicPowerMultiplier = 1;
+        healingPowerMultiplier = 1;
+        defenseMultiplier= 1;
+
+    }
+
+    void Update() {
+        StatsCalculations();
+        regenerateHealth();
+        regenerateStamina();
+    }
+
+    void StatsCalculations () {
+        maxHP = 1000 + strength / statsRatio;
+        maxStamina = 1000 + agility / statsRatio;
+
+        HP = Mathf.Clamp(HP, 0, maxHP);
+        Stamina = Mathf.Clamp(Stamina, 0, maxStamina);
+
+        meleeAttack = Mathf.RoundToInt( (strength / statsRatio) * meleeMultiplier);
+        rangedAttack = Mathf.RoundToInt( (agility / statsRatio) * rangedMultiplier);
+        magicPower = Mathf.RoundToInt( (intellect / statsRatio) * magicPowerMultiplier);
+        healingPower = Mathf.RoundToInt( (intellect / statsRatio) * healingPowerMultiplier);
+        defense = Mathf.RoundToInt( (strength / statsRatio + agility / statsRatio) * defenseMultiplier);
+
+        attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement;
+    }
+
+    float hpTimer = 1;
+    void regenerateHealth() {
+        if (canRegenerateHealth && HP < maxHP) {
+            if (hpTimer <= 0) {
+                HP += HealthPointsPerSecond/10;
+                hpTimer = 0.1f;
+            } else {
+                hpTimer -= Time.deltaTime;
+            }
+        }
+    }
+    float staminaTimer = 1;
+    void regenerateStamina() {
+        if (PlayerControlls.instance.isSprinting) {
+            StaminaPerSecond = -40;
+        } else {
+            StaminaPerSecond = baseStaminaPerSecond;
+        }
+
+        if (canRegenerateStamina) {
+            if (staminaTimer <= 0) {
+                Stamina += StaminaPerSecond/10;
+                staminaTimer = 0.1f;
+            } else {
+                staminaTimer -= Time.deltaTime;
+            }
+        }
+    }
+
+    public void GetHitOrHealed (int damage) {
+        HP -= damage;
+    }
+    public void UseOrRestoreStamina (int amount) {
+        Stamina -= amount;
+    }
+
+    public void AddBuff(Skill skill) {
+        if (skill.name == "Rage") {
+            float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
+            meleeMultiplier += buffIncrease/100;
+            attackSpeedPercentageAdjustement += buffIncrease/100;
+            GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
+            icon.GetComponent<BuffIcon>().skill = skill;
+        }
+    }
+
+    public void RemoveBuff(Skill skill) {
+        if (skill.name == "Rage") {
+            float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
+            meleeMultiplier -= buffIncrease/100;
+            attackSpeedPercentageAdjustement -= buffIncrease/100;
+        }
+    }
+
+}
