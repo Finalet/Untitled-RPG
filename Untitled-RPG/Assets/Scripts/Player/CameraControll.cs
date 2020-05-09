@@ -73,4 +73,13 @@ public class CameraControll : MonoBehaviour
             else cam.fieldOfView = 60;
         }
     }
+
+    public void CameraMounted() {
+        camDesiredPosition += 3;
+        maxCamDistance += 5;
+    }
+    public void CameraDismount () {
+        camDesiredPosition -= 3;
+        maxCamDistance -= 5;
+    }
 }

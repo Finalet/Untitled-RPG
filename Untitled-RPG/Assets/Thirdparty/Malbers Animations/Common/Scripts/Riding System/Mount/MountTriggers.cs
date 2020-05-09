@@ -31,7 +31,6 @@ namespace MalbersAnimations.HAP
         //Rider rider;
         MRider rider;
 
-
         // Use this for initialization
         void Awake()
         {
@@ -40,6 +39,9 @@ namespace MalbersAnimations.HAP
 
         void OnTriggerEnter(Collider other)
         {
+            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+                return;
+
             GetAnimal(other);
         }
         
@@ -75,6 +77,9 @@ namespace MalbersAnimations.HAP
         
         void OnTriggerExit(Collider other)
         {
+            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+                return;
+
             rider = other.GetComponentInChildren<MRider>();
             if (rider == null) rider = other.GetComponentInParent<MRider>();
 

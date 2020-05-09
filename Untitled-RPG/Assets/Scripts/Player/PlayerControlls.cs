@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MalbersAnimations.HAP;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControlls : MonoBehaviour
@@ -21,6 +22,7 @@ public class PlayerControlls : MonoBehaviour
     public bool isCrouch;
     public bool isJumping;
     public bool isRolling;
+    public bool isMounted;
     public bool isAttacking;
     public bool isWeaponOut;
     public bool isGrounded;
@@ -87,9 +89,13 @@ public class PlayerControlls : MonoBehaviour
 
     void Update()
     {
-        Movement();
-        Animations();
+
+        if (!isMounted) {
+            Movement();
+            Animations();
+        }
         Sprinting();
+        MountAnimal();
 
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
@@ -381,5 +387,14 @@ public class PlayerControlls : MonoBehaviour
             sprintTrails.Play();
         else if (!isSprinting && sprintTrails.isPlaying) 
             sprintTrails.Stop();
+    }
+
+    void MountAnimal () {
+        if (Input.GetKeyDown(KeyCode.F)) {
+            if (!isMounted)
+                GetComponent<MRider>().MountAnimal();
+            else 
+                GetComponent<MRider>().DismountAnimal();
+        }
     }
 }

@@ -276,6 +276,8 @@ namespace MalbersAnimations.HAP
             if (!CanMount) return;
 
             Anim?.SetLayerWeight(MountLayerIndex, 1);                     //Enable the Mounting layer  
+            PlayerControlls.instance.isMounted = true;
+            PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraMounted();
 
             if (!Montura.InstantMount)                                                  //If is instant Mount play it      
             {
@@ -296,15 +298,15 @@ namespace MalbersAnimations.HAP
             if (!CanDismount) return;
 
             Montura.Mounted = Mounted = false;                                  //Unmount the Animal
-
             MountTriggers MTrigger = GetDismountTrigger();
+
+            PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraDismount();
 
             foreach (var mt in Montura.MountTriggers)
                 if (mt.AutoMount) mt.WasAutomounted = true;                 //Set to all the Auto Mounted Triggers that it dismounting
 
 
             Anim.SetInteger(Hash.MountSide, MTrigger.DismountID);           //Update MountSide Parameter In the Animator
-
             if (Montura.InstantMount)                                       //Use for Instant mount
             {
                 Anim.Play(Hash.Empty, MountLayerIndex);
@@ -527,6 +529,7 @@ namespace MalbersAnimations.HAP
         internal virtual void End_Dismounting()
         {
             IsOnHorse = false;                                                              //Is no longer on the Animal
+            PlayerControlls.instance.isMounted = false;            
 
             if (Montura)
             {
