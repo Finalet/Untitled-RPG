@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e33e187dc72d4a48aaede99913c6393, type: 3}
+  m_Name: AC 02 Attack and Kill
+  m_EditorClassIdentifier: 
+  tasks:
+  - {fileID: 11400000, guid: e21030647b816a24e87409a863da005a, type: 2}
+  - {fileID: 11400000, guid: 278e0c7e44f77bb44914db658a5de9cd, type: 2}
+  - {fileID: 11400000, guid: 0ebfad3f1189700489e1c8ac0d3e2b47, type: 2}
+  - {fileID: 11400000, guid: ff56f4762056add468aeb3b0679896b4, type: 2}
+  - {fileID: 11400000, guid: ae7fac85f19b9a9418c2e7f7841c5fe4, type: 2}
+  - {fileID: 11400000, guid: b59e3d9f479a7c946ab9d83ef0251dd8, type: 2}
+  transitions:
+  - decision: {fileID: 11400000, guid: d673b8d842b355949963f29d384e2043, type: 2}
+    trueState: {fileID: 11400000, guid: 2ecb231e39609524b9fd193fb84c5f26, type: 2}
+    falseState: {fileID: 11400000, guid: 7aeddc7f19f7d9a48b115fe9c0581668, type: 2}
+  - decision: {fileID: 11400000, guid: e7e2645ff1542844db35d825c1af0d82, type: 2}
+    trueState: {fileID: 11400000, guid: 7aeddc7f19f7d9a48b115fe9c0581668, type: 2}
+    falseState: {fileID: 11400000, guid: 2ecb231e39609524b9fd193fb84c5f26, type: 2}
+  GizmoStateColor: {r: 0, g: 1, b: 0.1323154, a: 1}

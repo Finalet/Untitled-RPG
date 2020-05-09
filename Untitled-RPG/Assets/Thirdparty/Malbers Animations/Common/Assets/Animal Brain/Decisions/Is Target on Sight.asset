@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00a63bfc37e3794ea3b0af5a3c6381e, type: 3}
+  m_Name: Is Target on Sight
+  m_EditorClassIdentifier: 
+  Description: Keep Target on Sight. If the sight is lost then Remove the Target on
+    the Ai Control Component
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.3
+    Variable: {fileID: 0}
+  LookRange:
+    UseConstant: 1
+    ConstantValue: 10
+    Variable: {fileID: 0}
+  LookAngle: 360
+  lookFor: 6
+  ObstacleLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  AssignTarget: 0
+  MoveToTarget: 0
+  RemoveTarget: 1
+  UnityTag: 
+  GameObjectName: 
+  tags:
+  - {fileID: 11400000, guid: 67f766f57bb0b4849a687729032dab98, type: 2}
+  - {fileID: 11400000, guid: cdeba0555f612f54e876822607c9df10, type: 2}
+  zoneType: 0
+  ZoneID: 0
+  debugColor: {r: 0.5849056, g: 0.041297972, b: 0, a: 0.039215688}

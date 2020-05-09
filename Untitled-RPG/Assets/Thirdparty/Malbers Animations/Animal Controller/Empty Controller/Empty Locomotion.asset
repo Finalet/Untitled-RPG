@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f91725cc87674489032347c829fec4, type: 3}
+  m_Name: Empty Locomotion
+  m_EditorClassIdentifier: 
+  Index: 0
+  Active: 1
+  ID: {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+  Input: 
+  General:
+    modify: -1
+    RootMotion: 0
+    Sprint: 1
+    Gravity: 0
+    Grounded: 1
+    OrientToGround: 1
+    CustomRotation: 0
+    FreeMovement: 0
+    AdditivePosition: 1
+    Persistent: 0
+    IgnoreLowerStates: 0
+    LockMovement: 0
+    LockInput: 0
+    Colliders: 1
+  SleepFrom: []
+  QueueFrom: []
+  TagModifiers: []
+  StartVerticalSpeed: 1
+  speedModifiers:
+  - name: Walk
+    ID: 0
+    position:
+      UseConstant: 1
+      ConstantValue: 5
+      Variable: {fileID: 0}
+    lerpPosition:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    animator:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    lerpAnimator:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    rotation:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    Vertical:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+  - name: Sprint
+    ID: 0
+    position:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    lerpPosition:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    animator:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    lerpAnimator:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    rotation:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    Vertical:
+      UseConstant: 1
+      ConstantValue: 2
+      Variable: {fileID: 0}
