@@ -42,14 +42,11 @@ public class Skill : MonoBehaviour
     }
 
     public virtual void Use() {
-        if (isCoolingDown) {
-            return;
-        }
         if (playerControlls.GetComponent<Characteristics>().Stamina < staminaRequired) {
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
-        if (!playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isUsingSkill)
+        if (playerControlls.isMounted || isCoolingDown || !playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isUsingSkill)
             return;
 
         playerControlls.isUsingSkill = true;

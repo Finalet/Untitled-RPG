@@ -78,7 +78,6 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler
     void DisplayItem () {
         if (itemDragHandler.itemType == ItemType.skill) {
             image.sprite = slotObject.GetComponent<Skill>().icon;
-            image.color = Color.white;
 
             //Cooldown
             if(slotObject.GetComponent<Skill>().isCoolingDown) {
@@ -87,6 +86,12 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler
             } else {
                 transform.GetChild(1).GetComponent<Image>().color = new Color(0, 0, 0, 0);
                 transform.GetChild(1).GetComponent<Image>().fillAmount = 1;
+            }
+
+            if (PlayerControlls.instance.isWeaponOut && !PlayerControlls.instance.isMounted) {
+                image.color = Color.white;
+            } else {
+                image.color = new Color(0.75f, 0.75f, 0.75f, 1); 
             }
         }
     }

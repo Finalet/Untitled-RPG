@@ -3,6 +3,7 @@ using MalbersAnimations.Events;
 using MalbersAnimations.Scriptables;
 using MalbersAnimations.Utilities;
 using UnityEngine;
+using MalbersAnimations.HAP;
 
 namespace MalbersAnimations.SA
 {
@@ -53,8 +54,6 @@ namespace MalbersAnimations.SA
             MainCamera = MalbersTools.FindMainCamera()?.transform;
         }
 
-
-
         public virtual void SetInputAxis(Vector2 move)
         {
             Vector3 move3 = new Vector3(move.x, 0, move.y);
@@ -81,9 +80,6 @@ namespace MalbersAnimations.SA
 
 
             m_ForwardAmount = move.z;
-
-            
-         
 
 
             ApplyExtraTurnRotation();
