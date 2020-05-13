@@ -145,7 +145,7 @@ public class Enemy : MonoBehaviour
 
 
     void DisplayDamageNumber(int damage) {
-        TextMeshProUGUI ddText = Instantiate(AssetHolder.instance.ddText);
-        ddText.text = damage.ToString();
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity, transform);
+        ddText.GetComponent<ddText>().damage = damage;
     }
 }

@@ -6,7 +6,7 @@ public class AssetHolder : MonoBehaviour
 {
     public static AssetHolder instance;
     
-    public TextMeshProUGUI ddText;
+    public GameObject ddText;
     public Canvas canvas;
     public Camera PlayersCamera;
     public GameObject dragDisplayObject;

@@ -8,40 +8,40 @@ public class ddText : MonoBehaviour
     float x = 1;
     Color c;
 
-    public float upwardSpeed = 1;
-    public float disolveSpeed = 1;
-    public float lifeTime = 1;
-    
+    public float speed = 1;
+    public float lifeTime = 2;
+
     Vector2 offset;
+    Color orange;
 
-    float break1;
-
-    void Awake() {
-        transform.SetParent(AssetHolder.instance.canvas.gameObject.transform);
-    }
+    public int damage;
 
     void Start() {
-        c = GetComponent<TextMeshProUGUI>().color;
-        StartCoroutine(work());
-        GetComponent<RectTransform>().anchoredPosition = new Vector2(Random.Range(-200f, 200f), Random.Range(0, 200f));
+        float x = Random.Range(-1f, 1f);
+        x = ((x >= 0) ? 1:-1);
 
-        break1 = lifeTime * 0.8f;
+        Vector3 dir = (PlayerControlls.instance.transform.right * x  + Vector3.up) * Random.Range(speed*0.5f, speed*1.3f) * (1+(float)damage/3000f);
+        GetComponent<Rigidbody>().AddForce(dir, ForceMode.Impulse);
+        timer = lifeTime;
+        transform.GetChild(0).GetComponent<TextMeshPro>().text = damage.ToString();
+
+        orange = new Color(1, 0.5f, 0,1);
+        transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(orange, Color.red, (float)damage/3000f);
+        transform.localScale = Vector3.zero;
     }
 
-    IEnumerator work() {
-        while (lifeTime > break1) {
-            lifeTime -= Time.deltaTime;
-            GetComponent<RectTransform>().Translate(Vector3.up * Time.deltaTime * upwardSpeed / 4);
-            yield return new WaitForSeconds(Time.deltaTime);
+    float timer;
+    void Update() {
+        transform.LookAt(PlayerControlls.instance.playerCamera.transform);
+
+        if (timer > 1) {
+            timer -= Time.deltaTime;
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(1,1,1), Time.deltaTime * 10);
+        } else if (timer <= 1.5f && timer > 0) {
+            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(transform.GetChild(0).GetComponent<TextMeshPro>().color, new Color(c.r,c.g,c.b,0), Time.deltaTime*2f);
+            timer -= Time.deltaTime;
+        } else {
+            Destroy(gameObject);
         }
-        while (lifeTime > 0) {
-            lifeTime -= Time.deltaTime;
-            upwardSpeed += Time.deltaTime * 10;
-            GetComponent<RectTransform>().Translate(Vector3.up * Time.deltaTime * upwardSpeed);
-            x -= Time.deltaTime * disolveSpeed;
-            GetComponent<TextMeshProUGUI>().color = new Color(c.r, c.g, c.b, x);
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-        Destroy(gameObject);
     }
 }
