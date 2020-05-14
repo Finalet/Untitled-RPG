@@ -41,7 +41,7 @@ public class Combat : MonoBehaviour
 
     bool canHit;
     void Attacks() {
-        if (Input.GetButton("Fire1") && !playerControlls.isRolling && !PeaceCanvas.instance.anyPanelOpen) {
+        if (Input.GetButton("Fire1") && !playerControlls.isRolling && !PeaceCanvas.instance.anyPanelOpen && !playerControlls.isGettingHit) {
             animator.SetBool("KeepAttacking", true);
             playerControlls.isAttacking = true;
             comboTimer = baseComboTimer;
@@ -71,7 +71,7 @@ public class Combat : MonoBehaviour
     }
 
     void OnTriggerStay(Collider other) {
-        if (other.gameObject.GetComponent<Enemy>() != null && canHit) {
+        if (other.gameObject.GetComponent<Enemy>() != null && !other.isTrigger && canHit) { //Checking if not trigger to make sure hitting the mesh and not other triggers
             other.GetComponent<Enemy>().GetHit(damage(), hitID);
             if (prevHitID != hitID) {
                 GetComponent<Characteristics>().UseOrRestoreStamina(-10);

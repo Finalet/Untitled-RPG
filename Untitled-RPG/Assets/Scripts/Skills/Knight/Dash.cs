@@ -30,7 +30,7 @@ public class Dash : Skill
     }    
 
     void OnTriggerStay(Collider other) {
-        if (other.gameObject.GetComponent<Enemy>() != null && canHit) {
+        if (other.gameObject.GetComponent<Enemy>() != null && !other.isTrigger && canHit) {
             other.GetComponent<Enemy>().GetHit(damage(), hitID);
         }
     }

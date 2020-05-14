@@ -24,6 +24,7 @@ public class PlayerControlls : MonoBehaviour
     public bool isRolling;
     public bool isMounted;
     public bool isAttacking;
+    public bool isGettingHit;
     public bool isWeaponOut;
     public bool isGrounded;
     public bool isUsingSkill;
@@ -53,7 +54,7 @@ public class PlayerControlls : MonoBehaviour
     Vector3 lastCamRotation;
 
     [Header("Animations")]
-    Animator animator;
+    public Animator animator;
     public Transform leftFoot;
     public Transform rightFoot;
     public ParticleSystem sprintTrails;
@@ -309,7 +310,7 @@ public class PlayerControlls : MonoBehaviour
     float jumpDis;
     void Jump ()
     {
-        if (!isGrounded || isCrouch || isRolling || isAttacking) {
+        if (!isGrounded || isCrouch || isRolling || isAttacking || !isGettingHit) {
             return;
         }
         animator.SetTrigger("Jump");

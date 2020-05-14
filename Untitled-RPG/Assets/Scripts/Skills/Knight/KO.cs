@@ -32,7 +32,7 @@ public class KO : Skill
     }    
 
     void OnTriggerStay(Collider other) {
-        if (other.GetComponent<Enemy>() != null && canHit) {
+        if (other.GetComponent<Enemy>() != null && !other.isTrigger && canHit) {
             if (knockDown) {
                 other.GetComponent<Enemy>().GetKnockedDown();
             }

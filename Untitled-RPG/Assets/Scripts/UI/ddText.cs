@@ -15,6 +15,7 @@ public class ddText : MonoBehaviour
     Color orange;
 
     public int damage;
+    public bool isPlayer;
 
     void Start() {
         float x = Random.Range(-1f, 1f);
@@ -26,7 +27,10 @@ public class ddText : MonoBehaviour
         transform.GetChild(0).GetComponent<TextMeshPro>().text = damage.ToString();
 
         orange = new Color(1, 0.5f, 0,1);
-        transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(orange, Color.red, (float)damage/3000f);
+        if (isPlayer)
+            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.red;
+        else 
+            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(orange, Color.red, (float)damage/3000f);
         transform.localScale = Vector3.zero;
     }
 

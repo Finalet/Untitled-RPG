@@ -80,6 +80,7 @@ public class WeaponsController : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
         animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), 0);
+        animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 0);
 
         started = false;
     }

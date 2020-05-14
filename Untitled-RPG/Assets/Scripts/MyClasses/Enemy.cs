@@ -10,21 +10,31 @@ public class Enemy : MonoBehaviour
     public string enemyName;
     public int maxHealth;
     public int health;
+    public int baseDamage;
 
     public float playerDetectRadius;
+    public float attackRadius;
+
+    public float distanceToPlayer;
+
     public bool staticEnemy;
     public Transform spawner;
-
-    bool isWalking;
+ 
+    [Header("States")]
+    public bool isWalking;
+    public bool isGettingHit;
     public bool isDead;
     public bool isKnockedDown;
     public bool canGetHit = true;
 
     float prevHitID;
 
-    Animator animator;
-    NavMeshAgent agent;
-    Transform target;
+    public Animator animator;
+    public NavMeshAgent agent;
+    public Transform target;
+
+    [System.NonSerialized] public float hitID;
+    [System.NonSerialized] public bool canHit;
 
     [Header("Adjustements from debuffs")]
     public float TargetSkillDamagePercentage;
@@ -49,11 +59,13 @@ public class Enemy : MonoBehaviour
         if (!staticEnemy && !isKnockedDown)
             Movement();
 
+
+        distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
         //Creates collision between enemies, but makes kinematic when interacting with player to stop him from applying force.
         if (isDead || isKnockedDown) {
             GetComponent<Rigidbody>().isKinematic = true;
         } else {
-            if (Vector3.Distance(transform.position, PlayerControlls.instance.transform.position) <= 1.5f)
+            if (distanceToPlayer <= 1.5f)
                 GetComponent<Rigidbody>().isKinematic = true;
             else 
                 GetComponent<Rigidbody>().isKinematic = false; 
@@ -80,7 +92,8 @@ public class Enemy : MonoBehaviour
         if (Vector3.Distance(transform.position, PlayerControlls.instance.transform.position) <= playerDetectRadius) {
             target = PlayerControlls.instance.transform;
         } else {
-            target = spawner;
+            if (spawner != null)
+                target = spawner;
         }
     }
 
@@ -145,7 +158,7 @@ public class Enemy : MonoBehaviour
 
 
     void DisplayDamageNumber(int damage) {
-        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity, transform);
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity);
         ddText.GetComponent<ddText>().damage = damage;
     }
 }

@@ -8,6 +8,7 @@ public class Characteristics : MonoBehaviour
 
     public static Characteristics instance;
 
+    public bool canGetHit;
     [Header("Main")]
     public int maxHP;
     public int maxStamina;
@@ -45,6 +46,8 @@ public class Characteristics : MonoBehaviour
     }
 
     void Start() {
+        canGetHit = true;
+
         HP = maxHP;
         Stamina = maxStamina;
 
@@ -60,6 +63,11 @@ public class Characteristics : MonoBehaviour
         StatsCalculations();
         regenerateHealth();
         regenerateStamina();
+
+        if (PlayerControlls.instance.isUsingSkill)
+            canGetHit = false;
+        else 
+            canGetHit = true;
     }
 
     void StatsCalculations () {
@@ -106,10 +114,24 @@ public class Characteristics : MonoBehaviour
             }
         }
     }
+    public int xx= 0;
+    public void GetHit (int damage) {
+        if (!canGetHit)
+            return;
 
-    public void GetHitOrHealed (int damage) {
+        PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.25f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
+        int actualDamage = Mathf.RoundToInt(damage); 
         HP -= damage;
+        DisplayDamageNumber(damage);
+        xx++;
     }
+
+    void DisplayDamageNumber(int damage) {
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
+        ddText.GetComponent<ddText>().damage = damage;
+        ddText.GetComponent<ddText>().isPlayer = true;
+    }
+
     public void UseOrRestoreStamina (int amount) {
         Stamina -= amount;
     }

@@ -46,7 +46,7 @@ public class Skill : MonoBehaviour
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
-        if (playerControlls.isMounted || isCoolingDown || !playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isUsingSkill)
+        if (playerControlls.isMounted || isCoolingDown || !playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isUsingSkill || playerControlls.isGettingHit)
             return;
 
         playerControlls.isUsingSkill = true;
