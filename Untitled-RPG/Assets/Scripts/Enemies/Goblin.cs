@@ -71,7 +71,7 @@ public class Goblin : Enemy
     }
 
     void Hit () {
-        if (isGettingHit)
+        if (isGettingHit || !playerWithinReach)
             return;
 
         PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage());
@@ -80,7 +80,6 @@ public class Goblin : Enemy
     int damage () {
         return Mathf.RoundToInt(Random.Range(baseDamage*0.85f, baseDamage*1.15f));
     }
-
 
     void OnDrawGizmosSelected() {
         Gizmos.color = Color.red;

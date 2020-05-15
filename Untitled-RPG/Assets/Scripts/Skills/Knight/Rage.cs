@@ -13,7 +13,9 @@ public class Rage : Skill
 
     IEnumerator Using () {
         animator.CrossFade("Attacks.DoubleSwords.Rage", 0.25f);
-        yield return new WaitForSeconds(startAttackTime);
+        while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).IsName("Rage_loop")) {
+            yield return null;
+        }
         playerControlls.isAttacking = false;
         playerControlls.isUsingSkill = false;
         characteristics.AddBuff(this);

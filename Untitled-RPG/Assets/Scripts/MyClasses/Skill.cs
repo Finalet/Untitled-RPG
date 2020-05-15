@@ -19,8 +19,6 @@ public class Skill : MonoBehaviour
 
     [Header("Timings")]
     [Tooltip("Time needed to prepare and attack")] public float castingTime;
-    [Tooltip("Offset in %. For instance, an attack animation takes some time to start actaully hitting - include that time into this offset")] public float startAttackTime;
-    [Tooltip("Offset in %. For instance, an attack animation takes some time to start actaully hitting - include that time into this offset")] public float stopAttackTime = 1;
     [Tooltip("Total attack time, excluding casting (enemy can get hit during attackTime*(1-attackTimeOffset)")] public float totalAttackTime;
     
     Collider hitCollider;
@@ -28,8 +26,6 @@ public class Skill : MonoBehaviour
     [System.NonSerialized] public PlayerControlls playerControlls;
     [System.NonSerialized] public Animator animator;
     [System.NonSerialized] public Characteristics characteristics;
-
-    public bool canHit;
 
     public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
     public enum SkillType {Damaging, Healing, Buff };

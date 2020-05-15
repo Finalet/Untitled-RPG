@@ -10,7 +10,7 @@ public class BuffIcon : MonoBehaviour
 
     float timer;
     void Start() {
-        timer = skill.totalAttackTime-skill.startAttackTime;
+        timer = skill.totalAttackTime;
         GetComponent<Image>().sprite = skill.icon;
         timerText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
     }

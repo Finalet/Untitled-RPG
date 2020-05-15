@@ -4,16 +4,25 @@ using UnityEngine;
 
 public class StoneHit : Skill
 {
-    float hitID;
     bool yes;
 
     Vector3 baseCenter;
     Vector3 newCenter;
+
+    List<GameObject> enemiesHit = new List<GameObject>();
+
     public override void Start() {
         base.Start();
         
+        GetComponent<BoxCollider>().enabled = false;
+        
         baseCenter = GetComponent<BoxCollider>().center;
         newCenter = baseCenter + Vector3.forward * 4.5f;
+    }
+
+    public override void Update() {
+        base.Update();
+        ClearTrigger();
     }
 
     public void CustomUse() {
@@ -21,24 +30,21 @@ public class StoneHit : Skill
         StartCoroutine(Using());
     }
 
-    bool knockDown;
     IEnumerator Using () {
-        GenerateHitID();
         animator.CrossFade("Attacks.DoubleSwords.StoneHit", 0.25f);
         while(!yes) {
             yield return null;
         }
         transform.GetChild(0).GetComponent<ParticleSystem>().Play();
-        canHit = true;
-        knockDown = true;
+        GetComponent<BoxCollider>().enabled = true;
         while (GetComponent<BoxCollider>().center != newCenter) {
             GetComponent<BoxCollider>().center = Vector3.MoveTowards(GetComponent<BoxCollider>().center, newCenter, 15 * Time.deltaTime);
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        canHit = false;
         yes = false;
-        knockDown = false;
         GetComponent<BoxCollider>().center = baseCenter;
+        GetComponent<BoxCollider>().enabled = false;
+        enemiesHit.Clear();
     }
     
     public void ApplyDamage() {
@@ -49,16 +55,24 @@ public class StoneHit : Skill
         return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
     }    
 
-    void OnTriggerStay(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger && canHit) {
-            if (knockDown) {
+    void OnTriggerEnter(Collider other) {
+        if (!yes)
+            return;
+
+        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
+            if (!enemiesHit.Contains(other.gameObject)) {
                 other.GetComponent<Enemy>().GetKnockedDown();
+                other.GetComponent<Enemy>().GetHit(damage());
+                enemiesHit.Add(other.gameObject);
             }
-            other.GetComponent<Enemy>().GetHit(damage(), hitID);
         }
     }
 
-    void GenerateHitID () {
-        hitID = Random.Range(-100.00f, 100.00f);
+    void ClearTrigger () {
+        for (int i = 0; i < enemiesHit.Count; i++) {
+            if (enemiesHit[i].gameObject == null) {
+                enemiesHit.RemoveAt(i);
+            }
+        }
     }
 }

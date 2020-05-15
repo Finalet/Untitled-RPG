@@ -27,7 +27,6 @@ public class Target : Skill
     public float timer;
     IEnumerator Using () {
         SkillTarget = AssetHolder.instance.PlayersCamera.GetComponent<LookingTarget>().target;
-        yield return new WaitForSeconds (startAttackTime);
         
         timer = 0;
         
@@ -40,7 +39,7 @@ public class Target : Skill
         PlayerControlls.instance.GetComponent<PlayerControlls>().isUsingSkill = false;
         PlayerControlls.instance.GetComponent<PlayerControlls>().isAttacking = false;
         float y =0;
-        while (totalAttackTime - startAttackTime + timer >= 0) {
+        while (totalAttackTime + timer >= 0) {
             timer -= Time.fixedDeltaTime;
             y += Time.fixedDeltaTime * 4;
             newTargetPrefab.transform.localPosition = Vector3.up * (2.3f + Mathf.Sin(y)/10);

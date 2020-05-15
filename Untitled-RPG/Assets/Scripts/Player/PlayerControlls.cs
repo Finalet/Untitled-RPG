@@ -310,7 +310,7 @@ public class PlayerControlls : MonoBehaviour
     float jumpDis;
     void Jump ()
     {
-        if (!isGrounded || isCrouch || isRolling || isAttacking || !isGettingHit) {
+        if (!isGrounded || isCrouch || isRolling || isAttacking || isGettingHit) {
             return;
         }
         animator.SetTrigger("Jump");

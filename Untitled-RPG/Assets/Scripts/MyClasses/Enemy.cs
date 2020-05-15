@@ -27,13 +27,10 @@ public class Enemy : MonoBehaviour
     public bool isKnockedDown;
     public bool canGetHit = true;
 
-    float prevHitID;
-
     public Animator animator;
     public NavMeshAgent agent;
     public Transform target;
 
-    [System.NonSerialized] public float hitID;
     [System.NonSerialized] public bool canHit;
 
     [Header("Adjustements from debuffs")]
@@ -114,11 +111,10 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, playerDetectRadius);   
     }
 
-    public virtual void GetHit(int damage, float hitID) {
-        if (hitID == prevHitID || isDead || !canGetHit)
+    public virtual void GetHit(int damage) {
+        if (isDead || !canGetHit)
             return;
-
-        prevHitID = hitID;
+            
         if (!staticEnemy && !isKnockedDown) animator.Play("GetHit.GetHit", animator.GetLayerIndex("GetHit"), 0);
         int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
         health -= actualDamage;

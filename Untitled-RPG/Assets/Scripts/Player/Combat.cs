@@ -17,11 +17,7 @@ public class Combat : MonoBehaviour
     [SerializeField]float baseComboTimer;
     [SerializeField]float comboTimer;
 
-    float animatorLayerWeight;
-
-    int comboCount;
-    float hitID;
-    float prevHitID;
+    public List<GameObject> enemiesInCombatTrigger = new List<GameObject>();
 
     void Start() {
         weapons = GetComponent<WeaponsController>();
@@ -33,13 +29,21 @@ public class Combat : MonoBehaviour
 
     void Update() {
         Timer();
+        ClearTrigger();
 
         if (!playerControlls.isJumping && weapons.isWeaponOut) {
             Attacks();
         }
     }
+    
+    void ClearTrigger () {
+        for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
+            if (enemiesInCombatTrigger[i].gameObject == null) {
+                enemiesInCombatTrigger.RemoveAt(i);
+            }
+        }
+    }
 
-    bool canHit;
     void Attacks() {
         if (Input.GetButton("Fire1") && !playerControlls.isRolling && !PeaceCanvas.instance.anyPanelOpen && !playerControlls.isGettingHit) {
             animator.SetBool("KeepAttacking", true);
@@ -50,17 +54,6 @@ public class Combat : MonoBehaviour
         AttackSpeed();
         actualAttackDamage = Mathf.RoundToInt( baseAttackDamage * (float)GetComponent<Characteristics>().meleeAttack/100f);
     }
-    public void moveFwdAttack () {
-        StartCoroutine(moveCoroutine());
-    }
-    IEnumerator moveCoroutine() {
-        float timer = 0.1f;
-        while (timer > 0) {
-            playerControlls.GetComponent<CharacterController>().Move(transform.forward * Time.fixedDeltaTime * 10);
-            timer -= Time.fixedDeltaTime;
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-        }
-    }
 
     void Timer () {
         if (comboTimer >= 0) {
@@ -70,40 +63,52 @@ public class Combat : MonoBehaviour
         } 
     }
 
-    void OnTriggerStay(Collider other) {
-        if (other.gameObject.GetComponent<Enemy>() != null && !other.isTrigger && canHit) { //Checking if not trigger to make sure hitting the mesh and not other triggers
-            other.GetComponent<Enemy>().GetHit(damage(), hitID);
-            if (prevHitID != hitID) {
-                GetComponent<Characteristics>().UseOrRestoreStamina(-10);
-                prevHitID = hitID;
-            }
+    void OnTriggerEnter(Collider other) {
+        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
+            enemiesInCombatTrigger.Add(other.gameObject);
         }
-    } 
+    }
+    void OnTriggerExit(Collider other) {
+        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
+            enemiesInCombatTrigger.Remove(other.gameObject);
+        }
+    }
 
     void Hit () {
-        Invoke("CantHit", 0.1f);
-        float x = Random.Range(-150.00f, 150.00f);
-        hitID = x;
-        canHit = true;
+        for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
+            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage());
+        }
     }
 
-    void CantHit () {
-        canHit = false;
-        basicAttackCollider.size = baseColliderSize;
-    }
     int damage () {
         return Mathf.RoundToInt(Random.Range(actualAttackDamage*0.85f, actualAttackDamage*1.15f));
     }
 
     public void IncreaseCollider() {
         basicAttackCollider.size += Vector3.right;
+        Invoke("ResetCollider", 0.9f);
+    }
+    void ResetCollider() {
+        basicAttackCollider.size = baseColliderSize;
     }
 
     void AttackSpeed () {
         animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeedPercentage);
     }
 
-    public void StoneHitAttack() {
-        gameObject.GetComponentInChildren<StoneHit>().ApplyDamage();
+
+#region Voids for skills
+
+    public void SkillHit(AnimationEvent skillID) {
+        if (skillID.intParameter == 0) 
+            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Dash>().Hit(skillID.floatParameter);
+        else if (skillID.intParameter == 1) 
+            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<StrongAttack>().Hit();
+        else if (skillID.intParameter == 2)
+            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<KO>().Hit(skillID.floatParameter);
+        else if (skillID.intParameter == 5)
+            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<StoneHit>().ApplyDamage();
     }
+
+#endregion
 }
