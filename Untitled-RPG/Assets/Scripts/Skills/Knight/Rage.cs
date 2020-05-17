@@ -7,7 +7,7 @@ public class Rage : Skill
     [Header("Custom Vars")]
     public float buffIncrease = 20;
 
-     public void CustomUse() {
+     protected override void CustomUse() {
         StartCoroutine(Using());
     }
 

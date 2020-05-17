@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Skill : MonoBehaviour
+public abstract class Skill : MonoBehaviour
 {
     public string skillName;
     public string description;
@@ -30,14 +30,14 @@ public class Skill : MonoBehaviour
     public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
     public enum SkillType {Damaging, Healing, Buff };
 
-    public virtual void Start() {
+    protected virtual void Start() {
         hitCollider = GetComponent<Collider>();
         playerControlls = PlayerControlls.instance.GetComponent<PlayerControlls>();
         animator = PlayerControlls.instance.GetComponent<Animator>();
         characteristics = PlayerControlls.instance.GetComponent<Characteristics>();
     }
 
-    public virtual void Use() {
+    public virtual void Use() { //Virtual, because sometimes need to be overriden, for instance in the Target skill.
         if (playerControlls.GetComponent<Characteristics>().Stamina < staminaRequired) {
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
@@ -50,15 +50,16 @@ public class Skill : MonoBehaviour
         playerControlls.isAttacking = true;
         playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         if (skillType == SkillType.Damaging) Invoke("usingSkill", totalAttackTime);
-
-        gameObject.SendMessage("CustomUse", null, SendMessageOptions.DontRequireReceiver);
+        CustomUse();
     }
 
-    void usingSkill () {
+    protected abstract void CustomUse(); // Custom code that is overriden in each skill seperately.
+
+    void usingSkill () { //Indicates that the skill is not being used anymore.
         playerControlls.isUsingSkill = false;
     }
 
-    public virtual void Update() {
+    protected virtual void Update() {
         if (coolDownTimer >= 0) {
             coolDownTimer -= Time.deltaTime;
             isCoolingDown = true;

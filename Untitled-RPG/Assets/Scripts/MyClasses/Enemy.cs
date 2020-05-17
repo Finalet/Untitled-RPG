@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Collider))]
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
     public string enemyName;
     public int maxHealth;
@@ -19,9 +19,11 @@ public class Enemy : MonoBehaviour
 
     public bool staticEnemy;
     public Transform spawner;
+    Transform initialPos;
  
     [Header("States")]
     public bool isWalking;
+    public bool isAttacking;
     public bool isGettingHit;
     public bool isDead;
     public bool isKnockedDown;
@@ -33,19 +35,25 @@ public class Enemy : MonoBehaviour
 
     [System.NonSerialized] public bool canHit;
 
+    [Header("Audio Clips")]
+    public int playID;
+    public AudioClip[] getHitClips;
+
     [Header("Adjustements from debuffs")]
     public float TargetSkillDamagePercentage;
 
-    public virtual void Start() {
+    protected virtual void Start() {
+        initialPos = transform;
         canGetHit = true;
         health = maxHealth;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+
         if (!staticEnemy)
             agent.updatePosition = false;
     }
 
-    public virtual void Update() {
+    protected virtual void Update() {
         if (isDead)
             return;
 
@@ -69,15 +77,29 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void Movement() {
-        UpdateTarget();
+    void Movement() { 
+        SetTarget();
+        WalkToTarget();
+    }
 
-        animator.SetBool("isWalking", isWalking);
+    void SetTarget() {
+        if (distanceToPlayer <= playerDetectRadius) {
+            target = PlayerControlls.instance.transform;
+        } else {
+            if (spawner != null)
+                target = spawner;
+            else 
+                target = initialPos;
+        }
         agent.destination = target.position;
+    }
+
+    void WalkToTarget() {
+        animator.SetBool("isWalking", isWalking);
+
         agent.nextPosition = transform.position;
 
-
-        if (agent.remainingDistance > agent.stoppingDistance) {
+        if (agent.remainingDistance > agent.stoppingDistance && !isAttacking) {
             isWalking = true;
         } else {
             isWalking = false;
@@ -85,30 +107,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void UpdateTarget () {
-        if (Vector3.Distance(transform.position, PlayerControlls.instance.transform.position) <= playerDetectRadius) {
-            target = PlayerControlls.instance.transform;
-        } else {
-            if (spawner != null)
-                target = spawner;
-        }
-    }
-
-    Vector3 position;
     void OnAnimatorMove ()
     {
-        position = animator.rootPosition;
-        transform.position = position;
+        transform.position = animator.rootPosition;
     } 
 
     void FaceTarget () {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-    }
-
-    void OnDrawGizmosSelected() {
-        Gizmos.DrawWireSphere(transform.position, playerDetectRadius);   
     }
 
     public virtual void GetHit(int damage) {
@@ -120,6 +127,7 @@ public class Enemy : MonoBehaviour
         health -= actualDamage;
         DisplayDamageNumber (actualDamage);
         gameObject.SendMessage("CustomGetHit", actualDamage, SendMessageOptions.DontRequireReceiver);
+        PlayGetHitNext();
     }
 
     public virtual void Die() {
@@ -156,5 +164,16 @@ public class Enemy : MonoBehaviour
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity);
         ddText.GetComponent<ddText>().damage = damage;
+    }
+
+    protected virtual void PlayGetHitNext() {
+        GetComponent<AudioSource>().clip = getHitClips[playID];
+        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.2f, 0.2f);
+        GetComponent<AudioSource>().Play();
+        if (playID >= getHitClips.Length-1) {
+            playID = 0;
+        } else {
+            playID++;
+        }
     }
 }

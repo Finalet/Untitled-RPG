@@ -11,7 +11,7 @@ public class StoneHit : Skill
 
     List<GameObject> enemiesHit = new List<GameObject>();
 
-    public override void Start() {
+    protected override void Start() {
         base.Start();
         
         GetComponent<BoxCollider>().enabled = false;
@@ -20,12 +20,12 @@ public class StoneHit : Skill
         newCenter = baseCenter + Vector3.forward * 4.5f;
     }
 
-    public override void Update() {
+    protected override void Update() {
         base.Update();
         ClearTrigger();
     }
 
-    public void CustomUse() {
+    protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
         StartCoroutine(Using());
     }

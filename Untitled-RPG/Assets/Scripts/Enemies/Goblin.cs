@@ -4,18 +4,47 @@ using UnityEngine;
 
 public class Goblin : Enemy
 {
+
+    [Header("Custom vars")]
     public GameObject healthBar;
     public bool playerWithinReach;
 
-    public override void Start() {
+    public float attackCoolDown = 2;
+    public bool isCoolingDown;
+    float cooldownTimer;
+
+    protected override void Start() {
         base.Start();
     }
 
-    public override void Update() {
+    protected override void Update() {
         base.Update();
 
         ShowHealthBar();
         AI();
+    }
+
+    void AI () {
+        if (distanceToPlayer <= attackRadius && !isCoolingDown && !isDead && !isKnockedDown) {
+            Attack();
+        }
+        CoolDown();
+    }
+
+    void Attack() {
+        isAttacking = true;
+        animator.CrossFade("Main.Attack", 0.25f);
+        cooldownTimer = attackCoolDown;
+    }
+
+    void CoolDown () {
+        if (cooldownTimer > 0) {
+            cooldownTimer -= Time.deltaTime;
+            isCoolingDown = true;
+        } else {
+            isCoolingDown = false;
+            isAttacking = false;
+        }
     }
 
     void ShowHealthBar () {
@@ -31,32 +60,6 @@ public class Goblin : Enemy
         } else {
             healthBar.SetActive(false);
         }
-    }
-
-    bool one;
-    void AI (){
-        if (distanceToPlayer <= attackRadius && !one) {
-            StartCoroutine(Attack());
-        }
-    }
-
-    IEnumerator Attack () {
-        if (isGettingHit || isKnockedDown || isDead) 
-            yield break;
-
-        agent.isStopped = true;
-        one = true;
-        animator.CrossFade("Main.Attack", 0.25f);
-        float timer = 1;
-        while (timer > 0) {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-            timer -= Time.fixedDeltaTime;
-            if (isGettingHit) {
-                break;
-            }
-        }
-        one = false;
-        agent.isStopped = false;
     }
 
     void OnTriggerStay(Collider other) {

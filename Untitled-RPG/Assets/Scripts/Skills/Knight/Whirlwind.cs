@@ -9,14 +9,12 @@ public class Whirlwind : Skill
     [Header("CustomVars")]
     public float moveSpeed;
 
-    public void CustomUse() {
-
+    protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
-
         StartCoroutine(Using());
     }
 
-    public override void Update() {
+    protected override void Update() {
         base.Update();
         ClearTrigger();
     }
@@ -30,7 +28,7 @@ public class Whirlwind : Skill
         playerControlls.sideways += moveSpeed;
         
         float timer = totalAttackTime;
-        float hitTimer = 0.2f * 1/characteristics.attackSpeedPercentage;
+        float hitTimer = 0;
         while (timer > 0) {
             timer -= Time.fixedDeltaTime;
             if (hitTimer <= 0) {

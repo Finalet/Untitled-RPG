@@ -6,12 +6,12 @@ public class StrongAttack : Skill
 {
     public List<GameObject> enemiesInTrigger = new List<GameObject>();
 
-    public override void Update() {
+    protected override void Update() {
         base.Update();
         ClearTrigger();
     }
 
-    public void CustomUse() {
+    protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
         animator.CrossFade("Attacks.DoubleSwords.StrongAttack", 0.25f);
 

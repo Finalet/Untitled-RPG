@@ -9,17 +9,17 @@ public class Dash : Skill
     [Header("Custom Vars")]
     public float dashDistance;
 
-    public override  void Start() {
+    protected override  void Start() {
         base.Start();
 
         GetComponent<BoxCollider>().enabled = false;
     }
-    public override void Update() {
+    protected override void Update() {
         base.Update();
         ClearTrigger();
     }
 
-    public void CustomUse() {
+    protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.meleeAttack/100f);
         animator.CrossFade("Attacks.DoubleSwords.Dash", 0.25f);
     }

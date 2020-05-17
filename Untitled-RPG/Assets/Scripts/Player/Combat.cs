@@ -9,7 +9,6 @@ public class Combat : MonoBehaviour
 
     PlayerControlls playerControlls;
     Animator animator;
-    WeaponsController weapons;
     BoxCollider basicAttackCollider;
     Vector3 baseColliderSize;
     WeaponsController weaponsController;
@@ -20,7 +19,7 @@ public class Combat : MonoBehaviour
     public List<GameObject> enemiesInCombatTrigger = new List<GameObject>();
 
     void Start() {
-        weapons = GetComponent<WeaponsController>();
+        weaponsController = GetComponent<WeaponsController>();
         playerControlls = GetComponent<PlayerControlls>();    
         animator = GetComponent<Animator>();
         basicAttackCollider = GetComponent<BoxCollider>();
@@ -31,7 +30,7 @@ public class Combat : MonoBehaviour
         Timer();
         ClearTrigger();
 
-        if (!playerControlls.isJumping && weapons.isWeaponOut) {
+        if (!playerControlls.isJumping && weaponsController.isWeaponOut) {
             Attacks();
         }
     }
@@ -46,13 +45,17 @@ public class Combat : MonoBehaviour
 
     void Attacks() {
         if (Input.GetButton("Fire1") && !playerControlls.isRolling && !PeaceCanvas.instance.anyPanelOpen && !playerControlls.isGettingHit) {
-            animator.SetBool("KeepAttacking", true);
-            playerControlls.isAttacking = true;
-            comboTimer = baseComboTimer;
-        }
+            Attack();
+        } 
 
         AttackSpeed();
         actualAttackDamage = Mathf.RoundToInt( baseAttackDamage * (float)GetComponent<Characteristics>().meleeAttack/100f);
+    }
+
+    void Attack () {
+        animator.SetBool("KeepAttacking", true);
+        playerControlls.isAttacking = true;
+        comboTimer = baseComboTimer;
     }
 
     void Timer () {
@@ -95,6 +98,7 @@ public class Combat : MonoBehaviour
     void AttackSpeed () {
         animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeedPercentage);
     }
+
 
 
 #region Voids for skills

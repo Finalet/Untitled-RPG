@@ -13,12 +13,12 @@ public class TrainingDummy : Enemy
     Vector3 direction;
     GameObject rotationObj;
     
-    public override void Start() {
+    protected override void Start() {
         rotationObj = transform.GetChild(0).gameObject;
         canGetHit = true;
     }
 
-    public override void Update() {
+    protected override void Update() {
         transform.rotation = Quaternion.Euler(0,0,0);
 
         health = maxHealth;
@@ -45,5 +45,17 @@ public class TrainingDummy : Enemy
     public void CustomGetHit (float damage) {
         rotationX = direction.normalized.z * 30 * (1 + damage/5000);
         rotationZ = -direction.normalized.x * 30 * (1 + damage/5000);
+    }
+
+    protected override void PlayGetHitNext () {
+        float x = Random.Range(0f, 1f);
+        if (x<0.7f) {
+            playID = 0;
+        } else {
+            playID = 1;
+        }
+        GetComponent<AudioSource>().clip = getHitClips[playID];
+        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.2f, 0.2f);
+        GetComponent<AudioSource>().Play();
     }
 }

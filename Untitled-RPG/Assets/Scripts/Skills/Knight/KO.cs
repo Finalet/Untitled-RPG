@@ -6,12 +6,12 @@ public class KO : Skill
 {
     List<GameObject> enemiesInTrigger = new List<GameObject>();
 
-    public override void Update() {
+    protected override void Update() {
         base.Update();
         ClearTrigger();
     }
 
-    public void CustomUse() {
+    protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
         animator.CrossFade("Attacks.DoubleSwords.KO", 0.25f);
     }

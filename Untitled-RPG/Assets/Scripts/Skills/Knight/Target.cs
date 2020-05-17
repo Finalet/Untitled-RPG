@@ -20,7 +20,7 @@ public class Target : Skill
         base.Use();
     }
 
-    public void CustomUse() { 
+    protected override void CustomUse() { 
         StartCoroutine(Using());
     }
 
