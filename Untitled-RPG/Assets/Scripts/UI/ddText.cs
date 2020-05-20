@@ -5,7 +5,6 @@ using TMPro;
 
 public class ddText : MonoBehaviour
 {
-    float x = 1;
     Color c;
 
     public float speed = 1;

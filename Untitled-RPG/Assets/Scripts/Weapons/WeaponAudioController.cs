@@ -8,14 +8,21 @@ public class WeaponAudioController : MonoBehaviour
     public AudioClip[] sounds;
     int playID = 0;
 
+    AudioSource audioSource;
+
+    void Start() {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     public void Play(int soundID) {
-        GetComponent<AudioSource>().clip = sounds[soundID];
-        GetComponent<AudioSource>().Play();
+        audioSource.clip = sounds[soundID];
+        audioSource.Play();
     }
 
     public void PlayNext() {
-        GetComponent<AudioSource>().clip = sounds[playID];
-        GetComponent<AudioSource>().Play();
+        audioSource.clip = sounds[playID];
+        audioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
+        audioSource.Play();
         if (playID >= sounds.Length-1) {
             playID = 0;
         } else {

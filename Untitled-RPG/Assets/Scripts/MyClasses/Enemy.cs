@@ -36,7 +36,6 @@ public abstract class Enemy : MonoBehaviour
     [System.NonSerialized] public bool canHit;
 
     [Header("Audio Clips")]
-    public int playID;
     public AudioClip[] getHitClips;
 
     [Header("Adjustements from debuffs")]
@@ -167,13 +166,9 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected virtual void PlayGetHitNext() {
+        int playID = Random.Range(0, getHitClips.Length);
         GetComponent<AudioSource>().clip = getHitClips[playID];
-        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.2f, 0.2f);
+        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.1f, 0.1f);
         GetComponent<AudioSource>().Play();
-        if (playID >= getHitClips.Length-1) {
-            playID = 0;
-        } else {
-            playID++;
-        }
     }
 }

@@ -11,6 +11,11 @@ public class StoneHit : Skill
 
     List<GameObject> enemiesHit = new List<GameObject>();
 
+    public AudioClip first;
+    public AudioClip last;
+
+    public GameObject SFX;
+
     protected override void Start() {
         base.Start();
         
@@ -36,6 +41,11 @@ public class StoneHit : Skill
             yield return null;
         }
         transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+
+        GameObject soundFX = Instantiate(SFX.gameObject, transform.position, Quaternion.identity);
+        soundFX.GetComponent<AudioSource>().clip = first;
+        soundFX.GetComponent<AudioSource>().Play();
+
         GetComponent<BoxCollider>().enabled = true;
         while (GetComponent<BoxCollider>().center != newCenter) {
             GetComponent<BoxCollider>().center = Vector3.MoveTowards(GetComponent<BoxCollider>().center, newCenter, 15 * Time.deltaTime);
@@ -45,6 +55,14 @@ public class StoneHit : Skill
         GetComponent<BoxCollider>().center = baseCenter;
         GetComponent<BoxCollider>().enabled = false;
         enemiesHit.Clear();
+        yield return new WaitForSeconds(1.1f);
+
+        soundFX.GetComponent<AudioSource>().clip = last;
+        soundFX.GetComponent<AudioSource>().Play();
+        while(soundFX.GetComponent<AudioSource>().isPlaying){
+            yield return null;
+        }
+        Destroy(soundFX);
     }
     
     public void ApplyDamage() {

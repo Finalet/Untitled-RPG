@@ -26,12 +26,14 @@ public abstract class Skill : MonoBehaviour
     [System.NonSerialized] public PlayerControlls playerControlls;
     [System.NonSerialized] public Animator animator;
     [System.NonSerialized] public Characteristics characteristics;
+    [System.NonSerialized] public AudioSource audioSource;
 
     public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
     public enum SkillType {Damaging, Healing, Buff };
 
     protected virtual void Start() {
         hitCollider = GetComponent<Collider>();
+        audioSource = GetComponent<AudioSource>();
         playerControlls = PlayerControlls.instance.GetComponent<PlayerControlls>();
         animator = PlayerControlls.instance.GetComponent<Animator>();
         characteristics = PlayerControlls.instance.GetComponent<Characteristics>();

@@ -50,6 +50,7 @@ public class PlayerControlls : MonoBehaviour
 
     [System.NonSerialized] public CharacterController controller;
     [System.NonSerialized] public Camera playerCamera;
+    [System.NonSerialized] public PlayerAudioController audioController;
 
     Vector3 lastCamRotation;
 
@@ -73,6 +74,8 @@ public class PlayerControlls : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        audioController = GetComponent<PlayerAudioController>();
+
         playerCamera = Camera.main;
 
         prevPos = transform.position;
@@ -313,6 +316,8 @@ public class PlayerControlls : MonoBehaviour
         if (!isGrounded || isCrouch || isRolling || isAttacking || isGettingHit) {
             return;
         }
+
+        audioController.PlayJumpSound();
         animator.SetTrigger("Jump");
         isJumping = true;
         jumpDis = jumpDistance * Mathf.Abs(currentSpeed/3);

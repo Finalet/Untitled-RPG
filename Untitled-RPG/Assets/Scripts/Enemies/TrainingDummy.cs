@@ -48,6 +48,7 @@ public class TrainingDummy : Enemy
     }
 
     protected override void PlayGetHitNext () {
+        int playID;
         float x = Random.Range(0f, 1f);
         if (x<0.7f) {
             playID = 0;
@@ -55,7 +56,7 @@ public class TrainingDummy : Enemy
             playID = 1;
         }
         GetComponent<AudioSource>().clip = getHitClips[playID];
-        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.2f, 0.2f);
+        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.1f, 0.1f);
         GetComponent<AudioSource>().Play();
     }
 }
