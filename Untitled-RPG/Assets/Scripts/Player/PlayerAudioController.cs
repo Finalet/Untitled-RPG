@@ -41,11 +41,11 @@ public class PlayerAudioController : MonoBehaviour
         }
     }
 
-    float leftDisToGround;
+    public float leftDisToGround;
     float rightDisToGround;
     float threashold;
     void CheckFootsteps () {
-        if (PlayerControlls.instance.isRunning)
+        if (PlayerControlls.instance.isSprinting || PlayerControlls.instance.isAttacking)
             threashold = 0.1f;
         else 
             threashold = 0f;

@@ -26,6 +26,9 @@ public class Target : Skill
 
     public float timer;
     IEnumerator Using () {
+        audioSource.time = 0.21f;
+        audioSource.Play();
+
         SkillTarget = AssetHolder.instance.PlayersCamera.GetComponent<LookingTarget>().target;
         
         timer = 0;
@@ -35,6 +38,7 @@ public class Target : Skill
 
         newTargetPrefab.SetActive(true);
         newTargetPrefab.transform.localPosition = Vector3.up * 2.3f;
+
 
         PlayerControlls.instance.GetComponent<PlayerControlls>().isUsingSkill = false;
         PlayerControlls.instance.GetComponent<PlayerControlls>().isAttacking = false;
