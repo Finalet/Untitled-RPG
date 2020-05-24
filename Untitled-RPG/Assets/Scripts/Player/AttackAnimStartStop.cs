@@ -4,10 +4,21 @@ using UnityEngine;
 
 public class AttackAnimStartStop : StateMachineBehaviour
 {
+    public bool Player;
+    public bool Enemy;
+
     override public void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) {
-        animator.gameObject.GetComponent<PlayerControlls>().isAttacking = false;
+        if (Player){
+            animator.gameObject.GetComponent<PlayerControlls>().isAttacking = false;
+        } else {
+            animator.gameObject.GetComponent<Enemy>().isAttacking = true;
+        }
     }
     override public void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) {
-        animator.gameObject.GetComponent<PlayerControlls>().isAttacking = true;
+        if (Player){
+            animator.gameObject.GetComponent<PlayerControlls>().isAttacking = true;
+        } else {
+            animator.gameObject.GetComponent<Enemy>().isAttacking = false;
+        }
     }
 }

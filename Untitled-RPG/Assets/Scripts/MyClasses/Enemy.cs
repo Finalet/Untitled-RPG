@@ -8,18 +8,23 @@ using UnityEngine.AI;
 public abstract class Enemy : MonoBehaviour
 {
     public string enemyName;
+    [Header("Stats")]
     public int maxHealth;
     public int health;
     public int baseDamage;
+    public float movementSpeed = 1;
+    public float attackSpeed = 1;
 
     public float playerDetectRadius;
     public float attackRadius;
 
+    float baseAngularSpeed;
+
+    [Space]
     public float distanceToPlayer;
 
-    public bool staticEnemy;
+    public Vector3 initialPos;
     public Transform spawner;
-    Transform initialPos;
  
     [Header("States")]
     public bool isWalking;
@@ -27,41 +32,61 @@ public abstract class Enemy : MonoBehaviour
     public bool isGettingHit;
     public bool isDead;
     public bool isKnockedDown;
+    public bool isReturningToBase;
     public bool canGetHit = true;
+    public bool canHit = true;
 
     public Animator animator;
     public NavMeshAgent agent;
     public Transform target;
 
-    [System.NonSerialized] public bool canHit;
+    [Space]
+    public GameObject healthBar;
+
 
     [Header("Audio Clips")]
-    public AudioClip[] getHitClips;
+    public AudioSource stabsAudioSource;
+    float stabsBasePitch;
+    public AudioSource getHitAurdioSource;
+    float getHitBasePitch;
+    public AudioClip[] stabsClips;
+    public AudioClip[] getHitVoicesClips;
 
     [Header("Adjustements from debuffs")]
     public float TargetSkillDamagePercentage;
 
     protected virtual void Start() {
-        initialPos = transform;
+        initialPos = transform.position;
+
         canGetHit = true;
         health = maxHealth;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
 
-        if (!staticEnemy)
-            agent.updatePosition = false;
+        stabsBasePitch = stabsAudioSource.pitch;
+        getHitBasePitch = getHitAurdioSource.pitch;
+
+        agent.updatePosition = false;
+        baseAngularSpeed = agent.angularSpeed;
     }
 
     protected virtual void Update() {
-        if (isDead)
+        if (isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
             return;
+        }
 
         if (health <= 0) {
             Die();
         }
 
-        if (!staticEnemy && !isKnockedDown)
+        if (!isKnockedDown)
             Movement();
+
+        if (isAttacking){
+            agent.angularSpeed = 0;
+        } else {
+            agent.angularSpeed = baseAngularSpeed;
+        }
 
 
         distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
@@ -74,6 +99,16 @@ public abstract class Enemy : MonoBehaviour
             else 
                 GetComponent<Rigidbody>().isKinematic = false; 
         }
+
+        if (isGettingHit || isKnockedDown || isDead)
+            canHit = false;
+        else 
+            canHit = true;
+
+        animator.SetFloat("movementSpeed", movementSpeed);
+        animator.SetFloat("attackSpeed", attackSpeed);
+
+        ShowHealthBar();
     }
 
     void Movement() { 
@@ -85,12 +120,16 @@ public abstract class Enemy : MonoBehaviour
         if (distanceToPlayer <= playerDetectRadius) {
             target = PlayerControlls.instance.transform;
         } else {
-            if (spawner != null)
-                target = spawner;
-            else 
-                target = initialPos;
+            target = null;
         }
-        agent.destination = target.position;
+
+        if (target == null) {
+            agent.destination = initialPos;
+            isReturningToBase = true;
+        } else {
+            isReturningToBase = false;
+            agent.destination = target.position;
+        }
     }
 
     void WalkToTarget() {
@@ -112,6 +151,9 @@ public abstract class Enemy : MonoBehaviour
     } 
 
     void FaceTarget () {
+        if (target == null || isAttacking)
+            return;
+
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
@@ -121,12 +163,13 @@ public abstract class Enemy : MonoBehaviour
         if (isDead || !canGetHit)
             return;
             
-        if (!staticEnemy && !isKnockedDown) animator.Play("GetHit.GetHit", animator.GetLayerIndex("GetHit"), 0);
+        if (!isKnockedDown)
+            animator.CrossFade("GetHit.GetHit", 0.25f);
         int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
         health -= actualDamage;
         DisplayDamageNumber (actualDamage);
-        gameObject.SendMessage("CustomGetHit", actualDamage, SendMessageOptions.DontRequireReceiver);
-        PlayGetHitNext();
+        PlayGetHitSounds();
+        PlayStabSounds();
     }
 
     public virtual void Die() {
@@ -134,12 +177,12 @@ public abstract class Enemy : MonoBehaviour
         animator.CrossFade("GetHit.Die", 0.25f);
         GetComponent<Collider>().enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
-        spawner.GetComponent<EnemySpawner>().listOfAllEnemies.Remove(gameObject);
+        if (spawner != null) spawner.GetComponent<EnemySpawner>().listOfAllEnemies.Remove(gameObject);
         Destroy(gameObject, 10f);
     }
 
     public virtual void GetKnockedDown() {
-        if (!isDead && !staticEnemy)
+        if (!isDead)
             StartCoroutine(KnockedDown());
     }
     IEnumerator KnockedDown () {
@@ -160,15 +203,42 @@ public abstract class Enemy : MonoBehaviour
     }
 
 
-    void DisplayDamageNumber(int damage) {
+    protected void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity);
         ddText.GetComponent<ddText>().damage = damage;
     }
 
-    protected virtual void PlayGetHitNext() {
-        int playID = Random.Range(0, getHitClips.Length);
-        GetComponent<AudioSource>().clip = getHitClips[playID];
-        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.1f, 0.1f);
-        GetComponent<AudioSource>().Play();
+    protected virtual void ShowHealthBar () {
+        if (isDead) {
+            healthBar.SetActive(false);
+            return;
+        }
+
+        if (Vector3.Distance(transform.position, PlayerControlls.instance.transform.position) <= PlayerControlls.instance.playerCamera.GetComponent<LookingTarget>().viewDistance / 1.5f) {
+            healthBar.transform.GetChild(0).localScale = new Vector3((float)health/maxHealth, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+            healthBar.transform.LookAt (PlayerControlls.instance.playerCamera.transform);
+            healthBar.SetActive(true);
+        } else {
+            healthBar.SetActive(false);
+        }
+    }
+
+    protected virtual void PlayGetHitSounds() {
+        if (getHitVoicesClips.Length == 0)
+            return;
+
+        int playID = Random.Range(0, getHitVoicesClips.Length);
+        getHitAurdioSource.clip = getHitVoicesClips[playID];
+        getHitAurdioSource.pitch = getHitBasePitch + Random.Range(-0.1f, 0.1f);
+        getHitAurdioSource.Play();
+    }
+    protected virtual void PlayStabSounds() {
+        if (stabsClips.Length == 0)
+            return;
+
+        int playID = Random.Range(0, stabsClips.Length);
+        stabsAudioSource.clip = stabsClips[playID];
+        stabsAudioSource.pitch = stabsBasePitch + Random.Range(-0.1f, 0.1f);
+        stabsAudioSource.Play();
     }
 }

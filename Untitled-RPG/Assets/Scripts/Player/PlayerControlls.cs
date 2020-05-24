@@ -317,7 +317,7 @@ public class PlayerControlls : MonoBehaviour
             return;
         }
 
-        audioController.PlayJumpSound();
+        audioController.PlayJumpRollSound();
         animator.SetTrigger("Jump");
         isJumping = true;
         jumpDis = jumpDistance * Mathf.Abs(currentSpeed/3);
@@ -371,6 +371,7 @@ public class PlayerControlls : MonoBehaviour
         rollDis = rollDistance + Mathf.Abs(currentSpeed/6);
         fwd += rollDis;
         sideways += rollDis;
+        audioController.PlayJumpRollSound();
     }
     public void StopRoll() {
         isRolling = false;

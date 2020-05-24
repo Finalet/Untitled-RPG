@@ -16,9 +16,13 @@ public class TrainingDummy : Enemy
     protected override void Start() {
         rotationObj = transform.GetChild(0).gameObject;
         canGetHit = true;
+        stabsAudioSource = GetComponent<AudioSource>();
     }
 
     protected override void Update() {
+        if (PlayerControlls.instance == null) //Player instance is null when level is only loading
+            return;
+
         transform.rotation = Quaternion.Euler(0,0,0);
 
         health = maxHealth;
@@ -42,12 +46,25 @@ public class TrainingDummy : Enemy
         rotationObj.transform.rotation = Quaternion.Euler(x, rotationObj.transform.eulerAngles.y, z);
     }
 
-    public void CustomGetHit (float damage) {
-        rotationX = direction.normalized.z * 30 * (1 + damage/5000);
-        rotationZ = -direction.normalized.x * 30 * (1 + damage/5000);
+    public override void GetHit (int damage) {
+        if (isDead || !canGetHit)
+            return;
+
+        int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
+
+        DisplayDamageNumber (actualDamage);
+        PlayGetHitSounds();
+        PlayStabSounds();
+
+        rotationX = direction.normalized.z * 30 * (1 + (float)damage/5000);
+        rotationZ = -direction.normalized.x * 30 * (1 + (float)damage/5000);
     }
 
-    protected override void PlayGetHitNext () {
+    public override void GetKnockedDown () {
+        //Do nothing
+    }
+
+    protected override void PlayStabSounds () {
         int playID;
         float x = Random.Range(0f, 1f);
         if (x<0.7f) {
@@ -55,8 +72,8 @@ public class TrainingDummy : Enemy
         } else {
             playID = 1;
         }
-        GetComponent<AudioSource>().clip = getHitClips[playID];
-        GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.1f, 0.1f);
-        GetComponent<AudioSource>().Play();
+        stabsAudioSource.clip = stabsClips[playID];
+        stabsAudioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
+        stabsAudioSource.Play();
     }
 }

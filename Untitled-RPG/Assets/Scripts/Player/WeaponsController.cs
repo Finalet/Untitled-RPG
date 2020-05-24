@@ -8,7 +8,7 @@ public class WeaponsController : MonoBehaviour
     Animator animator;
 
     float weight;
-    public float overlaySpeed = 3;
+    float overlaySpeed = 3;
 
     public bool isLeftHandEquiped;
     public bool isRightHandEquiped;
@@ -16,6 +16,8 @@ public class WeaponsController : MonoBehaviour
 
     public GameObject LeftHandEquipement;
     public GameObject RightHandEquipement;
+
+    public AudioClip[] sheathSounds;
 
     void Start () {
         animator = GetComponent<Animator>();
@@ -44,6 +46,8 @@ public class WeaponsController : MonoBehaviour
         started = true;
 
         animator.SetTrigger("UnSheath");
+        GetComponent<AudioSource>().clip = sheathSounds[0];
+        GetComponent<AudioSource>().PlayDelayed(0.3f);
         weight = 0;
         while (weight <= 1) {
             if (isRightHandEquiped) {
@@ -88,6 +92,10 @@ public class WeaponsController : MonoBehaviour
         started = true;
 
         animator.SetTrigger("Sheath");
+
+        GetComponent<AudioSource>().clip = sheathSounds[1];
+        GetComponent<AudioSource>().PlayDelayed(0.3f);
+
         weight = 0;
         while (weight <= 1) {
             if (isRightHandEquiped)

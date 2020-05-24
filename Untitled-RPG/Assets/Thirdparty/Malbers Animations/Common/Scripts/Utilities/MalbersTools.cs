@@ -13,8 +13,9 @@ namespace MalbersAnimations.Utilities
         public static Camera FindMainCamera()
         {
               var  MainCamera = Camera.main;
-                if (MainCamera == null)
+                if (MainCamera == null){
                     MainCamera = GameObject.FindObjectOfType<Camera>();
+                }
 
             return MainCamera;
         }

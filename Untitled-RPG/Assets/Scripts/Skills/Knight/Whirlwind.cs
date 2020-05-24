@@ -32,8 +32,10 @@ public class Whirlwind : Skill
         while (timer > 0) {
             timer -= Time.fixedDeltaTime;
             if (hitTimer <= 0) {
-                hitTimer = 0.2f * 1/characteristics.attackSpeedPercentage;
+                hitTimer = 0.2f * characteristics.attackSpeedPercentageInverted;
                 Hit();
+                audioSource.time = 0.05f;
+                audioSource.Play();
             } else {
                 hitTimer -= Time.fixedDeltaTime;
             }

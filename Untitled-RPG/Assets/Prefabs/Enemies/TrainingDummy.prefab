@@ -214,9 +214,12 @@ MonoBehaviour:
   animator: {fileID: 0}
   agent: {fileID: 0}
   target: {fileID: 0}
-  getHitClips:
+  stabsAudioSource: {fileID: 0}
+  getHitAurdioSource: {fileID: 0}
+  stabsClips:
   - {fileID: 8300000, guid: 6bbe09a5c075e5e46bb0856a0c0ce45b, type: 3}
   - {fileID: 8300000, guid: 19c49fe1f08784e46b54e08b5f9379d2, type: 3}
+  getHitVoicesClips: []
   TargetSkillDamagePercentage: 0
 --- !u!82 &8023516861763838166
 AudioSource:
@@ -239,7 +242,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 5
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -275,7 +278,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

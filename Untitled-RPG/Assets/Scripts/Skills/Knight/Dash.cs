@@ -22,6 +22,7 @@ public class Dash : Skill
     protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.meleeAttack/100f);
         animator.CrossFade("Attacks.DoubleSwords.Dash", 0.25f);
+        audioSource.PlayDelayed(0.1f * characteristics.attackSpeedPercentageInverted);
     }
 
     int damage () {

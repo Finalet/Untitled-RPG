@@ -25,8 +25,9 @@ public class EnemySpawner : MonoBehaviour
     } 
 
     void Spawn () {
-        Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-5f, 5f), transform.position.y, transform.position.z + Random.Range(-5f, 5f) );
-        GameObject en = Instantiate(enemy, spawnPos, Quaternion.identity);
+        Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-10f, 10f), transform.position.y, transform.position.z + Random.Range(-10f, 10f) );
+        Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360),0);
+        GameObject en = Instantiate(enemy, spawnPos, rotation);
         en.GetComponent<Enemy>().spawner = transform;
         listOfAllEnemies.Add(en);
         particles.transform.position = spawnPos;

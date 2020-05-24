@@ -6,6 +6,9 @@ public class KO : Skill
 {
     List<GameObject> enemiesInTrigger = new List<GameObject>();
 
+    [Header("Custom vars")]
+    public AudioClip[] sounds;
+
     protected override void Update() {
         base.Update();
         ClearTrigger();
@@ -14,6 +17,22 @@ public class KO : Skill
     protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
         animator.CrossFade("Attacks.DoubleSwords.KO", 0.25f);
+
+        Invoke("PlaySound", 0.15f * characteristics.attackSpeedPercentageInverted);
+        Invoke("PlaySound", 0.6f * characteristics.attackSpeedPercentageInverted);
+    }
+
+    float x = 0;
+    void PlaySound(){
+        if (x == 0) {
+            audioSource.clip = sounds[0];
+            audioSource.Play();
+            x = 1;
+        } else {
+            audioSource.clip = sounds[1];
+            audioSource.Play();
+            x = 0;
+        }
     }
 
     int damage () {

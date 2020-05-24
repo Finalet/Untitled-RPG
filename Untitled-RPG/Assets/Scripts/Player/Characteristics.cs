@@ -27,6 +27,7 @@ public class Characteristics : MonoBehaviour
     [Header("Misc")]
     public int castingTime;
     public float attackSpeedPercentage; public float attackSpeedPercentageAdjustement;
+    public float attackSpeedPercentageInverted;
 
     int statsRatio = 2;
     [Header("Stats regeneration")]
@@ -84,6 +85,7 @@ public class Characteristics : MonoBehaviour
         defense = Mathf.RoundToInt( (strength / statsRatio + agility / statsRatio) * defenseMultiplier);
 
         attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement;
+        attackSpeedPercentageInverted = 1 - attackSpeedPercentageAdjustement;
     }
 
     float hpTimer = 1;
@@ -123,6 +125,7 @@ public class Characteristics : MonoBehaviour
         int actualDamage = Mathf.RoundToInt(damage); 
         HP -= damage;
         DisplayDamageNumber(damage);
+        GetComponent<PlayerAudioController>().PlayGetHitSound();
         xx++;
     }
 

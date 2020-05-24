@@ -17,16 +17,18 @@ public class PlayerAudioController : MonoBehaviour
     public AudioClip[] walkFootstepsGrass;
     public AudioClip[] runFootstepsGrass;
 
-    [Header("Jumping Grunts")]
-    public AudioClip[] jumpingGunts;
+    [Header("Voices")]
+    public AudioClip[] jumpingRollingGunts;
+    public AudioClip[] getHit;
 
     AudioClip[] currentArray;
-    public bool leftFootDown;
-    public bool rightFootDown;
+    bool leftFootDown;
+    bool rightFootDown;
 
     void Update() {
         CheckSounds();
         CheckFootsteps();
+        UpdateThreashold();
     }
 
     void CheckSounds () {
@@ -45,11 +47,6 @@ public class PlayerAudioController : MonoBehaviour
     float rightDisToGround;
     float threashold;
     void CheckFootsteps () {
-        if (PlayerControlls.instance.isSprinting || PlayerControlls.instance.isAttacking)
-            threashold = 0.1f;
-        else 
-            threashold = 0f;
-
         RaycastHit hitLeft;
         if (Physics.Raycast(leftFoot.position -leftFoot.up * 0.1f, leftFoot.up, out hitLeft, 5f)) { //For some reason in game the left foot transform is up side down. Thats why the signs are inverted here
            leftDisToGround = leftFoot.position.y - hitLeft.point.y;
@@ -97,9 +94,22 @@ public class PlayerAudioController : MonoBehaviour
         }
     }
 
-    public void PlayJumpSound () {
-        int playID = Random.Range(0, jumpingGunts.Length);
-        GetComponent<AudioSource>().clip = jumpingGunts[playID];
+    void UpdateThreashold () {
+        if (PlayerControlls.instance.isSprinting || PlayerControlls.instance.isAttacking)
+            threashold = 0.1f;
+        else 
+            threashold = 0f;
+    }
+
+    public void PlayJumpRollSound () {
+        int playID = Random.Range(0, jumpingRollingGunts.Length);
+        GetComponent<AudioSource>().clip = jumpingRollingGunts[playID];
+        GetComponent<AudioSource>().Play();
+    }
+
+    public void PlayGetHitSound () {
+        int playID = Random.Range(0, getHit.Length);
+        GetComponent<AudioSource>().clip = getHit[playID];
         GetComponent<AudioSource>().Play();
     }
 }
