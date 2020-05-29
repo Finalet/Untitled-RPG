@@ -42,6 +42,7 @@ public abstract class Enemy : MonoBehaviour
 
     [Space]
     public GameObject healthBar;
+    public ParticleSystem hitParticles;
 
 
     [Header("Audio Clips")]
@@ -164,12 +165,24 @@ public abstract class Enemy : MonoBehaviour
             return;
             
         if (!isKnockedDown)
-            animator.CrossFade("GetHit.GetHit", 0.25f);
+            animator.CrossFade("GetHit.GetHit", 0.25f, animator.GetLayerIndex("GetHit"), 0);
         int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
         health -= actualDamage;
         DisplayDamageNumber (actualDamage);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
+        StartCoroutine(HitStop());
+        HitParticles();
         PlayGetHitSounds();
         PlayStabSounds();
+    }
+
+    IEnumerator HitStop () {
+        float timer = Time.realtimeSinceStartup;
+        Time.timeScale = 0.4f;
+        while(Time.realtimeSinceStartup - timer < 0.15f) {
+            yield return null;
+        }
+        Time.timeScale = 1;
     }
 
     public virtual void Die() {
@@ -201,7 +214,6 @@ public abstract class Enemy : MonoBehaviour
         isKnockedDown = false;
         canGetHit = true;
     }
-
 
     protected void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity);
@@ -240,5 +252,12 @@ public abstract class Enemy : MonoBehaviour
         stabsAudioSource.clip = stabsClips[playID];
         stabsAudioSource.pitch = stabsBasePitch + Random.Range(-0.1f, 0.1f);
         stabsAudioSource.Play();
+    }
+
+    protected virtual void HitParticles () {
+        if (hitParticles == null)
+            return;
+
+        hitParticles.Play();
     }
 }

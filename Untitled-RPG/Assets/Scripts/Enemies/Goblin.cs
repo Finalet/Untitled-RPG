@@ -14,7 +14,7 @@ public class Goblin : Enemy
 
     public AudioSource attackAudioSource;
     public AudioClip[] attackSounds; 
-
+    
     protected override void Update() {
         if (PlayerControlls.instance == null) // Player instnace is null when loading level;
             return;

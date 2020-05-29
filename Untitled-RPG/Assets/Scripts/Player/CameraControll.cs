@@ -9,6 +9,7 @@ public class CameraControll : MonoBehaviour
     float cameraY;
 
     public Vector3 offset;
+    Vector3 shake;
     public float camDistance;
     public float maxCamDistance = 10;
     public float camDesiredPosition;
@@ -49,7 +50,7 @@ public class CameraControll : MonoBehaviour
         if (!PeaceCanvas.instance.anyPanelOpen)
             transform.eulerAngles = new Vector3(rotationX, transform.eulerAngles.y + cameraY, transform.eulerAngles.z);     
 
-        transform.position = Player.transform.position - (transform.forward * camDistance) + offset;
+        transform.position = Player.transform.position - (transform.forward * camDistance) + offset + shake;
 
         RaycastHit hit;
         if (Physics.Linecast(Player.transform.position + offset, transform.position, out hit)) {
@@ -81,5 +82,39 @@ public class CameraControll : MonoBehaviour
     public void CameraDismount () {
         camDesiredPosition -= 3;
         maxCamDistance -= 5;
+    }
+
+    bool isShaking;
+    public void CameraShake (float duration, float magnitude, float damage){
+        if (isShaking)
+            return;
+
+        StartCoroutine(Shake(duration, magnitude, damage));
+    }
+
+    IEnumerator Shake (float duration, float magnitude, float damage) {
+        float elapsed = 0;
+    
+        Vector3 newPos = Vector3.zero;
+        isShaking = true;
+        while (elapsed < duration * (1 + damage / 4000)) {   
+
+            if (Vector3.Distance(shake, newPos) <= magnitude/4f) {
+                float x = Random.Range(-1f, 1f) * magnitude * (1 + damage / 2000);
+                float y = Random.Range(-1f, 1f) * magnitude * (1 + damage / 2000);
+                newPos = new Vector3(x, y, 0);
+            }
+            
+            shake = Vector3.Lerp(shake, newPos, Time.deltaTime * 50);
+
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+        while (Vector3.Distance(shake, Vector3.zero) >= magnitude/4f) {
+            shake = Vector3.Lerp(shake, Vector3.zero, 0.5f);
+        }
+        shake = Vector3.zero;
+        isShaking = false;
     }
 }

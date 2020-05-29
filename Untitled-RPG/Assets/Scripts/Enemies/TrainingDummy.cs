@@ -53,11 +53,23 @@ public class TrainingDummy : Enemy
         int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
 
         DisplayDamageNumber (actualDamage);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
+        HitParticles();
+        StartCoroutine(HitStop());
         PlayGetHitSounds();
         PlayStabSounds();
 
         rotationX = direction.normalized.z * 30 * (1 + (float)damage/5000);
         rotationZ = -direction.normalized.x * 30 * (1 + (float)damage/5000);
+    }
+
+    IEnumerator HitStop () {
+        float timer = Time.realtimeSinceStartup;
+        Time.timeScale = 0.2f;
+        while(Time.realtimeSinceStartup - timer < 0.13f) {
+            yield return null;
+        }
+        Time.timeScale = 1;
     }
 
     public override void GetKnockedDown () {
