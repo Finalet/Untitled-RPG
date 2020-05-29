@@ -66,7 +66,7 @@ public class TrainingDummy : Enemy
     IEnumerator HitStop () {
         float timer = Time.realtimeSinceStartup;
         Time.timeScale = 0.2f;
-        while(Time.realtimeSinceStartup - timer < 0.13f) {
+        while(Time.realtimeSinceStartup - timer < 0.1f) {
             yield return null;
         }
         Time.timeScale = 1;
