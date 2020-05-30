@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public abstract class Skill : MonoBehaviour
 {
+    public int ID;
+    [Space]
     public string skillName;
     public string description;
     public Sprite icon;

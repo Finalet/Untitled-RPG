@@ -176,9 +176,9 @@ public abstract class Enemy : MonoBehaviour
         PlayStabSounds();
     }
 
-    IEnumerator HitStop () {
+    protected IEnumerator HitStop () {
         float timer = Time.realtimeSinceStartup;
-        Time.timeScale = 0.2f;
+        Time.timeScale = 0.25f;
         while(Time.realtimeSinceStartup - timer < 0.1f) {
             yield return null;
         }

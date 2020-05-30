@@ -63,15 +63,6 @@ public class TrainingDummy : Enemy
         rotationZ = -direction.normalized.x * 30 * (1 + (float)damage/5000);
     }
 
-    IEnumerator HitStop () {
-        float timer = Time.realtimeSinceStartup;
-        Time.timeScale = 0.2f;
-        while(Time.realtimeSinceStartup - timer < 0.1f) {
-            yield return null;
-        }
-        Time.timeScale = 1;
-    }
-
     public override void GetKnockedDown () {
         //Do nothing
     }

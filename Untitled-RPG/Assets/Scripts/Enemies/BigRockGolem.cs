@@ -90,13 +90,20 @@ public class BigRockGolem : Enemy
         }
     }
 
-    void OnTriggerStay(Collider other) {
+    void OnTriggerEnter(Collider other) {
+
         if (other.CompareTag("Player")) {
+            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+                return;
+
             playerWithinReach = true;
         }    
     }
     void OnTriggerExit(Collider other) {
         if (other.CompareTag("Player")) {
+            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+                return;
+                
             playerWithinReach = false;
         }    
     }

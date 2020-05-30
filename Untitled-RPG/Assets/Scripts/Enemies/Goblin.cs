@@ -58,11 +58,17 @@ public class Goblin : Enemy
 
     void OnTriggerStay(Collider other) {
         if (other.CompareTag("Player")) {
+            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+                return;
+
             playerWithinReach = true;
         }    
     }
     void OnTriggerExit(Collider other) {
         if (other.CompareTag("Player")) {
+            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+                return;
+                
             playerWithinReach = false;
         }    
     }
