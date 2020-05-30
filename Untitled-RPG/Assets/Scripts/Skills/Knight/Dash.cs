@@ -32,7 +32,7 @@ public class Dash : Skill
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.GetComponent<Enemy>() != null && !other.isTrigger) {
             if (!enemiesHit.Contains(other.gameObject)) {
-                other.GetComponent<Enemy>().GetHit(damage());
+                other.GetComponent<Enemy>().GetHit(damage(), true);
                 enemiesHit.Add(other.gameObject);
             }
         }

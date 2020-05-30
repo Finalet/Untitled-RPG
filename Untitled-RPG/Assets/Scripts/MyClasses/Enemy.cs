@@ -160,7 +160,7 @@ public abstract class Enemy : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
     }
 
-    public virtual void GetHit(int damage) {
+    public virtual void GetHit(int damage, bool stopHit) {
         if (isDead || !canGetHit)
             return;
             
@@ -170,7 +170,7 @@ public abstract class Enemy : MonoBehaviour
         health -= actualDamage;
         DisplayDamageNumber (actualDamage);
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
-        StartCoroutine(HitStop());
+        if (stopHit) StartCoroutine(HitStop());
         HitParticles();
         PlayGetHitSounds();
         PlayStabSounds();

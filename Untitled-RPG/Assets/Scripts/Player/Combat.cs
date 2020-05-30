@@ -79,7 +79,7 @@ public class Combat : MonoBehaviour
 
     void Hit () {
         for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
-            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage());
+            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage(), true);
         }
     }
 

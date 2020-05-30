@@ -55,7 +55,7 @@ public class KO : Skill
             if (knockDown == 1) {
                 enemiesInTrigger[i].GetComponent<Enemy>().GetKnockedDown();
             }
-            enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage());
+            enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), true);
         }
     }
 
