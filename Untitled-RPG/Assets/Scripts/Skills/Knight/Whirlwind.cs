@@ -64,7 +64,7 @@ public class Whirlwind : Skill
 
     public void Hit () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), true);
+            enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), true, true);
         }
     }
 

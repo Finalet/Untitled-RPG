@@ -46,16 +46,16 @@ public class TrainingDummy : Enemy
         rotationObj.transform.rotation = Quaternion.Euler(x, rotationObj.transform.eulerAngles.y, z);
     }
 
-    public override void GetHit (int damage, bool stopHit) {
+    public override void GetHit (int damage, bool stopHit, bool cameraShake) {
         if (isDead || !canGetHit)
             return;
 
         int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
 
         DisplayDamageNumber (actualDamage);
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
-        HitParticles();
+        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
         if (stopHit) StartCoroutine(HitStop());
+        HitParticles();
         PlayGetHitSounds();
         PlayStabSounds();
 
