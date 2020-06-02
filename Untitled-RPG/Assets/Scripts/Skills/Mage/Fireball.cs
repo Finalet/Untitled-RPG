@@ -13,9 +13,12 @@ public class Fireball : Skill
 
     Vector3 shootPoint;
 
-    protected override void CustomUse() {
+    protected override void CastingAnim() {
+        animator.CrossFade("Attacks.Mage.Fireball", 0.25f);
+    }
+
+    protected override void CustomUse () {
         actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f);
-        //play animation
         //play sound
         GameObject Fireball = Instantiate(fireball, shootPosition.position, Quaternion.identity);
         
@@ -32,6 +35,7 @@ public class Fireball : Skill
         Fireball.GetComponent<FireballProjectile>().distance = distance;
         Fireball.GetComponent<FireballProjectile>().actualDamage = actualDamage;
         Fireball.GetComponent<FireballProjectile>().doNotDestroy = false;
+        playerControlls.isAttacking = false;
     }
 
     /*

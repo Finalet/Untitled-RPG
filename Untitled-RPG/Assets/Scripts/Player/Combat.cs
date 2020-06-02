@@ -56,6 +56,8 @@ public class Combat : MonoBehaviour
         animator.SetBool("KeepAttacking", true);
         playerControlls.isAttacking = true;
         comboTimer = baseComboTimer;
+
+        PlayerControlls.instance.InterruptCasting();
     }
 
     void Timer () {
@@ -96,7 +98,8 @@ public class Combat : MonoBehaviour
     }
 
     void AttackSpeed () {
-        animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeedPercentage);
+        animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeed.x);
+        animator.SetFloat("CastingSpeed", GetComponent<Characteristics>().attackSpeed.x);
     }
 
 

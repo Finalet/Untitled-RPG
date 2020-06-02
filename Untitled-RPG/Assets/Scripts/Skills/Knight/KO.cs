@@ -16,10 +16,10 @@ public class KO : Skill
 
     protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
-        animator.CrossFade("Attacks.DoubleSwords.KO", 0.25f);
+        animator.CrossFade("Attacks.Knight.KO", 0.25f);
 
-        Invoke("PlaySound", 0.15f * characteristics.attackSpeedPercentageInverted);
-        Invoke("PlaySound", 0.6f * characteristics.attackSpeedPercentageInverted);
+        Invoke("PlaySound", 0.15f * characteristics.attackSpeed.z);
+        Invoke("PlaySound", 0.6f * characteristics.attackSpeed.z);
     }
 
     float x = 0;

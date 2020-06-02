@@ -20,19 +20,21 @@ public class Whirlwind : Skill
     }
 
     IEnumerator Using () {
-        animator.CrossFade("Attacks.DoubleSwords.Whirlwind", 0.25f);
+        animator.CrossFade("Attacks.Knight.Whirlwind", 0.25f);
         while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).IsName("Whirlwind_loop")) {
             yield return null;
         }
         playerControlls.fwd += moveSpeed;
         playerControlls.sideways += moveSpeed;
+
+        Characteristics.instance.canGetHit = false;
         
         float timer = totalAttackTime;
         float hitTimer = 0;
         while (timer > 0) {
             timer -= Time.fixedDeltaTime;
             if (hitTimer <= 0) {
-                hitTimer = 0.2f * characteristics.attackSpeedPercentageInverted;
+                hitTimer = 0.2f * characteristics.attackSpeed.z;
                 Hit();
                 audioSource.time = 0.05f;
                 audioSource.Play();
@@ -43,8 +45,8 @@ public class Whirlwind : Skill
         }
         playerControlls.fwd -= moveSpeed;
         playerControlls.sideways -= moveSpeed;
-        animator.CrossFade("Attacks.DoubleSwords.Whirlwind_end", 0.25f);
-        
+        animator.CrossFade("Attacks.Knight.Whirlwind_end", 0.25f);
+        Characteristics.instance.canGetHit = true;
     }
 
     int damage () {

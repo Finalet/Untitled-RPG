@@ -39,8 +39,6 @@ public class Target : Skill
         newTargetPrefab.SetActive(true);
         newTargetPrefab.transform.localPosition = Vector3.up * 2.3f;
 
-
-        PlayerControlls.instance.GetComponent<PlayerControlls>().isUsingSkill = false;
         PlayerControlls.instance.GetComponent<PlayerControlls>().isAttacking = false;
         float y =0;
         while (totalAttackTime + timer >= 0) {

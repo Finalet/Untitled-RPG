@@ -36,7 +36,7 @@ public class StoneHit : Skill
     }
 
     IEnumerator Using () {
-        animator.CrossFade("Attacks.DoubleSwords.StoneHit", 0.25f);
+        animator.CrossFade("Attacks.Knight.StoneHit", 0.25f);
         while(!yes) {
             yield return null;
         }

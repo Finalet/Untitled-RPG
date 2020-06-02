@@ -24,10 +24,15 @@ public class Characteristics : MonoBehaviour
     public int magicPower; public float magicPowerMultiplier;
     public int healingPower; public float healingPowerMultiplier;
     public int defense; public float defenseMultiplier;
+    
     [Header("Misc")]
-    public int castingTime;
-    public float attackSpeedPercentage; public float attackSpeedPercentageAdjustement;
-    public float attackSpeedPercentageInverted;
+
+    [Tooltip("X - casting speed percentage, Y - casting speed adjustement, Z - casting speed inverted")]
+    public Vector3 castingSpeed;
+    float castingSpeedPercentage; float castingSpeedPercentageAdjustement; float castingSpeedPercentageIverted;
+    [Tooltip("X - attack speed percentage, Y - attack speed adjustement, Z - attack speed inverted")]
+    public Vector3 attackSpeed;
+    float attackSpeedPercentage; float attackSpeedPercentageAdjustement; float attackSpeedPercentageInverted;
 
     int statsRatio = 2;
     [Header("Stats regeneration")]
@@ -64,11 +69,6 @@ public class Characteristics : MonoBehaviour
         StatsCalculations();
         regenerateHealth();
         regenerateStamina();
-
-        if (PlayerControlls.instance.isUsingSkill)
-            canGetHit = false;
-        else 
-            canGetHit = true;
     }
 
     void StatsCalculations () {
@@ -85,7 +85,18 @@ public class Characteristics : MonoBehaviour
         defense = Mathf.RoundToInt( (strength / statsRatio + agility / statsRatio) * defenseMultiplier);
 
         attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement;
-        attackSpeedPercentageInverted = 1 - attackSpeedPercentageAdjustement;
+        attackSpeedPercentageInverted = 1/attackSpeedPercentage;
+
+        attackSpeed.x = attackSpeedPercentage;
+        attackSpeed.y = attackSpeedPercentageAdjustement;
+        attackSpeed.z = attackSpeedPercentageInverted;
+
+        castingSpeedPercentage = 1 + castingSpeedPercentageAdjustement;
+        castingSpeedPercentageIverted = 1/castingSpeedPercentage;
+
+        castingSpeed.x = castingSpeedPercentage; 
+        castingSpeed.y = castingSpeedPercentageAdjustement; 
+        castingSpeed.z = castingSpeedPercentageIverted;
     }
 
     float hpTimer = 1;
@@ -116,7 +127,7 @@ public class Characteristics : MonoBehaviour
             }
         }
     }
-    public int xx= 0;
+    
     public void GetHit (int damage) {
         if (!canGetHit)
             return;
@@ -126,7 +137,6 @@ public class Characteristics : MonoBehaviour
         HP -= damage;
         DisplayDamageNumber(damage);
         GetComponent<PlayerAudioController>().PlayGetHitSound();
-        xx++;
     }
 
     void DisplayDamageNumber(int damage) {

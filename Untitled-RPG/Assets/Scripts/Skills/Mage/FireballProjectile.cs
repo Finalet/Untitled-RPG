@@ -58,15 +58,16 @@ public class FireballProjectile : MonoBehaviour
     }
 
     void Explode (bool hit) {
-        if (hit)
+        if (hit) {
             explostionSparks.Play();
-        else 
+            PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.12f, 0.12f, 0);
+        } else {
             emptySparks.Play();
+        } 
         fire.Stop();
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<Collider>().enabled = false;
         GetComponent<MeshRenderer>().enabled = false;
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.12f, 0.12f, 0);
         Destroy(gameObject,0.51f);
     }
 

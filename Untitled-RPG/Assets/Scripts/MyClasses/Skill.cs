@@ -14,7 +14,7 @@ public abstract class Skill : MonoBehaviour
     public SkillType skillType; 
     public int staminaRequired;
     [Tooltip("Base damage without player's characteristics")] public int baseDamage;
-    [Tooltip("Damage after applying player's characteristics")] public int actualDamage;
+    [Tooltip("Damage after applying player's characteristics")] protected int actualDamage;
     public float coolDown;
     public float coolDownTimer;
     public bool isCoolingDown;
@@ -22,19 +22,16 @@ public abstract class Skill : MonoBehaviour
     [Header("Timings")]
     [Tooltip("Time needed to prepare and attack")] public float castingTime;
     [Tooltip("Total attack time, excluding casting (enemy can get hit during attackTime*(1-attackTimeOffset)")] public float totalAttackTime;
-    
-    Collider hitCollider;
 
-    [System.NonSerialized] public PlayerControlls playerControlls;
-    [System.NonSerialized] public Animator animator;
-    [System.NonSerialized] public Characteristics characteristics;
-    [System.NonSerialized] public AudioSource audioSource;
+    protected PlayerControlls playerControlls;
+    protected Animator animator;
+    protected Characteristics characteristics;
+    protected AudioSource audioSource;
 
     public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
     public enum SkillType {Damaging, Healing, Buff };
 
     protected virtual void Start() {
-        hitCollider = GetComponent<Collider>();
         audioSource = GetComponent<AudioSource>();
         playerControlls = PlayerControlls.instance.GetComponent<PlayerControlls>();
         animator = PlayerControlls.instance.GetComponent<Animator>();
@@ -46,22 +43,45 @@ public abstract class Skill : MonoBehaviour
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
-        if (playerControlls.isMounted || isCoolingDown || !playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isUsingSkill || playerControlls.isGettingHit)
+        if (playerControlls.isMounted || isCoolingDown || !playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isGettingHit)
             return;
 
-        playerControlls.isUsingSkill = true;
+        if (castingTime != 0)
+            StartCoroutine(UseCoroutine());
+        else 
+            LocalUse();
+    }
+
+    protected virtual IEnumerator UseCoroutine (){
+        if (playerControlls.isCastingSkill || !playerControlls.isIdle)
+            yield break;
+
+        CastingAnim();
+        playerControlls.isCastingSkill = true;
+        float timer = castingTime * characteristics.attackSpeed.z; // Z is inverted attack speed
+        while (timer > 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+            if (playerControlls.castInterrupted) { 
+                playerControlls.castInterrupted = false;
+                yield break;
+            }
+        }
+        playerControlls.isCastingSkill = false;
+        LocalUse();
+    }
+
+    protected virtual void LocalUse () {
+        playerControlls.InterruptCasting();
         coolDownTimer = coolDown;
         playerControlls.isAttacking = true;
         playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
-        if (skillType == SkillType.Damaging) Invoke("usingSkill", totalAttackTime);
         CustomUse();
     }
 
-    protected abstract void CustomUse(); // Custom code that is overriden in each skill seperately.
+    protected virtual void CastingAnim () {}
 
-    void usingSkill () { //Indicates that the skill is not being used anymore.
-        playerControlls.isUsingSkill = false;
-    }
+    protected abstract void CustomUse(); // Custom code that is overriden in each skill seperately.
 
     protected virtual void Update() {
         if (coolDownTimer >= 0) {

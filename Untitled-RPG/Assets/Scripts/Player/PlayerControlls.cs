@@ -27,7 +27,11 @@ public class PlayerControlls : MonoBehaviour
     public bool isGettingHit;
     public bool isWeaponOut;
     public bool isGrounded;
-    public bool isUsingSkill;
+    //public bool isUsingSkill;
+    public bool isCastingSkill;
+
+    [Space]
+    public bool castInterrupted;
 
     float sprintingDirection;
     float rollDirection;
@@ -297,6 +301,7 @@ public class PlayerControlls : MonoBehaviour
     void InputMagnitudeFunc () {
         if (Input.GetButton("Horizontal") || Input.GetButton("Vertical")) {
             InputMagnitude = 1;
+            InterruptCasting();
         } else {
             InputMagnitude = 0;
         }
@@ -326,6 +331,8 @@ public class PlayerControlls : MonoBehaviour
         sideways += jumpDis;
         animator.applyRootMotion = false;
         StartCoroutine(DetectLanding());
+
+        InterruptCasting();
     }
 
     IEnumerator DetectLanding () {
@@ -343,6 +350,8 @@ public class PlayerControlls : MonoBehaviour
     void Crouch() {
         if (isGrounded)
             isCrouch = !isCrouch;
+        
+        InterruptCasting();
     }
 
     public void SprintOff () {
@@ -372,6 +381,8 @@ public class PlayerControlls : MonoBehaviour
         fwd += rollDis;
         sideways += rollDis;
         audioController.PlayJumpRollSound();
+
+        InterruptCasting();
     }
     public void StopRoll() {
         isRolling = false;
@@ -403,5 +414,13 @@ public class PlayerControlls : MonoBehaviour
             else 
                 GetComponent<MRider>().DismountAnimal();
         }
+    }
+
+    public void InterruptCasting () {
+        if (!isCastingSkill)
+            return;
+        animator.CrossFade("Attacks.Empty", 0.25f);
+        castInterrupted = true;
+        isCastingSkill = false;
     }
 }
