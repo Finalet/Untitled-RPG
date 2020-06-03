@@ -29,6 +29,7 @@ public class Combat : MonoBehaviour
     void Update() {
         Timer();
         ClearTrigger();
+        AttackSpeed();
 
         if (!playerControlls.isJumping && weaponsController.isWeaponOut) {
             Attacks();
@@ -48,7 +49,6 @@ public class Combat : MonoBehaviour
             Attack();
         } 
 
-        AttackSpeed();
         actualAttackDamage = Mathf.RoundToInt( baseAttackDamage * (float)GetComponent<Characteristics>().meleeAttack/100f);
     }
 
@@ -99,7 +99,7 @@ public class Combat : MonoBehaviour
 
     void AttackSpeed () {
         animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeed.x);
-        animator.SetFloat("CastingSpeed", GetComponent<Characteristics>().attackSpeed.x);
+        animator.SetFloat("CastingSpeed", GetComponent<Characteristics>().castingSpeed.x);
     }
 
 
@@ -115,6 +115,8 @@ public class Combat : MonoBehaviour
             AssetHolder.instance.Skills[skillID.intParameter].GetComponent<KO>().Hit(skillID.floatParameter);
         else if (skillID.intParameter == 5)
             AssetHolder.instance.Skills[skillID.intParameter].GetComponent<StoneHit>().ApplyDamage();
+        else if (skillID.intParameter == 7)
+            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Fireball>().FireProjectile();
     }
 
 #endregion

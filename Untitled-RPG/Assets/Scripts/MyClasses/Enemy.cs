@@ -160,22 +160,6 @@ public abstract class Enemy : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
     }
 
-    public virtual void GetHit(int damage, bool stopHit, bool cameraShake) {
-        if (isDead || !canGetHit)
-            return;
-            
-        if (!isKnockedDown)
-            animator.CrossFade("GetHit.GetHit", 0.25f, animator.GetLayerIndex("GetHit"), 0);
-        int actualDamage = Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) ); 
-        health -= actualDamage;
-        DisplayDamageNumber (actualDamage);
-        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
-        if (stopHit) StartCoroutine(HitStop());
-        HitParticles();
-        PlayGetHitSounds();
-        PlayStabSounds();
-    }
-
     protected IEnumerator HitStop () {
         float timer = Time.realtimeSinceStartup;
         Time.timeScale = 0.25f;
@@ -213,11 +197,6 @@ public abstract class Enemy : MonoBehaviour
         yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(animator.GetLayerIndex("GetHit")).Length);
         isKnockedDown = false;
         canGetHit = true;
-    }
-
-    protected void DisplayDamageNumber(int damage) {
-        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity);
-        ddText.GetComponent<ddText>().damage = damage;
     }
 
     protected virtual void ShowHealthBar () {
@@ -260,4 +239,79 @@ public abstract class Enemy : MonoBehaviour
 
         hitParticles.Play();
     }
+
+#region Get hit overloads
+
+    protected int actualDamage;
+
+    protected int calculateActualDamage (int damage) {
+        return Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) );
+    }
+    protected bool checkFailed () {
+        if (isDead || !canGetHit)
+            return true;
+        else 
+            return false;
+    }
+
+    protected virtual void BasicGetHit (int damage) {
+        if (!isKnockedDown)
+            animator.CrossFade("GetHit.GetHit", 0.25f, animator.GetLayerIndex("GetHit"), 0);
+
+        actualDamage = calculateActualDamage(damage);
+
+        health -= actualDamage;
+        HitParticles(); 
+        PlayGetHitSounds(); 
+        PlayStabSounds();
+    }
+
+    public virtual void GetHit(int damage) {
+        if (checkFailed())
+            return;      
+
+        BasicGetHit(damage); 
+        DisplayDamageNumber (actualDamage);
+    }
+
+    public virtual void GetHit(int damage, Vector3 damageTextPos) {
+        if (checkFailed())
+            return;
+
+        BasicGetHit(damage);
+        DisplayDamageNumber(actualDamage, damageTextPos);
+    }
+
+    public virtual void GetHit(int damage, bool stopHit, bool cameraShake) {
+        if (checkFailed())
+            return;
+
+        BasicGetHit(damage);
+        DisplayDamageNumber (actualDamage);
+        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
+        if (stopHit) StartCoroutine(HitStop());
+    }
+
+    public virtual void GetHit(int damage, bool stopHit, bool cameraShake, Vector3 damageTextPos) {
+        if (checkFailed())
+            return;
+            
+        BasicGetHit(damage);
+        DisplayDamageNumber(actualDamage, damageTextPos);
+        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
+        if (stopHit) StartCoroutine(HitStop());
+    }
+#endregion
+
+#region Display damage number overloads
+    protected void DisplayDamageNumber(int damage) {
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1.5f, Quaternion.identity);
+        ddText.GetComponent<ddText>().damage = damage;
+    }
+    protected void DisplayDamageNumber(int damage, Vector3 position) {
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, position, Quaternion.identity);
+        ddText.GetComponent<ddText>().damage = damage;
+    }
+#endregion
+
 }

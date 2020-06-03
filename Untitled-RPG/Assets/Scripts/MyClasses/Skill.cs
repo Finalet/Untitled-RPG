@@ -22,6 +22,8 @@ public abstract class Skill : MonoBehaviour
     [Header("Timings")]
     [Tooltip("Time needed to prepare and attack")] public float castingTime;
     [Tooltip("Total attack time, excluding casting (enemy can get hit during attackTime*(1-attackTimeOffset)")] public float totalAttackTime;
+    public bool finishedCast;
+
 
     protected PlayerControlls playerControlls;
     protected Animator animator;
@@ -43,7 +45,7 @@ public abstract class Skill : MonoBehaviour
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
-        if (playerControlls.isMounted || isCoolingDown || !playerControlls.isWeaponOut || playerControlls.isRolling || playerControlls.isGettingHit)
+        if (!canBeUsed() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit)
             return;
 
         if (castingTime != 0)
@@ -58,14 +60,14 @@ public abstract class Skill : MonoBehaviour
 
         CastingAnim();
         playerControlls.isCastingSkill = true;
-        float timer = castingTime * characteristics.attackSpeed.z; // Z is inverted attack speed
-        while (timer > 0) {
-            timer -= Time.deltaTime;
-            yield return null;
+        finishedCast = false;
+        while (!finishedCast) {
             if (playerControlls.castInterrupted) { 
+                InterruptCasting();
                 playerControlls.castInterrupted = false;
                 yield break;
             }
+            yield return null;
         }
         playerControlls.isCastingSkill = false;
         LocalUse();
@@ -80,6 +82,7 @@ public abstract class Skill : MonoBehaviour
     }
 
     protected virtual void CastingAnim () {}
+    protected virtual void InterruptCasting () {}
 
     protected abstract void CustomUse(); // Custom code that is overriden in each skill seperately.
 
@@ -89,6 +92,22 @@ public abstract class Skill : MonoBehaviour
             isCoolingDown = true;
         } else {
             isCoolingDown = false;
+        }
+    }
+
+    public virtual bool canBeUsed () {
+        if (playerControlls.isMounted)
+            return false;
+
+        if (skillTree == SkillTree.Knight) {
+            if (playerControlls.isWeaponOut)
+                return true;
+            else 
+                return false;
+        } else if (skillTree == SkillTree.Mage) {
+            return true;
+        } else {
+            return false;
         }
     }
 

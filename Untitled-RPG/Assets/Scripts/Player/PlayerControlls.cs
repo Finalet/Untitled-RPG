@@ -296,6 +296,7 @@ public class PlayerControlls : MonoBehaviour
 
         animator.SetBool("Idle", isIdle);
         animator.SetBool("isCrouch", isCrouch);
+        animator.SetBool("isGrounded", isGrounded);
     }
 
     void InputMagnitudeFunc () {
@@ -344,7 +345,6 @@ public class PlayerControlls : MonoBehaviour
         sideways -= jumpDis;
         animator.applyRootMotion = true;
         isJumping = false;
-        animator.SetTrigger("Landed");
     }
 
     void Crouch() {

@@ -13,11 +13,37 @@ public class Fireball : Skill
 
     Vector3 shootPoint;
 
+    public ParticleSystem HandsEffect;
+    public Transform[] hands;
+    ParticleSystem[] instanciatedEffects = new ParticleSystem[2];
+
     protected override void CastingAnim() {
         animator.CrossFade("Attacks.Mage.Fireball", 0.25f);
+        instanciatedEffects[0] = Instantiate(HandsEffect, hands[0].position, Quaternion.identity, hands[0]);
+        instanciatedEffects[1] = Instantiate(HandsEffect, hands[1].position, Quaternion.identity, hands[1]);
+
+        instanciatedEffects[0].gameObject.SetActive(true);
+        instanciatedEffects[1].gameObject.SetActive(true);
     }
 
-    protected override void CustomUse () {
+    protected override void CustomUse() {}
+
+    public void FireProjectile () {
+        finishedCast = true;
+
+        ParticleSystem[] left = instanciatedEffects[0].GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < left.Length; i++) {
+            left[i].Stop();
+        }
+        ParticleSystem[] right = instanciatedEffects[0].GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < right.Length; i++) {
+            right[i].Stop();
+        }
+        instanciatedEffects[0].Stop();
+        instanciatedEffects[1].Stop();
+        Destroy(instanciatedEffects[0].gameObject, 1f);
+        Destroy(instanciatedEffects[1].gameObject, 1f);
+
         actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f);
         //play sound
         GameObject Fireball = Instantiate(fireball, shootPosition.position, Quaternion.identity);
@@ -43,6 +69,21 @@ public class Fireball : Skill
         base.Update();
         DrawDebugs();
     } */
+
+    protected override void InterruptCasting() {
+        ParticleSystem[] left = instanciatedEffects[0].GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < left.Length; i++) {
+            left[i].Stop();
+        }
+        ParticleSystem[] right = instanciatedEffects[0].GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < right.Length; i++) {
+            right[i].Stop();
+        }
+        instanciatedEffects[0].Stop();
+        instanciatedEffects[1].Stop();
+        Destroy(instanciatedEffects[0].gameObject, 1f);
+        Destroy(instanciatedEffects[1].gameObject, 1f);
+    }
 
     void DrawDebugs () {
         RaycastHit hit;

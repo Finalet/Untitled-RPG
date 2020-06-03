@@ -88,7 +88,7 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler
                 transform.GetChild(1).GetComponent<Image>().fillAmount = 1;
             }
 
-            if (PlayerControlls.instance.isWeaponOut && !PlayerControlls.instance.isMounted) {
+            if (slotObject.GetComponent<Skill>().canBeUsed()) {
                 image.color = Color.white;
             } else {
                 image.color = new Color(0.75f, 0.75f, 0.75f, 1); 

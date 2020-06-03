@@ -85,6 +85,14 @@ public class CameraControll : MonoBehaviour
     }
 
     bool isShaking;
+
+#region Camera shake overloads
+    public void CameraShake (float duration, float magnitude){
+        if (isShaking)
+            return;
+
+        StartCoroutine(Shake(duration, magnitude));
+    }
     public void CameraShake (float duration, float magnitude, float damage){
         if (isShaking)
             return;
@@ -92,6 +100,31 @@ public class CameraControll : MonoBehaviour
         StartCoroutine(Shake(duration, magnitude, damage));
     }
 
+    IEnumerator Shake (float duration, float magnitude) {
+        float elapsed = 0;
+    
+        Vector3 newPos = Vector3.zero;
+        isShaking = true;
+        while (elapsed < duration) {   
+
+            if (Vector3.Distance(shake, newPos) <= magnitude/4f) {
+                float x = Random.Range(-1f, 1f) * magnitude;
+                float y = Random.Range(-1f, 1f) * magnitude;
+                newPos = new Vector3(x, y, 0);
+            }
+            
+            shake = Vector3.Lerp(shake, newPos, Time.deltaTime * 50);
+
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+        while (Vector3.Distance(shake, Vector3.zero) >= magnitude/4f) {
+            shake = Vector3.Lerp(shake, Vector3.zero, 0.5f);
+        }
+        shake = Vector3.zero;
+        isShaking = false;
+    }
     IEnumerator Shake (float duration, float magnitude, float damage) {
         float elapsed = 0;
     
@@ -117,4 +150,6 @@ public class CameraControll : MonoBehaviour
         shake = Vector3.zero;
         isShaking = false;
     }
+
+#endregion
 }

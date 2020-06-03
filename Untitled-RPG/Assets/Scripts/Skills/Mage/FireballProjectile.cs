@@ -12,7 +12,6 @@ public class FireballProjectile : MonoBehaviour
 
     public ParticleSystem fire;
     public ParticleSystem explostionSparks;
-    public ParticleSystem emptySparks;
 
     Vector3 begPos;
     bool done;
@@ -32,7 +31,7 @@ public class FireballProjectile : MonoBehaviour
 
         if (Vector3.Distance(transform.position, begPos) >= distance && !done) {
             done = true;
-            Explode(false);
+            StartCoroutine(Disappear());
         }
 
         transform.Rotate(randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime);
@@ -52,23 +51,29 @@ public class FireballProjectile : MonoBehaviour
             return;
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
-            other.GetComponent<Enemy>().GetHit(damage(), false, false);
+            other.GetComponent<Enemy>().GetHit(damage(), true, false, transform.position);
         }
-        Explode(true);
+        Explode();
     }
 
-    void Explode (bool hit) {
-        if (hit) {
-            explostionSparks.Play();
-            PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.12f, 0.12f, 0);
-        } else {
-            emptySparks.Play();
-        } 
+    void Explode () {
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.12f, 0.12f, 0);
+        explostionSparks.Play();
         fire.Stop();
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<Collider>().enabled = false;
         GetComponent<MeshRenderer>().enabled = false;
         Destroy(gameObject,0.51f);
+    }
+
+    IEnumerator Disappear() {
+        fire.Stop();
+        GetComponent<Collider>().enabled = false;
+        while (transform.localScale.x > 0) {
+            transform.localScale -= Vector3.one * Time.deltaTime;
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 
 }

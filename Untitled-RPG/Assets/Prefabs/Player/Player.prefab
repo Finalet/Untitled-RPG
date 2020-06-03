@@ -144,7 +144,8 @@ MonoBehaviour:
   isGettingHit: 0
   isWeaponOut: 0
   isGrounded: 0
-  isUsingSkill: 0
+  isCastingSkill: 0
+  castInterrupted: 0
   jumpHeight: 2
   jumpDistance: 2
   gravity: -50
@@ -152,7 +153,7 @@ MonoBehaviour:
   fwd: 0
   independentFromInputFwd: 0
   sideways: 0
-  rollDistance: 1
+  rollDistance: 0.8
   animator: {fileID: 0}
   leftFoot: {fileID: 8799963076812449710}
   rightFoot: {fileID: 8799963076812449708}
@@ -246,17 +247,14 @@ MonoBehaviour:
   healingPowerMultiplier: 0
   defense: 0
   defenseMultiplier: 0
-  castingTime: 0
-  attackSpeedPercentage: 0
-  attackSpeedPercentageAdjustement: 0
-  attackSpeedPercentageInverted: 0
+  castingSpeed: {x: 0, y: 0, z: 0}
+  attackSpeed: {x: 0, y: 0, z: 0}
   canRegenerateHealth: 1
   HealthPointsPerSecond: 10
   canRegenerateStamina: 1
   baseStaminaPerSecond: 50
   buffIcon: {fileID: 4436150398646105867, guid: 55bb0ef939a72e247abfcf66748e3030,
     type: 3}
-  xx: 0
 --- !u!114 &89537938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6820,9 +6818,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 3796254581576987130}
     m_Modifications:
     - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
+      propertyPath: hands.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
       propertyPath: shootPosition
       value: 
       objectReference: {fileID: 8799963076812449762}
+    - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
+      propertyPath: hands.Array.data[0]
+      value: 
+      objectReference: {fileID: 5446218091314998475}
+    - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
+      propertyPath: hands.Array.data[1]
+      value: 
+      objectReference: {fileID: 5446218091419771110}
     - target: {fileID: 4129496327993674985, guid: f070ad03912b9e14bbc1462d032b5e65,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
