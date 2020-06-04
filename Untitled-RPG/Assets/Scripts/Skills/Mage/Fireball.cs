@@ -5,6 +5,7 @@ using UnityEngine;
 public class Fireball : Skill
 {
     [Header("Custom Vars")]
+    public LayerMask ignorePlayer;
     public float speed;
     public float distance;
 
@@ -15,12 +16,20 @@ public class Fireball : Skill
 
     public ParticleSystem HandsEffect;
     public Transform[] hands;
+
+    [Header("Sounds")]
+    public AudioClip castingSound;
+
     ParticleSystem[] instanciatedEffects = new ParticleSystem[2];
 
     protected override void CastingAnim() {
+
         animator.CrossFade("Attacks.Mage.Fireball", 0.25f);
-        instanciatedEffects[0] = Instantiate(HandsEffect, hands[0].position, Quaternion.identity, hands[0]);
-        instanciatedEffects[1] = Instantiate(HandsEffect, hands[1].position, Quaternion.identity, hands[1]);
+
+        PlaySound(castingSound, 0.15f, 0.75f);
+
+        instanciatedEffects[0] = Instantiate(HandsEffect, hands[0]);
+        instanciatedEffects[1] = Instantiate(HandsEffect, hands[1]);
 
         instanciatedEffects[0].gameObject.SetActive(true);
         instanciatedEffects[1].gameObject.SetActive(true);
@@ -30,7 +39,7 @@ public class Fireball : Skill
 
     public void FireProjectile () {
         finishedCast = true;
-
+         
         ParticleSystem[] left = instanciatedEffects[0].GetComponentsInChildren<ParticleSystem>();
         for (int i = 0; i < left.Length; i++) {
             left[i].Stop();
@@ -49,7 +58,7 @@ public class Fireball : Skill
         GameObject Fireball = Instantiate(fireball, shootPosition.position, Quaternion.identity);
         
         RaycastHit hit;
-        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, distance)) {
+        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, distance, ignorePlayer)) {
             shootPoint = hit.point;        
         } else {
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (distance + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
@@ -71,6 +80,8 @@ public class Fireball : Skill
     } */
 
     protected override void InterruptCasting() {
+        base.InterruptCasting();
+
         ParticleSystem[] left = instanciatedEffects[0].GetComponentsInChildren<ParticleSystem>();
         for (int i = 0; i < left.Length; i++) {
             left[i].Stop();
@@ -87,7 +98,7 @@ public class Fireball : Skill
 
     void DrawDebugs () {
         RaycastHit hit;
-        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, distance)) {
+        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, distance, ignorePlayer)) {
             shootPoint = hit.point;        
         } else {
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (distance + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;

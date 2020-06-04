@@ -27,8 +27,8 @@ public class PlayerControlls : MonoBehaviour
     public bool isGettingHit;
     public bool isWeaponOut;
     public bool isGrounded;
-    //public bool isUsingSkill;
     public bool isCastingSkill;
+    public bool isFlying;
 
     [Space]
     public bool castInterrupted;
@@ -90,20 +90,38 @@ public class PlayerControlls : MonoBehaviour
     }
 
     Vector3 prevPos;
+    float calculatingCurrentSpeedTimer;
+    float currentSpeedSums;
+    float instantCurrentSpeed;
     void CalculateCurrentSpeed () {
-        currentSpeed = Vector3.Magnitude(transform.position - prevPos) * 120;
-        prevPos = transform.position;
+        if (calculatingCurrentSpeedTimer < 0.25f) {
+            calculatingCurrentSpeedTimer += Time.fixedDeltaTime;
+            instantCurrentSpeed = Vector3.Magnitude(transform.position - prevPos - new Vector3(0, transform.position.y, 0)) * 120;
+            prevPos = transform.position - new Vector3(0, transform.position.y, 0);
+            currentSpeedSums += instantCurrentSpeed;
+        } else {
+            currentSpeed = Mathf.Round( (currentSpeedSums/(0.25f/Time.fixedDeltaTime)) * 100f ) / 100f;
+            calculatingCurrentSpeedTimer = 0;
+            currentSpeedSums = 0;
+        }
+        
     }
 
     void Update()
     {
+        isGrounded = IsGrounded();
 
-        if (!isMounted) {
-            Movement();
-            Animations();
+        if (!isMounted && !isFlying) {
+            GroundMovement();
+            GroundAnimations();
+        } else if (isFlying) {
+            FlyingMovement();
+            FlyingAnimations();
         }
         Sprinting();
         MountAnimal();
+        SetAnimatorVarialbes();
+        InputMagnitudeFunc();
 
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
@@ -121,11 +139,10 @@ public class PlayerControlls : MonoBehaviour
         CalculateCurrentSpeed();
     }
 
+#region Ground movement
     bool staminaRanOutFromSprinting;
-    void Movement()
+    void GroundMovement()
     {
-        isGrounded = IsGrounded();
-
         if (Input.GetButtonDown("Jump"))
             Jump();
 
@@ -224,7 +241,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
 
-    [Header("Animations variables")]
+    //Animation variables
     float InputDirection;
     float lastInputDirection;
     float InputMagnitude;
@@ -232,7 +249,7 @@ public class PlayerControlls : MonoBehaviour
     float isRunningFloat;
     float isSprintingFloat;
     
-    void Animations() {
+    void GroundAnimations() {
         if ( (InputDirection == 90 || InputDirection == -90) && isRunning && !isSprinting)
             walkSpeed = baseWalkSpeed * 1.2f;
         else 
@@ -255,11 +272,6 @@ public class PlayerControlls : MonoBehaviour
                 animator.speed = walkSpeed;
         }
 
-        InputMagnitudeFunc();
-        animator.SetFloat("InputMagnitude", InputMagnitude);    
-        animator.SetFloat("InputDirection", InputDirection);
-
-
         if (!Input.GetKey(KeyCode.LeftAlt)) {
             if (Input.GetAxis("Mouse X") == 0) {
                 if (RotationDirection > 0.1f) 
@@ -277,7 +289,6 @@ public class PlayerControlls : MonoBehaviour
                 RotationDirection += Time.deltaTime * 50;
             }
         }
-        animator.SetFloat("RotationDirection", RotationDirection);
 
         if (isRunning) {
             isRunningFloat += Time.deltaTime * 5;
@@ -285,18 +296,12 @@ public class PlayerControlls : MonoBehaviour
             isRunningFloat -= Time.deltaTime * 5;
         }
         isRunningFloat = Mathf.Clamp01(isRunningFloat);
-        animator.SetFloat("isRunning", isRunningFloat);
 
         if (isSprinting) {
             isSprintingFloat = 1;
         } else {
             isSprintingFloat = 0;
         }
-        animator.SetFloat("isSprinting", isSprintingFloat);
-
-        animator.SetBool("Idle", isIdle);
-        animator.SetBool("isCrouch", isCrouch);
-        animator.SetBool("isGrounded", isGrounded);
     }
 
     void InputMagnitudeFunc () {
@@ -319,7 +324,7 @@ public class PlayerControlls : MonoBehaviour
     float jumpDis;
     void Jump ()
     {
-        if (!isGrounded || isCrouch || isRolling || isAttacking || isGettingHit) {
+        if (!isGrounded || isFlying || isCrouch || isRolling || isAttacking || isGettingHit || isJumping) {
             return;
         }
 
@@ -344,7 +349,17 @@ public class PlayerControlls : MonoBehaviour
         fwd -= jumpDis;
         sideways -= jumpDis;
         animator.applyRootMotion = true;
+        yield return new WaitForSeconds(0.5f);
         isJumping = false;
+    }
+    IEnumerator DetectLanding (bool afterFlying) {
+        yield return new WaitForSeconds(0.1f);
+        while (!isGrounded) {
+            velocityY += gravity/2.5f * Time.deltaTime;
+            yield return null;
+        }
+        isFlying = false;
+        animator.applyRootMotion = true;
     }
 
     void Crouch() {
@@ -354,13 +369,9 @@ public class PlayerControlls : MonoBehaviour
         InterruptCasting();
     }
 
-    public void SprintOff () {
-        isSprinting = false;
-    }
-
     float rollDis;
     void Roll() {
-        if (isAttacking || isRolling) {
+        if (isAttacking || isRolling || isFlying) {
             return;
         }
         if (GetComponent<Characteristics>().Stamina < staminaReqToRoll) {
@@ -406,16 +417,91 @@ public class PlayerControlls : MonoBehaviour
         else if (!isSprinting && sprintTrails.isPlaying) 
             sprintTrails.Stop();
     }
+    public void SprintOff () {
+        isSprinting = false;
+    }
 
     void MountAnimal () {
         if (Input.GetKeyDown(KeyCode.F)) {
-            if (!isMounted)
+            if (!isMounted) {
                 GetComponent<MRider>().MountAnimal();
-            else 
+                SprintOff();
+            }
+            else {
                 GetComponent<MRider>().DismountAnimal();
+            } 
         }
     }
 
+
+#endregion
+
+#region Flying movement
+
+    [Header("Flying variables")]
+    public float flySpeed = 2;
+
+    void FlyingMovement() {
+        RotationDirection = 0;
+
+        forward = flySpeed * transform.forward * (1+fwd) * Input.GetAxis("Vertical") + independentFromInputFwd * transform.forward;
+        side = flySpeed * transform.right * (1+sideways) * Input.GetAxis("Horizontal");
+
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.LeftShift)) {
+            velocityY = Mathf.MoveTowards(velocityY, 1, 0.2f);
+        } else if (Input.GetKey(KeyCode.LeftControl)) {
+            velocityY = Mathf.MoveTowards(velocityY, -1, 0.2f);;
+        } else {
+            velocityY = Mathf.MoveTowards(velocityY, 0, 0.2f);
+        }
+        
+        velocity = Vector3.up * velocityY * 2 + forward + side;
+        controller.Move(velocity * flySpeed * Time.deltaTime); 
+
+        UpdateRotation();
+    }
+
+    void FlyingAnimations () {
+        if (!isIdle) {
+            InputDirection = Mathf.Atan2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * Mathf.Rad2Deg;
+            lastInputDirection = InputDirection;
+        } else {
+            InputDirection = lastInputDirection;
+        }
+    }
+
+    public void TakeOff () {
+        animator.CrossFade("Main.Flying.Takeoff", 0.1f);
+        animator.applyRootMotion = false;
+        isFlying = true;
+    }
+    public void LandFromFlying () {
+        animator.CrossFade("Main.Flying.Land", 0.1f);
+    }
+    public void FlyUp () { //Called from take off animation
+        velocityY = 5f;
+        SprintOff();
+    }
+    public void LandDown () { //Called from landing animation
+        StartCoroutine(DetectLanding(true));
+    }
+
+
+#endregion
+    
+    void SetAnimatorVarialbes () {
+        animator.SetFloat("RotationDirection", RotationDirection);
+        animator.SetFloat("InputMagnitude", InputMagnitude);    
+        animator.SetFloat("InputDirection", InputDirection);
+        animator.SetFloat("isSprinting", isSprintingFloat);
+        animator.SetFloat("RotationDirection", RotationDirection);
+        animator.SetFloat("isRunning", isRunningFloat);
+        
+        animator.SetBool("Idle", isIdle);
+        animator.SetBool("isCrouch", isCrouch);
+        animator.SetBool("isGrounded", isGrounded);
+    }
+    
     public void InterruptCasting () {
         if (!isCastingSkill)
             return;

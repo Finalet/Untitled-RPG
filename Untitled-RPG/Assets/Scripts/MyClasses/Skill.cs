@@ -61,6 +61,7 @@ public abstract class Skill : MonoBehaviour
         CastingAnim();
         playerControlls.isCastingSkill = true;
         finishedCast = false;
+        CanvasScript.instance.DisplayCastingBar(castingTime);
         while (!finishedCast) {
             if (playerControlls.castInterrupted) { 
                 InterruptCasting();
@@ -76,7 +77,7 @@ public abstract class Skill : MonoBehaviour
     protected virtual void LocalUse () {
         playerControlls.InterruptCasting();
         coolDownTimer = coolDown;
-        playerControlls.isAttacking = true;
+        //playerControlls.isAttacking = true;
         playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
     }
@@ -111,4 +112,10 @@ public abstract class Skill : MonoBehaviour
         }
     }
 
+    protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch) {
+        audioSource.clip = clip;
+        audioSource.time = timeOffest;
+        audioSource.pitch = pitch;
+        audioSource.Play();
+    }
 }

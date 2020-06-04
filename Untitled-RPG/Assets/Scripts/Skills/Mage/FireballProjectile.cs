@@ -23,6 +23,10 @@ public class FireballProjectile : MonoBehaviour
         GetComponent<MeshRenderer>().enabled = true;
         fire.GetComponent<ParticleSystem>().Play();
         begPos = transform.position;
+
+        GetComponent<AudioSource>().time = 0.1f; 
+        GetComponent<AudioSource>().pitch = 1.2f; 
+        GetComponent<AudioSource>().Play(); 
     }
 
     void Update() {

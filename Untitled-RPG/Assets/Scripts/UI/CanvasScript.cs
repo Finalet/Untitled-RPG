@@ -12,6 +12,7 @@ public class CanvasScript : MonoBehaviour
     public Image healthBar;
     public Image staminaBar;
     public GameObject buffs;
+    public GameObject castingBar;
 
     [Header("Overall UI")]
     public TextMeshProUGUI warningText;
@@ -87,5 +88,24 @@ public class CanvasScript : MonoBehaviour
         warningText.text = null;
         warningText.gameObject.SetActive(false);
         warning = null;
+    }
+
+    float timer = 0;
+    public void DisplayCastingBar (float castingTime) {
+        StartCoroutine(DisplayCastinBarIenum(castingTime));
+    }
+    IEnumerator DisplayCastinBarIenum (float castingTime) {
+        float timer = 0;
+        castingBar.SetActive(true);
+        while (timer < castingTime) {
+            if (PlayerControlls.instance.castInterrupted) {
+                break;
+            }
+            timer += Time.deltaTime;
+            castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = timer/castingTime;
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.25f);
+        castingBar.SetActive(false);
     }
 }
