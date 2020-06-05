@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3796254581576987130}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 7278422578841500356}
   - component: {fileID: 2637180670562774279}
   - component: {fileID: 413061358}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -111,13 +111,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.8
+  m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 50
   m_StepOffset: 0.3
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.95, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &2637180670562774273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +160,11 @@ MonoBehaviour:
   leftFoot: {fileID: 8799963076812449710}
   rightFoot: {fileID: 8799963076812449708}
   sprintTrails: {fileID: 5991069649218392711}
+  footIKRay:
+    serializedVersion: 2
+    m_Bits: 1074791223
+  distanceToGround: 0.06
+  maxStep: 0.3
   flySpeed: 2
 --- !u!114 &2637180670562774274
 MonoBehaviour:
@@ -252,6 +257,7 @@ MonoBehaviour:
   defenseMultiplier: 0
   castingSpeed: {x: 0, y: 0, z: 0}
   attackSpeed: {x: 0, y: 0, z: 0}
+  magicSkillDistanceIncrease: 0
   canRegenerateHealth: 1
   HealthPointsPerSecond: 10
   canRegenerateStamina: 1
@@ -647,7 +653,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6475160472764327556}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Knight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -684,7 +690,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5446218090661921047}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SheildSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -715,7 +721,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5446218090870927202}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LongSwordSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -745,7 +751,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5446218090910558829}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RightWeaponSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -776,7 +782,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5446218091101984824}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SkillsHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -808,7 +814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5446218091314998475}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WeaponSlotLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -838,7 +844,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5446218091419771110}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WeaponSlotRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -870,7 +876,7 @@ GameObject:
   - component: {fileID: 5446218092118220920}
   - component: {fileID: 5446218092121664248}
   - component: {fileID: 5446218092120595472}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Shield_Ornate_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -947,7 +953,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5446218092481379633}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LeftWeaponSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -980,7 +986,7 @@ GameObject:
   - component: {fileID: 6857990194683429700}
   - component: {fileID: 5991069649218392711}
   - component: {fileID: 2779884185395198853}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SprintingTrails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5741,7 +5747,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8799963076812449330}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spine_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5773,7 +5779,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8799963076812449340}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spine_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5806,7 +5812,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8799963076812449708}
   - component: {fileID: 665173170}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ball_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5934,7 +5940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8799963076812449710}
   - component: {fileID: 17478675}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ball_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6062,7 +6068,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8799963076812449714}
   - component: {fileID: 8799963076798625434}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Skin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6144,7 +6150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8799963076812449762}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hand_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6175,7 +6181,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8799963076812449772}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hand_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6205,6 +6211,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3796254581576987130}
     m_Modifications:
+    - target: {fileID: -6896996163050224093, guid: 6bdadc9ae37fd5847a4a1290b845c314,
+        type: 3}
+      propertyPath: feetsAndHands.Array.data[0]
+      value: 
+      objectReference: {fileID: 8799963076812449710}
+    - target: {fileID: -6896996163050224093, guid: 6bdadc9ae37fd5847a4a1290b845c314,
+        type: 3}
+      propertyPath: feetsAndHands.Array.data[1]
+      value: 
+      objectReference: {fileID: 8799963076812449708}
+    - target: {fileID: -6896996163050224093, guid: 6bdadc9ae37fd5847a4a1290b845c314,
+        type: 3}
+      propertyPath: feetsAndHands.Array.data[2]
+      value: 
+      objectReference: {fileID: 5446218091314998475}
+    - target: {fileID: -6896996163050224093, guid: 6bdadc9ae37fd5847a4a1290b845c314,
+        type: 3}
+      propertyPath: feetsAndHands.Array.data[3]
+      value: 
+      objectReference: {fileID: 5446218091419771110}
     - target: {fileID: 4129496328151638762, guid: 6bdadc9ae37fd5847a4a1290b845c314,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6285,6 +6311,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Target
       objectReference: {fileID: 0}
+    - target: {fileID: 1698341961080254111, guid: 3486bfc3683056242b0a38a12d535de9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5219558128135389665, guid: 3486bfc3683056242b0a38a12d535de9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6339,6 +6370,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6850994744321980146, guid: 3486bfc3683056242b0a38a12d535de9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3486bfc3683056242b0a38a12d535de9, type: 3}
@@ -6415,6 +6451,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dash
       objectReference: {fileID: 0}
+    - target: {fileID: 6762687854657974093, guid: 7b9e9ef2ddfc69846b77572455f9afeb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9e9ef2ddfc69846b77572455f9afeb, type: 3}
 --- !u!4 &9123180249773832159 stripped
@@ -6430,6 +6471,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5446218092481379633}
     m_Modifications:
+    - target: {fileID: 1726790996373259273, guid: 7b6d9c81ce8714a4682e0f244c89fede,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4561477817132018793, guid: 7b6d9c81ce8714a4682e0f244c89fede,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5964504789648759460, guid: 7b6d9c81ce8714a4682e0f244c89fede,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6490,6 +6541,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MySword
       objectReference: {fileID: 0}
+    - target: {fileID: 7250078903685327031, guid: 7b6d9c81ce8714a4682e0f244c89fede,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b6d9c81ce8714a4682e0f244c89fede, type: 3}
 --- !u!1 &5371984906626739445 stripped
@@ -6511,6 +6567,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6475160472764327556}
     m_Modifications:
+    - target: {fileID: 127515062751026105, guid: c72110436cf34d14e8adfe6e87d9b81f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1170207704176486007, guid: c72110436cf34d14e8adfe6e87d9b81f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1654239541132647760, guid: c72110436cf34d14e8adfe6e87d9b81f,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -6520,6 +6586,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Rage
+      objectReference: {fileID: 0}
+    - target: {fileID: 1698341961080254111, guid: c72110436cf34d14e8adfe6e87d9b81f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3363206479389141321, guid: c72110436cf34d14e8adfe6e87d9b81f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5219558128135389665, guid: c72110436cf34d14e8adfe6e87d9b81f,
         type: 3}
@@ -6595,6 +6671,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Whirlwind
+      objectReference: {fileID: 0}
+    - target: {fileID: 3155188577460487680, guid: a91a054327f05504080059380690a612,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3155188577460487687, guid: a91a054327f05504080059380690a612,
         type: 3}
@@ -6730,6 +6811,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoneHit
       objectReference: {fileID: 0}
+    - target: {fileID: 6762687854657974093, guid: 2a552418682e37743a1b87cf82c793ea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7587762131332577357, guid: 2a552418682e37743a1b87cf82c793ea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8375942635819256315, guid: 2a552418682e37743a1b87cf82c793ea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8524438119942058840, guid: 2a552418682e37743a1b87cf82c793ea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8962092676790311249, guid: 2a552418682e37743a1b87cf82c793ea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057656696862073831, guid: 2a552418682e37743a1b87cf82c793ea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a552418682e37743a1b87cf82c793ea, type: 3}
 --- !u!4 &560936431652456363 stripped
@@ -6804,6 +6915,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Smash
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762687854657974093, guid: d5279c4e592553e408f0af3637caa3cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5279c4e592553e408f0af3637caa3cb, type: 3}
@@ -6880,6 +6996,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: K.O.
       objectReference: {fileID: 0}
+    - target: {fileID: 6762687854657974093, guid: bbf67b52ca9718e49a61278fee995ce3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbf67b52ca9718e49a61278fee995ce3, type: 3}
 --- !u!4 &2947177736279937321 stripped
@@ -6911,6 +7032,21 @@ PrefabInstance:
       propertyPath: hands.Array.data[1]
       value: 
       objectReference: {fileID: 5446218091419771110}
+    - target: {fileID: 1111256807779781418, guid: f070ad03912b9e14bbc1462d032b5e65,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3252507433604302347, guid: f070ad03912b9e14bbc1462d032b5e65,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852938157896160233, guid: f070ad03912b9e14bbc1462d032b5e65,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4129496327993674985, guid: f070ad03912b9e14bbc1462d032b5e65,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -6981,6 +7117,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fireball
       objectReference: {fileID: 0}
+    - target: {fileID: 4129496328151638763, guid: f070ad03912b9e14bbc1462d032b5e65,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4708443703055047615, guid: f070ad03912b9e14bbc1462d032b5e65,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8121552614198588256, guid: f070ad03912b9e14bbc1462d032b5e65,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8955996354320797727, guid: f070ad03912b9e14bbc1462d032b5e65,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
 --- !u!4 &4923387477737055512 stripped
@@ -6996,6 +7152,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5446218090910558829}
     m_Modifications:
+    - target: {fileID: 4416282044699467586, guid: 4c42f84176753b848b41a9a02a5e8674,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028012287972672972, guid: 4c42f84176753b848b41a9a02a5e8674,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7214381241472663016, guid: 4c42f84176753b848b41a9a02a5e8674,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7055,6 +7221,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MySword2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7214381241472913728, guid: 4c42f84176753b848b41a9a02a5e8674,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c42f84176753b848b41a9a02a5e8674, type: 3}

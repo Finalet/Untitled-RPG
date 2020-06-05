@@ -34,6 +34,8 @@ public class Characteristics : MonoBehaviour
     public Vector3 attackSpeed;
     float attackSpeedPercentage; float attackSpeedPercentageAdjustement; float attackSpeedPercentageInverted;
 
+    public float magicSkillDistanceIncrease;
+
     int statsRatio = 2;
     [Header("Stats regeneration")]
     public bool canRegenerateHealth; 
@@ -150,20 +152,26 @@ public class Characteristics : MonoBehaviour
     }
 
     public void AddBuff(Skill skill) {
-        if (skill.name == "Rage") {
+        if (skill.ID == 4) { //Rage skill
             float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
             meleeMultiplier += buffIncrease/100;
             attackSpeedPercentageAdjustement += buffIncrease/100;
-            GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
-            icon.GetComponent<BuffIcon>().skill = skill;
+        } else if (skill.ID == 12) { //Levitation skill
+            magicSkillDistanceIncrease += skill.GetComponent<Levitation>().skillDistanceIncrease;
+            magicPowerMultiplier += skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
         }
+        GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
+        icon.GetComponent<BuffIcon>().skill = skill;
     }
 
     public void RemoveBuff(Skill skill) {
-        if (skill.name == "Rage") {
+        if (skill.ID == 4) {
             float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
             meleeMultiplier -= buffIncrease/100;
             attackSpeedPercentageAdjustement -= buffIncrease/100;
+        } else if (skill.ID == 12) {
+            magicSkillDistanceIncrease -= skill.GetComponent<Levitation>().skillDistanceIncrease;
+            magicPowerMultiplier -= skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
         }
     }
 

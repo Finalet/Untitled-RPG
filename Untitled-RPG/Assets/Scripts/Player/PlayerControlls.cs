@@ -433,6 +433,52 @@ public class PlayerControlls : MonoBehaviour
         }
     }
 
+    [Header("Feet IK")]
+    public LayerMask footIKRay;
+    public float distanceToGround;
+    public float maxStep = 0.5f;
+    float legDifference;
+    void OnAnimatorIK(int layerIndex) {
+        if (isFlying)
+            return;
+
+        animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("IKLeftFootWeight"));
+        animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("IKLeftFootWeight"));
+        animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, animator.GetFloat("IKRightFootWeight"));
+        animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, animator.GetFloat("IKRightFootWeight"));
+
+        //Left foot
+        RaycastHit hit;
+        Ray ray = new Ray (animator.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down);
+        if (Physics.Raycast(ray, out hit, distanceToGround + maxStep + 1f, footIKRay)) {
+            Vector3 footPosition = hit.point;
+            footPosition.y += distanceToGround;
+            animator.SetIKPosition(AvatarIKGoal.LeftFoot, footPosition);
+            animator.SetIKRotation(AvatarIKGoal.LeftFoot, Quaternion.LookRotation(transform.forward, hit.normal));
+        } else {
+            Vector3 footPosition = animator.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.down * (distanceToGround + maxStep);
+            animator.SetIKPosition(AvatarIKGoal.LeftFoot, footPosition);
+            animator.SetIKRotation(AvatarIKGoal.LeftFoot, Quaternion.LookRotation(transform.forward, Vector3.up));
+        }
+
+        //Right foot
+        ray = new Ray (animator.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.up, Vector3.down);
+        if (Physics.Raycast(ray, out hit, distanceToGround + maxStep + 1f, footIKRay)) {
+            Vector3 footPosition = hit.point;
+            footPosition.y += distanceToGround;
+            animator.SetIKPosition(AvatarIKGoal.RightFoot, footPosition);
+            animator.SetIKRotation(AvatarIKGoal.RightFoot, Quaternion.LookRotation(transform.forward, hit.normal));
+        } else {
+            Vector3 footPosition = animator.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.down * (distanceToGround + maxStep);
+            animator.SetIKPosition(AvatarIKGoal.RightFoot, footPosition);
+            animator.SetIKRotation(AvatarIKGoal.RightFoot, Quaternion.LookRotation(transform.forward, Vector3.up));
+        }
+        
+        legDifference = Mathf.Abs(animator.GetIKPosition(AvatarIKGoal.LeftFoot).y - animator.GetIKPosition(AvatarIKGoal.RightFoot).y);
+
+        animator.bodyPosition -= Vector3.up * (legDifference/2 - distanceToGround/4);
+    }
+
 
 #endregion
 
@@ -471,6 +517,8 @@ public class PlayerControlls : MonoBehaviour
     }
 
     public void TakeOff () {
+        isCrouch = false;
+
         animator.CrossFade("Main.Flying.Takeoff", 0.1f);
         animator.applyRootMotion = false;
         isFlying = true;
