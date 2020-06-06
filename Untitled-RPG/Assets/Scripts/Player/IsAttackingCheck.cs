@@ -7,7 +7,7 @@ public class IsAttackingCheck : StateMachineBehaviour
     public bool Player;
     public bool Enemy;
 
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) {
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) {
         if (Player){
             animator.gameObject.GetComponent<PlayerControlls>().isAttacking = false;
         } else {

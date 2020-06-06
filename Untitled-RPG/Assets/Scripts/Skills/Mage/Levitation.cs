@@ -14,6 +14,13 @@ public class Levitation : Skill
 
     List<ParticleSystem> instanciatedParticles = new List<ParticleSystem>();
 
+
+    protected override void LocalUse() {
+        if (playerControlls.isAttacking)
+            return;
+        base.LocalUse();
+    }
+
     protected override void Start() {
         base.Start(); 
         totalAttackTime = flightDuration;
