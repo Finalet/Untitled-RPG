@@ -50,7 +50,7 @@ public class PlayerControlls : MonoBehaviour
     Vector3 side;
 
     [Header("Rolling")]
-    public float rollDistance;    
+    public float rollDistance;  
 
     [System.NonSerialized] public CharacterController controller;
     [System.NonSerialized] public Camera playerCamera;
@@ -63,6 +63,8 @@ public class PlayerControlls : MonoBehaviour
     public Transform leftFoot;
     public Transform rightFoot;
     public ParticleSystem sprintTrails;
+
+    public SkinnedMeshRenderer skinnedMesh;
 
     float baseHeight;
     float baseColliderCenterY;
@@ -345,6 +347,13 @@ public class PlayerControlls : MonoBehaviour
     IEnumerator DetectLanding () {
         yield return new WaitForSeconds(0.1f);
         while (!isGrounded) {
+            if (isFlying) {
+                fwd -= jumpDis;
+                sideways -= jumpDis;
+                isJumping = false;
+                animator.CrossFade("Jump/Roll.Empty", 0.25f);
+                yield break;
+            }
             yield return null;
         }
         fwd -= jumpDis;

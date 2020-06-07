@@ -18,14 +18,19 @@ public class Whirlwind : Skill
         base.Update();
         ClearTrigger();
     }
-
+    bool wasFlying;
     IEnumerator Using () {
         animator.CrossFade("Attacks.Knight.Whirlwind", 0.25f);
         while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).IsName("Whirlwind_loop")) {
             yield return null;
         }
-        playerControlls.fwd += moveSpeed;
-        playerControlls.sideways += moveSpeed;
+
+        if (!playerControlls.isFlying) {
+            playerControlls.fwd += moveSpeed;
+            playerControlls.sideways += moveSpeed;
+        } else {
+            wasFlying = true;
+        }
 
         Characteristics.instance.canGetHit = false;
         
@@ -41,10 +46,18 @@ public class Whirlwind : Skill
             } else {
                 hitTimer -= Time.fixedDeltaTime;
             }
+            //if was flying but the flight is over midway
+            if (!playerControlls.isFlying && wasFlying == true) {
+                playerControlls.fwd += moveSpeed;
+                playerControlls.sideways += moveSpeed;
+                wasFlying = false;
+            }
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
-        playerControlls.fwd -= moveSpeed;
-        playerControlls.sideways -= moveSpeed;
+        if (!wasFlying) {
+            playerControlls.fwd -= moveSpeed;
+            playerControlls.sideways -= moveSpeed;
+        }
         animator.CrossFade("Attacks.Knight.Whirlwind_end", 0.25f);
         Characteristics.instance.canGetHit = true;
     }

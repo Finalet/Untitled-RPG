@@ -8,11 +8,17 @@ public class Dash : Skill
 
     [Header("Custom Vars")]
     public float dashDistance;
+    public ParticleSystem dashVFX;
 
     protected override  void Start() {
         base.Start();
 
         GetComponent<BoxCollider>().enabled = false;
+        var sh = dashVFX.shape; //Dots
+        sh.skinnedMeshRenderer = playerControlls.skinnedMesh;
+
+        sh = dashVFX.transform.GetChild(0).GetComponent<ParticleSystem>().shape; //trails
+        sh.skinnedMeshRenderer = playerControlls.skinnedMesh;
     }
     protected override void Update() {
         base.Update();
@@ -21,6 +27,7 @@ public class Dash : Skill
 
     protected override void CustomUse() {
         actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.meleeAttack/100f);
+        dashVFX.Play();
         animator.CrossFade("Attacks.Knight.Dash", 0.25f);
         audioSource.PlayDelayed(0.1f * characteristics.attackSpeed.z);
     }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class FireballProjectile : MonoBehaviour
 {
     public float distance;
@@ -16,17 +15,21 @@ public class FireballProjectile : MonoBehaviour
     Vector3 begPos;
     bool done;
 
+    bool explosionExpand;
+    float explosionRadius;
+
+    List<Enemy> enemiesHit = new List<Enemy>();
     void Start() {
         if (doNotDestroy)
             return;
 
-        GetComponent<MeshRenderer>().enabled = true;
         fire.GetComponent<ParticleSystem>().Play();
         begPos = transform.position;
 
         GetComponent<AudioSource>().time = 0.1f; 
         GetComponent<AudioSource>().pitch = 1.2f; 
         GetComponent<AudioSource>().Play(); 
+        explosionRadius = GetComponent<SphereCollider>().radius * 3;
     }
 
     void Update() {
@@ -39,6 +42,13 @@ public class FireballProjectile : MonoBehaviour
         }
 
         transform.Rotate(randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime);
+    
+        if(explosionExpand) {
+            if (GetComponent<SphereCollider>().radius <= explosionRadius)
+                GetComponent<SphereCollider>().radius += Time.deltaTime*10;
+            else 
+                GetComponent<Collider>().enabled = false;    
+        }
     }
 
     int damage () {
@@ -55,7 +65,10 @@ public class FireballProjectile : MonoBehaviour
             return;
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
-            other.GetComponent<Enemy>().GetHit(damage(), true, false, transform.position);
+            if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
+                other.GetComponent<Enemy>().GetHit(damage(), true, false, transform.position);
+                enemiesHit.Add(other.GetComponent<Enemy>());
+            }
         }
         Explode();
     }
@@ -65,7 +78,7 @@ public class FireballProjectile : MonoBehaviour
         explostionSparks.Play();
         fire.Stop();
         GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<Collider>().enabled = false;
+        explosionExpand = true;
         GetComponent<MeshRenderer>().enabled = false;
         Destroy(gameObject,0.51f);
     }

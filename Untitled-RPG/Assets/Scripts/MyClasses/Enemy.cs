@@ -192,11 +192,9 @@ public abstract class Enemy : MonoBehaviour
             if (isDead)
                 yield break;
         }
-        canGetHit = false;
         animator.Play("GetHit.GetUp");
         yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(animator.GetLayerIndex("GetHit")).Length);
         isKnockedDown = false;
-        canGetHit = true;
     }
 
     protected virtual void ShowHealthBar () {

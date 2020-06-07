@@ -770,10 +770,12 @@ MonoBehaviour:
   independentFromInputFwd: 0
   sideways: 0
   rollDistance: 0.8
+  rollVFX: {fileID: 0}
   animator: {fileID: 0}
   leftFoot: {fileID: 5394102877094082619}
   rightFoot: {fileID: 1703932730010866860}
   sprintTrails: {fileID: 5991069649218392711}
+  skinnedMesh: {fileID: 7372601912270971082}
   flySpeed: 2
 --- !u!114 &2637180670562774274
 MonoBehaviour:
@@ -7607,6 +7609,11 @@ PrefabInstance:
       propertyPath: feetsAndHands.Array.data[3]
       value: 
       objectReference: {fileID: 5446218091419771110}
+    - target: {fileID: -6896996163050224093, guid: 6bdadc9ae37fd5847a4a1290b845c314,
+        type: 3}
+      propertyPath: flightDuration
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 4129496328151638762, guid: 6bdadc9ae37fd5847a4a1290b845c314,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7831,6 +7838,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6893237622896211928, guid: 7b9e9ef2ddfc69846b77572455f9afeb,
+        type: 3}
+      propertyPath: ShapeModule.m_SkinnedMeshRenderer
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9e9ef2ddfc69846b77572455f9afeb, type: 3}
@@ -8394,7 +8406,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
       propertyPath: hands.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
       propertyPath: shootPosition
@@ -8403,7 +8415,7 @@ PrefabInstance:
     - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
       propertyPath: hands.Array.data[0]
       value: 
-      objectReference: {fileID: 5446218091314998475}
+      objectReference: {fileID: 5446218091419771110}
     - target: {fileID: 165843991, guid: f070ad03912b9e14bbc1462d032b5e65, type: 3}
       propertyPath: hands.Array.data[1]
       value: 

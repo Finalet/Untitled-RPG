@@ -24,7 +24,10 @@ public class Fireball : Skill
 
     protected override void CastingAnim() {
 
-        animator.CrossFade("Attacks.Mage.Fireball", 0.25f);
+        if (playerControlls.isFlying)
+            animator.CrossFade("Attacks.Mage.Fireball_flying", 0.25f);
+        else 
+            animator.CrossFade("Attacks.Mage.Fireball", 0.25f);
 
         PlaySound(castingSound, 0.15f, 0.75f);
 
@@ -57,6 +60,7 @@ public class Fireball : Skill
 
         Vector3 direction = shootPoint - shootPosition.position; 
 
+        Fireball.SetActive(true);
         Fireball.GetComponent<Rigidbody>().AddForce(direction.normalized * speed, ForceMode.Impulse);
         Fireball.GetComponent<FireballProjectile>().distance = actualDistance;
         Fireball.GetComponent<FireballProjectile>().actualDamage = actualDamage;

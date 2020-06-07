@@ -11,19 +11,20 @@ public class Levitation : Skill
 
     public Transform[] feetsAndHands;
     public ParticleSystem bodypartsVFX;
+    public ParticleSystem fullbodyVFX;
 
     List<ParticleSystem> instanciatedParticles = new List<ParticleSystem>();
 
-
-    protected override void LocalUse() {
+    public override void Use () {
         if (playerControlls.isAttacking)
             return;
-        base.LocalUse();
+        base.Use();
     }
-
     protected override void Start() {
         base.Start(); 
         totalAttackTime = flightDuration;
+        var sh = fullbodyVFX.shape;
+        sh.skinnedMeshRenderer = playerControlls.skinnedMesh;
     }
 
     protected override void CustomUse() {
@@ -36,6 +37,9 @@ public class Levitation : Skill
             ps.gameObject.SetActive(true);
             instanciatedParticles.Add(ps);
         }
+
+
+        fullbodyVFX.Play();
     }
 
     IEnumerator flightTimer () {
@@ -48,5 +52,7 @@ public class Levitation : Skill
             Destroy(instanciatedParticles[0].gameObject, 1f);
             instanciatedParticles.Remove(instanciatedParticles[0]);
         }
+
+        fullbodyVFX.Stop();
     }
 }
