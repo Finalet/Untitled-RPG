@@ -46,6 +46,8 @@ public class StoneHit : Skill
         soundFX.GetComponent<AudioSource>().clip = first;
         soundFX.GetComponent<AudioSource>().Play();
 
+        playerControlls.playerCamera.GetComponent<CameraControll>().CameraShake(0.4f, 0.1f);
+
         GetComponent<BoxCollider>().enabled = true;
         while (GetComponent<BoxCollider>().center != newCenter) {
             GetComponent<BoxCollider>().center = Vector3.MoveTowards(GetComponent<BoxCollider>().center, newCenter, 15 * Time.deltaTime);

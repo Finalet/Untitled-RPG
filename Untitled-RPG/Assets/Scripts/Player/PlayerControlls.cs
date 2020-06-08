@@ -34,7 +34,6 @@ public class PlayerControlls : MonoBehaviour
     public bool castInterrupted;
 
     float sprintingDirection;
-    float rollDirection;
 
     [Header("Jumping")]
     public float jumpHeight = 2;
@@ -50,7 +49,9 @@ public class PlayerControlls : MonoBehaviour
     Vector3 side;
 
     [Header("Rolling")]
-    public float rollDistance;  
+    public float rollDistance; 
+    public float rollDirection;
+    float desiredRollDirection;
 
     [System.NonSerialized] public CharacterController controller;
     [System.NonSerialized] public Camera playerCamera;
@@ -135,6 +136,12 @@ public class PlayerControlls : MonoBehaviour
         }
 
         isWeaponOut = GetComponent<WeaponsController>().isWeaponOut;
+
+        if (Mathf.Abs(rollDirection - desiredRollDirection) > 1) {
+            rollDirection = Mathf.Lerp(rollDirection, desiredRollDirection, Time.deltaTime * 20);
+        } else {
+            rollDirection = desiredRollDirection;
+        }
 
     }
 
@@ -389,12 +396,15 @@ public class PlayerControlls : MonoBehaviour
             return;
         }
 
+        animator.applyRootMotion = false;
         GetComponent<Characteristics>().UseOrRestoreStamina(staminaReqToRoll);
         isRolling = true;
         if (InputDirection > 0 && !isSprinting && !isIdle) {
-            rollDirection = InputDirection;
+            //rollDirection = InputDirection;
+            desiredRollDirection = InputDirection;
         } else if (!isSprinting && !isIdle) {
-            rollDirection = 360 + InputDirection;
+            //rollDirection = 360 + InputDirection;
+            desiredRollDirection = InputDirection;
         } 
         UpdateRotation();
         animator.SetTrigger("Roll");
@@ -409,7 +419,9 @@ public class PlayerControlls : MonoBehaviour
         isRolling = false;
         fwd -= rollDis;
         sideways -= rollDis;
-        rollDirection = 0;
+        //rollDirection = 0;
+        desiredRollDirection = 0;
+        animator.applyRootMotion = true;
     }
 
     bool IsGrounded () {
