@@ -50,7 +50,7 @@ public class CameraControll : MonoBehaviour
         if (!PeaceCanvas.instance.anyPanelOpen)
             transform.eulerAngles = new Vector3(rotationX, transform.eulerAngles.y + cameraY, transform.eulerAngles.z);     
 
-        transform.position = Player.transform.position - (transform.forward * camDistance) + transform.right * offset.x + Vector3.up * offset.y + shake;
+        transform.position = Player.transform.position  -transform.forward * (camDistance + offset.z) + transform.right * offset.x + Vector3.up * offset.y + shake;
 
         RaycastHit hit;
         if (Physics.Linecast(Player.transform.position + Vector3.up, transform.position, out hit)) {

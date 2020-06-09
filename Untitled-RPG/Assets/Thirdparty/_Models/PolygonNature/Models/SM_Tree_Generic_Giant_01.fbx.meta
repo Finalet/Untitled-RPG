@@ -1,34 +1,89 @@
 fileFormatVersion: 2
 guid: 2a09a12473720d545bc0108ca893e759
-timeCreated: 1528149684
-licenseType: Store
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: SM_Tree_Generic_Giant_01
-    100002: //RootNode
-    100004: SM_Tree_Generic_Giant_01_Branches
-    100006: SM_Tree_Generic_Giant_01_Leaves
-    400000: SM_Tree_Generic_Giant_01
-    400002: //RootNode
-    400004: SM_Tree_Generic_Giant_01_Branches
-    400006: SM_Tree_Generic_Giant_01_Leaves
-    2300000: SM_Tree_Generic_Giant_01
-    2300002: SM_Tree_Generic_Giant_01_Branches
-    2300004: SM_Tree_Generic_Giant_01_Leaves
-    2300006: //RootNode
-    3300000: SM_Tree_Generic_Giant_01
-    3300002: SM_Tree_Generic_Giant_01_Branches
-    3300004: SM_Tree_Generic_Giant_01_Leaves
-    3300006: //RootNode
-    4300000: SM_Tree_Generic_Giant_01
-    4300002: SM_Tree_Generic_Giant_01_Leaves
-    4300004: SM_Tree_Generic_Giant_01_Branches
-    9500000: //RootNode
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: SM_Tree_Generic_Giant_01
+  - first:
+      1: 100002
+    second: //RootNode
+  - first:
+      1: 100004
+    second: SM_Tree_Generic_Giant_01_Branches
+  - first:
+      1: 100006
+    second: SM_Tree_Generic_Giant_01_Leaves
+  - first:
+      4: 400000
+    second: SM_Tree_Generic_Giant_01
+  - first:
+      4: 400002
+    second: //RootNode
+  - first:
+      4: 400004
+    second: SM_Tree_Generic_Giant_01_Branches
+  - first:
+      4: 400006
+    second: SM_Tree_Generic_Giant_01_Leaves
+  - first:
+      23: 2300000
+    second: SM_Tree_Generic_Giant_01
+  - first:
+      23: 2300002
+    second: SM_Tree_Generic_Giant_01_Branches
+  - first:
+      23: 2300004
+    second: SM_Tree_Generic_Giant_01_Leaves
+  - first:
+      23: 2300006
+    second: //RootNode
+  - first:
+      33: 3300000
+    second: SM_Tree_Generic_Giant_01
+  - first:
+      33: 3300002
+    second: SM_Tree_Generic_Giant_01_Branches
+  - first:
+      33: 3300004
+    second: SM_Tree_Generic_Giant_01_Leaves
+  - first:
+      33: 3300006
+    second: //RootNode
+  - first:
+      43: 4300000
+    second: SM_Tree_Generic_Giant_01
+  - first:
+      43: 4300002
+    second: SM_Tree_Generic_Giant_01_Leaves
+  - first:
+      43: 4300004
+    second: SM_Tree_Generic_Giant_01_Branches
+  - first:
+      95: 9500000
+    second: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Leave
+    second: {fileID: 2100000, guid: dd1c3959cc08125438b89eecfa2c2a8f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Leaves_Dead
+    second: {fileID: 2100000, guid: 3da053a7ebd1be545bfb8b227602b7ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Trunk
+    second: {fileID: 2100000, guid: be132297f8b493348ac55a521df31389, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -41,12 +96,15 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 0
   meshes:
@@ -54,13 +112,23 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
     importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -70,10 +138,14 @@ ModelImporter:
     normalSmoothAngle: 0
     normalImportMode: 0
     tangentImportMode: 0
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -83,14 +155,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
