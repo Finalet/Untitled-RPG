@@ -130,17 +130,6 @@ public class Characteristics : MonoBehaviour
         }
     }
     
-    public void GetHit (int damage) {
-        if (!canGetHit)
-            return;
-
-        PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.25f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
-        int actualDamage = Mathf.RoundToInt(damage); 
-        HP -= damage;
-        DisplayDamageNumber(damage);
-        GetComponent<PlayerAudioController>().PlayGetHitSound();
-    }
-
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
         ddText.GetComponent<ddText>().damage = damage;
@@ -175,4 +164,35 @@ public class Characteristics : MonoBehaviour
         }
     }
 
+#region Get hit overloads 
+    bool checkFailed () {
+        if (!canGetHit)
+            return true;
+        else   
+            return false;
+    }
+
+    void BasicGetHit (int damage) {
+        PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.25f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
+        int actualDamage = Mathf.RoundToInt(damage); 
+        HP -= damage;
+        DisplayDamageNumber(damage);
+        GetComponent<PlayerAudioController>().PlayGetHitSound();
+    }
+
+    public void GetHit (int damage) {
+        if (checkFailed())
+            return;
+
+        BasicGetHit(damage);
+    }
+    public void GetHit (int damage, float cameraShakeDuration, float cameraShakeMagnitude) {
+        if (checkFailed())
+            return;
+
+        BasicGetHit(damage);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeDuration, cameraShakeMagnitude, damage);
+    }
+
+#endregion
 }

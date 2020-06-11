@@ -33,7 +33,8 @@ public class PlayerControlls : MonoBehaviour
     [Space]
     public bool castInterrupted;
 
-    float sprintingDirection;
+    public float sprintingDirection;
+    public float desiredSprintingDirection;
 
     [Header("Jumping")]
     public float jumpHeight = 2;
@@ -50,7 +51,7 @@ public class PlayerControlls : MonoBehaviour
 
     [Header("Rolling")]
     public float rollDistance; 
-    public float rollDirection;
+    float rollDirection;
     float desiredRollDirection;
 
     [System.NonSerialized] public CharacterController controller;
@@ -143,6 +144,13 @@ public class PlayerControlls : MonoBehaviour
             rollDirection = desiredRollDirection;
         }
 
+        //LerpAngle since need to go from -179 to 179 smoothely
+        if (Mathf.Abs(sprintingDirection - desiredSprintingDirection) > 1) {
+            sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 10);
+        } else {
+            sprintingDirection = desiredSprintingDirection;
+        }
+
     }
 
     void FixedUpdate() {
@@ -229,12 +237,15 @@ public class PlayerControlls : MonoBehaviour
 
         if (isSprinting) {
             if (InputDirection > 0) {
-                sprintingDirection = InputDirection;
+                //sprintingDirection = InputDirection;
+                desiredSprintingDirection = InputDirection;
             } else {
-                sprintingDirection = 360 + InputDirection;
+                //sprintingDirection = 360 + InputDirection;
+                desiredSprintingDirection =  InputDirection;
             }
         } else {
-            sprintingDirection = 0;
+            // sprintingDirection = 0;
+            desiredSprintingDirection = 0;
         }
 
         if (isAttacking) {
@@ -400,10 +411,8 @@ public class PlayerControlls : MonoBehaviour
         GetComponent<Characteristics>().UseOrRestoreStamina(staminaReqToRoll);
         isRolling = true;
         if (InputDirection > 0 && !isSprinting && !isIdle) {
-            //rollDirection = InputDirection;
             desiredRollDirection = InputDirection;
         } else if (!isSprinting && !isIdle) {
-            //rollDirection = 360 + InputDirection;
             desiredRollDirection = InputDirection;
         } 
         UpdateRotation();
@@ -419,7 +428,6 @@ public class PlayerControlls : MonoBehaviour
         isRolling = false;
         fwd -= rollDis;
         sideways -= rollDis;
-        //rollDirection = 0;
         desiredRollDirection = 0;
         animator.applyRootMotion = true;
     }

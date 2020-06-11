@@ -4967,7 +4967,6 @@ GameObject:
   - component: {fileID: 6108445801165152893}
   - component: {fileID: 8009673420645125702}
   - component: {fileID: 1814711764957383585}
-  - component: {fileID: 6203428316940080599}
   - component: {fileID: 7338315334149968762}
   - component: {fileID: 6108445801165152895}
   - component: {fileID: 6108445801165152894}
@@ -5072,19 +5071,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!65 &6203428316940080599
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5048537492052852752}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.4, y: 1.5, z: 1.3740218}
-  m_Center: {x: 0, y: 0.79999995, z: 1.2129934}
 --- !u!114 &7338315334149968762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5104,7 +5090,7 @@ MonoBehaviour:
   movementSpeed: 0.5
   attackSpeed: 0.4
   playerDetectRadius: 20
-  attackRadius: 6
+  attackRadius: 7
   distanceToPlayer: 0
   initialPos: {x: 0, y: 0, z: 0}
   spawner: {fileID: 0}
@@ -5133,7 +5119,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b7a309c396ef6704dbb91917bd4b3d5d, type: 3}
   - {fileID: 8300000, guid: a7149d784e1c7fc4bb5cd1827147632f, type: 3}
   TargetSkillDamagePercentage: 0
-  playerWithinReach: 0
   attackCoolDown: 3
   isCoolingDown: 0
   trailsParticles: {fileID: 1840756226919696805}
@@ -6007,6 +5992,8 @@ GameObject:
   - component: {fileID: 5425899621179819663}
   - component: {fileID: 5425899621181054611}
   - component: {fileID: 5425899621181989425}
+  - component: {fileID: 6808408076156523903}
+  - component: {fileID: 3910987671922109330}
   m_Layer: 0
   m_Name: SM_Wep_Goblin_Machete_Spikes_01
   m_TagString: Untagged
@@ -6076,6 +6063,31 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &6808408076156523903
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5425899621180007033}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.108065605, y: 1.0504899, z: 0.31594467}
+  m_Center: {x: -0.00000023841858, y: 0.39539552, z: -0.012149692}
+--- !u!114 &3910987671922109330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5425899621180007033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8404210632511335619
 GameObject:
   m_ObjectHideFlags: 0

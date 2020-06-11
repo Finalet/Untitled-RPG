@@ -6,8 +6,6 @@ public class BigRockGolem : Enemy
 {
 
     [Header("Custom vars")]
-    public bool playerWithinReach;
-
     public float attackCoolDown = 2;
     public bool isCoolingDown;
     float cooldownTimer;
@@ -90,29 +88,11 @@ public class BigRockGolem : Enemy
         }
     }
 
-    void OnTriggerEnter(Collider other) {
-
-        if (other.CompareTag("Player")) {
-            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
-                return;
-
-            playerWithinReach = true;
-        }    
-    }
-    void OnTriggerExit(Collider other) {
-        if (other.CompareTag("Player")) {
-            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
-                return;
-                
-            playerWithinReach = false;
-        }    
-    }
-
-    void Hit () {
-        if (!canHit || !playerWithinReach)
+    public override void Hit () {
+        if (!canHit)
             return;
 
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage());
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), 0.2f, 0.3f);
     }
 
     int damage () {

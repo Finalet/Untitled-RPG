@@ -59,6 +59,9 @@ public class TrainingDummy : Enemy
     public override void GetKnockedDown () {
         //Do nothing
     }
+    public override void Hit(){
+        //Does nothing
+    }
 
     protected override void PlayStabSounds () {
         int playID;

@@ -34,7 +34,7 @@ public abstract class Enemy : MonoBehaviour
     public bool isKnockedDown;
     public bool isReturningToBase;
     public bool canGetHit = true;
-    public bool canHit = true;
+    public bool canHit;
 
     public Animator animator;
     public NavMeshAgent agent;
@@ -101,13 +101,13 @@ public abstract class Enemy : MonoBehaviour
                 GetComponent<Rigidbody>().isKinematic = false; 
         }
 
-        if (isGettingHit || isKnockedDown || isDead)
-            canHit = false;
-        else 
-            canHit = true;
-
         animator.SetFloat("movementSpeed", movementSpeed);
         animator.SetFloat("attackSpeed", attackSpeed);
+        
+        if (animator.GetFloat("CanHit") >= 0.9f)
+            canHit = true;
+        else 
+            canHit = false;
 
         ShowHealthBar();
     }
@@ -237,6 +237,8 @@ public abstract class Enemy : MonoBehaviour
 
         hitParticles.Play();
     }
+
+    public abstract void Hit();
 
 #region Get hit overloads
 
