@@ -107,16 +107,20 @@ public class Combat : MonoBehaviour
 #region Voids for skills
 
     public void SkillHit(AnimationEvent skillID) {
-        if (skillID.intParameter == 0) 
-            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Dash>().Hit(skillID.floatParameter);
-        else if (skillID.intParameter == 1) 
-            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<StrongAttack>().Hit();
-        else if (skillID.intParameter == 2)
-            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<KO>().Hit(skillID.floatParameter);
-        else if (skillID.intParameter == 5)
-            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<StoneHit>().ApplyDamage();
-        else if (skillID.intParameter == 7)
-            AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Fireball>().FireProjectile();
+        switch (skillID.intParameter) {
+            case 0: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Dash>().Hit(skillID.floatParameter);
+                break;
+            case 1: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<StrongAttack>().Hit();
+                break;
+            case 2: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<KO>().Hit(skillID.floatParameter);
+                break;
+            case 5: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<StoneHit>().ApplyDamage();
+                break;
+            case 7: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Fireball>().FireProjectile();
+                break;
+            case 9: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Hailstone>().FireProjectile();
+                break;
+        }
     }
 
 #endregion

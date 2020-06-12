@@ -90,19 +90,21 @@ public class CanvasScript : MonoBehaviour
         warning = null;
     }
 
-    float timer = 0;
     public void DisplayCastingBar (float castingTime) {
         StartCoroutine(DisplayCastinBarIenum(castingTime));
     }
-    IEnumerator DisplayCastinBarIenum (float castingTime) {
-        float timer = 0;
+    IEnumerator DisplayCastinBarIenum (float castEndNormalizedTime) {
         castingBar.SetActive(true);
-        while (timer < castingTime) {
+        castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = 0;
+        while (castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount != 1) {
             if (PlayerControlls.instance.castInterrupted) {
                 break;
             }
-            timer += Time.deltaTime;
-            castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = timer/castingTime;
+            AnimatorStateInfo cc = PlayerControlls.instance.animator.GetCurrentAnimatorStateInfo(PlayerControlls.instance.animator.GetLayerIndex("Attacks"));
+            if (cc.IsName("Empty"))
+                cc = PlayerControlls.instance.animator.GetNextAnimatorStateInfo(PlayerControlls.instance.animator.GetLayerIndex("Attacks")); 
+
+            castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = cc.normalizedTime % 1 / castEndNormalizedTime;
             yield return null;
         }
         yield return new WaitForSeconds(0.25f);

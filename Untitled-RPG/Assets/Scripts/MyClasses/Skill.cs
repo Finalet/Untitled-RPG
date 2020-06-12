@@ -12,7 +12,7 @@ public abstract class Skill : MonoBehaviour
     public Sprite icon;
     [Tooltip("From what tree the skill is")] public SkillTree skillTree; 
     public SkillType skillType; 
-    public int staminaRequired;
+    public int staminaRequired; 
     [Tooltip("Base damage without player's characteristics")] public int baseDamage;
     [Tooltip("Damage after applying player's characteristics")] protected int actualDamage;
     public float coolDown;
@@ -20,7 +20,7 @@ public abstract class Skill : MonoBehaviour
     public bool isCoolingDown;
 
     [Header("Timings")]
-    [Tooltip("Time needed to prepare and attack")] public float castingTime;
+    [Tooltip("Time needed to prepare and attack")] public float castingTime; public float nomralizedCastingAnim;
     [Tooltip("Total attack time, excluding casting (enemy can get hit during attackTime*(1-attackTimeOffset)")] public float totalAttackTime;
     public bool finishedCast;
 
@@ -32,6 +32,13 @@ public abstract class Skill : MonoBehaviour
 
     public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
     public enum SkillType {Damaging, Healing, Buff };
+
+    [Header("AOE Area Picking")]
+    public bool needToPickArea;
+    public GameObject areaPickerPrefab;
+    GameObject instanciatedAP;
+    public float areaPickerSize;
+    protected Vector3 pickedPosition;
 
     protected virtual void Start() {
         audioSource = GetComponent<AudioSource>();
@@ -48,6 +55,17 @@ public abstract class Skill : MonoBehaviour
         if (!canBeUsed() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit)
             return;
 
+        StartCoroutine(StartUse());
+    }
+
+    protected virtual IEnumerator StartUse () {
+        if (needToPickArea) {
+            playerControlls.isPickingArea = true;
+            while (playerControlls.isPickingArea) {
+                PickArea();
+                yield return null;
+            }
+        }
         if (castingTime != 0)
             StartCoroutine(UseCoroutine());
         else 
@@ -61,7 +79,7 @@ public abstract class Skill : MonoBehaviour
         CastingAnim();
         playerControlls.isCastingSkill = true;
         finishedCast = false;
-        CanvasScript.instance.DisplayCastingBar(castingTime);
+        CanvasScript.instance.DisplayCastingBar(nomralizedCastingAnim);
         while (!finishedCast) {
             if (playerControlls.castInterrupted) { 
                 InterruptCasting();
@@ -85,6 +103,34 @@ public abstract class Skill : MonoBehaviour
     protected virtual void CastingAnim () {}
     protected virtual void InterruptCasting () {}
 
+    protected virtual float actualDistance() {
+        return 0;
+    }
+
+    protected virtual void PickArea () {
+
+        RaycastHit hit;
+        Vector3 pickPosition;
+        if (Physics.Raycast(playerControlls.playerCamera.transform.position, playerControlls.playerCamera.transform.forward, out hit, actualDistance())) {
+            pickPosition = hit.point + hit.normal * 0.2f;
+        } else if (Physics.Raycast(playerControlls.playerCamera.transform.position + playerControlls.playerCamera.transform.forward * actualDistance(), Vector3.down, out hit, 10)) {
+            pickPosition = hit.point + hit.normal * 0.2f;
+        } else {
+            pickPosition = playerControlls.transform.position + playerControlls.transform.forward * 10;
+        }
+
+        if (instanciatedAP == null) instanciatedAP = Instantiate(areaPickerPrefab, pickPosition, Quaternion.identity);
+        instanciatedAP.transform.position = pickPosition;
+        instanciatedAP.transform.localScale = Vector3.one * areaPickerSize / 10f;
+
+        if (Input.GetKeyDown(KeyCode.Mouse0)) {
+            playerControlls.isPickingArea = false;
+            pickedPosition = instanciatedAP.transform.position;
+            instanciatedAP.transform.localPosition = Vector3.zero;
+            Destroy(instanciatedAP);
+        }
+    }
+
     protected abstract void CustomUse(); // Custom code that is overriden in each skill seperately.
 
     protected virtual void Update() {
@@ -97,7 +143,7 @@ public abstract class Skill : MonoBehaviour
     }
 
     public virtual bool canBeUsed () {
-        if (playerControlls.isMounted)
+        if (playerControlls.isMounted || playerControlls.isPickingArea)
             return false;
 
         if (skillTree == SkillTree.Knight) {

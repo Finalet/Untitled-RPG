@@ -29,6 +29,7 @@ public class PlayerControlls : MonoBehaviour
     public bool isGrounded;
     public bool isCastingSkill;
     public bool isFlying;
+    public bool isPickingArea;
 
     [Space]
     public bool castInterrupted;
@@ -536,7 +537,7 @@ public class PlayerControlls : MonoBehaviour
     public void InterruptCasting () {
         if (!isCastingSkill)
             return;
-        animator.CrossFade("Attacks.Empty", 0.25f);
+        animator.CrossFade("Attacks.Empty", 0.1f);
         castInterrupted = true;
         isCastingSkill = false;
     }
