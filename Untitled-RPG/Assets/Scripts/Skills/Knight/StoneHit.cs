@@ -31,7 +31,6 @@ public class StoneHit : Skill
     }
 
     protected override void CustomUse() {
-        actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
         StartCoroutine(Using());
     }
 
@@ -70,10 +69,6 @@ public class StoneHit : Skill
     public void ApplyDamage() {
         yes = true;
     }
-    
-    int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
-    }    
 
     void OnTriggerEnter(Collider other) {
         if (!yes)

@@ -14,7 +14,6 @@ public abstract class Skill : MonoBehaviour
     public SkillType skillType; 
     public int staminaRequired; 
     [Tooltip("Base damage without player's characteristics")] public int baseDamage;
-    [Tooltip("Damage after applying player's characteristics")] protected int actualDamage;
     public float coolDown;
     public float coolDownTimer;
     public bool isCoolingDown;
@@ -95,7 +94,6 @@ public abstract class Skill : MonoBehaviour
     protected virtual void LocalUse () {
         playerControlls.InterruptCasting();
         coolDownTimer = coolDown;
-        //playerControlls.isAttacking = true;
         playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
     }
@@ -108,20 +106,22 @@ public abstract class Skill : MonoBehaviour
     }
 
     protected virtual void PickArea () {
+        if (instanciatedAP == null) instanciatedAP = Instantiate(areaPickerPrefab);
+
 
         RaycastHit hit;
-        Vector3 pickPosition;
+        Vector3 pickPosition;      
         if (Physics.Raycast(playerControlls.playerCamera.transform.position, playerControlls.playerCamera.transform.forward, out hit, actualDistance())) {
-            pickPosition = hit.point + hit.normal * 0.2f;
+            pickPosition = hit.point + hit.normal * 0.3f;
         } else if (Physics.Raycast(playerControlls.playerCamera.transform.position + playerControlls.playerCamera.transform.forward * actualDistance(), Vector3.down, out hit, 10)) {
-            pickPosition = hit.point + hit.normal * 0.2f;
+            pickPosition = hit.point + hit.normal * 0.3f;
         } else {
             pickPosition = playerControlls.transform.position + playerControlls.transform.forward * 10;
         }
 
-        if (instanciatedAP == null) instanciatedAP = Instantiate(areaPickerPrefab, pickPosition, Quaternion.identity);
         instanciatedAP.transform.position = pickPosition;
         instanciatedAP.transform.localScale = Vector3.one * areaPickerSize / 10f;
+
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
             playerControlls.isPickingArea = false;
@@ -155,6 +155,22 @@ public abstract class Skill : MonoBehaviour
             return true;
         } else {
             return false;
+        }
+    }
+
+    protected virtual int damage () {
+        return Mathf.RoundToInt(Random.Range(actualDamage()*0.85f, actualDamage()*1.15f));
+    } 
+
+    protected virtual int actualDamage () {
+        switch (skillTree) {
+            case SkillTree.Knight:
+                return Mathf.RoundToInt(baseDamage * (float)characteristics.meleeAttack/100f);
+            case SkillTree.Mage:
+                return Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f);
+            default: 
+                Debug.LogError("Fuck you this can never happen");
+                return 0;
         }
     }
 

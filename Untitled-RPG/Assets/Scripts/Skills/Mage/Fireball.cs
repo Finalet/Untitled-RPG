@@ -46,8 +46,6 @@ public class Fireball : Skill
         finishedCast = true;
          
         StopEffects();
-
-        actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f);
         //play sound
         GameObject Fireball = Instantiate(fireball, shootPosition.position, Quaternion.identity);
         
@@ -63,7 +61,7 @@ public class Fireball : Skill
         Fireball.SetActive(true);
         Fireball.GetComponent<Rigidbody>().AddForce(direction.normalized * speed, ForceMode.Impulse);
         Fireball.GetComponent<FireballProjectile>().distance = actualDistance;
-        Fireball.GetComponent<FireballProjectile>().actualDamage = actualDamage;
+        Fireball.GetComponent<FireballProjectile>().actualDamage = actualDamage();
         Fireball.GetComponent<FireballProjectile>().doNotDestroy = false;
         playerControlls.isAttacking = false;
     }

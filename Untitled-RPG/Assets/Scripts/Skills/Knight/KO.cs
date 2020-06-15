@@ -15,7 +15,6 @@ public class KO : Skill
     }
 
     protected override void CustomUse() {
-        actualDamage = Mathf.RoundToInt( baseDamage * (float)characteristics.meleeAttack/100f);
         animator.CrossFade("Attacks.Knight.KO", 0.25f);
 
         Invoke("PlaySound", 0.15f * characteristics.attackSpeed.z);
@@ -33,11 +32,7 @@ public class KO : Skill
             audioSource.Play();
             x = 0;
         }
-    }
-
-    int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
-    }    
+    } 
 
     void OnTriggerEnter(Collider other) {
         if (other.GetComponent<Enemy>() != null && !other.isTrigger) {

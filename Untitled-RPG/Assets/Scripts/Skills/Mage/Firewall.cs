@@ -30,8 +30,6 @@ public class Firewall : Skill
 
     void Spawn () {
         playerControlls.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 0.15f);
-
-        actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f);
         
         spawnPos = playerControlls.transform.position + playerControlls.transform.forward * 2 + Vector3.up - playerControlls.transform.right * 4.5f;
         
@@ -43,7 +41,7 @@ public class Firewall : Skill
 
         GameObject fw = Instantiate(firewall, spawnPos, Quaternion.LookRotation(playerControlls.transform.forward, Vector3.up));
         fw.GetComponent<FirewallWall>().duration = duration;
-        fw.GetComponent<FirewallWall>().actualDamage = actualDamage;
+        fw.GetComponent<FirewallWall>().actualDamage = actualDamage();
         fw.SetActive(true);
 
         DeleteEffects();

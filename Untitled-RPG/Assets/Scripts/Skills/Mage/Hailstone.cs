@@ -26,13 +26,9 @@ public class Hailstone : Skill
 
     public void FireProjectile () {
         finishedCast = true;
-        actualDamage = Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f);
 
-        FireHailStone();
-    }
-
-    void FireHailStone () {
         GameObject go = Instantiate (projectile, pickedPosition, Quaternion.LookRotation(-playerControlls.transform.forward, Vector3.up));
+        go.transform.GetChild(0).GetComponent<HailstoneProjectile>().actualDamage = actualDamage();
         go.SetActive(true);
     }
 }
