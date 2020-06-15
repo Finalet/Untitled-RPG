@@ -41,6 +41,11 @@ public class HailstoneProjectile : MonoBehaviour
         }
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f);
         debris.Play();
+
+        if (!isExtra) {
+            GetComponent<AudioSource>().time = 0.4f;
+            GetComponent<AudioSource>().Play();
+        }
     }
 
     int damage () {
