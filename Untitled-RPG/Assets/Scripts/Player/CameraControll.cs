@@ -8,19 +8,28 @@ public class CameraControll : MonoBehaviour
     float cameraX;
     float cameraY;
 
-    public Vector3 offset;
+    Vector3 offset;
+    public Vector3 desiredOffset;
     Vector3 shake;
-    public float camDistance;
-    public float maxCamDistance = 10;
-    public float camDesiredPosition;
-    float scroll;
     public float mouseSensitivity = 1;
+    public float maxCamDistance = 10;
+    public float camDistance;
+    float camDesiredPosition;
+    float scroll;
 
     Camera cam;
+
+    const float leftShoulder = -0.5f;
+    const float rightShoulder = 0.5f;
+    const float center = 0;
+
+    [Header("Stacking Cameras")]
+    public Camera UICamera;
 
     void Start()
     {
         camDesiredPosition = maxCamDistance;
+        offset = desiredOffset;
         cam = GetComponent<Camera>();
     }
 
@@ -35,9 +44,17 @@ public class CameraControll : MonoBehaviour
         float camDifference = camDesiredPosition - camDistance;
 
         camDistance += camDifference * Time.deltaTime * 20;
+
+        //Shoulder camera switching
+        if (Input.GetKeyUp(KeyCode.Mouse2))
+            SwitchShouderCam();
+        
+        //Turn on/off UI
+        if (Input.GetKeyUp(KeyCode.F3))
+            UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
     }
 
-    public float rotationX;
+    float rotationX;
     void LateUpdate()
     { 
         rotationX = transform.eulerAngles.x + cameraX;
@@ -60,6 +77,10 @@ public class CameraControll : MonoBehaviour
         }
 
         SprintCameraFOV();
+
+        if (offset != desiredOffset) {
+            offset = Vector3.MoveTowards(offset, desiredOffset, 4 * Time.deltaTime);
+        }
     }
 
     void SprintCameraFOV () {
@@ -75,6 +96,22 @@ public class CameraControll : MonoBehaviour
         }
     }
 
+    void SwitchShouderCam() {
+        switch (desiredOffset.x) {
+            case center: 
+                desiredOffset.x = rightShoulder;
+                break;
+            case rightShoulder:
+                desiredOffset.x = leftShoulder;
+                break;
+            case leftShoulder:
+                desiredOffset.x = center;
+                break;
+            default: desiredOffset.x = center;
+                break;
+        }
+    }
+
     public void CameraMounted() {
         camDesiredPosition += 3;
         maxCamDistance += 5;
@@ -84,9 +121,9 @@ public class CameraControll : MonoBehaviour
         maxCamDistance -= 5;
     }
 
-    bool isShaking;
 
 #region Camera shake overloads
+    bool isShaking;
     public void CameraShake (float duration, float magnitude){
         if (isShaking)
             return;
@@ -120,7 +157,7 @@ public class CameraControll : MonoBehaviour
             yield return null;
         }
         while (Vector3.Distance(shake, Vector3.zero) >= magnitude/4f) {
-            shake = Vector3.Lerp(shake, Vector3.zero, 0.5f);
+            shake = Vector3.Lerp(shake, Vector3.zero, 0.4f);
         }
         shake = Vector3.zero;
         isShaking = false;
@@ -145,7 +182,7 @@ public class CameraControll : MonoBehaviour
             yield return null;
         }
         while (Vector3.Distance(shake, Vector3.zero) >= magnitude/4f) {
-            shake = Vector3.Lerp(shake, Vector3.zero, 0.5f);
+            shake = Vector3.Lerp(shake, Vector3.zero, 0.4f);
         }
         shake = Vector3.zero;
         isShaking = false;

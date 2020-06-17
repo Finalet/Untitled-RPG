@@ -21,6 +21,7 @@ public class HailstoneProjectile : MonoBehaviour
             Vector3 offset = Random.onUnitSphere * Random.Range(1.6f, 2.4f);
             GameObject go = Instantiate(gameObject, transform.position + offset, transform.rotation, transform.parent);
             go.GetComponent<HailstoneProjectile>().isExtra = true;
+            go.GetComponent<CapsuleCollider>().enabled = false;
             go.transform.localScale = transform.localScale/5;
             go.transform.GetChild(0).localScale = go.transform.localScale * 3;
             go.GetComponent<Rigidbody>().AddForce(transform.right * Random.Range(18f, 22f), ForceMode.Impulse);
@@ -39,7 +40,7 @@ public class HailstoneProjectile : MonoBehaviour
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 0.1f, damage());
         debris.Play();
 
         if (!isExtra) {

@@ -45,7 +45,7 @@ public class Combat : MonoBehaviour
     }
 
     void Attacks() {
-        if (Input.GetButton("Fire1") && !playerControlls.isRolling && !PeaceCanvas.instance.anyPanelOpen && !playerControlls.isGettingHit && !playerControlls.isMounted) {
+        if (Input.GetButton("Fire1") && !playerControlls.isRolling && !PeaceCanvas.instance.anyPanelOpen && !playerControlls.isGettingHit && !playerControlls.isMounted && !playerControlls.isPickingArea) {
             Attack();
         } 
 

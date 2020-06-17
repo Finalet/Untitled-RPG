@@ -35,9 +35,10 @@ public abstract class Skill : MonoBehaviour
     [Header("AOE Area Picking")]
     public bool needToPickArea;
     public GameObject areaPickerPrefab;
-    GameObject instanciatedAP;
     public float areaPickerSize;
     protected Vector3 pickedPosition;
+    GameObject instanciatedAP;
+    bool skillCanceled;
 
     protected virtual void Start() {
         audioSource = GetComponent<AudioSource>();
@@ -63,6 +64,10 @@ public abstract class Skill : MonoBehaviour
             while (playerControlls.isPickingArea) {
                 PickArea();
                 yield return null;
+            }
+            if (skillCanceled) {
+                skillCanceled = false;
+                yield break;
             }
         }
         if (castingTime != 0)
@@ -102,18 +107,22 @@ public abstract class Skill : MonoBehaviour
     protected virtual void InterruptCasting () {}
 
     protected virtual float actualDistance() {
-        return 0;
+        Debug.LogError("Actual distance not set");
+        return 0; //Specified in the skill itself. If 0 then something is wrong
     }
 
     protected virtual void PickArea () {
-        if (instanciatedAP == null) instanciatedAP = Instantiate(areaPickerPrefab);
-
+        if (instanciatedAP == null) {
+            instanciatedAP = Instantiate(areaPickerPrefab);
+            CanvasScript.instance.ShowSCB(this);
+        }
 
         RaycastHit hit;
-        Vector3 pickPosition;      
-        if (Physics.Raycast(playerControlls.playerCamera.transform.position, playerControlls.playerCamera.transform.forward, out hit, actualDistance())) {
+        Vector3 pickPosition;
+        int layerMask =~ LayerMask.GetMask("Enemy");
+        if (Physics.Raycast(playerControlls.playerCamera.transform.position, playerControlls.playerCamera.transform.forward, out hit, actualDistance(), layerMask)) {
             pickPosition = hit.point + hit.normal * 0.3f;
-        } else if (Physics.Raycast(playerControlls.playerCamera.transform.position + playerControlls.playerCamera.transform.forward * actualDistance(), Vector3.down, out hit, 10)) {
+        } else if (Physics.Raycast(playerControlls.playerCamera.transform.position + playerControlls.playerCamera.transform.forward * actualDistance(), Vector3.down, out hit, 10, layerMask)) {
             pickPosition = hit.point + hit.normal * 0.3f;
         } else {
             pickPosition = playerControlls.transform.position + playerControlls.transform.forward * 10;
@@ -123,12 +132,21 @@ public abstract class Skill : MonoBehaviour
         instanciatedAP.transform.localScale = Vector3.one * areaPickerSize / 10f;
 
 
-        if (Input.GetKeyDown(KeyCode.Mouse0)) {
+        if (Input.GetKeyUp(KeyCode.Mouse0)) {
             playerControlls.isPickingArea = false;
             pickedPosition = instanciatedAP.transform.position;
-            instanciatedAP.transform.localPosition = Vector3.zero;
+            CanvasScript.instance.HideSCB();
             Destroy(instanciatedAP);
+        } else if (Input.GetKeyUp(KeyCode.Mouse1)) {
+            CancelPickingArea();
         }
+    }
+
+    void CancelPickingArea () {
+        playerControlls.isPickingArea = false;
+        CanvasScript.instance.HideSCB();
+        Destroy(instanciatedAP);
+        skillCanceled = true;
     }
 
     protected abstract void CustomUse(); // Custom code that is overriden in each skill seperately.

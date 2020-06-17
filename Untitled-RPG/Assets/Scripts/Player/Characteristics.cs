@@ -173,6 +173,7 @@ public class Characteristics : MonoBehaviour
     }
 
     void BasicGetHit (int damage) {
+        PlayerControlls.instance.InterruptCasting();
         PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.25f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
         int actualDamage = Mathf.RoundToInt(damage); 
         HP -= damage;

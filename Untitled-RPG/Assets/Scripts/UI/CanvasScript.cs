@@ -22,6 +22,10 @@ public class CanvasScript : MonoBehaviour
     public TextMeshProUGUI enemyName;
     public TextMeshProUGUI enemyHealth;
 
+    [Header("Skill Confirm Buttons")]
+    public bool scbActive;
+    public GameObject scb;
+
     Characteristics characteristics;
 
     void Awake() {
@@ -35,6 +39,7 @@ public class CanvasScript : MonoBehaviour
 
     void Update() {
         DisplayHPandStamina();
+        if (scbActive) CheckSCBPresses();
     }
 
     void DisplayHPandStamina () {
@@ -109,5 +114,50 @@ public class CanvasScript : MonoBehaviour
         }
         yield return new WaitForSeconds(0.25f);
         castingBar.SetActive(false);
+    }
+
+    public void ShowSCB (Skill skill) {
+        scb.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
+        scb.transform.GetChild(1).GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
+
+        scb.SetActive(true);
+        scbActive = true;
+        scb.transform.GetChild(0).GetComponent<Image>().sprite = skill.icon;
+    }
+    public void HideSCB () {
+        scb.SetActive(false);
+        scbActive = false;
+    }
+    void CheckSCBPresses() {
+        //Left Image
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+            StartCoroutine(PressAnimation(scb.transform.GetChild(0).GetComponent<Image>()));
+        else if (Input.GetKeyUp(KeyCode.Mouse0))
+            StartCoroutine(UnpressAnimation(scb.transform.GetChild(0).GetComponent<Image>()));
+
+        //Right Image
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+            StartCoroutine(PressAnimation(scb.transform.GetChild(1).GetComponent<Image>()));
+        else if (Input.GetKeyUp(KeyCode.Mouse1))
+            StartCoroutine(UnpressAnimation(scb.transform.GetChild(1).GetComponent<Image>()));
+    }
+
+    IEnumerator PressAnimation (Image slot) {
+        Vector2 currentSize = slot.GetComponent<RectTransform>().localScale;
+        while (currentSize.x > 0.9f) {
+            slot.GetComponent<RectTransform>().localScale = new Vector2(Mathf.Lerp(currentSize.x, 0.85f, 0.3f), Mathf.Lerp(currentSize.y, 0.85f, 0.3f));
+            currentSize = slot.GetComponent<RectTransform>().localScale;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        slot.GetComponent<RectTransform>().localScale = new Vector2(0.9f, 0.9f);
+    }
+    IEnumerator UnpressAnimation (Image slot) {
+        Vector2 currentSize = slot.GetComponent<RectTransform>().localScale;
+        while (currentSize.x < 1f) {
+            slot.GetComponent<RectTransform>().localScale = new Vector2(Mathf.Lerp(currentSize.x, 1.05f, 0.3f), Mathf.Lerp(currentSize.y, 1.05f, 0.3f));
+            currentSize = slot.GetComponent<RectTransform>().localScale;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        slot.GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
     }
 }
