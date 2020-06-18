@@ -23,9 +23,6 @@ public class CameraControll : MonoBehaviour
     const float rightShoulder = 0.5f;
     const float center = 0;
 
-    [Header("Stacking Cameras")]
-    public Camera UICamera;
-
     void Start()
     {
         camDesiredPosition = maxCamDistance;
@@ -50,8 +47,10 @@ public class CameraControll : MonoBehaviour
             SwitchShouderCam();
         
         //Turn on/off UI
-        if (Input.GetKeyUp(KeyCode.F3))
-            UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
+        if (Input.GetKeyUp(KeyCode.F3)) {
+            CanvasScript.instance.gameObject.SetActive(!CanvasScript.instance.gameObject.activeInHierarchy);
+            PeaceCanvas.instance.gameObject.SetActive(!PeaceCanvas.instance.gameObject.activeInHierarchy);
+        }
     }
 
     float rotationX;
