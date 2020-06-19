@@ -6,11 +6,10 @@ using UnityEngine;
 public class SlotHolderHandler : MonoBehaviour, IDropHandler
 {
     public int slotID;
+    public KeyCode assignedKey;
     public bool slotTaken;
     public GameObject slotObject;
     ItemDragHandler itemDragHandler;
-
-    KeyCode assignedKey; 
 
     Color baseColor;
     Image image;
@@ -30,36 +29,6 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler
         baseColor = image.color;
         Load();
 
-        //Assignes what key needs to be pressed
-        AssignKeys();
-    }
-
-    void AssignKeys () {
-        if (slotID == 0) {
-            assignedKey = KeyCode.Alpha1;
-        } else if (slotID == 1) {
-            assignedKey = KeyCode.Alpha2;
-        } else if (slotID == 2) {
-            assignedKey = KeyCode.Alpha3;
-        } else if (slotID == 3) {
-            assignedKey = KeyCode.Alpha4;
-        } else if (slotID == 4) {
-            assignedKey = KeyCode.Alpha5;
-        } else if (slotID == 5) {
-            assignedKey = KeyCode.Alpha6;
-        } else if (slotID == 6) {
-            assignedKey = KeyCode.Q;
-        } else if (slotID == 7) {
-            assignedKey = KeyCode.E;
-        } else if (slotID == 8) {
-            assignedKey = KeyCode.R;
-        } else if (slotID == 9) {
-            assignedKey = KeyCode.T;
-        } else if (slotID == 10) {
-            assignedKey = KeyCode.Z;
-        } else if (slotID == 11) {
-            assignedKey = KeyCode.X;
-        }
     }
 
     void Update() {
@@ -71,6 +40,9 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler
         if (slotTaken) {
             DisplayItem();
         }
+
+
+        transform.GetChild(0).GetComponent<Text>().text = KeyCodeDictionary.keys[assignedKey];
 
         UseSlots();
     }

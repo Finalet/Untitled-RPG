@@ -8,14 +8,17 @@ public class HailstoneProjectile : MonoBehaviour
     public int actualDamage;
     public ParticleSystem debris;
 
+    public Transform debirsPos;
+    Vector3 finalDebrisPos;
+
     List<Enemy> enemiesHit = new List<Enemy>();
 
     bool isExtra;
     void Start() {
-        if (isExtra)
+        if (isExtra) {
             return;
+        }
         
-
         GetComponent<Rigidbody>().AddForce(transform.right * 20, ForceMode.Impulse);
         for (int i = 0; i < 10; i++) {
             Vector3 offset = Random.onUnitSphere * Random.Range(1.6f, 2.4f);
@@ -27,7 +30,7 @@ public class HailstoneProjectile : MonoBehaviour
             go.GetComponent<Rigidbody>().AddForce(transform.right * Random.Range(18f, 22f), ForceMode.Impulse);
         }
 
-        Destroy(gameObject, 2f);
+        Destroy(transform.parent.gameObject, 2f);
     }
 
     void OnTriggerEnter(Collider other) {
@@ -41,8 +44,9 @@ public class HailstoneProjectile : MonoBehaviour
             }
         }
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 0.1f, damage());
-        debris.Play();
-
+        finalDebrisPos = debirsPos.position;
+        Instantiate(debris, finalDebrisPos, debris.transform.rotation, transform.parent).Play();
+        
         if (!isExtra) {
             GetComponent<AudioSource>().time = 0.4f;
             GetComponent<AudioSource>().Play();
