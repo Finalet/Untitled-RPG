@@ -7,6 +7,7 @@ public class Target : Skill
 
     [Header("Skill Specific Vars")]
     public float skillDistance;
+    public float duration;
     public GameObject targetPrefab;
     public GameObject SkillTarget;
     public float damageIncrease = 20;
@@ -41,7 +42,7 @@ public class Target : Skill
 
         PlayerControlls.instance.GetComponent<PlayerControlls>().isAttacking = false;
         float y =0;
-        while (totalAttackTime + timer >= 0) {
+        while (duration + timer >= 0) {
             timer -= Time.fixedDeltaTime;
             y += Time.fixedDeltaTime * 4;
             newTargetPrefab.transform.localPosition = Vector3.up * (2.3f + Mathf.Sin(y)/10);

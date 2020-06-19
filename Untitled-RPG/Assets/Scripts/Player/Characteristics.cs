@@ -46,6 +46,8 @@ public class Characteristics : MonoBehaviour
 
     public GameObject buffIcon;
 
+    public List<Skill> activeBuffs = new List<Skill>();
+
     void Awake() {
         if (instance == null)
             instance = this;
@@ -141,27 +143,54 @@ public class Characteristics : MonoBehaviour
     }
 
     public void AddBuff(Skill skill) {
-        if (skill.ID == 4) { //Rage skill
-            float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
-            meleeMultiplier += buffIncrease/100;
-            attackSpeedPercentageAdjustement += buffIncrease/100;
-        } else if (skill.ID == 12) { //Levitation skill
-            magicSkillDistanceIncrease += skill.GetComponent<Levitation>().skillDistanceIncrease;
-            magicPowerMultiplier += skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
-        }
+        activeBuffs.Add(skill);
         GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
         icon.GetComponent<BuffIcon>().skill = skill;
+
+        switch (skill.ID) {
+            case 4: //Rage 
+                float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
+                meleeMultiplier += buffIncrease/100;
+                attackSpeedPercentageAdjustement += buffIncrease/100;
+                icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Rage>().duration;
+                break;
+            case 10: //Power sphere
+                magicPowerMultiplier += skill.GetComponent<PowerSphere>().magicDamageIncrease;
+                castingSpeedPercentageAdjustement += skill.GetComponent<PowerSphere>().castSpeedIncrease;
+                defenseMultiplier += skill.GetComponent<PowerSphere>().defenseIncrease;
+                //No timer since its active while player is indside;
+                break;
+            case 12: // Levitation
+                magicSkillDistanceIncrease += skill.GetComponent<Levitation>().skillDistanceIncrease;
+                magicPowerMultiplier += skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
+                icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Levitation>().flightDuration;
+                break;
+            default: Debug.LogError("Wrong skill ID for adding buff");
+                break;
+        }    
     }
 
     public void RemoveBuff(Skill skill) {
-        if (skill.ID == 4) {
-            float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
-            meleeMultiplier -= buffIncrease/100;
-            attackSpeedPercentageAdjustement -= buffIncrease/100;
-        } else if (skill.ID == 12) {
-            magicSkillDistanceIncrease -= skill.GetComponent<Levitation>().skillDistanceIncrease;
-            magicPowerMultiplier -= skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
+        switch (skill.ID) {
+            case 4:
+                float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
+                meleeMultiplier -= buffIncrease/100;
+                attackSpeedPercentageAdjustement -= buffIncrease/100;
+                break;
+            case 10:
+                magicPowerMultiplier -= skill.GetComponent<PowerSphere>().magicDamageIncrease;
+                castingSpeedPercentageAdjustement -= skill.GetComponent<PowerSphere>().castSpeedIncrease;
+                defenseMultiplier -= skill.GetComponent<PowerSphere>().defenseIncrease;
+                break;
+            case 12:
+                magicSkillDistanceIncrease -= skill.GetComponent<Levitation>().skillDistanceIncrease;
+                magicPowerMultiplier -= skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
+                break;
+            default: Debug.LogError("Wrong skill ID for buff removal");
+                break;
         }
+
+        activeBuffs.Remove(skill);
     }
 
 #region Get hit overloads 

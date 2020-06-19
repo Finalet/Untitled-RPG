@@ -8,6 +8,7 @@ public class Whirlwind : Skill
 
     [Header("CustomVars")]
     public float moveSpeed;
+    public float duration;
 
     protected override void CustomUse() {
         StartCoroutine(Using());
@@ -33,7 +34,7 @@ public class Whirlwind : Skill
 
         Characteristics.instance.canGetHit = false;
         
-        float timer = totalAttackTime;
+        float timer = duration;
         float hitTimer = 0;
         while (timer > 0) {
             timer -= Time.fixedDeltaTime;

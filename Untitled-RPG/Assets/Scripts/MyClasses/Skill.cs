@@ -20,7 +20,6 @@ public abstract class Skill : MonoBehaviour
 
     [Header("Timings")]
     [Tooltip("Time needed to prepare and attack")] public float castingTime; public float nomralizedCastingAnim;
-    [Tooltip("Total attack time, excluding casting (enemy can get hit during attackTime*(1-attackTimeOffset)")] public float totalAttackTime;
     public bool finishedCast;
 
 
@@ -196,14 +195,12 @@ public abstract class Skill : MonoBehaviour
     protected virtual void PlaySound(AudioClip clip) {
         audioSource.volume = 1;
         audioSource.pitch = 1;
-        audioSource.clip = clip;
-        audioSource.Play();
+        audioSource.PlayOneShot(clip);
     }
     protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch) {
-        audioSource.clip = clip;
         audioSource.time = timeOffest;
         audioSource.pitch = pitch;
-        audioSource.Play();
+        audioSource.PlayOneShot(clip);
     }
     protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch, float delay) {
         audioSource.clip = clip;

@@ -120,7 +120,11 @@ public class Combat : MonoBehaviour
                 break;
             case 9: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Hailstone>().FireProjectile();
                 break;
-            case 10: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<PowerSphere>().SpawnSphere();
+            case 10: 
+                if (skillID.floatParameter == 1)
+                    AssetHolder.instance.Skills[skillID.intParameter].GetComponent<PowerSphere>().SpawnSphere();
+                else if (skillID.floatParameter == 0)
+                    AssetHolder.instance.Skills[skillID.intParameter].GetComponent<PowerSphere>().ShootSphere();
                 break;
         }
     }

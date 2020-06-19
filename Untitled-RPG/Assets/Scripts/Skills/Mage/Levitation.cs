@@ -22,13 +22,13 @@ public class Levitation : Skill
     }
     protected override void Start() {
         base.Start(); 
-        totalAttackTime = flightDuration;
         var sh = fullbodyVFX.shape;
         sh.skinnedMeshRenderer = playerControlls.skinnedMesh;
     }
 
     protected override void CustomUse() {
         PlayerControlls.instance.TakeOff();
+        GetComponent<AudioSource>().PlayDelayed(0.4f);
         characteristics.AddBuff(this);
         StartCoroutine(flightTimer());
 

@@ -7,12 +7,21 @@ public class PowerSphere : Skill
     [Header("Custom Vars")]
     public float sphereSize = 14f;
     public float distance;
+    public float duration = 20;
     public GameObject powerSphere;
     public AudioClip castingSound;
+    public AudioClip shootSound;
     
     public ParticleSystem HandsEffect;
     public Transform[] hands;
     public List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
+
+    GameObject instanciatedSphere;
+
+    [Header("Buffs")]
+    public float castSpeedIncrease = 0.2f;
+    public float magicDamageIncrease = 0.2f;
+    public float defenseIncrease = 0.2f;
 
     protected override float actualDistance () {
         return distance + characteristics.magicSkillDistanceIncrease;
@@ -31,16 +40,27 @@ public class PowerSphere : Skill
 
         AddParticles();
 
-        PlaySound(castingSound, 0, 0.3f, 0.3f);
+        PlaySound(castingSound, 0, 0.7f, 0);
     }
 
     protected override void CustomUse(){}
 
     public void SpawnSphere () {
-        RemoveParticles();
+        Vector3 averageHandsPos = (hands[0].position + hands[1].position) / 2; 
 
-        GameObject go = Instantiate(powerSphere, pickedPosition, Quaternion.LookRotation(-playerControlls.transform.forward, Vector3.up));
-        go.SetActive(true);
+        instanciatedSphere = Instantiate(powerSphere, averageHandsPos, powerSphere.transform.rotation);
+        instanciatedSphere.transform.localScale = Vector3.zero;
+        instanciatedSphere.GetComponent<PowerSphereProjectile>().powerSphereSkill = this;
+        instanciatedSphere.GetComponent<PowerSphereProjectile>().position = pickedPosition + Vector3.up;
+        instanciatedSphere.SetActive(true);
+    }
+
+    public void ShootSphere () {
+        finishedCast = true;
+
+        PlaySound(shootSound, 0.1f, 1.2f);
+        RemoveParticles();
+        instanciatedSphere.GetComponent<PowerSphereProjectile>().shoot = true;
     }
 
     void AddParticles() {
