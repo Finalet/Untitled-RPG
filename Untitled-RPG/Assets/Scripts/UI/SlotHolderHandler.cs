@@ -1,12 +1,14 @@
 ﻿using UnityEngine.EventSystems;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine;
 
 public class SlotHolderHandler : MonoBehaviour, IDropHandler
 {
     public int slotID;
-    public KeyCode assignedKey;
+    public KeyCode mainAssignedKey; //Main key "E"
+    public KeyCode secondaryAssignedKey; //Secondary key "Shift" to make "shift-e"
     public bool slotTaken;
     public GameObject slotObject;
     ItemDragHandler itemDragHandler;
@@ -42,9 +44,15 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler
         }
 
 
-        transform.GetChild(0).GetComponent<Text>().text = KeyCodeDictionary.keys[assignedKey];
+        DisplayKey();
+        DetectKeyPress();
+    }
 
-        UseSlots();
+    void DisplayKey () {
+        if (secondaryAssignedKey == KeyCode.None)
+            transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = KeyCodeDictionary.keys[mainAssignedKey];
+        else 
+            transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = KeyCodeDictionary.keys[secondaryAssignedKey] + " " + KeyCodeDictionary.keys[mainAssignedKey];
     }
 
     void DisplayItem () {
@@ -68,34 +76,44 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler
         }
     }
 
-    void UseSlots() {
+    void DetectKeyPress() {
+        if (secondaryAssignedKey == KeyCode.None) {
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+                return;
 
-        if (Input.GetKeyDown(assignedKey)) {
-            StartCoroutine(PressAnimation());
-        } else if (Input.GetKeyUp(assignedKey)) {
-            StartCoroutine(UnpressAnimation());
-            if (slotObject != null && itemDragHandler.itemType == ItemType.skill) //Check if slot if taken with a skill
-                slotObject.GetComponent<Skill>().Use();
+            if (Input.GetKeyDown(mainAssignedKey)) {
+                StartCoroutine(PressAnimation(mainAssignedKey));
+            } else if (Input.GetKeyUp(mainAssignedKey)) {
+                if (slotObject != null && itemDragHandler.itemType == ItemType.skill) //Check if slot if taken with a skill
+                    slotObject.GetComponent<Skill>().Use();
+            }
+        } else if (Input.GetKey(secondaryAssignedKey)) {
+            if (Input.GetKeyDown(mainAssignedKey)) {
+                StartCoroutine(PressAnimation(mainAssignedKey));
+            } else if (Input.GetKeyUp(mainAssignedKey)) {
+                if (slotObject != null && itemDragHandler.itemType == ItemType.skill) //Check if slot if taken with a skill
+                    slotObject.GetComponent<Skill>().Use();
+            }
         }
     }
 
-    IEnumerator PressAnimation () {
+    IEnumerator PressAnimation (KeyCode pressedKey) {
         Vector2 currentSize = GetComponent<RectTransform>().localScale;
         while (currentSize.x > 0.9f) {
-            GetComponent<RectTransform>().localScale = new Vector2(Mathf.Lerp(currentSize.x, 0.85f, 0.3f), Mathf.Lerp(currentSize.y, 0.85f, 0.3f));
+            GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one * 0.9f, Time.deltaTime * 5f);
             currentSize = GetComponent<RectTransform>().localScale;
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        GetComponent<RectTransform>().localScale = new Vector2(0.9f, 0.9f);
-    }
-    IEnumerator UnpressAnimation () {
-        Vector2 currentSize = GetComponent<RectTransform>().localScale;
-        while (currentSize.x < 1f) {
-            GetComponent<RectTransform>().localScale = new Vector2(Mathf.Lerp(currentSize.x, 1.05f, 0.3f), Mathf.Lerp(currentSize.y, 1.05f, 0.3f));
+        //Wait for key release
+        while (Input.GetKey(pressedKey)) {
+            yield return null;
+        }
+        //Unpress animation
+        while (currentSize.x < 1) {
+            GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one, Time.deltaTime * 5f);
             currentSize = GetComponent<RectTransform>().localScale;
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
     }
 
     public void OnDrop(PointerEventData eventData) {

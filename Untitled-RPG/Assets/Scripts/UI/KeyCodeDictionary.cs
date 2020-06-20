@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class KeyCodeDictionary
@@ -71,6 +70,18 @@ public class KeyCodeDictionary
         {KeyCode.Keypad8, "N8"},
         {KeyCode.Keypad9, "N9"},
         {KeyCode.Keypad0, "N0"},
+
+        //Shift, ctrl, tab, etc
+        {KeyCode.LeftShift, "Shift"},
+        {KeyCode.RightShift, "R-shift"},
+        {KeyCode.LeftControl, "Ctrl"},
+        {KeyCode.RightControl, "R-ctrl"},
+        {KeyCode.LeftAlt, "Alt"},
+        {KeyCode.RightAlt, "R-alt"},
+        {KeyCode.LeftWindows, "Win"},
+        {KeyCode.RightWindows, "R-win"},
+        {KeyCode.Tab, "Tab"},
+        {KeyCode.CapsLock, "Cap"},
 
         //Symbols
         {KeyCode.Exclaim, "!"}, //1
