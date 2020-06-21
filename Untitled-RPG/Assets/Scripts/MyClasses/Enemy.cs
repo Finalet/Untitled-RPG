@@ -264,6 +264,8 @@ public abstract class Enemy : MonoBehaviour
         HitParticles(); 
         PlayGetHitSounds(); 
         PlayStabSounds();
+
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points.");
     }
 
     public virtual void GetHit(int damage) {

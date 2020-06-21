@@ -54,6 +54,8 @@ public class TrainingDummy : Enemy
         HitParticles();
         PlayGetHitSounds();
         PlayStabSounds();
+    
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points.");
     }
 
     public override void GetKnockedDown () {

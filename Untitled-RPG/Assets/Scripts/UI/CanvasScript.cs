@@ -44,9 +44,9 @@ public class CanvasScript : MonoBehaviour
 
     void DisplayHPandStamina () {
         healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.HP/characteristics.maxHP, 0.1f);
-        healthBar.transform.GetChild(0).GetComponent<Text>().text = characteristics.HP.ToString();
+        healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.HP.ToString();
         staminaBar.fillAmount = Mathf.Lerp(staminaBar.fillAmount, (float)characteristics.Stamina/characteristics.maxStamina, 0.1f);
-        staminaBar.transform.GetChild(0).GetComponent<Text>().text = characteristics.Stamina.ToString();
+        staminaBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.Stamina.ToString();
     }
 
     public void DisplayEnemyInfo (string name, float healthFillAmount, int health) {
@@ -117,12 +117,12 @@ public class CanvasScript : MonoBehaviour
     }
 
     public void ShowSCB (Skill skill) {
-        scb.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
-        scb.transform.GetChild(1).GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
+        scb.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>().localScale = Vector2.one;
+        scb.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().localScale = Vector2.one;
 
         scb.SetActive(true);
         scbActive = true;
-        scb.transform.GetChild(0).GetComponent<Image>().sprite = skill.icon;
+        scb.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = skill.icon;
     }
     public void HideSCB () {
         scb.SetActive(false);
@@ -131,33 +131,11 @@ public class CanvasScript : MonoBehaviour
     void CheckSCBPresses() {
         //Left Image
         if (Input.GetKeyDown(KeyCode.Mouse0))
-            StartCoroutine(PressAnimation(scb.transform.GetChild(0).GetComponent<Image>()));
-        else if (Input.GetKeyUp(KeyCode.Mouse0))
-            StartCoroutine(UnpressAnimation(scb.transform.GetChild(0).GetComponent<Image>()));
+            StartCoroutine(UI_Animations.PressAnimation(scb.transform.GetChild(0).GetChild(0).GetComponent<Image>(), KeyCode.Mouse0));
 
         //Right Image
         if (Input.GetKeyDown(KeyCode.Mouse1))
-            StartCoroutine(PressAnimation(scb.transform.GetChild(1).GetComponent<Image>()));
-        else if (Input.GetKeyUp(KeyCode.Mouse1))
-            StartCoroutine(UnpressAnimation(scb.transform.GetChild(1).GetComponent<Image>()));
-    }
+            StartCoroutine(UI_Animations.PressAnimation(scb.transform.GetChild(1).GetChild(0).GetComponent<Image>(), KeyCode.Mouse1));
 
-    IEnumerator PressAnimation (Image slot) {
-        Vector2 currentSize = slot.GetComponent<RectTransform>().localScale;
-        while (currentSize.x > 0.9f) {
-            slot.GetComponent<RectTransform>().localScale = new Vector2(Mathf.Lerp(currentSize.x, 0.85f, 0.3f), Mathf.Lerp(currentSize.y, 0.85f, 0.3f));
-            currentSize = slot.GetComponent<RectTransform>().localScale;
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-        slot.GetComponent<RectTransform>().localScale = new Vector2(0.9f, 0.9f);
-    }
-    IEnumerator UnpressAnimation (Image slot) {
-        Vector2 currentSize = slot.GetComponent<RectTransform>().localScale;
-        while (currentSize.x < 1f) {
-            slot.GetComponent<RectTransform>().localScale = new Vector2(Mathf.Lerp(currentSize.x, 1.05f, 0.3f), Mathf.Lerp(currentSize.y, 1.05f, 0.3f));
-            currentSize = slot.GetComponent<RectTransform>().localScale;
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-        slot.GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
     }
 }

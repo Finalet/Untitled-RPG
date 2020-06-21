@@ -105,6 +105,9 @@ public class Characteristics : MonoBehaviour
 
     float hpTimer = 1;
     void regenerateHealth() {
+        if (HP == maxHP)
+            return;
+
         if (canRegenerateHealth && HP < maxHP) {
             if (hpTimer <= 0) {
                 HP += HealthPointsPerSecond/10;
@@ -116,6 +119,9 @@ public class Characteristics : MonoBehaviour
     }
     float staminaTimer = 1;
     void regenerateStamina() {
+        if (Stamina == maxStamina)
+            return;
+
         if (PlayerControlls.instance.isSprinting) {
             StaminaPerSecond = -40;
         } else {

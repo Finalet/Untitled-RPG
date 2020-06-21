@@ -228,9 +228,9 @@ public class PlayerControlls : MonoBehaviour
         velocity = Vector3.up * velocityY + forward + side;
         controller.Move(velocity * Time.deltaTime); 
 
-        if (Input.GetKeyDown(KeyCode.LeftAlt)) {
+        if (Input.GetButtonDown("FreeCamera")) {
             lastCamRotation = playerCamera.transform.eulerAngles;
-        } else if (Input.GetKeyUp(KeyCode.LeftAlt)) {
+        } else if (Input.GetButtonUp("FreeCamera")) {
             playerCamera.transform.eulerAngles = lastCamRotation;
         }
             
@@ -255,7 +255,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void UpdateRotation () {
-        if (!Input.GetKey(KeyCode.LeftAlt) && !PeaceCanvas.instance.anyPanelOpen) {
+        if (!Input.GetButton("FreeCamera") && !PeaceCanvas.instance.anyPanelOpen) {
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y + sprintingDirection + rollDirection, transform.eulerAngles.z);
         } else {
             RotationDirection = 0;
@@ -294,7 +294,7 @@ public class PlayerControlls : MonoBehaviour
                 animator.speed = walkSpeed;
         }
 
-        if (!Input.GetKey(KeyCode.LeftAlt)) {
+        if (!Input.GetButton("FreeCamera")) {
             if (Input.GetAxis("Mouse X") == 0) {
                 if (RotationDirection > 0.1f) 
                     RotationDirection -= Time.deltaTime * 50;

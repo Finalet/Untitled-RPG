@@ -26,7 +26,7 @@ public class WeaponsController : MonoBehaviour
 
     bool started;
     void Update() {
-        if (Input.GetKeyDown(KeyCode.H)) {
+        if (Input.GetKeyDown(KeyCode.H) && !PlayerControlls.instance.isAttacking) {
             if (isWeaponOut && !started)
                 StartCoroutine(Sheathe());
             else if (!isWeaponOut && !started)
