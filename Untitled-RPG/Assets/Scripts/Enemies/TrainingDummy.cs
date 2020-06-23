@@ -46,7 +46,7 @@ public class TrainingDummy : Enemy
         rotationObj.transform.rotation = Quaternion.Euler(x, rotationObj.transform.eulerAngles.y, z);
     }
 
-    protected override void BasicGetHit(int damage) {
+    protected override void BasicGetHit(int damage, string skillName) {
         actualDamage = calculateActualDamage(damage);
 
         rotationX = direction.normalized.z * 30 * (1 + (float)damage/5000);
@@ -55,7 +55,7 @@ public class TrainingDummy : Enemy
         PlayGetHitSounds();
         PlayStabSounds();
     
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }
 
     public override void GetKnockedDown () {

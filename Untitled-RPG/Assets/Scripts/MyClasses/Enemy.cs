@@ -254,7 +254,7 @@ public abstract class Enemy : MonoBehaviour
             return false;
     }
 
-    protected virtual void BasicGetHit (int damage) {
+    protected virtual void BasicGetHit (int damage, string skillName) {
         if (!isKnockedDown)
             animator.CrossFade("GetHit.GetHit", 0.25f, animator.GetLayerIndex("GetHit"), 0);
 
@@ -265,40 +265,40 @@ public abstract class Enemy : MonoBehaviour
         PlayGetHitSounds(); 
         PlayStabSounds();
 
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }
 
-    public virtual void GetHit(int damage) {
+    public virtual void GetHit(int damage, string skillName) {
         if (checkFailed())
             return;      
 
-        BasicGetHit(damage); 
+        BasicGetHit(damage, skillName); 
         DisplayDamageNumber (actualDamage);
     }
 
-    public virtual void GetHit(int damage, Vector3 damageTextPos) {
+    public virtual void GetHit(int damage, Vector3 damageTextPos, string skillName) {
         if (checkFailed())
             return;
 
-        BasicGetHit(damage);
+        BasicGetHit(damage, skillName);
         DisplayDamageNumber(actualDamage, damageTextPos);
     }
 
-    public virtual void GetHit(int damage, bool stopHit, bool cameraShake) {
+    public virtual void GetHit(int damage, bool stopHit, bool cameraShake, string skillName) {
         if (checkFailed())
             return;
 
-        BasicGetHit(damage);
+        BasicGetHit(damage, skillName);
         DisplayDamageNumber (actualDamage);
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
         if (stopHit) StartCoroutine(HitStop());
     }
 
-    public virtual void GetHit(int damage, bool stopHit, bool cameraShake, Vector3 damageTextPos) {
+    public virtual void GetHit(int damage, bool stopHit, bool cameraShake, Vector3 damageTextPos, string skillName) {
         if (checkFailed())
             return;
             
-        BasicGetHit(damage);
+        BasicGetHit(damage, skillName);
         DisplayDamageNumber(actualDamage, damageTextPos);
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, actualDamage);
         if (stopHit) StartCoroutine(HitStop());

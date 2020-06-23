@@ -20,7 +20,7 @@ public class Fireball : Skill
     [Header("Sounds")]
     public AudioClip castingSound;
 
-    public List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
+    List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
 
     protected override void CastingAnim() {
 

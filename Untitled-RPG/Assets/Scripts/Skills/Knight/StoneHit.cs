@@ -77,7 +77,7 @@ public class StoneHit : Skill
         if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
             if (!enemiesHit.Contains(other.gameObject)) {
                 other.GetComponent<Enemy>().GetKnockedDown();
-                other.GetComponent<Enemy>().GetHit(damage(), true, true);
+                other.GetComponent<Enemy>().GetHit(damage(), true, true, skillName);
                 enemiesHit.Add(other.gameObject);
             }
         }

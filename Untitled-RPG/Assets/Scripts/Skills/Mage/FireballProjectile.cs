@@ -12,7 +12,7 @@ public class FireballProjectile : MonoBehaviour
     public ParticleSystem fire;
     public ParticleSystem explostionSparks;
 
-    public GameObject light;
+    public GameObject light1;
 
     Vector3 begPos;
     bool done;
@@ -68,7 +68,7 @@ public class FireballProjectile : MonoBehaviour
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
             if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), true, false, transform.position);
+                other.GetComponent<Enemy>().GetHit(damage(), true, false, transform.position, "Fireball");
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
@@ -79,7 +79,7 @@ public class FireballProjectile : MonoBehaviour
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.12f, 0.12f, 0);
         explostionSparks.Play();
         fire.Stop();
-        light.SetActive(false);
+        light1.SetActive(false);
         GetComponent<Rigidbody>().isKinematic = true;
         explosionExpand = true;
         GetComponent<MeshRenderer>().enabled = false;

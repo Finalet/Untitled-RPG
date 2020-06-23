@@ -62,14 +62,14 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
 
             //Cooldown
             if(item.GetComponent<Skill>().isCoolingDown) {
-                cooldownImage.color = new Color(0, 0, 0, 0.85f);
+                cooldownImage.color = new Color(0, 0, 0, 0.9f);
                 cooldownImage.fillAmount = item.GetComponent<Skill>().coolDownTimer/item.GetComponent<Skill>().coolDown;
             } else {
                 cooldownImage.color = new Color(0, 0, 0, 0);
                 cooldownImage.fillAmount = 1;
             }
 
-            if (item.GetComponent<Skill>().canBeUsed()) {
+            if (item.GetComponent<Skill>().skillActive()) {
                 slotImage.color = Color.white;
                 keyText.color = Color.white;
             } else {
@@ -81,7 +81,7 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
 
     void DetectKeyPress() {
         if (secondaryAssignedKey == KeyCode.None) {
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+            if (Input.GetKey(KeyCode.LeftAlt))
                 return;
 
             if (Input.GetKeyDown(mainAssignedKey)) {
@@ -130,7 +130,6 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
     public void RemoveItemFromSlot() {
         item = null;
         slotImage.sprite = emptySlotSprite;
-        slotImage.color = new Color(0, 0, 0, 0.4f);
         keyText.color = Color.white;
         itemType = ItemType.empty;
         itemID = 0;

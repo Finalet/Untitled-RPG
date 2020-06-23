@@ -39,7 +39,7 @@ public class HailstoneProjectile : MonoBehaviour
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
             if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage());
+                other.GetComponent<Enemy>().GetHit(damage(), "Hailstone");
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }

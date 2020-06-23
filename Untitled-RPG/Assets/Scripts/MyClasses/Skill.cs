@@ -51,7 +51,7 @@ public abstract class Skill : MonoBehaviour
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
-        if (!canBeUsed() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit)
+        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
             return;
 
         StartCoroutine(StartUse());
@@ -105,7 +105,7 @@ public abstract class Skill : MonoBehaviour
     protected virtual void CastingAnim () {}
     protected virtual void InterruptCasting () {}
 
-    protected virtual float actualDistance() {
+    protected virtual float actualDistance() { //this distance is for picking area
         Debug.LogError("Actual distance not set");
         return 0; //Specified in the skill itself. If 0 then something is wrong
     }
@@ -159,7 +159,7 @@ public abstract class Skill : MonoBehaviour
         }
     }
 
-    public virtual bool canBeUsed () {
+    public virtual bool skillActive () {
         if (playerControlls.isMounted || playerControlls.isPickingArea)
             return false;
 
@@ -195,12 +195,15 @@ public abstract class Skill : MonoBehaviour
     protected virtual void PlaySound(AudioClip clip) {
         audioSource.volume = 1;
         audioSource.pitch = 1;
-        audioSource.PlayOneShot(clip);
+        audioSource.time = 0;
+        audioSource.clip = clip;
+        audioSource.Play();
     }
     protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch) {
         audioSource.time = timeOffest;
         audioSource.pitch = pitch;
-        audioSource.PlayOneShot(clip);
+        audioSource.clip = clip;
+        audioSource.Play();
     }
     protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch, float delay) {
         audioSource.clip = clip;

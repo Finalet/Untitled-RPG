@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 public static class UI_Animations
 {
-
     public static IEnumerator PressAnimation (Image image, KeyCode pressedKey) {
+        float animationDepth = 0.8f;
+        float animationSpeed = 10f;
         Vector2 currentSize = image.GetComponent<RectTransform>().localScale;
-        while (currentSize.x > 0.9f) {
-            image.GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one * 0.9f, Time.deltaTime * 7f);
+        while (currentSize.x > animationDepth) {
+            image.GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one * animationDepth, Time.deltaTime * animationSpeed);
             currentSize = image.GetComponent<RectTransform>().localScale;
             yield return new WaitForSeconds(Time.deltaTime);
         }
@@ -19,7 +20,7 @@ public static class UI_Animations
         }
 
         while (currentSize.x < 1) {
-            image.GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one, Time.deltaTime * 7f);
+            image.GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one, Time.deltaTime * animationSpeed);
             currentSize = image.GetComponent<RectTransform>().localScale;
             yield return new WaitForSeconds(Time.deltaTime);
         } 
