@@ -19,7 +19,8 @@ public abstract class Skill : MonoBehaviour
     public bool isCoolingDown;
 
     [Header("Timings")]
-    [Tooltip("Time needed to prepare and attack")] public float castingTime; public float nomralizedCastingAnim;
+    [Tooltip("Time needed to prepare and attack")] public float castingTime; 
+    [Range(0, 1)] public float nomralizedCastingAnim;
     public bool finishedCast;
 
 
@@ -46,7 +47,7 @@ public abstract class Skill : MonoBehaviour
         characteristics = PlayerControlls.instance.GetComponent<Characteristics>();
     }
 
-    public virtual void Use() { //Virtual, because sometimes need to be overriden, for instance in the Target skill.
+    public virtual void Use() {
         if (playerControlls.GetComponent<Characteristics>().Stamina < staminaRequired) {
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;

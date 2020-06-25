@@ -127,6 +127,8 @@ public class Combat : MonoBehaviour
                 else if (skillID.floatParameter == 0)
                     AssetHolder.instance.Skills[skillID.intParameter].GetComponent<PowerSphere>().ShootSphere();
                 break;
+            case 13: AssetHolder.instance.Skills[skillID.intParameter].GetComponent<Armageddon>().StartHell();
+                break;
         }
     }
 

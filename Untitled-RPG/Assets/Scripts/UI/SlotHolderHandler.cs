@@ -18,7 +18,7 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
 
     [Header("Do no edit")]
     [SerializeField] Image slotImage;
-    [SerializeField] Sprite emptySlotSprite;
+
     [SerializeField] Image cooldownImage;
     [SerializeField] TextMeshProUGUI keyText;
 
@@ -129,7 +129,7 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
     }
     public void RemoveItemFromSlot() {
         item = null;
-        slotImage.sprite = emptySlotSprite;
+        slotImage.color = new Color(0, 0, 0, 0);;
         keyText.color = Color.white;
         itemType = ItemType.empty;
         itemID = 0;

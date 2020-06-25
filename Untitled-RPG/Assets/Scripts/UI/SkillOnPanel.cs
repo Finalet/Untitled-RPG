@@ -1,11 +1,13 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
 
     public int skillID;
+    public TextMeshProUGUI name;
 
     GameObject dragDisplayObject;
     GameObject go;
@@ -13,6 +15,7 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     void Start() {
         dragDisplayObject = AssetHolder.instance.dragDisplayObject;
         GetComponent<Image>().sprite = AssetHolder.instance.Skills[skillID].GetComponent<Skill>().icon;
+        name.text = AssetHolder.instance.Skills[skillID].GetComponent<Skill>().skillName;
     }
 
     public void OnBeginDrag(PointerEventData eventData) {

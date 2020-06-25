@@ -16,6 +16,7 @@ public class Lightning : Skill
     Vector3 shootPoint;
     int shots;
     float lastShotTime;
+    bool continueShooting;
 
     public AudioClip[] sounds;
     public GameObject handsVFX;
@@ -45,6 +46,11 @@ public class Lightning : Skill
             Reset();
         }
 
+        if (Time.time - lastShotTime >= 0.4f && !continueShooting) {
+            playerControlls.isAttacking = false;
+            continueShooting = true;
+        }
+
         icon = skillIcons[shots];
     }
 
@@ -55,6 +61,8 @@ public class Lightning : Skill
     
     void ShootLightning () {
         shots++;
+        continueShooting = false;
+        playerControlls.isAttacking = true;
         PlayAnimation();
 
         lastShotTime = Time.time;
