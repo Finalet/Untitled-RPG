@@ -89,8 +89,6 @@ public abstract class Enemy : MonoBehaviour
             agent.angularSpeed = baseAngularSpeed;
         }
 
-
-        distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
         //Creates collision between enemies, but makes kinematic when interacting with player to stop him from applying force.
         if (isDead || isKnockedDown) {
             GetComponent<Rigidbody>().isKinematic = true;
@@ -117,11 +115,20 @@ public abstract class Enemy : MonoBehaviour
         WalkToTarget();
     }
 
+    float timer = 0;
     void SetTarget() {
-        if (distanceToPlayer <= playerDetectRadius) {
+
+        distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
+
+        if (distanceToPlayer <= playerDetectRadius || isGettingHit) {
             target = PlayerControlls.instance.transform;
+            timer = 10;
         } else {
-            target = null;
+            if (timer <= 0){
+                target = null;
+            } else {
+                timer -= Time.deltaTime;
+            }
         }
 
         if (target == null) {

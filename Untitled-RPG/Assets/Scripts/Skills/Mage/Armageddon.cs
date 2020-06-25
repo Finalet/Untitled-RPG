@@ -21,7 +21,7 @@ public class Armageddon : Skill
     float lastShotTime;
     Vector3 mainPos;
 
-    public List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
+    List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
     ParticleSystem instanciatedCloud;
 
     protected override float actualDistance () {
@@ -33,8 +33,7 @@ public class Armageddon : Skill
 
         AddParticles();
 
-
-        //PlaySound(castingSound, 0, 0.3f, 0.3f);
+        audioSource.Play();
     }
 
     protected override void CustomUse() {}
@@ -82,7 +81,7 @@ public class Armageddon : Skill
         int x = instanciatedEffects.Count;
         for (int i = 0; i < x; i++) {
             instanciatedEffects[0].Stop();
-            Destroy(instanciatedEffects[0].gameObject, 1f);
+            Destroy(instanciatedEffects[0].gameObject, 2f);
             instanciatedEffects.Remove(instanciatedEffects[0]);
         }
     }

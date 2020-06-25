@@ -107,7 +107,7 @@ public abstract class Skill : MonoBehaviour
     protected virtual void InterruptCasting () {}
 
     protected virtual float actualDistance() { //this distance is for picking area
-        Debug.LogError("Actual distance not set");
+        Debug.LogError($"\"Actual distance\" for {skillName} not set");
         return 0; //Specified in the skill itself. If 0 then something is wrong
     }
 
@@ -120,9 +120,10 @@ public abstract class Skill : MonoBehaviour
         RaycastHit hit;
         Vector3 pickPosition;
         int layerMask =~ LayerMask.GetMask("Enemy");
-        if (Physics.Raycast(playerControlls.playerCamera.transform.position, playerControlls.playerCamera.transform.forward, out hit, actualDistance(), layerMask)) {
+        float dis = actualDistance() + playerControlls.playerCamera.GetComponent<CameraControll>().camDistance;
+        if (Physics.Raycast(playerControlls.playerCamera.transform.position, playerControlls.playerCamera.transform.forward, out hit, dis, layerMask)) {
             pickPosition = hit.point + hit.normal * 0.3f;
-        } else if (Physics.Raycast(playerControlls.playerCamera.transform.position + playerControlls.playerCamera.transform.forward * actualDistance(), Vector3.down, out hit, 10, layerMask)) {
+        } else if (Physics.Raycast(playerControlls.playerCamera.transform.position + playerControlls.playerCamera.transform.forward * dis, Vector3.down, out hit, 10, layerMask)) {
             pickPosition = hit.point + hit.normal * 0.3f;
         } else {
             pickPosition = playerControlls.transform.position + playerControlls.transform.forward * 10;

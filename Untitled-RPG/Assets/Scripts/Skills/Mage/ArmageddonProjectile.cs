@@ -7,6 +7,10 @@ public class ArmageddonProjectile : MonoBehaviour
     public float speed;
     public float actualDamage;
 
+    public ParticleSystem hitParticles;
+
+    public AudioClip[] explosionSounds;
+
     List<Enemy> enemiesHit = new List<Enemy>();
 
     void Start() {
@@ -24,7 +28,10 @@ public class ArmageddonProjectile : MonoBehaviour
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
+        hitParticles.Play();
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 0.1f, damage());
+        GetComponent<AudioSource>().clip = explosionSounds[Random.Range(0, explosionSounds.Length)];
+        GetComponent<AudioSource>().Play();
     }
 
     int damage () {

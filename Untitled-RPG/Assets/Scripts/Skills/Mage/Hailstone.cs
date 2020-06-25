@@ -64,7 +64,7 @@ public class Hailstone : Skill
         int x = instanciatedEffects.Count;
         for (int i = 0; i < x; i++) {
             instanciatedEffects[0].Stop();
-            Destroy(instanciatedEffects[0].gameObject, 1f);
+            Destroy(instanciatedEffects[0].gameObject, 2f);
             instanciatedEffects.Remove(instanciatedEffects[0]);
         }
     }
