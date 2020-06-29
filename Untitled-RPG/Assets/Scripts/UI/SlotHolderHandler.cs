@@ -11,7 +11,7 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
     public KeyCode secondaryAssignedKey; //Secondary key "Shift" to make "shift-e"
 
     [Space]
-    public bool slotTaken;
+    //public bool slotTaken;
     SlotObjectType slotObjectType;
     public GameObject slotObject;
 
@@ -33,14 +33,7 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
 
     void Update() {
         if(slotObject != null)
-            slotTaken = true;
-        else 
-            slotTaken = false;
-
-        if (slotTaken) {
             DisplayItem();
-        }
-
 
         DisplayKey();
         DetectKeyPress();
@@ -122,7 +115,7 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
     }
 
     void AddItemToSlot(SlotObjectType type, int objectID) {
-        if (type == SlotObjectType.Skill) {
+        if (type == SlotObjectType.Skill) {           
             slotObject = AssetHolder.instance.Skills[objectID];
         } else if (type == SlotObjectType.Item) {
            // add item 
@@ -145,17 +138,15 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
             return;
 
         if (slotObjectType == SlotObjectType.Skill) {
-            PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, slotImage.GetComponent<Image>().sprite, slotObject.GetComponent<Skill>());
-        } else if (slotObjectType == SlotObjectType.Item) {
-            PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, slotImage.GetComponent<Image>().sprite, slotObject.GetComponent<Item>());
+            PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, slotObject.GetComponent<Skill>());
         }
 
 
         RemoveItemFromSlot();
     }
 
-    public void OnDrag (PointerEventData eventData) {
-        PeaceCanvas.instance.DragItem(GetComponent<RectTransform>().sizeDelta);
+    public void OnDrag (PointerEventData pointerData) {
+        PeaceCanvas.instance.DragItem(pointerData.delta.x, pointerData.delta.y);
     }
 
     public void OnEndDrag(PointerEventData eventData) {

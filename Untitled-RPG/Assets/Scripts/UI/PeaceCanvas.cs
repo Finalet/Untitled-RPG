@@ -9,19 +9,27 @@ public class PeaceCanvas : MonoBehaviour
     public delegate void SaveLoadSlots();
     public static event SaveLoadSlots onSkillsPanelClose; 
 
-    public static PeaceCanvas instance;
-
-    public Item itemBeingDragged;
-    public Skill skillBeingDragged;
-    GameObject dragGO;
+    public static PeaceCanvas instance;  
 
     [Space]
     public bool anyPanelOpen;
+
     [Space]
     public GameObject SkillsPanel;
     public GameObject Inventory;
+
+    [Space]
     public GameObject DebugChatPanel;
     public TextMeshProUGUI debugChatText;
+    public GameObject dragObject;
+    GameObject dragGO;
+
+    [Header("Dragging items and skills")]
+    public Item itemBeingDragged;
+    public Skill skillBeingDragged;
+    public int amountOfDraggedItem;
+    public UI_InventorySlotHandler initialSlot;
+    
     public int maxChatLines;
     int chatLines;
 
@@ -74,42 +82,29 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void BasicDrag (Vector2 iconSize, Sprite img) {
-        Vector2 offset = iconSize/4;
-        Vector2 mousePos;
-        mousePos.x = Input.mousePosition.x + offset.x;
-        mousePos.y = Input.mousePosition.y - offset.y;
-
-        dragGO = new GameObject();
-        dragGO.transform.SetParent(PeaceCanvas.instance.transform);
-        dragGO.transform.position = mousePos;
+        dragGO = Instantiate(dragObject, Input.mousePosition, Quaternion.identity, transform);
         dragGO.transform.localScale = Vector3.one * 1.1f;
-        dragGO.AddComponent<RectTransform>();
-        dragGO.AddComponent<Image>();
-        dragGO.AddComponent<CanvasGroup>();
-        dragGO.GetComponent<CanvasGroup>().blocksRaycasts = false;
         dragGO.GetComponent<RectTransform>().sizeDelta = iconSize;
         dragGO.GetComponent<Image>().sprite = img;
+        dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = amountOfDraggedItem.ToString();
     }
 
-    public void StartDraggingItem(Vector2 iconSize, Sprite img, Item item) {
-        BasicDrag(iconSize, img);
+    public void StartDraggingItem(Vector2 iconSize, Item item, int amount, UI_InventorySlotHandler initialSlot1) {
         itemBeingDragged = item;
+        amountOfDraggedItem = amount;
+        initialSlot = initialSlot1;
+        BasicDrag(iconSize, item.itemIcon);
     }
-    public void StartDraggingItem(Vector2 iconSize, Sprite img, Skill skill) {
-        BasicDrag(iconSize, img);
+    public void StartDraggingSkill(Vector2 iconSize, Skill skill) {
         skillBeingDragged = skill;
+        BasicDrag(iconSize, skill.icon);
     }
 
-    public void DragItem(Vector2 iconSize) {
+    public void DragItem(float deltaX, float deltaY) {
         if (dragGO == null)
             return;
 
-        Vector2 offset = iconSize/4;
-        Vector2 mousePos;
-        mousePos.x = Input.mousePosition.x + offset.x;
-        mousePos.y = Input.mousePosition.y - offset.y;
-
-        dragGO.transform.position = mousePos;
+        dragGO.transform.position += new Vector3(deltaX, deltaY, 0);
     }
 
     public void EndDrag () {
@@ -118,6 +113,8 @@ public class PeaceCanvas : MonoBehaviour
 
         PeaceCanvas.instance.itemBeingDragged = null;
         PeaceCanvas.instance.skillBeingDragged = null;
+        amountOfDraggedItem = 0;
+        initialSlot = null;
         
         Destroy(dragGO);
     }

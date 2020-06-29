@@ -27,7 +27,7 @@ public class AssetHolder : MonoBehaviour
                 if (consumables[i].ID == ID)
                     return consumables[i];
             }
-            Debug.LogError($"No item with ID = {ID} is found");
+            Debug.LogError($"Item with ID = {ID} is not found");
             return null;
         } else {
             Debug.LogError($"ID = {ID} is out of range");
