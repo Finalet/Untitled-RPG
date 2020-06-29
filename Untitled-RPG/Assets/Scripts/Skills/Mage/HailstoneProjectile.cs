@@ -43,7 +43,7 @@ public class HailstoneProjectile : MonoBehaviour
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 0.1f, damage());
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, damage());
         finalDebrisPos = debirsPos.position;
         Instantiate(debris, finalDebrisPos, debris.transform.rotation, transform.parent).Play();
         

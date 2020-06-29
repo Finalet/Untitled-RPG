@@ -9,9 +9,10 @@ public class PowerSphereProjectile : MonoBehaviour
     public PowerSphere powerSphereSkill;
     public bool playerInside;
 
-    [SerializeField] Material mat;
-    [SerializeField] VisualEffect VFX;
-    [SerializeField] Volume PP;
+    public Material mat;
+    public VisualEffect VFX;
+    public Volume PP;
+    
     bool done;
     bool destroying;
     bool invoked;

@@ -29,9 +29,6 @@ public abstract class Skill : MonoBehaviour
     protected Characteristics characteristics;
     protected AudioSource audioSource;
 
-    public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Shield, Summoner };
-    public enum SkillType {Damaging, Healing, Buff };
-
     [Header("AOE Area Picking")]
     public bool needToPickArea;
     public GameObject areaPickerPrefab;
@@ -104,7 +101,9 @@ public abstract class Skill : MonoBehaviour
     }
 
     protected virtual void CastingAnim () {}
-    protected virtual void InterruptCasting () {}
+    protected virtual void InterruptCasting () {
+        StopSounds();
+    }
 
     protected virtual float actualDistance() { //this distance is for picking area
         Debug.LogError($"\"Actual distance\" for {skillName} not set");
@@ -219,5 +218,9 @@ public abstract class Skill : MonoBehaviour
         audioSource.pitch = pitch;
         audioSource.volume = volume;
         audioSource.PlayDelayed(delay);
+    }
+
+    protected virtual void StopSounds () {
+        audioSource.Stop();
     }
 }

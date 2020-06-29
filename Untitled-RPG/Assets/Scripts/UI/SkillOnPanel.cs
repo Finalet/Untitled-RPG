@@ -7,39 +7,25 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 {
 
     public int skillID;
-    public TextMeshProUGUI name;
+    public TextMeshProUGUI name1;
 
-    GameObject dragDisplayObject;
     GameObject go;
 
     void Start() {
-        dragDisplayObject = AssetHolder.instance.dragDisplayObject;
         GetComponent<Image>().sprite = AssetHolder.instance.Skills[skillID].GetComponent<Skill>().icon;
-        name.text = AssetHolder.instance.Skills[skillID].GetComponent<Skill>().skillName;
+        name1.text = AssetHolder.instance.Skills[skillID].GetComponent<Skill>().skillName;
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
-        go = Instantiate(dragDisplayObject, Input.mousePosition, Quaternion.identity, PeaceCanvas.instance.transform);
-        go.GetComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
-        go.GetComponent<Image>().sprite = GetComponent<Image>().sprite;
-        go.GetComponent<DragDisplayObject>().itemType = ItemType.skill;
-        go.GetComponent<DragDisplayObject>().itemID = skillID;
-        PeaceCanvas.instance.itemBeingDragged = go;
+       PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, GetComponent<Image>().sprite, AssetHolder.instance.Skills[skillID].GetComponent<Skill>());
     }
 
     public void OnDrag (PointerEventData eventData) {
-        if (go == null)
-            return;
-
-        go.transform.position = Input.mousePosition;
+        PeaceCanvas.instance.DragItem(GetComponent<RectTransform>().sizeDelta);
     }
 
     public void OnEndDrag(PointerEventData eventData) {
-        if (go == null)
-            return;
-
-        PeaceCanvas.instance.itemBeingDragged = null;
-        Destroy(go);
+        PeaceCanvas.instance.EndDrag();
     }
 
 }

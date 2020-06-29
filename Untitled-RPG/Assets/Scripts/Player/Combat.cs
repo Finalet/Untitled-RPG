@@ -13,8 +13,8 @@ public class Combat : MonoBehaviour
     Vector3 baseColliderSize;
     WeaponsController weaponsController;
 
-    [SerializeField]float baseComboTimer;
-    [SerializeField]float comboTimer;
+    public float baseComboTimer;
+    public float comboTimer;
 
     public List<GameObject> enemiesInCombatTrigger = new List<GameObject>();
 

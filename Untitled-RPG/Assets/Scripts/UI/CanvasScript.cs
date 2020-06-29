@@ -131,11 +131,11 @@ public class CanvasScript : MonoBehaviour
     void CheckSCBPresses() {
         //Left Image
         if (Input.GetKeyDown(KeyCode.Mouse0))
-            StartCoroutine(UI_Animations.PressAnimation(scb.transform.GetChild(0).GetChild(0).GetComponent<Image>(), KeyCode.Mouse0));
+            StartCoroutine(UI_General.PressAnimation(scb.transform.GetChild(0).GetChild(0).GetComponent<Image>(), KeyCode.Mouse0));
 
         //Right Image
         if (Input.GetKeyDown(KeyCode.Mouse1))
-            StartCoroutine(UI_Animations.PressAnimation(scb.transform.GetChild(1).GetChild(0).GetComponent<Image>(), KeyCode.Mouse1));
+            StartCoroutine(UI_General.PressAnimation(scb.transform.GetChild(1).GetChild(0).GetComponent<Image>(), KeyCode.Mouse1));
 
     }
 }

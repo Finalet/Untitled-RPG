@@ -5,7 +5,7 @@ using TMPro;
 
 public class ddText : MonoBehaviour
 {
-    Color c;
+    Color baseColor;
 
     public float speed = 1;
     public float lifeTime = 2;
@@ -31,6 +31,8 @@ public class ddText : MonoBehaviour
         else 
             transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(orange, Color.red, (float)damage/3000f);
         transform.localScale = Vector3.zero;
+
+        baseColor = transform.GetChild(0).GetComponent<TextMeshPro>().color;
     }
 
     float timer;
@@ -41,7 +43,7 @@ public class ddText : MonoBehaviour
             timer -= Time.deltaTime;
             transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(1,1,1), Time.deltaTime * 10);
         } else if (timer <= 1.5f && timer > 0) {
-            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(transform.GetChild(0).GetComponent<TextMeshPro>().color, new Color(c.r,c.g,c.b,0), Time.deltaTime*2f);
+            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(transform.GetChild(0).GetComponent<TextMeshPro>().color, new Color(baseColor.r,baseColor.g,baseColor.b,0), Time.deltaTime*2f);
             timer -= Time.deltaTime;
         } else {
             Destroy(gameObject);

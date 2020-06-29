@@ -38,6 +38,11 @@ public class Armageddon : Skill
 
     protected override void CustomUse() {}
 
+    protected override void InterruptCasting() {
+        base.InterruptCasting();
+        RemoveParticles();
+    }
+
     public void StartHell () {
         finishedCast = true;
         instanciatedCloud = Instantiate(cloudVFX, pickedPosition + Vector3.up * 10, Quaternion.identity);

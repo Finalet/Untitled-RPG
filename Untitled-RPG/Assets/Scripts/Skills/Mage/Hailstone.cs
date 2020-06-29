@@ -23,7 +23,6 @@ public class Hailstone : Skill
 
     protected override void InterruptCasting() {
         base.InterruptCasting();
-
         RemoveParticles();
     }
 
