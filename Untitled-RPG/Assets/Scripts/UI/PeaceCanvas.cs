@@ -28,8 +28,8 @@ public class PeaceCanvas : MonoBehaviour
     public Item itemBeingDragged;
     public Skill skillBeingDragged;
     public int amountOfDraggedItem;
-    public UI_InventorySlotHandler initialSlot;
-    
+    public UI_InventorySlot initialSlot;
+
     public int maxChatLines;
     int chatLines;
 
@@ -86,17 +86,23 @@ public class PeaceCanvas : MonoBehaviour
         dragGO.transform.localScale = Vector3.one * 1.1f;
         dragGO.GetComponent<RectTransform>().sizeDelta = iconSize;
         dragGO.GetComponent<Image>().sprite = img;
-        dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = amountOfDraggedItem.ToString();
+        if (amountOfDraggedItem == 0) {
+            dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+        } else {
+            dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = amountOfDraggedItem.ToString();
+        }
     }
 
-    public void StartDraggingItem(Vector2 iconSize, Item item, int amount, UI_InventorySlotHandler initialSlot1) {
+    public void StartDraggingItem(Vector2 iconSize, Item item, int amount, UI_InventorySlot initialSlot1) {
         itemBeingDragged = item;
         amountOfDraggedItem = amount;
         initialSlot = initialSlot1;
         BasicDrag(iconSize, item.itemIcon);
     }
-    public void StartDraggingSkill(Vector2 iconSize, Skill skill) {
+    public void StartDraggingSkill(Vector2 iconSize, Skill skill, UI_InventorySlot initialSlot1) {
         skillBeingDragged = skill;
+        initialSlot = initialSlot1;
+        amountOfDraggedItem = 0;
         BasicDrag(iconSize, skill.icon);
     }
 

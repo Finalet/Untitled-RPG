@@ -11,14 +11,15 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
     public KeyCode secondaryAssignedKey; //Secondary key "Shift" to make "shift-e"
 
     [Space]
-    //public bool slotTaken;
-    SlotObjectType slotObjectType;
-    public GameObject slotObject;
+    public Skill slotSkill;
+    public Item slotItem;
+    public int itemAmount;
 
     [Header("Do no edit")]
     public Image slotImage;
     public Image cooldownImage;
     public TextMeshProUGUI keyText;
+    public TextMeshProUGUI amountText;
 
     void OnEnable() {
         PeaceCanvas.onSkillsPanelClose += Save;
@@ -32,8 +33,8 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
     }
 
     void Update() {
-        if(slotObject != null)
-            DisplayItem();
+        if(slotSkill != null || slotItem != null)
+            DisplaySlot();
 
         DisplayKey();
         DetectKeyPress();
@@ -46,26 +47,36 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
             keyText.text = KeyCodeDictionary.keys[secondaryAssignedKey] + " " + KeyCodeDictionary.keys[mainAssignedKey];
     }
 
-    void DisplayItem () {
-        if (slotObjectType == SlotObjectType.Skill) {
-            slotImage.sprite = slotObject.GetComponent<Skill>().icon;
-
+    void DisplaySlot () {
+        if (slotSkill != null) { //If skill
+            slotImage.sprite = slotSkill.icon;
+            amountText.text = "";
             //Cooldown
-            if(slotObject.GetComponent<Skill>().isCoolingDown) {
+            if(slotSkill.isCoolingDown) {
                 cooldownImage.color = new Color(0, 0, 0, 0.9f);
-                cooldownImage.fillAmount = slotObject.GetComponent<Skill>().coolDownTimer/slotObject.GetComponent<Skill>().coolDown;
+                cooldownImage.fillAmount = slotSkill.coolDownTimer/slotSkill.coolDown;
             } else {
                 cooldownImage.color = new Color(0, 0, 0, 0);
                 cooldownImage.fillAmount = 1;
             }
 
-            if (slotObject.GetComponent<Skill>().skillActive()) {
+            if (slotSkill.skillActive()) {
                 slotImage.color = Color.white;
                 keyText.color = Color.white;
             } else {
                 slotImage.color = new Color (0.3f, 0.3f, 0.3f, 1);
                 keyText.color = new Color(0.6f, 0, 0, 1); 
             }
+        } else if (slotItem != null) { //If item
+            slotImage.sprite = slotItem.itemIcon;
+            amountText.text = itemAmount.ToString();
+
+            //Disable cooldown image
+            cooldownImage.color = new Color(0, 0, 0, 0);
+            cooldownImage.fillAmount = 1;
+            //Activate slot image
+            slotImage.color = Color.white;
+            keyText.color = Color.white;
         }
     }
 
@@ -77,72 +88,118 @@ public class SlotHolderHandler : MonoBehaviour, IDropHandler, IDragHandler, IBeg
             if (Input.GetKeyDown(mainAssignedKey)) {
                 StartCoroutine(UI_General.PressAnimation(slotImage, mainAssignedKey));
             } else if (Input.GetKeyUp(mainAssignedKey)) {
-                if (slotObject != null && slotObjectType == SlotObjectType.Skill) //Check if slot if taken with a skill
-                    slotObject.GetComponent<Skill>().Use();
+                if (slotSkill != null) //Check if slot if taken with a skill
+                    slotSkill.Use();
             }
         } else if (Input.GetKey(secondaryAssignedKey)) {
             if (Input.GetKeyDown(mainAssignedKey)) {
                 StartCoroutine(UI_General.PressAnimation(slotImage, mainAssignedKey));
             } else if (Input.GetKeyUp(mainAssignedKey)) {
-                if (slotObject != null && slotObjectType == SlotObjectType.Skill) //Check if slot if taken with a skill
-                    slotObject.GetComponent<Skill>().Use();
+                if (slotSkill != null) //Check if slot if taken with a skill
+                    slotSkill.Use();
             }
         }
     }
 
-    public void OnDrop(PointerEventData eventData) {
-        if (PeaceCanvas.instance.skillBeingDragged != null) { //Draggin Skill
-            AddItemToSlot(SlotObjectType.Skill, PeaceCanvas.instance.skillBeingDragged.ID);
-        }
-    }
-
     public void Save () {
-        ES3.Save<SlotObjectType>("slot_" + slotID + "_slotObjectType", slotObjectType, "slots.txt");
-        if (slotObjectType != SlotObjectType.Empty) {
-            int itemID = (slotObjectType == SlotObjectType.Skill) ? slotObject.GetComponent<Skill>().ID : slotObject.GetComponent<Item>().ID;
-            ES3.Save<int>("slot_" + slotID + "_itemID", itemID, "slots.txt");
+        int ID;
+        if (slotSkill != null) { //Saving skill
+            ES3.Save<int>($"slot_{slotID}_type", 0, "slots.txt"); 
+            ES3.Save<int>($"slot_{slotID}_itemAmount", -1, "slots.txt");
+            ID = slotSkill.ID; 
+        } else if (slotItem != null) { //Saving item
+            ES3.Save<int>($"slot_{slotID}_type", 1, "slots.txt"); 
+            ES3.Save<int>($"slot_{slotID}_itemAmount", itemAmount, "slots.txt");
+            ID = slotItem.ID;
+        } else {
+            ES3.Save<int>($"slot_{slotID}_type", -1, "slots.txt"); //Saving empty slot
+            ES3.Save<int>($"slot_{slotID}_itemAmount", -1, "slots.txt");
+            ID = -1;
         }
+        ES3.Save<int>($"slot_{slotID}_objectID", ID, "slots.txt");
     }
     public void Load () {
-        SlotObjectType type = ES3.Load<SlotObjectType>("slot_" + slotID + "_slotObjectType", "slots.txt", SlotObjectType.Empty);
-        if (type == SlotObjectType.Empty) {
-            RemoveItemFromSlot();
+        int type = ES3.Load<int>($"slot_{slotID}_type", "slots.txt", -1);
+        if (type == -1) {
+            RemoveFromSlot();
             return;
         }
         
-        int itemID = ES3.Load<int>("slot_" + slotID + "_itemID", "slots.txt", -1);
-        AddItemToSlot(type, itemID);
-    }
-
-    void AddItemToSlot(SlotObjectType type, int objectID) {
-        if (type == SlotObjectType.Skill) {           
-            slotObject = AssetHolder.instance.Skills[objectID];
-        } else if (type == SlotObjectType.Item) {
-           // add item 
+        int ID = ES3.Load<int>($"slot_{slotID}_objectID", "slots.txt", 0);
+        if (type == 0) { //Loading skill
+            AddToSlot(AssetHolder.instance.Skills[ID], null);
+        } else if (type == 1) {
+            int amount = ES3.Load<int>($"slot_{slotID}_itemAmount", "slots.txt", 0);
+            AddToSlot(AssetHolder.instance.getItem(ID), amount, null);
         }
-        slotObjectType = type;
     }
 
-    public void RemoveItemFromSlot() {
-        slotObject = null;
+    //Adding skills
+    void AddToSlot (Skill skill, SlotHolderHandler initialSlot) {
+        if (slotItem == null && slotSkill == null) { //Slot is empty
+            slotSkill = skill;
+        } else if (slotSkill != null) { //Slot taken with another skill
+            initialSlot.AddToSlot(slotSkill, null);
+            slotSkill = skill;
+        } else if (slotItem != null) { //Slot taked with item
+            initialSlot.AddToSlot(slotItem, itemAmount, null);
+            slotSkill = skill;
+        }
+        slotItem = null;
+        itemAmount = 0;
+        amountText.text = "";
+    }
+    //Adding items
+    void AddToSlot (Item item, int amount, SlotHolderHandler initialSlot) {
+        if (slotItem == null && slotSkill == null) { //Slot is empty
+            slotItem = item;
+            itemAmount = amount;
+        } else if (slotItem == item && slotItem is Consumable) { //Adding the same item
+            itemAmount += amount;
+        } else if (slotItem != null) { //Switching items places
+            initialSlot.AddToSlot(slotItem, itemAmount, null);
+            slotItem = item;
+            itemAmount = amount;
+        } else if (slotSkill != null) { //Switching places with a skill
+            initialSlot.AddToSlot(slotSkill, null);
+            slotItem = item;
+            itemAmount = amount;
+        }
+        slotSkill = null;
+    }
+
+    public void RemoveFromSlot() {
+        itemAmount = 0;
+        amountText.text = "";
         slotImage.color = new Color(0, 0, 0, 0);
-        slotObjectType = SlotObjectType.Empty;
         keyText.color = Color.white;
         cooldownImage.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         cooldownImage.GetComponent<Image>().fillAmount = 1;
+        slotSkill = null;
+        slotItem = null;
     }
 
     //------------------------------------Dragging Items-------------------------------------------------//
+    public void OnDrop(PointerEventData eventData) {
+        if (PeaceCanvas.instance.skillBeingDragged != null) { //Dropping skill
+            AddToSlot(PeaceCanvas.instance.skillBeingDragged, null);
+        } else if (PeaceCanvas.instance.itemBeingDragged != null) { //Dropping item
+            AddToSlot(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, null);
+        }
+    }
+    
     public void OnBeginDrag(PointerEventData eventData) {
-        if (slotObjectType == SlotObjectType.Empty)
+        if (slotSkill == null && slotItem == null)
             return;
 
-        if (slotObjectType == SlotObjectType.Skill) {
-            PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, slotObject.GetComponent<Skill>());
+        if (slotSkill != null) {
+            //PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, slotSkill, this);
+        } else if (slotItem != null) {
+            PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, slotItem, itemAmount, null);
         }
 
 
-        RemoveItemFromSlot();
+        RemoveFromSlot();
     }
 
     public void OnDrag (PointerEventData pointerData) {

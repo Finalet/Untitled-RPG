@@ -13,7 +13,7 @@ public class SwitchShortcutsProfileOnPlay
 
     static SwitchShortcutsProfileOnPlay()
     {
-        EditorApplication.playModeStateChanged += DetectPlayModeState;
+        //EditorApplication.playModeStateChanged += DetectPlayModeState;
     }
 
     private static void SetActiveProfile(string profileId)

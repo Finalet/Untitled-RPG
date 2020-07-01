@@ -12,7 +12,7 @@ public class AssetHolder : MonoBehaviour
     public Canvas canvas;
     public Camera PlayersCamera;
 
-    public GameObject[] Skills;
+    public Skill[] Skills;
 
     public List<Item> consumables = new List<Item>();
 

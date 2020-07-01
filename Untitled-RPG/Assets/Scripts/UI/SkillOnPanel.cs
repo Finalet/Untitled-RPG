@@ -17,7 +17,7 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
-       PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, AssetHolder.instance.Skills[skillID].GetComponent<Skill>());
+       PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, AssetHolder.instance.Skills[skillID], null);
     }
 
     public void OnDrag (PointerEventData pointerData) {
