@@ -80,6 +80,7 @@ public class Armageddon : Skill
         go.GetComponent<ArmageddonProjectile>().actualDamage = actualDamage();
         go.GetComponent<ArmageddonProjectile>().speed = projectileSpeed;
         go.SetActive(true);
+        playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(10);
     }
 
     void AddParticles() {
