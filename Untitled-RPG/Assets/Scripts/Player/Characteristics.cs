@@ -143,6 +143,16 @@ public class Characteristics : MonoBehaviour
         ddText.GetComponent<ddText>().damage = damage;
         ddText.GetComponent<ddText>().isPlayer = true;
     }
+    void DisplayHealNumber(int healAmount) {
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 2f, Quaternion.identity);
+        ddText.GetComponent<ddText>().healAmount = healAmount;
+        ddText.GetComponent<ddText>().isPlayer = true;
+    }
+    void DisplayStaminaNumber(int staminaAmount) {
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 2f, Quaternion.identity);
+        ddText.GetComponent<ddText>().staminaAmount = staminaAmount;
+        ddText.GetComponent<ddText>().isPlayer = true;
+    }
 
     public void UseOrRestoreStamina (int amount) {
         Stamina -= amount;
@@ -231,4 +241,13 @@ public class Characteristics : MonoBehaviour
     }
 
 #endregion
+
+    public void GetHealed(int healAmount) {
+        HP += healAmount;
+        DisplayHealNumber(healAmount);
+    }
+    public void GetStamina(int staminaAmount) {
+        Stamina += staminaAmount;
+        DisplayStaminaNumber(staminaAmount);
+    }
 }

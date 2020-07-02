@@ -59,12 +59,19 @@ public class Armageddon : Skill
                 ShootOneMeteor();
                 lastShotTime = Time.time;
             }
+            if (playerControlls.castInterrupted) {
+                playerControlls.castInterrupted = false;
+                instanciatedCloud.Stop();
+                Destroy(instanciatedCloud.gameObject, 5);
+                yield break;
+            }
+            playerControlls.isCastingSkill = true;
             yield return null;
         }
         animator.CrossFade("Attacks.Mage.Armageddon_end", 0.25f);
         instanciatedCloud.Stop();
-        yield return new WaitForSeconds (5);
-        Destroy(instanciatedCloud.gameObject);
+        playerControlls.isCastingSkill = false;
+        Destroy(instanciatedCloud.gameObject, 5);
     }
     
     void ShootOneMeteor() {

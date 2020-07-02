@@ -14,7 +14,10 @@ public class ddText : MonoBehaviour
     Color orange;
 
     public int damage;
+    public int healAmount;
+    public int staminaAmount;
     public bool isPlayer;
+
 
     void Start() {
         float x = Random.Range(-1f, 1f);
@@ -23,16 +26,26 @@ public class ddText : MonoBehaviour
         Vector3 dir = (PlayerControlls.instance.transform.right * x  + Vector3.up) * Random.Range(speed*0.5f, speed*1.3f) * (1+(float)damage/3000f);
         GetComponent<Rigidbody>().AddForce(dir, ForceMode.Impulse);
         timer = lifeTime;
-        transform.GetChild(0).GetComponent<TextMeshPro>().text = damage.ToString();
+        if (healAmount == 0 && damage != 0) {
+            transform.GetChild(0).GetComponent<TextMeshPro>().text = damage.ToString();
 
-        orange = new Color(1, 0.5f, 0,1);
-        if (isPlayer)
-            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.red;
-        else 
-            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(orange, Color.red, (float)damage/3000f);
+            orange = new Color(1, 0.5f, 0,1);
+            if (isPlayer)
+                transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.red;
+            else 
+                transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.Lerp(orange, Color.red, (float)damage/3000f);
+        } else if (healAmount != 0 && damage == 0) {
+            transform.GetChild(0).GetComponent<TextMeshPro>().text = healAmount.ToString();
+            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.green;
+        } else {
+            transform.GetChild(0).GetComponent<TextMeshPro>().text = staminaAmount.ToString();
+            transform.GetChild(0).GetComponent<TextMeshPro>().color = Color.cyan;
+        }
+
         transform.localScale = Vector3.zero;
 
         baseColor = transform.GetChild(0).GetComponent<TextMeshPro>().color;
+        
     }
 
     float timer;

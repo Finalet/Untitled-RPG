@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public abstract class Item : ScriptableObject
 {
@@ -9,4 +10,5 @@ public abstract class Item : ScriptableObject
     public GameObject itemPrefab;
 
     public abstract void Use ();
+    public abstract IEnumerator UseEnum ();
 }

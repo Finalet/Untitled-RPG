@@ -9,6 +9,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
 {
     Sprite emptySlotSprite;
     public Image cooldownImage;
+    public TextMeshProUGUI cooldownTimerText;
     public TextMeshProUGUI keyText;
 
     [Header("Skill panel")]
@@ -29,7 +30,9 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     void Update() {
         if (skillInSlot != null) {
             DisplaySkill();
-        } else if (itemInSlot == null) {
+        } else if (itemInSlot != null) {
+            DisplayItem();
+        } else {
             slotIcon.sprite = emptySlotSprite;
         }
 
@@ -58,11 +61,39 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         if(skillInSlot.isCoolingDown) {
             cooldownImage.color = new Color(0, 0, 0, 0.9f);
             cooldownImage.fillAmount = skillInSlot.coolDownTimer/skillInSlot.coolDown;
+            cooldownTimerText.text = Mathf.RoundToInt(skillInSlot.coolDownTimer).ToString();
         } else {
             cooldownImage.color = new Color(0, 0, 0, 0);
             cooldownImage.fillAmount = 1;
+            cooldownTimerText.text = "";
         }
         if (skillInSlot.skillActive()) {
+            slotIcon.color = Color.white;
+            keyText.color = Color.white;
+        } else {
+            slotIcon.color = new Color (0.3f, 0.3f, 0.3f, 1);
+            keyText.color = new Color(0.6f, 0, 0, 1); 
+        }
+    }
+
+    void DisplayItem () {
+        slotIcon.sprite = itemInSlot.itemIcon;
+        itemAmountText.text = itemAmount.ToString();
+
+        if (!(itemInSlot is Consumable))
+            return;
+        
+        Consumable c = (Consumable)itemInSlot;
+        if(c.isCoolingDown) {
+            cooldownImage.color = new Color(0, 0, 0, 0.9f);
+            cooldownImage.fillAmount = c.cooldownTimer/c.cooldownTime;
+            cooldownTimerText.text = Mathf.RoundToInt(c.cooldownTimer).ToString();
+        } else {
+            cooldownImage.color = new Color(0, 0, 0, 0);
+            cooldownImage.fillAmount = 1;
+            cooldownTimerText.text = "";
+        }
+        if (c.canBeUsed()) {
             slotIcon.color = Color.white;
             keyText.color = Color.white;
         } else {
@@ -79,17 +110,35 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
             if (Input.GetKeyDown(mainAssignedKey)) {
                 StartCoroutine(UI_General.PressAnimation(slotIcon, mainAssignedKey));
             } else if (Input.GetKeyUp(mainAssignedKey)) {
-                if (skillInSlot != null) //Check if slot if taken with a skill
+                if (skillInSlot != null) //If slot is taken with a skill
                     skillInSlot.Use();
+                else if (itemInSlot != null) //If slot is taken with an item
+                    UseItem();
             }
         } else if (Input.GetKey(secondaryAssignedKey)) {
             if (Input.GetKeyDown(mainAssignedKey)) {
                 StartCoroutine(UI_General.PressAnimation(slotIcon, mainAssignedKey));
             } else if (Input.GetKeyUp(mainAssignedKey)) {
-                if (skillInSlot != null) //Check if slot if taken with a skill
+                if (skillInSlot != null) //If slot i taken with a skill
                     skillInSlot.Use();
+                else if (itemInSlot != null) //If slot is taken with an item
+                    UseItem();
             }
         }
+    }
+
+    void UseItem () {
+        if (itemInSlot is Consumable) {
+            Consumable c = (Consumable)itemInSlot;
+            if (c.isCoolingDown || !c.canBeUsed())
+                return;
+            
+            StartCoroutine( itemInSlot.UseEnum() );
+            itemAmount --;
+            if (itemAmount == 0)
+                ClearSlot();
+        }
+
     }
 
     void DisplayKey () {
@@ -118,12 +167,15 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
 
     public void AddSkill (Skill skill, UI_SkillPanelSlot initialSlot) {
         if (skillInSlot != null) { //Slot contains another skill
-            initialSlot.AddSkill(skillInSlot, null);
-        } else if (initialSlot == null && itemInSlot != null) { //Slot containts an item and skill was dragged from skill panel
-            print("Destory item?");
-            return;
+            if (initialSlot != null)
+                initialSlot.AddSkill(skillInSlot, null);
         } else if (itemInSlot != null) { //Slot contains an item
-            initialSlot.AddItem(itemInSlot, itemAmount, null);
+            if (initialSlot != null) {
+                initialSlot.AddItem(itemInSlot, itemAmount, null);
+            } else {
+                print("Destory item?");
+                return;
+            }
         }
         skillInSlot = skill;
         itemInSlot = null;

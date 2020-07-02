@@ -537,7 +537,7 @@ public class PlayerControlls : MonoBehaviour
     public void InterruptCasting () {
         if (!isCastingSkill)
             return;
-        animator.CrossFade("Attacks.Empty", 0.1f);
+        animator.CrossFade("Attacks.Empty", 0.15f);
         castInterrupted = true;
         isCastingSkill = false;
     }
