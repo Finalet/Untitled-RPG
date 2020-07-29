@@ -1,0 +1,82 @@
+﻿#pragma kernel ApplyAlphaPadding
+#pragma kernel ReadSourceTexture
+#pragma kernel ApplyOriginalAlpha
+
+Texture2D<float4> SourceTexture;
+bool Linear;
+
+Texture2D<float4> InputTexture;
+RWTexture2D<float4> OutputTexture;
+
+[numthreads(8,8,1)]
+void ApplyAlphaPadding (uint3 id : SV_DispatchThreadID)
+{
+	float4 centerColor = InputTexture[id.xy];
+				
+	if (centerColor.a > 0)
+	{
+		OutputTexture[id.xy] = centerColor;
+		return;
+	}
+	
+	float4 color0 = InputTexture[int2(id.x+1, id.y)];
+	float4 color1 = InputTexture[int2(id.x-1, id.y)];
+	float4 color2 = InputTexture[int2(id.x, id.y+1)];
+	float4 color3 = InputTexture[int2(id.x, id.y+1)];
+
+	float4 color4 = InputTexture[int2(id.x+1, id.y+1)];
+	float4 color5 = InputTexture[int2(id.x-1, id.y+1)];
+	float4 color6 = InputTexture[int2(id.x+1, id.y-1)];
+	float4 color7 = InputTexture[int2(id.x-1, id.y-1)];
+		
+	float alpha0 = ceil(color0.a);
+	float alpha1 = ceil(color1.a);
+	float alpha2 = ceil(color2.a);
+	float alpha3 = ceil(color3.a);
+	float alpha4 = ceil(color4.a);
+	float alpha5 = ceil(color5.a);
+	float alpha6 = ceil(color6.a);
+	float alpha7 = ceil(color7.a);
+
+	float sum = alpha0 + alpha1 + alpha2 + alpha3 + alpha4 + alpha5 + alpha6 + alpha7;
+	if (sum <= 0)
+	{
+		OutputTexture[id.xy] = centerColor;
+		return;
+	}
+
+	float4 outputColor = float4(0,0,0,1);
+	outputColor.rgb =  float3( alpha0 * color0.rgb +
+						alpha1 * color1.rgb +
+						alpha2 * color2.rgb +	
+						alpha3 * color3.rgb +	
+						alpha4 * color4.rgb +	
+						alpha5 * color5.rgb +	
+						alpha6 * color6.rgb +	
+						alpha7 * color7.rgb)/sum;									
+	OutputTexture[id.xy] = outputColor;
+}
+
+[numthreads(8,8,1)]
+void ReadSourceTexture (uint3 id : SV_DispatchThreadID)
+{
+	float4 outputColor = SourceTexture[id.xy];
+	if (Linear)
+	{
+		outputColor = pow(abs(outputColor), 0.454545);
+	}
+
+	if (outputColor.a == 0)
+	{
+		outputColor.rgb = float3(0,0,0);
+	}
+	OutputTexture[id.xy] = outputColor;
+}
+
+[numthreads(8,8,1)]
+void ApplyOriginalAlpha (uint3 id : SV_DispatchThreadID)
+{
+	float4 outputColor = OutputTexture[id.xy];
+	outputColor.a = SourceTexture[id.xy].a;		
+	OutputTexture[id.xy] = outputColor;
+}

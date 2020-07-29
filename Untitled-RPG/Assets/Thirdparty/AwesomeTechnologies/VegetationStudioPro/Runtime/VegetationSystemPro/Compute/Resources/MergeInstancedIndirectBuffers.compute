@@ -1,0 +1,194 @@
+﻿#pragma kernel MergeInstancedIndirectBuffers
+
+struct IndirectShaderData
+{
+	float4x4 PositionMatrix;
+	//float4x4 InversePositionMatrix;
+	float4 ControlData;
+};
+
+uint MergeSourceBufferCount0;
+uint MergeSourceBufferCount1;
+uint MergeSourceBufferCount2;
+uint MergeSourceBufferCount3;
+uint MergeSourceBufferCount4;
+uint MergeSourceBufferCount5;
+uint MergeSourceBufferCount6;
+uint MergeSourceBufferCount7;
+uint MergeSourceBufferCount8;
+uint MergeSourceBufferCount9;
+uint MergeSourceBufferCount10;
+uint MergeSourceBufferCount11;
+uint MergeSourceBufferCount12;
+uint MergeSourceBufferCount13;
+uint MergeSourceBufferCount14;
+//uint MergeSourceBufferCount15;
+
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer0;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer1;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer2;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer3;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer4;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer5;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer6;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer7;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer8;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer9;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer10;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer11;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer12;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer13;
+StructuredBuffer<IndirectShaderData> MergeSourceBuffer14;
+//StructuredBuffer<IndirectShaderData> MergeSourceBuffer15;
+
+AppendStructuredBuffer<IndirectShaderData> MergeBuffer;
+
+[numthreads(32,1,1)]
+void MergeInstancedIndirectBuffers (uint3 id : SV_DispatchThreadID)
+{
+	uint instanceId = id.x;
+	if (instanceId < MergeSourceBufferCount0)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer0[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer0[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer0[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount1)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer1[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer1[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer1[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount2)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer2[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer2[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer2[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount3)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer3[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer3[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer3[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount4)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer4[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer4[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer4[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount5)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer5[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer5[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer5[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount6)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer6[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer6[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer6[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount7)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer7[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer7[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer7[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+
+	if (instanceId < MergeSourceBufferCount8)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer8[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer8[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer8[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount9)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer9[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer9[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer9[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount10)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer10[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer10[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer10[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount11)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer11[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer11[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer11[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount12)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer12[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer12[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer12[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount13)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer13[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer13[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer13[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	if (instanceId < MergeSourceBufferCount14)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer14[id.x].PositionMatrix;
+		//instanceData.InversePositionMatrix = MergeSourceBuffer14[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer14[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}
+
+	/*if (instanceId < MergeSourceBufferCount15)
+	{
+		IndirectShaderData instanceData;
+		instanceData.PositionMatrix = MergeSourceBuffer15[id.x].PositionMatrix;
+		instanceData.InversePositionMatrix = MergeSourceBuffer15[id.x].InversePositionMatrix;
+		instanceData.ControlData = MergeSourceBuffer15[id.x].ControlData;
+		MergeBuffer.Append(instanceData);
+	}*/
+}

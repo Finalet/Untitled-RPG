@@ -1,0 +1,21 @@
+﻿#pragma kernel CSMain
+
+
+struct HeightData
+{
+	float TopHeight;
+	float BottomHeight;
+};
+
+Texture2D<float> InputDown;
+Texture2D<float> InputUp;
+RWStructuredBuffer<HeightData> OutputHeightBuffer;
+int TextureResolution;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	int2 upPosition = int2(id.x, TextureResolution - id.y);
+	OutputHeightBuffer[id.x + id.y * TextureResolution].TopHeight = InputDown[id.xy].r;
+	OutputHeightBuffer[id.x + id.y * TextureResolution].BottomHeight = InputUp[upPosition].r;
+}
