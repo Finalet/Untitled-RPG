@@ -13,7 +13,7 @@ public class Target : Skill
     public float damageIncrease = 20;
 
     public override void Use() {
-        if(!AssetHolder.instance.PlayersCamera.GetComponent<LookingTarget>().targetIsEnemy) {
+        if(!playerControlls.playerCamera.GetComponent<LookingTarget>().targetIsEnemy) {
             CanvasScript.instance.DisplayWarning("No enemy target!");
             return;
         }   
@@ -30,7 +30,7 @@ public class Target : Skill
         audioSource.time = 0.21f;
         audioSource.Play();
 
-        SkillTarget = AssetHolder.instance.PlayersCamera.GetComponent<LookingTarget>().target;
+        SkillTarget = playerControlls.playerCamera.GetComponent<LookingTarget>().target;
         
         timer = 0;
         

@@ -206,6 +206,80 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4073469}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &12097642
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 12097643}
+  - component: {fileID: 12097644}
+  m_Layer: 0
+  m_Name: TouchReactCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &12097643
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12097642}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1935318681}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &12097644
+Camera:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12097642}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: -10000
+  far clip plane: 10000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 50
+  m_Depth: -100
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 536870912
+  m_RenderingPath: 1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 0
+  m_HDR: 0
+  m_AllowMSAA: 0
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &14818293
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,36 +418,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.27497774, y: 0.71476513, z: -0.0000003874302}
     m_Extent: {x: 1.0800128, y: 1.3333809, z: 0.31909326}
   m_DirtyAABB: 0
---- !u!1 &16146398
-GameObject:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 16146399}
-  m_Layer: 0
-  m_Name: WindSampler_1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &16146399
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16146398}
-  m_LocalRotation: {x: -0.14564426, y: 0.71497834, z: -0.15643218, w: -0.66567457}
-  m_LocalPosition: {x: -82.25418, y: 5.205255, z: 82.0047}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1660991971}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &18265001
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1771,51 +1815,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.0217965, y: 1.1415833, z: 0.15355158}
   m_Center: {x: -0.0004850619, y: 0.5707924, z: 0.030902961}
---- !u!1 &130655667
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 130655669}
-  - component: {fileID: 130655668}
-  m_Layer: 0
-  m_Name: WindZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!182 &130655668
-WindZone:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130655667}
-  m_Enabled: 1
-  m_Mode: 0
-  m_Radius: 20
-  m_WindMain: 1
-  m_WindTurbulence: 1
-  m_WindPulseMagnitude: 0.5
-  m_WindPulseFrequency: 0.01
---- !u!4 &130655669
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130655667}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &140080796
 GameObject:
   m_ObjectHideFlags: 0
@@ -2428,57 +2427,6 @@ Transform:
   - {fileID: 1852703556}
   m_Father: {fileID: 963221273}
   m_RootOrder: 30
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &197561706
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 197561708}
-  - component: {fileID: 197561707}
-  m_Layer: 0
-  m_Name: VegetationStudioPro
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &197561707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197561706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 940b17483ed4b7845a39e51ecb290c17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CurrentTabIndex: 0
-  VegetationSystemList:
-  - {fileID: 1660991970}
-  PostProcessingLayer:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!4 &197561708
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197561706}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1660991971}
-  - {fileID: 686611813}
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &198010940
 GameObject:
@@ -4222,12 +4170,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 439350, guid: 788898b4df0d57f4393ca2863eb34f8c,
     type: 3}
   m_PrefabInstance: {fileID: 1739593707}
-  m_PrefabAsset: {fileID: 0}
---- !u!20 &333442091 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 2317584040315933776, guid: 09302767c0a7fa24eaa815dae654703f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1634858771}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &338173315
 PrefabInstance:
@@ -6677,6 +6619,51 @@ Transform:
   - {fileID: 144168717}
   m_Father: {fileID: 259685691}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &489309502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 489309504}
+  - component: {fileID: 489309503}
+  m_Layer: 0
+  m_Name: WindZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!182 &489309503
+WindZone:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489309502}
+  m_Enabled: 1
+  m_Mode: 0
+  m_Radius: 20
+  m_WindMain: 1
+  m_WindTurbulence: 1
+  m_WindPulseMagnitude: 0.5
+  m_WindPulseFrequency: 0.01
+--- !u!4 &489309504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489309502}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &490680235
 GameObject:
@@ -9391,61 +9378,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 673849912}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &686611812
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 686611813}
-  - component: {fileID: 686611814}
-  m_Layer: 0
-  m_Name: TouchReactSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &686611813
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686611812}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1339752605}
-  m_Father: {fileID: 197561708}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &686611814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686611812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d25149bb30cc134d8c386bc74a79d1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InvisibleLayer: 29
-  TouchReactCamera: {fileID: 1339752606}
-  SelectedCamera: {fileID: 333442091}
-  AutoselectCamera: 1
-  CameraYPosition: -1000
-  TouchReactQuality: 1
-  OrthographicSize: 50
-  ShowDebugColliders: 0
-  HideTouchReactCamera: 1
-  ColliderList: []
-  MeshFilterList: []
 --- !u!1001 &690758505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25353,92 +25285,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1335750808}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1335795401 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4675846286074408320, guid: 09302767c0a7fa24eaa815dae654703f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1634858771}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1336132860 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 454354, guid: fd3d2a7dec61bb842a89089e1d1e6764,
     type: 3}
   m_PrefabInstance: {fileID: 1487734404}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1339752604
-GameObject:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1339752605}
-  - component: {fileID: 1339752606}
-  m_Layer: 0
-  m_Name: TouchReactCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1339752605
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1339752604}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -28.417969, y: 0, z: 115.82031}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 686611813}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1339752606
-Camera:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1339752604}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: -10000
-  far clip plane: 10000
-  field of view: 60
-  orthographic: 1
-  orthographic size: 50
-  m_Depth: -100
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 536870912
-  m_RenderingPath: 1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 0
-  m_HDR: 0
-  m_AllowMSAA: 0
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!1 &1341084207
 GameObject:
   m_ObjectHideFlags: 0
@@ -25542,6 +25394,611 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 122f65ce20a93d54d9dcba16303e0785, type: 3}
+--- !u!1 &1352281719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1352281721}
+  - component: {fileID: 1352281720}
+  - component: {fileID: 1352281725}
+  - component: {fileID: 1352281724}
+  - component: {fileID: 1352281722}
+  - component: {fileID: 1352281723}
+  m_Layer: 0
+  m_Name: VegetationSystemPro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1352281720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3fa75fe30cb5d45b0b0f65ecf6a100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VegetationSystemBounds:
+    m_Center: {x: 6.5, y: 69.82372, z: 6.5}
+    m_Extent: {x: 256.5, y: 81.05573, z: 256.5}
+  AutomaticBoundsCalculation: 1
+  PersistentVegetationStorage: {fileID: 1352281722}
+  PredictiveCellLoaderCellsPerFrame: 1
+  LoadPotentialVegetationCells: 1
+  CurrentTabIndex: 4
+  VegetationPackageIndex: 0
+  SeaLevel: 0
+  ExcludeSeaLevelCells: 0
+  VegetationCellSize: 100
+  BillboardCellSize: 500
+  SelectedTextureMaskGroupTextureIndex: 0
+  SelectedTextureMaskGroupIndex: 0
+  DebugTextureMask:
+    TextureRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    Repeat: {x: 1, y: 1}
+    MaskTexture: {fileID: 0}
+  VegetationSettings:
+    PlantDistance: 150
+    AdditionalTreeMeshDistance: 100
+    AdditionalBillboardDistance: 3000
+    Seed: 0
+    LODDistanceFactor: 1
+    GrassShadows: 0
+    PlantShadows: 0
+    TreeShadows: 1
+    ObjectShadows: 1
+    LargeObjectShadows: 1
+    BillboardShadows: 0
+    DisableRenderDistanceFactor: 0
+    GrassLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    PlantLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    TreeLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    ObjectLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    LargeObjectLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    BillboardLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    GrassDensity: 1
+    PlantDensity: 1
+    TreeDensity: 1
+    ObjectDensity: 1
+    LargeObjectDensity: 1
+    VegetationScale: 1
+  VegetationRenderSettings:
+    DisableInstancedIndirectWindows: 0
+    DisableInstncedIndirectOsx: 0
+    DisableInstancedIndirectLinux: 0
+    DisableInstancedIndirectIos: 0
+    DisableInstancedIndirectAndroid: 0
+    DisableInstancedIndirectTvOs: 0
+    DisableInstancedIndirectXboxOne: 0
+    DisableInstancedIndirectPs4: 0
+    DisableInstancedIndirectWsa: 0
+  EnvironmentSettings:
+    SnowAmount: 0
+    SnowMinHeight: 0
+    RainAmount: 0
+    SnowColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    SnowSpecularColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.25}
+    BillboardSnowColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    SnowBlendFactor: 2.75
+    SnowBrightness: 1
+  VegetationStudioCameraList:
+  - SelectedCamera: {fileID: 0}
+    VegetationStudioCameraType: 1
+    RenderDirectToCamera: 0
+    RenderBillboardsOnly: 0
+    CameraCullingMode: 0
+    VegetationSystemPro: {fileID: 1352281720}
+    WindSampler: {fileID: 2062934319}
+  ShowVegetationCells: 0
+  ShowBillboardCells: 0
+  ShowVisibleBillboardCells: 0
+  ShowPotentialVisibleCells: 0
+  ShowVisibleCells: 0
+  ShowBiomeCells: 0
+  ShowVegetationMaskCells: 0
+  ShowHeatMap: 0
+  ShowTerrainTextures: 1
+  ShowVegetationPackageGeneralSettingsMenu: 1
+  ShowVegetationPackageNoiseMenu: 0
+  ShowTerrainTextureRulesMenu: 0
+  ShowTextureMaskRulesMenu: 0
+  ShowVegetationMaskRulesMenu: 0
+  ShowShaderSettingsMenu: 0
+  ShowPositionMenu: 0
+  ShowDistanceFalloffMenu: 0
+  ShowBiomeRulesMenu: 0
+  ShowConcaveLocationRulesMenu: 0
+  ShowColliderRulesMenu: 1
+  ShowBillboardsMenu: 1
+  ShowVegetationItemSettingsMenu: 1
+  ShowTerrainSourceSettingsMenu: 0
+  ShowAddVegetationItemMenu: 1
+  ShowLODMenu: 0
+  VegetationStudioTerrainObjectList:
+  - {fileID: 445141072}
+  VegetationPackageProList:
+  - {fileID: 11400000, guid: 3a9175ad702938f42b4d91f0eae8072e, type: 2}
+  WindControllerSettingsList:
+  - ControlerPropertyList:
+    - SerializedControlerPropertyType: 1
+      PropertyName: WindSpeed
+      PropertyDescription: Wind Speed
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 1
+      FloatMinValue: 0
+      FloatMaxValue: 3
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    Heading: CTI Wind Settings
+    Description: 
+    WindControlerID: CTIWindController
+  - ControlerPropertyList:
+    - SerializedControlerPropertyType: 7
+      PropertyName: Windvectors
+      PropertyDescription: Windvectors
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0
+      FloatMinValue: 0
+      FloatMaxValue: 0
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 2800000, guid: 0f28b996ff888ec4f9459d2e53004d6f, type: 3}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: WindSpeed
+      PropertyDescription: Base Wind Speed
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0.33
+      FloatMinValue: 0
+      FloatMaxValue: 10
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: WindStrength
+      PropertyDescription: Wind Strength
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 1
+      FloatMinValue: 0
+      FloatMaxValue: 3
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: WindAmplitude
+      PropertyDescription: Wind Amplitude
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 14
+      FloatMinValue: 0
+      FloatMaxValue: 20
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 6
+      PropertyName: ' '
+      PropertyDescription: ' '
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0
+      FloatMinValue: 0
+      FloatMaxValue: 0
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: TrunkWindSpeed
+      PropertyDescription: Trunk Wind Speed
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 10
+      FloatMinValue: 0
+      FloatMaxValue: 150
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: TrunkWindWeight
+      PropertyDescription: Trunk Wind Weight
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 4
+      FloatMinValue: 0
+      FloatMaxValue: 30
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: TrunkWindSwinging
+      PropertyDescription: Trunk Wind Swinging
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0.5
+      FloatMinValue: 0
+      FloatMaxValue: 0.99
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    Heading: Fantasy Adventure Environment Wind Settings
+    Description: 
+    WindControlerID: FAEWindController
+  - ControlerPropertyList:
+    - SerializedControlerPropertyType: 1
+      PropertyName: WindSpeed
+      PropertyDescription: Base Wind Speed (km/h)
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 45
+      FloatMinValue: 0
+      FloatMaxValue: 120
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: Turbulence
+      PropertyDescription: Turbulence
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0.4
+      FloatMinValue: 0
+      FloatMaxValue: 2
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 6
+      PropertyName: ' '
+      PropertyDescription: ' '
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0
+      FloatMinValue: 0
+      FloatMaxValue: 0
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 7
+      PropertyName: 3DNoise
+      PropertyDescription: 3D Noise
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0
+      FloatMinValue: 0
+      FloatMaxValue: 0
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 2800000, guid: d0a74847f88d32f41a3b746ca97d5796, type: 3}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: FlexNoiseWorldSize
+      PropertyDescription: Flex Noise World Size
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 150
+      FloatMinValue: 0
+      FloatMaxValue: 1000
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: ShiverNoiseWorldSize
+      PropertyDescription: Shiver Noise World Size
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 60
+      FloatMinValue: 0
+      FloatMaxValue: 300
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 6
+      PropertyName: ' '
+      PropertyDescription: ' '
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0
+      FloatMinValue: 0
+      FloatMaxValue: 0
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 7
+      PropertyName: GustNoise
+      PropertyDescription: Gust Noise
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0
+      FloatMinValue: 0
+      FloatMaxValue: 0
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 2800000, guid: 20db1391e2209d241be72af7faa38d87, type: 3}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: GustWorldSize
+      PropertyDescription: Gust World Size
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 600
+      FloatMinValue: 0
+      FloatMaxValue: 2000
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: GustSpeed
+      PropertyDescription: Gust Speed
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 20
+      FloatMinValue: 0
+      FloatMaxValue: 100
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: GustScale
+      PropertyDescription: Gust Scale
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0.35
+      FloatMinValue: 0
+      FloatMaxValue: 5
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    Heading: HD Wind Settings
+    Description: 
+    WindControlerID: HDWindController
+  - ControlerPropertyList: []
+    Heading: Tree creator wind
+    Description: 
+    WindControlerID: TreeCreatorWindController
+  - ControlerPropertyList:
+    - SerializedControlerPropertyType: 7
+      PropertyName: AW_WavesTex
+      PropertyDescription: Wind Waves
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 0
+      FloatMinValue: 0
+      FloatMaxValue: 0
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 2800000, guid: c0a881baa80762d44b08db54fd409932, type: 3}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: WindWaveSize
+      PropertyDescription: Wind Wave Size
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 10
+      FloatMinValue: 0
+      FloatMaxValue: 30
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    - SerializedControlerPropertyType: 1
+      PropertyName: WindSpeed
+      PropertyDescription: Wind Speed
+      PropertyInfo: 
+      IntValue: 0
+      IntMinValue: 0
+      IntMaxValue: 0
+      FloatValue: 1
+      FloatMinValue: 0
+      FloatMaxValue: 3
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+      BoolValue: 0
+      TextureValue: {fileID: 0}
+      StringList: []
+    Heading: Vegetation Studio Grass Wind Settings
+    Description: 
+    WindControlerID: VSWindController
+  SelectedWindZone: {fileID: 489309503}
+  WindSpeedFactor: 1
+  SunDirectionalLight: {fileID: 1848637268}
+  FrustumKernelHandle: 0
+  FrusumMatrixShader: {fileID: 7200000, guid: aa7dc0aef81f0da4195b4d8e1994e2c3, type: 3}
+  MergeBufferKernelHandle: 0
+  MergeBufferShader: {fileID: 7200000, guid: 030238c2ec494454ab855b484d8b547e, type: 3}
+  FloatingOriginAnchor: {fileID: 0}
+  FloatingOriginOffset: {x: 0, y: 0, z: 0}
+  FloatingOriginStartPosition: {x: 0, y: 0, z: 0}
+--- !u!4 &1352281721
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2062934320}
+  - {fileID: 1915287739}
+  m_Father: {fileID: 2015659299}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1352281722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc446db0ba9c0c44bd72bb755b14e64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PersistentVegetationStoragePackage: {fileID: 0}
+  VegetationSystemPro: {fileID: 1352281720}
+  SelectedBrushIndex: 0
+  BrushSize: 5
+  SampleDistance: 1
+  RandomizePosition: 1
+  PaintOnColliders: 0
+  UseSteepnessRules: 0
+  IgnoreHeight: 1
+  DisablePersistentStorage: 0
+  GroundLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  SelectedVegetationPackageIndex: 0
+  SelectedEditVegetationID: 
+  SelectedPaintVegetationID: 
+  SelectedBakeVegetationID: 
+  SelectedStorageVegetationID: 
+  SelectedPrecisionPaintingVegetationID: 
+  PrecisionPaintingMode: 2
+  SelectedImporterIndex: 0
+--- !u!114 &1352281723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7076ef32668a914fb30e2cfc7837e0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VegetationSystemPro: {fileID: 1352281720}
+  CurrentTabIndex: 0
+  VegetationPackageIndex: 0
+  ShowDebugCells: 0
+  ShowRuntimePrefabs: 0
+--- !u!114 &1352281724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9072a67ec3124ad40ab079decaf23a9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VegetationSystemPro: {fileID: 1352281720}
+  SetBakedCollidersStatic: 1
+  ConvertBakedCollidersToMesh: 0
+  CurrentTabIndex: 0
+  ShowDebugCells: 0
+  ShowColliders: 0
+--- !u!114 &1352281725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317311894747be543b1a1d7690b6b2b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VegetationSystemPro: {fileID: 1352281720}
+  CurrentTabIndex: 2
+  VegetationPackageIndex: 0
+  VegetationPackageTextureIndex: 0
+  ShowCurvesMenu: 1
+  ShowNoiseMenu: 1
 --- !u!1 &1367001630
 GameObject:
   m_ObjectHideFlags: 0
@@ -29003,36 +29460,6 @@ Transform:
   m_Father: {fileID: 808683473}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1603598489
-GameObject:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1603598490}
-  m_Layer: 0
-  m_Name: WindSampler_0
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1603598490
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1603598489}
-  m_LocalRotation: {x: -0.0076999357, y: -0.9856545, z: 0.04675024, w: -0.16198914}
-  m_LocalPosition: {x: -28.51535, y: 23.007132, z: 115.85688}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1660991971}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1604031103
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29526,440 +29953,6 @@ Transform:
   m_Father: {fileID: 1214323783}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1634858771
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1137167906275766156, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906275766156, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906275766156, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906275766156, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906275766156, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906275766156, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906472048753, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906472048753, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906472048753, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906472048753, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906472048753, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906472048753, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906666543593, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906666543593, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906666543593, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906666543593, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906666543593, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906666543593, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906935092446, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906935092446, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906935092446, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906935092446, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906935092446, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167906935092446, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907031365919, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907031365919, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907031365919, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907031365919, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907031365919, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907031365919, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907064512560, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907064512560, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907064512560, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907064512560, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907064512560, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907064512560, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907169645381, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907169645381, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907169645381, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907169645381, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907169645381, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907169645381, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907213808955, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907213808955, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907213808955, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907213808955, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907213808955, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907213808955, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907547292988, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907547292988, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907547292988, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907547292988, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907547292988, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907547292988, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907856582436, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907856582436, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907856582436, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907856582436, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907856582436, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907856582436, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907879274953, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907879274953, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907879274953, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907879274953, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907879274953, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167907879274953, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167908061160339, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167908061160339, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167908061160339, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167908061160339, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167908061160339, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1137167908061160339, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2025100062616712049, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479366, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_Name
-      value: Player_Object
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2317584039330479369, guid: 09302767c0a7fa24eaa815dae654703f,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 09302767c0a7fa24eaa815dae654703f, type: 3}
 --- !u!1001 &1636721176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30290,641 +30283,6 @@ Transform:
   m_Father: {fileID: 1106653687}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1660991969
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1660991971}
-  - component: {fileID: 1660991970}
-  - component: {fileID: 1660991975}
-  - component: {fileID: 1660991974}
-  - component: {fileID: 1660991972}
-  - component: {fileID: 1660991973}
-  - component: {fileID: 1660991976}
-  m_Layer: 0
-  m_Name: VegetationSystemPro
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1660991970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660991969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3fa75fe30cb5d45b0b0f65ecf6a100, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VegetationSystemBounds:
-    m_Center: {x: 6.5, y: 69.82372, z: 6.5}
-    m_Extent: {x: 256.5, y: 81.05573, z: 256.5}
-  AutomaticBoundsCalculation: 1
-  PersistentVegetationStorage: {fileID: 1660991972}
-  PredictiveCellLoaderCellsPerFrame: 1
-  LoadPotentialVegetationCells: 1
-  CurrentTabIndex: 5
-  VegetationPackageIndex: 0
-  SeaLevel: 0
-  ExcludeSeaLevelCells: 0
-  VegetationCellSize: 100
-  BillboardCellSize: 500
-  SelectedTextureMaskGroupTextureIndex: 0
-  SelectedTextureMaskGroupIndex: 0
-  DebugTextureMask:
-    TextureRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0
-      height: 0
-    Repeat: {x: 1, y: 1}
-    MaskTexture: {fileID: 0}
-  VegetationSettings:
-    PlantDistance: 150
-    AdditionalTreeMeshDistance: 300
-    AdditionalBillboardDistance: 3000
-    Seed: 0
-    LODDistanceFactor: 1
-    GrassShadows: 0
-    PlantShadows: 0
-    TreeShadows: 1
-    ObjectShadows: 1
-    LargeObjectShadows: 1
-    BillboardShadows: 0
-    DisableRenderDistanceFactor: 0
-    GrassLayer:
-      serializedVersion: 2
-      m_Bits: 0
-    PlantLayer:
-      serializedVersion: 2
-      m_Bits: 0
-    TreeLayer:
-      serializedVersion: 2
-      m_Bits: 0
-    ObjectLayer:
-      serializedVersion: 2
-      m_Bits: 0
-    LargeObjectLayer:
-      serializedVersion: 2
-      m_Bits: 0
-    BillboardLayer:
-      serializedVersion: 2
-      m_Bits: 0
-    GrassDensity: 1
-    PlantDensity: 1
-    TreeDensity: 1
-    ObjectDensity: 1
-    LargeObjectDensity: 1
-    VegetationScale: 1
-  VegetationRenderSettings:
-    DisableInstancedIndirectWindows: 0
-    DisableInstncedIndirectOsx: 0
-    DisableInstancedIndirectLinux: 0
-    DisableInstancedIndirectIos: 0
-    DisableInstancedIndirectAndroid: 0
-    DisableInstancedIndirectTvOs: 0
-    DisableInstancedIndirectXboxOne: 0
-    DisableInstancedIndirectPs4: 0
-    DisableInstancedIndirectWsa: 0
-  EnvironmentSettings:
-    SnowAmount: 0
-    SnowMinHeight: 0
-    RainAmount: 0
-    SnowColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
-    SnowSpecularColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.25}
-    BillboardSnowColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
-    SnowBlendFactor: 2.75
-    SnowBrightness: 1
-  VegetationStudioCameraList:
-  - SelectedCamera: {fileID: 0}
-    VegetationStudioCameraType: 1
-    RenderDirectToCamera: 0
-    RenderBillboardsOnly: 0
-    CameraCullingMode: 0
-    VegetationSystemPro: {fileID: 1660991970}
-    WindSampler: {fileID: 1603598489}
-  ShowVegetationCells: 0
-  ShowBillboardCells: 0
-  ShowVisibleBillboardCells: 0
-  ShowPotentialVisibleCells: 0
-  ShowVisibleCells: 0
-  ShowBiomeCells: 0
-  ShowVegetationMaskCells: 0
-  ShowHeatMap: 0
-  ShowTerrainTextures: 1
-  ShowVegetationPackageGeneralSettingsMenu: 0
-  ShowVegetationPackageNoiseMenu: 0
-  ShowTerrainTextureRulesMenu: 0
-  ShowTextureMaskRulesMenu: 0
-  ShowVegetationMaskRulesMenu: 0
-  ShowShaderSettingsMenu: 1
-  ShowPositionMenu: 0
-  ShowDistanceFalloffMenu: 0
-  ShowBiomeRulesMenu: 0
-  ShowConcaveLocationRulesMenu: 0
-  ShowColliderRulesMenu: 1
-  ShowBillboardsMenu: 0
-  ShowVegetationItemSettingsMenu: 0
-  ShowTerrainSourceSettingsMenu: 0
-  ShowAddVegetationItemMenu: 0
-  ShowLODMenu: 0
-  VegetationStudioTerrainObjectList:
-  - {fileID: 445141072}
-  VegetationPackageProList:
-  - {fileID: 11400000, guid: 3a9175ad702938f42b4d91f0eae8072e, type: 2}
-  WindControllerSettingsList:
-  - ControlerPropertyList:
-    - SerializedControlerPropertyType: 1
-      PropertyName: WindSpeed
-      PropertyDescription: Wind Speed
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 1
-      FloatMinValue: 0
-      FloatMaxValue: 3
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    Heading: CTI Wind Settings
-    Description: 
-    WindControlerID: CTIWindController
-  - ControlerPropertyList:
-    - SerializedControlerPropertyType: 7
-      PropertyName: Windvectors
-      PropertyDescription: Windvectors
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0
-      FloatMinValue: 0
-      FloatMaxValue: 0
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 2800000, guid: 0f28b996ff888ec4f9459d2e53004d6f, type: 3}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: WindSpeed
-      PropertyDescription: Base Wind Speed
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0.33
-      FloatMinValue: 0
-      FloatMaxValue: 10
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: WindStrength
-      PropertyDescription: Wind Strength
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 1
-      FloatMinValue: 0
-      FloatMaxValue: 3
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: WindAmplitude
-      PropertyDescription: Wind Amplitude
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 14
-      FloatMinValue: 0
-      FloatMaxValue: 20
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 6
-      PropertyName: ' '
-      PropertyDescription: ' '
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0
-      FloatMinValue: 0
-      FloatMaxValue: 0
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: TrunkWindSpeed
-      PropertyDescription: Trunk Wind Speed
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 10
-      FloatMinValue: 0
-      FloatMaxValue: 150
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: TrunkWindWeight
-      PropertyDescription: Trunk Wind Weight
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 4
-      FloatMinValue: 0
-      FloatMaxValue: 30
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: TrunkWindSwinging
-      PropertyDescription: Trunk Wind Swinging
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0.5
-      FloatMinValue: 0
-      FloatMaxValue: 0.99
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    Heading: Fantasy Adventure Environment Wind Settings
-    Description: 
-    WindControlerID: FAEWindController
-  - ControlerPropertyList:
-    - SerializedControlerPropertyType: 1
-      PropertyName: WindSpeed
-      PropertyDescription: Base Wind Speed (km/h)
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 45
-      FloatMinValue: 0
-      FloatMaxValue: 120
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: Turbulence
-      PropertyDescription: Turbulence
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0.4
-      FloatMinValue: 0
-      FloatMaxValue: 2
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 6
-      PropertyName: ' '
-      PropertyDescription: ' '
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0
-      FloatMinValue: 0
-      FloatMaxValue: 0
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 7
-      PropertyName: 3DNoise
-      PropertyDescription: 3D Noise
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0
-      FloatMinValue: 0
-      FloatMaxValue: 0
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 2800000, guid: d0a74847f88d32f41a3b746ca97d5796, type: 3}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: FlexNoiseWorldSize
-      PropertyDescription: Flex Noise World Size
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 150
-      FloatMinValue: 0
-      FloatMaxValue: 1000
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: ShiverNoiseWorldSize
-      PropertyDescription: Shiver Noise World Size
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 60
-      FloatMinValue: 0
-      FloatMaxValue: 300
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 6
-      PropertyName: ' '
-      PropertyDescription: ' '
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0
-      FloatMinValue: 0
-      FloatMaxValue: 0
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 7
-      PropertyName: GustNoise
-      PropertyDescription: Gust Noise
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0
-      FloatMinValue: 0
-      FloatMaxValue: 0
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 2800000, guid: 20db1391e2209d241be72af7faa38d87, type: 3}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: GustWorldSize
-      PropertyDescription: Gust World Size
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 600
-      FloatMinValue: 0
-      FloatMaxValue: 2000
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: GustSpeed
-      PropertyDescription: Gust Speed
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 20
-      FloatMinValue: 0
-      FloatMaxValue: 100
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: GustScale
-      PropertyDescription: Gust Scale
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0.35
-      FloatMinValue: 0
-      FloatMaxValue: 5
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    Heading: HD Wind Settings
-    Description: 
-    WindControlerID: HDWindController
-  - ControlerPropertyList: []
-    Heading: Tree creator wind
-    Description: 
-    WindControlerID: TreeCreatorWindController
-  - ControlerPropertyList:
-    - SerializedControlerPropertyType: 7
-      PropertyName: AW_WavesTex
-      PropertyDescription: Wind Waves
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 0
-      FloatMinValue: 0
-      FloatMaxValue: 0
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 2800000, guid: c0a881baa80762d44b08db54fd409932, type: 3}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: WindWaveSize
-      PropertyDescription: Wind Wave Size
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 10
-      FloatMinValue: 0
-      FloatMaxValue: 30
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    - SerializedControlerPropertyType: 1
-      PropertyName: WindSpeed
-      PropertyDescription: Wind Speed
-      PropertyInfo: 
-      IntValue: 0
-      IntMinValue: 0
-      IntMaxValue: 0
-      FloatValue: 1
-      FloatMinValue: 0
-      FloatMaxValue: 3
-      ColorValue: {r: 0, g: 0, b: 0, a: 0}
-      BoolValue: 0
-      TextureValue: {fileID: 0}
-      StringList: []
-    Heading: Vegetation Studio Grass Wind Settings
-    Description: 
-    WindControlerID: VSWindController
-  SelectedWindZone: {fileID: 130655668}
-  WindSpeedFactor: 1
-  SunDirectionalLight: {fileID: 1848637268}
-  FrustumKernelHandle: 0
-  FrusumMatrixShader: {fileID: 7200000, guid: aa7dc0aef81f0da4195b4d8e1994e2c3, type: 3}
-  MergeBufferKernelHandle: 0
-  MergeBufferShader: {fileID: 7200000, guid: 030238c2ec494454ab855b484d8b547e, type: 3}
-  FloatingOriginAnchor: {fileID: 0}
-  FloatingOriginOffset: {x: 0, y: 0, z: 0}
-  FloatingOriginStartPosition: {x: 0, y: 0, z: 0}
---- !u!4 &1660991971
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660991969}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1603598490}
-  - {fileID: 16146399}
-  m_Father: {fileID: 197561708}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1660991972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660991969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc446db0ba9c0c44bd72bb755b14e64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PersistentVegetationStoragePackage: {fileID: 0}
-  VegetationSystemPro: {fileID: 1660991970}
-  SelectedBrushIndex: 0
-  BrushSize: 5
-  SampleDistance: 1
-  RandomizePosition: 1
-  PaintOnColliders: 0
-  UseSteepnessRules: 0
-  IgnoreHeight: 1
-  DisablePersistentStorage: 0
-  GroundLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  SelectedVegetationPackageIndex: 0
-  SelectedEditVegetationID: 
-  SelectedPaintVegetationID: 
-  SelectedBakeVegetationID: 
-  SelectedStorageVegetationID: 
-  SelectedPrecisionPaintingVegetationID: 
-  PrecisionPaintingMode: 2
-  SelectedImporterIndex: 0
---- !u!114 &1660991973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660991969}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7076ef32668a914fb30e2cfc7837e0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VegetationSystemPro: {fileID: 1660991970}
-  CurrentTabIndex: 0
-  VegetationPackageIndex: 0
-  ShowDebugCells: 0
-  ShowRuntimePrefabs: 0
---- !u!114 &1660991974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660991969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9072a67ec3124ad40ab079decaf23a9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VegetationSystemPro: {fileID: 1660991970}
-  SetBakedCollidersStatic: 1
-  ConvertBakedCollidersToMesh: 0
-  CurrentTabIndex: 0
-  ShowDebugCells: 0
-  ShowColliders: 1
---- !u!114 &1660991975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660991969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 317311894747be543b1a1d7690b6b2b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VegetationSystemPro: {fileID: 1660991970}
-  CurrentTabIndex: 1
-  VegetationPackageIndex: 0
-  VegetationPackageTextureIndex: 7
-  ShowCurvesMenu: 1
-  ShowNoiseMenu: 1
---- !u!114 &1660991976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660991969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f88c6c0bd2ee8e9439ca69a1bbb88368, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bendRenderer: {fileID: 11400000, guid: 6646d2562bb9379498d38addaba2d66d, type: 2}
-  debug: 0
-  followSceneCamera: 1
-  renderExtends: 32
-  followTarget: {fileID: 1335795401}
-  vectorRT: {fileID: 0}
-  renderCam: {fileID: 0}
-  maskEdges: 0
-  resolution: 1024
-  colorMap: {fileID: 0}
-  listenToWindZone: 1
-  windZone: {fileID: 130655668}
-  actualFollowTarget: {fileID: 0}
-  lastPos: {x: -28.51535, y: 23.007132, z: 115.85688}
-  bounds:
-    m_Center: {x: -28.51535, y: 23.007133, z: 115.85688}
-    m_Extent: {x: 32, y: 32, z: 32}
 --- !u!1 &1669860792
 GameObject:
   m_ObjectHideFlags: 0
@@ -34483,6 +33841,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1909745703}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1915287738
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1915287739}
+  m_Layer: 0
+  m_Name: WindSampler_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1915287739
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915287738}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1352281721}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1917081154
 GameObject:
   m_ObjectHideFlags: 0
@@ -34829,6 +34217,61 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1933636022}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1935318680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1935318681}
+  - component: {fileID: 1935318682}
+  m_Layer: 0
+  m_Name: TouchReactSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1935318681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935318680}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 12097643}
+  m_Father: {fileID: 2015659299}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1935318682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935318680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d25149bb30cc134d8c386bc74a79d1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InvisibleLayer: 29
+  TouchReactCamera: {fileID: 12097644}
+  SelectedCamera: {fileID: 0}
+  AutoselectCamera: 1
+  CameraYPosition: -1000
+  TouchReactQuality: 1
+  OrthographicSize: 50
+  ShowDebugColliders: 0
+  HideTouchReactCamera: 1
+  ColliderList: []
+  MeshFilterList: []
 --- !u!1001 &1938740111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36486,6 +35929,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2015659297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2015659299}
+  - component: {fileID: 2015659298}
+  m_Layer: 0
+  m_Name: VegetationStudioPro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2015659298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015659297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940b17483ed4b7845a39e51ecb290c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentTabIndex: 0
+  VegetationSystemList:
+  - {fileID: 1352281720}
+  PostProcessingLayer:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!4 &2015659299
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015659297}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1352281721}
+  - {fileID: 1935318681}
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2022427228
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37333,6 +36827,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.021797, y: 1.1415833, z: 0.15355168}
   m_Center: {x: -0.0004926941, y: 0.5707924, z: 0.03089915}
+--- !u!1 &2062934319
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2062934320}
+  m_Layer: 0
+  m_Name: WindSampler_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2062934320
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062934319}
+  m_LocalRotation: {x: 0.09699215, y: -0.69166803, z: 0.09458993, w: 0.70939463}
+  m_LocalPosition: {x: -44.04248, y: 10.657074, z: 80.12662}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1352281721}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2063511353 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 121376, guid: 19fe5cc2a44e36940b2b60a288b72525,
