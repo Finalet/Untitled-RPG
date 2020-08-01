@@ -711,7 +711,8 @@ namespace Crest
                 if (EditorApplication.isPlaying)
 #endif
                 {
-                    Debug.LogError("Viewpoint is null, ocean update will fail.", this);
+                    //Debug.LogError("Viewpoint is null, ocean update will fail.", this);
+                    Debug.LogWarning("Viewpoint is null, ocean update will fail.", this);
                 }
             }
 

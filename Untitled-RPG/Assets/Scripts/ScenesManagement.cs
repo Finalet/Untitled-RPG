@@ -16,7 +16,7 @@ public class ScenesManagement : MonoBehaviour
 
     bool one;
     IEnumerator LoadGame () {
-        AsyncOperation outdoors = SceneManager.LoadSceneAsync("Outdoors", LoadSceneMode.Additive);
+        AsyncOperation outdoors = SceneManager.LoadSceneAsync("TheBay", LoadSceneMode.Additive);
         while(!outdoors.isDone) {
             progessBar.fillAmount = outdoors.progress/2f;
             yield return null;
@@ -26,7 +26,7 @@ public class ScenesManagement : MonoBehaviour
             progessBar.fillAmount = 0.5f + player_object.progress;
             yield return null;
         }
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Outdoors"));
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("TheBay"));
         hideOnLoaded.SetActive(false);
     }
 }
