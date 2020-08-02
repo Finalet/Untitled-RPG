@@ -1,0 +1,37 @@
+﻿      
+      // ADAPTER INSERT
+
+
+      #undef WorldNormalVector
+      #define WorldNormalVector(data, normal) mul(normal, data.TBN)
+      
+      #define UnityObjectToWorldNormal(normal) mul(GetObjectToWorldMatrix(), normal)
+
+      #define _WorldSpaceLightPos0 _MainLightPosition
+      
+      #define UNITY_DECLARE_TEX2D(name) TEXTURE2D(name); SAMPLER(sampler_##name);
+      #define UNITY_DECLARE_TEX2D_NOSAMPLER(name) TEXTURE2D(name);
+      #define UNITY_DECLARE_TEX2DARRAY(name) TEXTURE2D_ARRAY(name); SAMPLER(sampler_##name);
+     
+      #define UNITY_SAMPLE_TEX2DARRAY(tex,coord)            SAMPLE_TEXTURE2D_ARRAY(tex, sampler_##tex, coord.xy, coord.z)
+      #define UNITY_SAMPLE_TEX2DARRAY_LOD(tex,coord,lod)    SAMPLE_TEXTURE2D_ARRAY_LOD(tex, sampler_##tex, coord.xy, coord.z, lod)
+      #define UNITY_SAMPLE_TEX2D(tex, coord)                SAMPLE_TEXTURE2D(tex, sampler_##tex, coord)
+      #define UNITY_SAMPLE_TEX2D_SAMPLER(tex, samp, coord)  SAMPLE_TEXTURE2D(tex, sampler_##samp, coord)
+
+     
+      #if defined(UNITY_COMPILER_HLSL)
+         #define UNITY_INITIALIZE_OUTPUT(type,name) name = (type)0;
+      #else
+         #define UNITY_INITIALIZE_OUTPUT(type,name)
+      #endif
+
+      #define sampler2D_float sampler2D
+      #define sampler2D_half sampler2D
+
+     
+
+      
+
+
+
+   

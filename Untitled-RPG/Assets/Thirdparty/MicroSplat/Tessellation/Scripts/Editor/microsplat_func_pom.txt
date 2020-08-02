@@ -1,0 +1,267 @@
+
+         
+         #if _TRIPLANAR
+            #define OffsetUVChannel(config, tc, offset, channel) tc.uv##channel[0].xy += offset; tc.uv##channel[1].xy += offset; tc.uv##channel[2].xy += offset
+         #else
+            #define OffsetUVChannel(config, tc, offset, channel) config.uv##channel.xy += offset
+         #endif
+         
+         void OffsetUVs(inout Config c, inout TriplanarConfig tc, float2 offset)
+         {
+            OffsetUVChannel(c, tc, offset, 0);
+            OffsetUVChannel(c, tc, offset, 1);
+            OffsetUVChannel(c, tc, offset, 2);
+            OffsetUVChannel(c, tc, offset, 3);
+         }
+         
+         
+         half SampleHeightsPOM0(Config config, TriplanarConfig tc, MIPFORMAT mipLevel, float2 offset, half4 ptHeight)
+         {
+            OffsetUVChannel(config, tc, offset, 0);
+            
+            float height = 0;
+            #if _TRIPLANAR
+               #if _USEGRADMIP
+                  float4 d0 = mipLevel.d0;
+                  float4 d1 = mipLevel.d1;
+                  float4 d2 = mipLevel.d2;
+               #elif _USELODMIP
+                  float d0 = mipLevel.x;
+                  float d1 = mipLevel.y;
+                  float d2 = mipLevel.z;
+               #else
+                  MIPFORMAT d0 = mipLevel;
+                  MIPFORMAT d1 = mipLevel;
+                  MIPFORMAT d2 = mipLevel;
+               #endif
+            
+
+               {
+                  half a0 = MICROSPLAT_SAMPLE_DIFFUSE(tc.uv0[0], config.cluster0, d0).a;
+                  half a1 = MICROSPLAT_SAMPLE_DIFFUSE(tc.uv0[1], config.cluster0, d1).a;
+                  half a2 = MICROSPLAT_SAMPLE_DIFFUSE(tc.uv0[2], config.cluster0, d2).a;
+                  half3 bf = tc.pN0;
+
+                  height = a0 * bf.x + a1 * bf.y + a2 * bf.z;
+               }
+            #else
+               height = MICROSPLAT_SAMPLE_DIFFUSE(config.uv0, config.cluster0, mipLevel).a;
+            #endif
+
+            #if _PERTEXHEIGHTOFFSET || _PERTEXHEIGHTCONTRAST
+
+               #if _PERTEXHEIGHTOFFSET
+                  height = saturate(s.albedo.a + ptHeight.b - 1);
+               #endif
+               #if _PERTEXHEIGHTCONTRAST
+                  heights = saturate(pow(s.albedo.a + 0.5, ptHeight.a) - 0.5);
+               #endif
+            #endif
+            return height;
+         }
+         
+         half SampleHeightsPOM1(Config config, TriplanarConfig tc, MIPFORMAT mipLevel, float2 offset, half4 ptHeight)
+         {
+            OffsetUVChannel(config, tc, offset, 1);
+            
+            float height = 0;
+            #if _TRIPLANAR
+               #if _USEGRADMIP
+                  float4 d0 = mipLevel.d0;
+                  float4 d1 = mipLevel.d1;
+                  float4 d2 = mipLevel.d2;
+               #elif _USELODMIP
+                  float d0 = mipLevel.x;
+                  float d1 = mipLevel.y;
+                  float d2 = mipLevel.z;
+               #else
+                  MIPFORMAT d0 = mipLevel;
+                  MIPFORMAT d1 = mipLevel;
+                  MIPFORMAT d2 = mipLevel;
+               #endif
+            
+
+               {
+                  half a0 = MICROSPLAT_SAMPLE_DIFFUSE(tc.uv1[0], config.cluster1, d0).a;
+                  half a1 = MICROSPLAT_SAMPLE_DIFFUSE(tc.uv1[1], config.cluster1, d1).a;
+                  half a2 = MICROSPLAT_SAMPLE_DIFFUSE(tc.uv1[2], config.cluster1, d2).a;
+                  half3 bf = tc.pN0;
+
+                  height = a0 * bf.x + a1 * bf.y + a2 * bf.z;
+               }
+            #else
+               height = MICROSPLAT_SAMPLE_DIFFUSE(config.uv1, config.cluster1, mipLevel).a;
+            #endif
+
+            #if _PERTEXHEIGHTOFFSET || _PERTEXHEIGHTCONTRAST
+
+               #if _PERTEXHEIGHTOFFSET
+                  height = saturate(s.albedo.a + ptHeight.b - 1);
+               #endif
+               #if _PERTEXHEIGHTCONTRAST
+                  heights = saturate(pow(s.albedo.a + 0.5, ptHeight.a) - 0.5);
+               #endif
+            #endif
+            return height;
+         }
+         
+         float2 POMLayer0(Config config, TriplanarConfig tc, MIPFORMAT mipLevel, float3 viewDirTan, 
+            int numSteps, float2 texOffsetPerStep, float stepSize, half4 ptData, out float outHeight)
+         {
+         
+             // Do a first step before the loop to init all value correctly
+             float2 texOffsetCurrent = float2(0.0, 0.0);
+             float prevHeight = SampleHeightsPOM0(config, tc, mipLevel, texOffsetCurrent, ptData);
+             texOffsetCurrent += texOffsetPerStep;
+             float currHeight = SampleHeightsPOM0(config, tc, mipLevel, texOffsetCurrent, ptData);
+             float rayHeight = 1.0 - stepSize; // Start at top less one sample
+
+             // Linear search
+             for (int stepIndex = 0; stepIndex < numSteps; ++stepIndex)
+             {
+                 if (currHeight > rayHeight)
+                     break;
+
+                 prevHeight = currHeight;
+                 rayHeight -= stepSize;
+                 texOffsetCurrent += texOffsetPerStep;
+                 
+                 currHeight = SampleHeightsPOM0(config, tc, mipLevel, texOffsetCurrent, ptData);
+             }
+             
+             // secant search method
+             
+             float pt0 = rayHeight + stepSize;
+             float pt1 = rayHeight;
+             float delta0 = pt0 - prevHeight;
+             float delta1 = pt1 - currHeight;
+
+             float delta;
+             float2 offset;
+             
+             for (int i = 0; i < 3; ++i)
+             {
+                 float intersectionHeight = (pt0 * delta1 - pt1 * delta0) / (delta1 - delta0);
+                 offset = (1 - intersectionHeight) * texOffsetPerStep * numSteps;
+
+                 currHeight = SampleHeightsPOM0(config, tc, mipLevel, offset, ptData);
+
+                 delta = intersectionHeight - currHeight;
+
+                 if (abs(delta) <= 0.01)
+                     break;
+
+                 // intersectionHeight < currHeight => new lower bounds
+                 if (delta < 0.0)
+                 {
+                     delta1 = delta;
+                     pt1 = intersectionHeight;
+                 }
+                 else
+                 {
+                     delta0 = delta;
+                     pt0 = intersectionHeight;
+                 }
+             }
+
+         
+
+             outHeight = currHeight;
+
+             return offset;
+         
+         }
+         
+         float2 POMLayer1(Config config, TriplanarConfig tc, MIPFORMAT mipLevel, float3 viewDirTan, 
+            int numSteps, float2 texOffsetPerStep, float stepSize, half4 ptData, out float outHeight)
+         {
+         
+             // Do a first step before the loop to init all value correctly
+             float2 texOffsetCurrent = float2(0.0, 0.0);
+             float prevHeight = SampleHeightsPOM1(config, tc, mipLevel, texOffsetCurrent, ptData);
+             texOffsetCurrent += texOffsetPerStep;
+             float currHeight = SampleHeightsPOM1(config, tc, mipLevel, texOffsetCurrent, ptData);
+             float rayHeight = 1.0 - stepSize; // Start at top less one sample
+
+             // Linear search
+             for (int stepIndex = 0; stepIndex < numSteps; ++stepIndex)
+             {
+                 if (currHeight > rayHeight)
+                     break;
+
+                 prevHeight = currHeight;
+                 rayHeight -= stepSize;
+                 texOffsetCurrent += texOffsetPerStep;
+                 
+                 currHeight = SampleHeightsPOM1(config, tc, mipLevel, texOffsetCurrent, ptData);
+             }
+             
+             // secant search method
+             
+             float pt0 = rayHeight + stepSize;
+             float pt1 = rayHeight;
+             float delta0 = pt0 - prevHeight;
+             float delta1 = pt1 - currHeight;
+
+             float delta;
+             float2 offset;
+             
+             for (int i = 0; i < 3; ++i)
+             {
+                 float intersectionHeight = (pt0 * delta1 - pt1 * delta0) / (delta1 - delta0);
+                 offset = (1 - intersectionHeight) * texOffsetPerStep * numSteps;
+
+                 currHeight = SampleHeightsPOM1(config, tc, mipLevel, offset, ptData);
+
+                 delta = intersectionHeight - currHeight;
+
+                 if (abs(delta) <= 0.01)
+                     break;
+
+                 // intersectionHeight < currHeight => new lower bounds
+                 if (delta < 0.0)
+                 {
+                     delta1 = delta;
+                     pt1 = intersectionHeight;
+                 }
+                 else
+                 {
+                     delta0 = delta;
+                     pt0 = intersectionHeight;
+                 }
+             }
+             
+             outHeight = currHeight;
+
+             return offset;
+         
+         }
+         
+         
+         void DoPOM(Input i, inout Config c, inout TriplanarConfig tc, MIPFORMAT mipLevel, 
+            half4 weights, float camDist, float3 worldNormal)
+         {
+            // prefetch heights, so we don't do it every sample
+            #if _PERTEXHEIGHTOFFSET || _PERTEXHEIGHTCONTRAST
+               SAMPLE_PER_TEX(ptHeight, 10.5, config, 1);
+            #else
+               half4 ptHeights0 = half4(1,1,1,1);
+               half4 ptHeights1 = half4(1,1,1,1);
+            #endif
+            
+            float3 viewDirTS = i.viewDir;
+            
+            float stepSize = 1.0 / (float)_POMParams.w;
+            float2 parallaxMaxOffsetTS = (viewDirTS.xy / -viewDirTS.z);
+            float2 texOffsetPerStep = stepSize * parallaxMaxOffsetTS * _POMParams.x;
+            
+            float outHeight0 = 0;
+            float outHeight1 = 0;
+            float2 offset0 = POMLayer0(c, tc, mipLevel, viewDirTS, _POMParams.w, texOffsetPerStep, stepSize, ptHeights0, outHeight0);
+            float2 offset1 = POMLayer1(c, tc, mipLevel, viewDirTS, _POMParams.w, texOffsetPerStep, stepSize, ptHeights1, outHeight1);
+            
+            weights.xy = normalize(weights.xy);
+            float l = HeightBlend(outHeight0, outHeight1, 1.0 - weights.x, _Contrast);
+            float2 offset = lerp(offset0, offset1, l);
+            OffsetUVs(c, tc, offset);
+         }

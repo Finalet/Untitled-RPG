@@ -1,0 +1,41 @@
+﻿
+         #if _DETAILNOISE
+         half3 _DetailNoiseScaleStrengthFade;
+         #endif
+
+         #if _DISTANCENOISE
+         half4 _DistanceNoiseScaleStrengthFade;
+         #endif
+
+         #if _DISTANCERESAMPLE
+         float3  _ResampleDistanceParams;
+         
+            #if _DISTANCERESAMPLENOFADE || _DISTANCERESAMPLENOISE
+               half _DistanceResampleConstant;
+            #endif
+            #if _DISTANCERESAMPLENOISE
+               float2 _DistanceResampleNoiseParams;
+            #endif
+         #endif
+
+         #if _NORMALNOISE
+         half2 _NormalNoiseScaleStrength;
+         #endif
+
+         #if _NORMALNOISE2
+         half2 _NormalNoiseScaleStrength2;
+         #endif
+
+         #if _NORMALNOISE3
+         half2 _NormalNoiseScaleStrength3;
+         #endif
+         
+         #if _NOISEHEIGHT
+            half2 _NoiseHeightData; // scale, amp
+         #endif
+
+         #if _NOISEUV
+            half2 _NoiseUVData; // scale, amp
+         #endif
+         
+

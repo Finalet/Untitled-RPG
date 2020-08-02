@@ -19,7 +19,7 @@ RenderSettings:
   m_FogMode: 2
   m_FogDensity: 0.0015
   m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_LinearFogEnd: 817.85
   m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -3060,25 +3060,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Nodes:
   - Selected: 0
-    Position: {x: -185.89148, y: 0.6166992, z: 125.258545}
+    Position: {x: -182.30591, y: 0.6351013, z: 120.57678}
     OverrideWidth: 0
     CustomWidth: 2
     Active: 1
     DisableEdge: 0
   - Selected: 0
-    Position: {x: -191.16254, y: 0.417984, z: 185.11206}
+    Position: {x: -189.3883, y: 0.21228027, z: 181.53748}
     OverrideWidth: 0
     CustomWidth: 2
     Active: 1
     DisableEdge: 0
   - Selected: 0
-    Position: {x: -234.68146, y: 2.7855988, z: 195.52429}
+    Position: {x: -236.18896, y: 4.2354126, z: 185.79419}
     OverrideWidth: 0
     CustomWidth: 2
     Active: 1
     DisableEdge: 0
   - Selected: 0
-    Position: {x: -233.84393, y: 3.0423584, z: 130.21094}
+    Position: {x: -237.2627, y: 3.52771, z: 130.66113}
     OverrideWidth: 0
     CustomWidth: 2
     Active: 1
@@ -5338,6 +5338,7 @@ GameObject:
   - component: {fileID: 706863191}
   - component: {fileID: 706863190}
   - component: {fileID: 706863193}
+  - component: {fileID: 706863194}
   m_Layer: 11
   m_Name: Terrain
   m_TagString: Untagged
@@ -5373,14 +5374,14 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 50
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
   m_DrawHeightmap: 1
   m_DrawInstanced: 0
   m_DrawTreesAndFoliage: 0
   m_ReflectionProbeUsage: 1
-  m_MaterialTemplate: {fileID: 2100000, guid: c5067b54da3734144b15dfc51ea73564, type: 2}
+  m_MaterialTemplate: {fileID: 0}
   m_BakeLightProbesForTrees: 1
   m_PreserveTreePrototypeLayers: 0
   m_DeringLightProbesForTrees: 1
@@ -5424,6 +5425,43 @@ MonoBehaviour:
   AutoAddToVegegetationSystem: 0
   TerrainSourceID: 0
   TerrainPosition: {x: -1000, y: -140, z: -1000}
+--- !u!114 &706863194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706863189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6525fd4a9fb974b7f878dee70144de99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  templateMaterial: {fileID: 2100000, guid: 718192b112046bc43b30e13802ff68d3, type: 2}
+  blendMat: {fileID: 0}
+  blendMatInstance: {fileID: 0}
+  keywordSO: {fileID: 11400000, guid: f249d68fb1e42944d951db007211e644, type: 2}
+  perPixelNormal: {fileID: 0}
+  terrainDesc: {fileID: 0}
+  descriptorFormat: 0
+  streamTexture: {fileID: 2800000, guid: 752d72c4b38fdf94fa922ab8cd609f87, type: 3}
+  vsGrassMap: {fileID: 0}
+  vsShadowMap: {fileID: 0}
+  advDetailControl: {fileID: 0}
+  propData: {fileID: 11400000, guid: 51753625816bd8f48a429887308f07cb, type: 2}
+  addPass: {fileID: 0}
+  terrain: {fileID: 706863191}
+  customControl0: {fileID: 0}
+  customControl1: {fileID: 0}
+  customControl2: {fileID: 0}
+  customControl3: {fileID: 0}
+  customControl4: {fileID: 0}
+  customControl5: {fileID: 0}
+  customControl6: {fileID: 0}
+  customControl7: {fileID: 0}
+  reenabled: 1
+  sTerrainDirty: 0
+  importSplatMaps: []
 --- !u!1001 &712895809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8062,8 +8100,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986036421}
-  m_LocalRotation: {x: 0.07837543, y: 0.615504, z: -0.0616745, w: 0.7817982}
-  m_LocalPosition: {x: -200.5137, y: 20.40712, z: 124.98294}
+  m_LocalRotation: {x: -0.1884637, y: -0.47137177, z: 0.10389077, w: -0.85527587}
+  m_LocalPosition: {x: -212.9981, y: 18.26309, z: 138.01183}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1783757439}
@@ -10545,7 +10583,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1275182696}
-  - component: {fileID: 1275182697}
   m_Layer: 11
   m_Name: DockArea
   m_TagString: Untagged
@@ -10584,125 +10621,6 @@ Transform:
   m_Father: {fileID: 425040871}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1275182697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275182695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b22a7428b77679040a920c45a17b32d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RemoveGrass: 0
-  RemovePlants: 0
-  RemoveTrees: 1
-  RemoveObjects: 1
-  RemoveLargeObjects: 1
-  AdditionalGrassPerimiter: 0
-  AdditionalPlantPerimiter: 0
-  AdditionalTreePerimiter: 0
-  AdditionalObjectPerimiter: 0
-  AdditionalLargeObjectPerimiter: 0
-  AdditionalGrassPerimiterMax: 0
-  AdditionalPlantPerimiterMax: 0
-  AdditionalTreePerimiterMax: 0
-  AdditionalObjectPerimiterMax: 0
-  AdditionalLargeObjectPerimiterMax: 0
-  NoiseScaleGrass: 5
-  NoiseScalePlant: 5
-  NoiseScaleTree: 5
-  NoiseScaleObject: 5
-  NoiseScaleLargeObject: 5
-  Id: 2ef62198-b9f8-4a7d-84fc-41bf497331ca
-  IncludeVegetationType: 0
-  Nodes:
-  - Selected: 0
-    Position: {x: 9.038391, y: 2.6323304, z: 33.566513}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: 40.03717, y: -4.04429, z: 31.974228}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: 41.54254, y: -4.1233916, z: 29.394272}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: 41.64032, y: -4.0987945, z: 28.473984}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: 44.214844, y: 1.9847627, z: -42.296158}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: 43.907837, y: 2.343207, z: -43.36879}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: 42.900574, y: 2.6858277, z: -43.81642}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: 31.82312, y: 3.3866181, z: -42.595352}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: -19.694702, y: 4.8767915, z: -8.0215}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: -21.86499, y: 5.183081, z: -5.680313}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: -31.599182, y: 5.911368, z: 6.991562}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: -34.361023, y: 6.7413087, z: 19.301865}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: -34.091675, y: 6.9535584, z: 21.906113}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: -31.782104, y: 6.4822907, z: 27.195908}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  - Selected: 0
-    Position: {x: -16.51056, y: 4.9977784, z: 31.179062}
-    OverrideWidth: 0
-    CustomWidth: 2
-    Active: 1
-  ClosedArea: 1
-  ShowArea: 1
-  ShowHandles: 1
-  MaskName: 
-  GroundLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  VegetationTypeList: []
-  ReductionTolerance: 0.2
 --- !u!1001 &1280440006
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13354,7 +13272,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.9198113, g: 0.99806774, b: 1, a: 1}
-  m_Intensity: 0.5
+  m_Intensity: 0.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -15718,7 +15636,7 @@ MonoBehaviour:
   PredictiveCellLoaderCellsPerFrame: 1
   LoadPotentialVegetationCells: 1
   CurrentTabIndex: 5
-  VegetationPackageIndex: 1
+  VegetationPackageIndex: 0
   SeaLevel: 107
   ExcludeSeaLevelCells: 0
   VegetationCellSize: 100
@@ -15807,21 +15725,21 @@ MonoBehaviour:
   ShowVegetationMaskCells: 0
   ShowHeatMap: 0
   ShowTerrainTextures: 1
-  ShowVegetationPackageGeneralSettingsMenu: 1
-  ShowVegetationPackageNoiseMenu: 0
+  ShowVegetationPackageGeneralSettingsMenu: 0
+  ShowVegetationPackageNoiseMenu: 1
   ShowTerrainTextureRulesMenu: 1
   ShowTextureMaskRulesMenu: 0
   ShowVegetationMaskRulesMenu: 0
-  ShowShaderSettingsMenu: 0
+  ShowShaderSettingsMenu: 1
   ShowPositionMenu: 1
   ShowDistanceFalloffMenu: 0
   ShowBiomeRulesMenu: 1
   ShowConcaveLocationRulesMenu: 0
   ShowColliderRulesMenu: 0
   ShowBillboardsMenu: 0
-  ShowVegetationItemSettingsMenu: 1
+  ShowVegetationItemSettingsMenu: 0
   ShowTerrainSourceSettingsMenu: 0
-  ShowAddVegetationItemMenu: 1
+  ShowAddVegetationItemMenu: 0
   ShowLODMenu: 0
   VegetationStudioTerrainObjectList:
   - {fileID: 706863189}
@@ -16278,9 +16196,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VegetationSystemPro: {fileID: 1783757438}
-  CurrentTabIndex: 0
+  CurrentTabIndex: 1
   VegetationPackageIndex: 0
-  VegetationPackageTextureIndex: 4
+  VegetationPackageTextureIndex: 8
   ShowCurvesMenu: 1
   ShowNoiseMenu: 1
 --- !u!114 &1783757444
@@ -16308,7 +16226,7 @@ MonoBehaviour:
   listenToWindZone: 1
   windZone: {fileID: 136272697}
   actualFollowTarget: {fileID: 0}
-  lastPos: {x: -200.5137, y: 20.40712, z: 124.98294}
+  lastPos: {x: -213.22914, y: 18.181915, z: 137.86589}
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 32, y: 32, z: 32}

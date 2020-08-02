@@ -1,0 +1,11 @@
+﻿
+            half4 _TessData1; // tess, displacement, mipBias, edge length
+            half4 _TessData2; // distance min, max, shaping, upbias
+
+
+            #if _MESHCOMBINEDHEIGHT || _MESHCOMBINEDPACKEDMAP
+               half _MeshCombineTessBlend;
+            #endif
+
+
+            

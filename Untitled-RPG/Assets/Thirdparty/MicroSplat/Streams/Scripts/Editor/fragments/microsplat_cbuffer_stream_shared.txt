@@ -1,0 +1,63 @@
+﻿
+         half _GlobalPorosity;
+         
+         #if _WETNESS
+            #if _GLOBALWETNESS
+            half2 _Global_WetnessParams;
+            #else
+            half2 _WetnessParams;
+            #endif
+
+            #if _HEIGHTWETNESS
+            float4 _HeightWetness;
+            #endif
+         #endif
+
+         #if _PUDDLES
+            half2 _PuddleParams;
+            #if _GLOBALPUDDLES
+            half _Global_PuddleParams;
+            #endif
+         #endif
+
+         #if _STREAMS
+            half _StreamBlend;
+            half4 _StreamFlowParams;
+            half2 _StreamNormalFoam;
+            float2 _StreamUVScales;
+            #if _GLOBALSTREAMS
+               half _Global_StreamMax;
+            #else
+               half _StreamMax;
+            #endif
+
+            #if _STREAMHEIGHTFILTER
+               float4 _StreamFades;
+            #endif
+         #endif
+
+         #if _LAVA
+            half4 _LavaParams;
+            half4 _LavaParams2;
+            half3 _LavaEdgeColor;
+            half3 _LavaColorLow;
+            half3 _LavaColorHighlight;
+            float2 _LavaUVScale;
+            half _LavaDislacementScale;
+            #if _LAVAHEIGHTFILTER
+               float4 _LavaFades;
+            #endif
+            half _LavaEmissiveMult;
+
+            #if _LAVASTOCHASTIC
+               half _LavaStochasticSize;
+               half _LavaStochasticContrast;
+            #endif
+         #endif
+
+         #if _RAINDROPS
+            float2 _RainIntensityScale;
+            #if _GLOBALRAIN
+               float _Global_RainIntensity;
+            #endif
+         #endif

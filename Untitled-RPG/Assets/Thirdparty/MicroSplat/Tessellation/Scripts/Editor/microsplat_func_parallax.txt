@@ -1,0 +1,60 @@
+
+         float2 MSParallaxOffset( half h, half height, half3 viewDir )
+         {
+            h = h * height - height/2.0;
+            float3 v = normalize(viewDir);
+            v.z += 0.42;
+            return h * (v.xy / v.z);
+         }
+
+         void DoParallax(Input i, half h, inout Config c, inout TriplanarConfig tc, inout RawSamples s, half4 weights, float camDist)
+         {
+            float fade = (1 - saturate((camDist - _ParallaxParams.y) / max(_ParallaxParams.z, 0.01)));
+            float2 offset = MSParallaxOffset(h, _ParallaxParams.x * fade, i.viewDir);
+
+
+            #if !_TRIPLANAR
+               #if _PERTEXPARALLAX
+               SAMPLE_PER_TEX(ptp, 6.5, c, 0.0);
+               c.uv0.xy += offset * ptp0.a;
+               c.uv1.xy += offset * ptp1.a;
+               c.uv2.xy += offset * ptp2.a;
+               c.uv3.xy += offset * ptp3.a;
+               #else
+               c.uv0.xy += offset;
+               c.uv1.xy += offset;
+               c.uv2.xy += offset;
+               c.uv3.xy += offset;
+               #endif
+            #else
+               #if _PERTEXPARALLAX
+               SAMPLE_PER_TEX(ptp, 6.5, c, 0.0);
+               tc.uv0[0].xy += offset * ptp0.a;
+               tc.uv0[1].xy += offset * ptp0.a;
+               tc.uv0[2].xy += offset * ptp0.a;
+               tc.uv1[0].xy += offset * ptp1.a;
+               tc.uv1[1].xy += offset * ptp1.a;
+               tc.uv1[2].xy += offset * ptp1.a;
+               tc.uv2[0].xy += offset * ptp2.a;
+               tc.uv2[1].xy += offset * ptp2.a;
+               tc.uv2[2].xy += offset * ptp2.a;
+               tc.uv3[0].xy += offset * ptp3.a;
+               tc.uv3[1].xy += offset * ptp3.a;
+               tc.uv3[2].xy += offset * ptp3.a;
+               #else
+               tc.uv0[0].xy += offset;
+               tc.uv0[1].xy += offset;
+               tc.uv0[2].xy += offset;
+               tc.uv1[0].xy += offset;
+               tc.uv1[1].xy += offset;
+               tc.uv1[2].xy += offset;
+               tc.uv2[0].xy += offset;
+               tc.uv2[1].xy += offset;
+               tc.uv2[2].xy += offset;
+               tc.uv3[0].xy += offset;
+               tc.uv3[1].xy += offset;
+               tc.uv3[2].xy += offset;
+               #endif
+            #endif
+
+         }

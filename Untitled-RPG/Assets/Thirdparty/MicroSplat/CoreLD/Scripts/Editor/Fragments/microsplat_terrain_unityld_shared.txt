@@ -1,0 +1,151 @@
+﻿      // LD INSERT
+
+
+      #undef MICROSPLAT_SAMPLE_TEX2D_LOD
+      #undef MICROSPLAT_SAMPLE_TEX2D_SAMPLER_LOD
+      #undef MICROSPLAT_SAMPLE_TEX2DARRAY_GRAD
+      #undef MICROSPLAT_SAMPLE_TEX2D_SAMPLER_GRAD
+
+      #define MICROSPLAT_SAMPLE_TEX2D_LOD(tex,coord,lod)                    SAMPLE_TEXTURE2D_LOD(tex,sampler_##tex, coord, lod)
+      #define MICROSPLAT_SAMPLE_TEX2DARRAY_GRAD(tex,coord,dx,dy)                 SAMPLE_TEXTURE2D_GRAD(tex,sampler_##tex,coord,dx,dy)
+      #define MICROSPLAT_SAMPLE_TEX2D_SAMPLER_GRAD(tex,samp,coord,dx,dy)    SAMPLE_TEXTURE2D_GRAD(tex,sampler_##samp,coord,dx,dy)
+      #define MICROSPLAT_SAMPLE_TEX2D_SAMPLER_LOD(tex, samp, coord, lod)    SAMPLE_TEXTURE2D_LOD(tex, sampler_##samp, coord, lod)
+      
+      #if defined(PASSFORWARD) || defined(PASSMETA)
+      #ifdef PASSFORWARD
+      void FromInput(inout GraphVertexOutput o, inout Input i)
+      #else
+      void FromInput(inout VertexOutput o, inout Input i)
+      #endif
+      {
+         #if _MICRODIGGERMESH || _MICROVERTEXMESH
+            o.w0 = i.w0;
+            #if !_MAX4TEXTURES
+               o.w1 = i.w1;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES
+               o.w2 = i.w2;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES && !_MAX12TEXTURES
+               o.w3 = i.w3;
+            #endif
+            #if _MAX20TEXTURES || _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               o.w4 = i.w4;
+            #endif
+            #if _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               o.w5 = i.w5;
+            #endif
+            #if (_MAX28TEXTURES || _MAX32TEXTURES) && !_STREAMS && !_LAVA && !_WETNESS && !_PUDDLES
+               o.w6 = i.w6;
+            #endif
+
+            #if _STEAMS || _WETNESS || _LAVA || _PUDDLES
+               o.s0 = i.s0;
+            #endif
+
+         #endif
+         
+      }
+
+      
+      #ifdef PASSFORWARD
+      void ToSurfaceDescInput(GraphVertexOutput i, inout SurfaceDescriptionInputs o)
+      #else
+      void ToSurfaceDescInput(VertexOutput i, inout SurfaceDescriptionInputs o)
+      #endif
+      {
+         #if _MICRODIGGERMESH || _MICROVERTEXMESH
+            o.w0 = i.w0;
+            #if !_MAX4TEXTURES
+               o.w1 = i.w1;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES
+               o.w2 = i.w2;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES && !_MAX12TEXTURES
+               o.w3 = i.w3;
+            #endif
+            #if _MAX20TEXTURES || _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               o.w4 = i.w4;
+            #endif
+            #if _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               o.w5 = i.w5;
+            #endif
+            #if (_MAX28TEXTURES || _MAX32TEXTURES) && !_STREAMS && !_LAVA && !_WETNESS && !_PUDDLES
+               o.w6 = i.w6;
+            #endif
+
+            #if _STEAMS || _WETNESS || _LAVA || _PUDDLES
+               o.s0 = i.s0;
+            #endif
+
+         #endif
+      }
+      
+      #endif
+
+
+      Input DescToInput(SurfaceDescriptionInputs IN)
+      {
+        Input s = (Input)0;
+        s.TBN = float3x3(IN.WorldSpaceTangent, IN.WorldSpaceBiTangent, IN.WorldSpaceNormal);
+        s.worldNormal = IN.WorldSpaceNormal;
+        s.worldPos = IN.WorldSpacePosition;
+        s.viewDir = IN.TangentSpaceViewDirection;
+        s.uv_Control0 = IN.uv0.xy;
+        
+
+        #if _MICROMESH && _MESHUV2
+            s.uv_Diffuse = IN.uv.xy1;
+        #endif
+
+        #if _SRPTERRAINBLEND
+            s.color = IN.VertexColor;
+        #endif
+
+        #ifdef PASSFORWARD
+        #if _MICRODIGGERMESH || _MICROVERTEXMESH
+            s.w0 = IN.w0;
+            #if !_MAX4TEXTURES
+               s.w1 = IN.w1;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES
+               s.w2 = IN.w2;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES && !_MAX12TEXTURES
+               s.w3 = IN.w3;
+            #endif
+            #if _MAX20TEXTURES || _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               s.w4 = IN.w4;
+            #endif
+            #if _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               s.w5 = IN.w5;
+            #endif
+            #if (_MAX28TEXTURES || _MAX32TEXTURES) && !_STREAMS && !_LAVA && !_WETNESS && !_PUDDLES
+               s.w6 = IN.w6;
+            #endif
+
+            #if _STEAMS || _WETNESS || _LAVA || _PUDDLES
+               s.s0 = IN.s0;
+            #endif
+
+         #endif
+         #endif //PASSFORWARD
+
+        return s;
+
+
+     }
+     
+      #if _MICROVERTEXMESH || _MICRODIGGERMESH
+      appdata ToAppData(GraphVertexInput i)
+      {
+         appdata a = (appdata)0;
+         a.color = i.color;
+         a.texcoord1 = i.texcoord1;
+         a.texcoord2 = i.texcoord2;
+         return a;
+      }
+      #endif
+
+     //MS_EXTENSIONS

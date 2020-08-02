@@ -1,0 +1,26 @@
+﻿#if _MICRODIGGERMESH || _MICROVERTEXMESH
+            fixed4 w0 : TEXCOORD11;
+            #if !_MAX4TEXTURES
+               fixed4 w1 : TEXCOORD12;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES
+               fixed4 w2 : TEXCOORD13;
+            #endif
+            #if !_MAX4TEXTURES && !_MAX8TEXTURES && !_MAX12TEXTURES
+               fixed4 w3 : TEXCOORD14;
+            #endif
+            #if _MAX20TEXTURES || _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               fixed4 w4 : TEXCOORD15;
+            #endif
+            #if _MAX24TEXTURES || _MAX28TEXTURES || _MAX32TEXTURES
+               fixed4 w5 : TEXCOORD16;
+            #endif
+            #if (_MAX28TEXTURES || _MAX32TEXTURES) && !_STREAMS && !_LAVA && !_WETNESS && !_PUDDLES
+               fixed4 w6 : TEXCOORD17;
+            #endif
+
+            #if _STEAMS || _WETNESS || _LAVA || _PUDDLES
+               fixed4 s0 : TEXCOORD17;
+            #endif
+
+         #endif
