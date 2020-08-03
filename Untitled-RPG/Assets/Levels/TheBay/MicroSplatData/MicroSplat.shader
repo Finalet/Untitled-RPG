@@ -123,6 +123,7 @@ _TerrainNormalmapTexture("InstancedPerPixelNormal", 2D) = "bump" {}
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
@@ -5443,6 +5444,7 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
@@ -10625,6 +10627,7 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
@@ -15778,6 +15781,7 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
@@ -20982,7 +20986,7 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
 
       }
    Dependency "AddPassShader" = "Hidden/MicroSplat/AddPass"
-   Dependency "BaseMapShader" = "Hidden/MicroSplat/Terrain_Base-1269271826"
+   Dependency "BaseMapShader" = "Hidden/MicroSplat/Terrain_Base2064807213"
    CustomEditor "MicroSplatShaderGUI"
    Fallback "Nature/Terrain/Diffuse"
 }

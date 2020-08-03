@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MalbersAnimations.HAP;
+using Cinemachine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControlls : MonoBehaviour
@@ -57,6 +58,7 @@ public class PlayerControlls : MonoBehaviour
 
     [System.NonSerialized] public CharacterController controller;
     [System.NonSerialized] public Camera playerCamera;
+    [System.NonSerialized] public CinemachineFreeLook CM_Camera;
     [System.NonSerialized] public PlayerAudioController audioController;
 
     Vector3 lastCamRotation;
@@ -86,6 +88,7 @@ public class PlayerControlls : MonoBehaviour
         audioController = GetComponent<PlayerAudioController>();
 
         playerCamera = Camera.main;
+        CM_Camera = playerCamera.GetComponentInChildren<CinemachineFreeLook>();
 
         prevPos = transform.position;
         walkSpeed = baseWalkSpeed;
@@ -256,7 +259,7 @@ public class PlayerControlls : MonoBehaviour
 
     void UpdateRotation () {
         if (!Input.GetButton("FreeCamera") && !PeaceCanvas.instance.anyPanelOpen) {
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCamera.transform.eulerAngles.y + sprintingDirection + rollDirection, transform.eulerAngles.z);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, CM_Camera.m_XAxis.Value + sprintingDirection + rollDirection, transform.eulerAngles.z);
         } else {
             RotationDirection = 0;
         }

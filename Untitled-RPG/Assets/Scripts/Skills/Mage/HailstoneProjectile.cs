@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class HailstoneProjectile : MonoBehaviour
 {
@@ -43,7 +44,8 @@ public class HailstoneProjectile : MonoBehaviour
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 0.1f, damage());
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f* (1+damage()/2000), 0.1f, transform.position);
+
         finalDebrisPos = debirsPos.position;
         Instantiate(debris, finalDebrisPos, debris.transform.rotation, transform.parent).Play();
         

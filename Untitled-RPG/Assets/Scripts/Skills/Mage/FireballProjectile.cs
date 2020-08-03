@@ -76,7 +76,7 @@ public class FireballProjectile : MonoBehaviour
     }
 
     void Explode () {
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.12f, 0.12f, 0);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f, 0.1f, transform.position);
         explostionSparks.Play();
         fire.Stop();
         light1.SetActive(false);

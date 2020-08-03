@@ -29,7 +29,7 @@ public class ArmageddonProjectile : MonoBehaviour
             }
         }
         hitParticles.Play();
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 0.1f, damage());
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2*(1+damage()/2000), 0.2f, transform.position);
         GetComponent<AudioSource>().clip = explosionSounds[Random.Range(0, explosionSounds.Length)];
         GetComponent<AudioSource>().Play();
     }

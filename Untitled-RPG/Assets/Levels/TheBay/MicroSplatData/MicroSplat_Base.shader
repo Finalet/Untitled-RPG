@@ -9,7 +9,7 @@
 //   RenderLoop : Unity LD
 //////////////////////////////////////////////////////
 
-Shader "Hidden/MicroSplat/Terrain_Base-1269271826" {
+Shader "Hidden/MicroSplat/Terrain_Base2064807213" {
    Properties {
       [HideInInspector] _Control0 ("Control0", 2D) = "red" {}
       [HideInInspector] _Control1 ("Control1", 2D) = "black" {}
@@ -120,6 +120,7 @@ _TerrainNormalmapTexture("InstancedPerPixelNormal", 2D) = "bump" {}
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
@@ -5440,6 +5441,7 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
@@ -10622,6 +10624,7 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
@@ -15775,6 +15778,7 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTOFFSET 1
       #define _PERTEXINTERPCONTRAST 1
+      #define _PERTEXNORMSTR 1
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1

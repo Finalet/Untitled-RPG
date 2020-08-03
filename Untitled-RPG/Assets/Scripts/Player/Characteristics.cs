@@ -232,12 +232,12 @@ public class Characteristics : MonoBehaviour
 
         BasicGetHit(damage);
     }
-    public void GetHit (int damage, float cameraShakeDuration, float cameraShakeMagnitude) {
+    public void GetHit (int damage, float cameraShakeFrequency, float cameraShakeAmplitude) {
         if (checkFailed())
             return;
 
         BasicGetHit(damage);
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeDuration, cameraShakeMagnitude, damage);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude);
     }
 
 #endregion
