@@ -4,6 +4,7 @@ using UnityEngine;
 using MalbersAnimations.HAP;
 using Cinemachine;
 
+
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControlls : MonoBehaviour
 {

@@ -59,7 +59,7 @@ public class Goblin : Enemy
         if (!canHit)
             return;
 
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), 0.1f, 0.1f);
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), 0.2f, 1f);
     }
 
     int damage () {

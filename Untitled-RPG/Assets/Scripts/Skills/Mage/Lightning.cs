@@ -10,7 +10,6 @@ public class Lightning : Skill
     public GameObject lightningProjectile;
     public Sprite[] skillIcons;
 
-    public LayerMask ignorePlayer;
     public Transform[] hands;
 
     Vector3 shootPoint;
@@ -69,7 +68,7 @@ public class Lightning : Skill
         float actualDistance = distance + characteristics.magicSkillDistanceIncrease;
 
         RaycastHit hit;
-        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, actualDistance, ignorePlayer)) {
+        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, actualDistance, ~LayerMask.GetMask("Player"))) {
             shootPoint = hit.point;        
         } else {
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (actualDistance + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;

@@ -92,7 +92,7 @@ public class BigRockGolem : Enemy
         if (!canHit)
             return;
 
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), 0.2f, 0.3f);
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), 0.2f, 3);
     }
 
     int damage () {

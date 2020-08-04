@@ -6,7 +6,8 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemy;
     public int numberOfEnemies;
-    float delay = 2;
+    public float spawnFrequency = 2;
+    float timer;
     
     public List<GameObject> listOfAllEnemies;
     public ParticleSystem particles;
@@ -16,11 +17,11 @@ public class EnemySpawner : MonoBehaviour
     }
 
     void Update() {
-        if (listOfAllEnemies.Count < numberOfEnemies && delay <= 0) {
+        if (listOfAllEnemies.Count < numberOfEnemies && timer <= 0) {
             Spawn();
-            delay = 2;
+            timer = 1/spawnFrequency;
         } else {
-            delay -= Time.deltaTime;
+            timer -= Time.deltaTime;
         }
     } 
 

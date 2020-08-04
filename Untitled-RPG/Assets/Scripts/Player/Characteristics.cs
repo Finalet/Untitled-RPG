@@ -237,7 +237,7 @@ public class Characteristics : MonoBehaviour
             return;
 
         BasicGetHit(damage);
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
     }
 
 #endregion

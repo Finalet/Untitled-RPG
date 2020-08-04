@@ -297,7 +297,7 @@ public abstract class Enemy : MonoBehaviour
 
         BasicGetHit(damage, skillName);
         DisplayDamageNumber (actualDamage);
-        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2*(1+actualDamage/2000), 0.1f, transform.position);
+        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/2000), 0.1f, transform.position);
         if (stopHit) StartCoroutine(HitStop());
     }
 
@@ -307,7 +307,7 @@ public abstract class Enemy : MonoBehaviour
             
         BasicGetHit(damage, skillName);
         DisplayDamageNumber(actualDamage, damageTextPos);
-        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2*(1+actualDamage/2000), 0.1f, transform.position);
+        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/2000), 0.1f, transform.position);
         if (stopHit) StartCoroutine(HitStop());
     }
 #endregion

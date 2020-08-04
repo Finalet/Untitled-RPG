@@ -5,7 +5,6 @@ using UnityEngine;
 public class LightningProjectile : MonoBehaviour
 {
     public int actualDamage;
-    public AudioClip[] sounds;
     public int shots;
 
     void Start() {
@@ -28,5 +27,6 @@ public class LightningProjectile : MonoBehaviour
 
     void EnableCollider () {
         GetComponent<SphereCollider>().enabled = true;
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2*(1+actualDamage/2000), 0.1f, transform.position);
     }
 }
