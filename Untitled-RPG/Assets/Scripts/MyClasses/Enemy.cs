@@ -102,7 +102,7 @@ public abstract class Enemy : MonoBehaviour
         animator.SetFloat("movementSpeed", movementSpeed);
         animator.SetFloat("attackSpeed", attackSpeed);
         
-        if (animator.GetFloat("CanHit") >= 0.9f)
+        if (animator.GetFloat("CanHit") >= 0.5f)
             canHit = true;
         else 
             canHit = false;

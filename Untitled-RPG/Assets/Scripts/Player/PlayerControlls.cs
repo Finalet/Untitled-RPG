@@ -36,8 +36,11 @@ public class PlayerControlls : MonoBehaviour
     [Space]
     public bool castInterrupted;
 
-    public float sprintingDirection;
-    public float desiredSprintingDirection;
+    float sprintingDirection;
+    float desiredSprintingDirection;
+
+    float desiredLookDirection;
+    float lookDirection;
 
     [Header("Jumping")]
     public float jumpHeight = 2;
@@ -143,17 +146,27 @@ public class PlayerControlls : MonoBehaviour
 
         isWeaponOut = GetComponent<WeaponsController>().isWeaponOut;
 
+
+        //Smooth rotation after rolling
         if (Mathf.Abs(rollDirection - desiredRollDirection) > 1) {
-            rollDirection = Mathf.Lerp(rollDirection, desiredRollDirection, Time.deltaTime * 20);
+            rollDirection = Mathf.Lerp(rollDirection, desiredRollDirection, Time.deltaTime * 15);
         } else {
             rollDirection = desiredRollDirection;
         }
 
+        //Smooth rotation after sprinting
         //LerpAngle since need to go from -179 to 179 smoothely
         if (Mathf.Abs(sprintingDirection - desiredSprintingDirection) > 1) {
             sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 10);
         } else {
             sprintingDirection = desiredSprintingDirection;
+        }
+
+        //Smooth rotation after idle
+        if (Mathf.Abs(lookDirection - desiredLookDirection) > 1) {
+            lookDirection = Mathf.LerpAngle(lookDirection, desiredLookDirection, Time.deltaTime * 15);
+        } else {
+            lookDirection = desiredLookDirection;
         }
 
     }
@@ -259,10 +272,12 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void UpdateRotation () {
-        if (!Input.GetButton("FreeCamera") && !PeaceCanvas.instance.anyPanelOpen) {
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, CM_Camera.m_XAxis.Value + sprintingDirection + rollDirection, transform.eulerAngles.z);
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, lookDirection + sprintingDirection + rollDirection, transform.eulerAngles.z);
+        
+        if (!PeaceCanvas.instance.anyPanelOpen && !isIdle) {
+            desiredLookDirection = CM_Camera.m_XAxis.Value;
         } else {
-            RotationDirection = 0;
+            desiredLookDirection = lookDirection;
         }
     }
 
@@ -271,7 +286,6 @@ public class PlayerControlls : MonoBehaviour
     float InputDirection;
     float lastInputDirection;
     float InputMagnitude;
-    float RotationDirection;
     float isRunningFloat;
     float isSprintingFloat;
     
@@ -291,30 +305,8 @@ public class PlayerControlls : MonoBehaviour
 
         } else {
             InputDirection = lastInputDirection;
-
-             if (RotationDirection > 5 || RotationDirection < -5)
-                animator.speed = (1 + Mathf.Abs(RotationDirection / 100));
-            else 
-                animator.speed = walkSpeed;
         }
 
-        if (!Input.GetButton("FreeCamera")) {
-            if (Input.GetAxis("Mouse X") == 0) {
-                if (RotationDirection > 0.1f) 
-                    RotationDirection -= Time.deltaTime * 50;
-                else if (RotationDirection < -0.1f)
-                    RotationDirection += Time.deltaTime * 50;
-            } else {
-                RotationDirection += Input.GetAxis("Mouse X");
-            }
-            RotationDirection = Mathf.Clamp(RotationDirection, -45, 45);       
-        } else {
-            if (RotationDirection > 0.1f) 
-                RotationDirection -= Time.deltaTime * 50;
-            else if (RotationDirection < -0.1f) {
-                RotationDirection += Time.deltaTime * 50;
-            }
-        }
 
         if (isRunning) {
             isRunningFloat += Time.deltaTime * 5;
@@ -357,7 +349,8 @@ public class PlayerControlls : MonoBehaviour
         audioController.PlayJumpRollSound();
         animator.SetTrigger("Jump");
         isJumping = true;
-        jumpDis = jumpDistance * Mathf.Abs(currentSpeed/3);
+        jumpDis = jumpDistance * currentSpeed/3;
+        jumpDis = Mathf.Clamp(jumpDis, 0, 13); //Limit max jumping distance
         velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
         fwd += jumpDis;
         sideways += jumpDis;
@@ -422,7 +415,8 @@ public class PlayerControlls : MonoBehaviour
         } 
         UpdateRotation();
         animator.SetTrigger("Roll");
-        rollDis = rollDistance + Mathf.Abs(currentSpeed/6);
+        rollDis = rollDistance + currentSpeed/6;
+        rollDis = Mathf.Clamp(rollDis, 0, 9);
         fwd += rollDis;
         sideways += rollDis;
         audioController.PlayJumpRollSound();
@@ -476,8 +470,6 @@ public class PlayerControlls : MonoBehaviour
     public float flySpeed = 2;
 
     void FlyingMovement() {
-        RotationDirection = 0;
-
         forward = flySpeed * transform.forward * (1+fwd) * Input.GetAxis("Vertical") + independentFromInputFwd * transform.forward;
         side = flySpeed * transform.right * (1+sideways) * Input.GetAxis("Horizontal");
 
@@ -526,11 +518,9 @@ public class PlayerControlls : MonoBehaviour
 #endregion
     
     void SetAnimatorVarialbes () {
-        animator.SetFloat("RotationDirection", RotationDirection);
         animator.SetFloat("InputMagnitude", InputMagnitude);    
         animator.SetFloat("InputDirection", InputDirection);
         animator.SetFloat("isSprinting", isSprintingFloat);
-        animator.SetFloat("RotationDirection", RotationDirection);
         animator.SetFloat("isRunning", isRunningFloat);
         
         animator.SetBool("Idle", isIdle);

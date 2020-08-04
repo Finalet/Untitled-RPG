@@ -31,7 +31,7 @@ public class Goblin : Enemy
 
     void Attack() {
         isAttacking = true;
-        animator.CrossFade("Main.Attack", 0.25f);
+        animator.CrossFade("Main.Attack", 0.1f);
         PlayAttackSounds();
         cooldownTimer = attackCoolDown;
     }
@@ -56,8 +56,9 @@ public class Goblin : Enemy
     }
 
     public override void Hit () {
-        if (!canHit)
+        if (!canHit) {
             return;
+        }
 
         PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), 0.2f, 1f);
     }
