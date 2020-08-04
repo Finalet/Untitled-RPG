@@ -300,8 +300,6 @@ public class PlayerControlls : MonoBehaviour
             lastInputDirection = InputDirection;
 
             CheckWhichFootIsUp();
-            
-            animator.speed = walkSpeed;
 
         } else {
             InputDirection = lastInputDirection;
@@ -350,7 +348,7 @@ public class PlayerControlls : MonoBehaviour
         animator.SetTrigger("Jump");
         isJumping = true;
         jumpDis = jumpDistance * currentSpeed/3;
-        jumpDis = Mathf.Clamp(jumpDis, 0, 13); //Limit max jumping distance
+        jumpDis = Mathf.Clamp(jumpDis, 0, 10); //Limit max jumping distance
         velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
         fwd += jumpDis;
         sideways += jumpDis;
@@ -416,7 +414,7 @@ public class PlayerControlls : MonoBehaviour
         UpdateRotation();
         animator.SetTrigger("Roll");
         rollDis = rollDistance + currentSpeed/6;
-        rollDis = Mathf.Clamp(rollDis, 0, 9);
+        rollDis = Mathf.Clamp(rollDis, 0, 8);
         fwd += rollDis;
         sideways += rollDis;
         audioController.PlayJumpRollSound();
@@ -522,6 +520,7 @@ public class PlayerControlls : MonoBehaviour
         animator.SetFloat("InputDirection", InputDirection);
         animator.SetFloat("isSprinting", isSprintingFloat);
         animator.SetFloat("isRunning", isRunningFloat);
+        animator.SetFloat("WalkSpeed", walkSpeed);
         
         animator.SetBool("Idle", isIdle);
         animator.SetBool("isCrouch", isCrouch);

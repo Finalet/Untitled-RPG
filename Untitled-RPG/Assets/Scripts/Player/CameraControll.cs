@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Animations.Rigging;
 
 public class CameraControll : MonoBehaviour
 {
     public float camDistance = 5;
+    
+    [Header("Animation IK")]
+    public Transform headAimTarget;
+    
 
     Vector3 shake;
 
@@ -38,6 +43,19 @@ public class CameraControll : MonoBehaviour
             CanvasScript.instance.gameObject.SetActive(!CanvasScript.instance.gameObject.activeInHierarchy);
             PeaceCanvas.instance.gameObject.SetActive(!PeaceCanvas.instance.gameObject.activeInHierarchy);
         }
+    }
+
+    void FixedUpdate() {
+        if (PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight < 0.7f) {
+            headAimTarget.GetComponentInParent<MultiAimConstraint>().weight += Time.deltaTime;
+        } else if (!PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight > 0) {
+            headAimTarget.GetComponentInParent<MultiAimConstraint>().weight -= Time.deltaTime;
+        }
+
+        Vector3 aimPos = transform.position + transform.forward * 13;
+        aimPos.y = Mathf.Clamp(aimPos.y, PlayerControlls.instance.transform.position.y, PlayerControlls.instance.transform.position.y + 5);
+        headAimTarget.transform.position = aimPos;
+        headAimTarget.transform.localPosition = new Vector3(headAimTarget.transform.localPosition.x, headAimTarget.transform.localPosition.y, Mathf.Clamp(headAimTarget.transform.localPosition.z, 1, 10));
     }
 
     float rotationX;
@@ -77,15 +95,6 @@ public class CameraControll : MonoBehaviour
             default: desiredOffset = center;
                 break;
         }
-    }
-
-    public void CameraMounted() {
-        //camDesiredPosition += 3;
-        //maxCamDistance += 5;
-    }
-    public void CameraDismount () {
-        //camDesiredPosition -= 3;
-        //maxCamDistance -= 5;
     }
 
     public void CameraShake(float frequency = 0.2f, float amplitude = 2f, float duration = 0.1f, Vector3 position = new Vector3()) {
