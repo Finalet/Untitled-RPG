@@ -71,12 +71,12 @@ public class CameraControll : MonoBehaviour
     void SprintCameraFOV () {
         if (PlayerControlls.instance.isSprinting) {
             if (CM_cam.m_Lens.FieldOfView < 80)
-                CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 82, 10 * Time.deltaTime);
+                CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 82, 7 * Time.deltaTime);
             else 
                 CM_cam.m_Lens.FieldOfView = 80;
         } else {
             if (CM_cam.m_Lens.FieldOfView > 60)
-                CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 58, 10 * Time.deltaTime);
+                CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 58, 7 * Time.deltaTime);
             else CM_cam.m_Lens.FieldOfView = 60;
         }
     }

@@ -4,7 +4,7 @@
 //
 // Auto-generated shader code, don't hand edit!
 //   Compiled with MicroSplat 3.4
-//   Unity : 2019.4.5f1
+//   Unity : 2019.4.6f1
 //   Platform : WindowsEditor
 //   RenderLoop : Unity LD
 //////////////////////////////////////////////////////

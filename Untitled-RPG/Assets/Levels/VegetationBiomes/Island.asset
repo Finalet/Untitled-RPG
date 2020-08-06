@@ -171,15 +171,33 @@ MonoBehaviour:
     ConcaveLoactionMinHeightDifference: 1
     ConcaveLoactionDistance: 3
     ConcaveLoactionAverage: 1
-    UseTerrainTextureIncludeRules: 0
-    TerrainTextureIncludeRuleList: []
-    UseTerrainTextureExcludeRules: 1
+    UseTerrainTextureIncludeRules: 1
+    TerrainTextureIncludeRuleList:
+    - TextureIndex: 0
+      MinimumValue: 0.1
+      MaximumValue: 1
+    - TextureIndex: 2
+      MinimumValue: 0.1
+      MaximumValue: 1
+    - TextureIndex: 7
+      MinimumValue: 0.1
+      MaximumValue: 1
+    - TextureIndex: 14
+      MinimumValue: 0.1
+      MaximumValue: 1
+    UseTerrainTextureExcludeRules: 0
     TerrainTextureExcludeRuleList:
     - TextureIndex: 1
       MinimumValue: 0.3
       MaximumValue: 1
     - TextureIndex: 8
       MinimumValue: 0.3
+      MaximumValue: 1
+    - TextureIndex: 15
+      MinimumValue: 0.01
+      MaximumValue: 1
+    - TextureIndex: 12
+      MinimumValue: 0.1
       MaximumValue: 1
     UseTextureMaskIncludeRules: 0
     TextureMaskIncludeRuleList: []

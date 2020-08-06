@@ -149,7 +149,7 @@ public class PlayerControlls : MonoBehaviour
 
         //Smooth rotation after rolling
         if (Mathf.Abs(rollDirection - desiredRollDirection) > 1) {
-            rollDirection = Mathf.Lerp(rollDirection, desiredRollDirection, Time.deltaTime * 15);
+            rollDirection = Mathf.Lerp(rollDirection, desiredRollDirection, Time.deltaTime * 10);
         } else {
             rollDirection = desiredRollDirection;
         }
@@ -157,7 +157,7 @@ public class PlayerControlls : MonoBehaviour
         //Smooth rotation after sprinting
         //LerpAngle since need to go from -179 to 179 smoothely
         if (Mathf.Abs(sprintingDirection - desiredSprintingDirection) > 1) {
-            sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 10);
+            sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 7);
         } else {
             sprintingDirection = desiredSprintingDirection;
         }
