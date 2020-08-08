@@ -348,7 +348,7 @@ public class PlayerControlls : MonoBehaviour
         animator.SetTrigger("Jump");
         isJumping = true;
         jumpDis = jumpDistance * currentSpeed/3;
-        jumpDis = Mathf.Clamp(jumpDis, 0, 10); //Limit max jumping distance
+        jumpDis = Mathf.Clamp(jumpDis, 0, 8); //Limit max jumping distance
         velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
         fwd += jumpDis;
         sideways += jumpDis;
@@ -430,12 +430,24 @@ public class PlayerControlls : MonoBehaviour
     }
 
     bool IsGrounded () {
-        Debug.DrawRay(transform.position + Vector3.up * 0.1f, -Vector3.up * 0.15f, Color.red);
-        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, -Vector3.up, 0.15f)) {
-            return true;
-        } else {
-            return false;
+        Vector3 rayOffset;
+        for (int i = 0; i < 4; i++) {
+            if (i==0)
+                rayOffset = transform.forward * 0.4f;
+            else if (i==1)
+                rayOffset = -transform.forward * 0.4f;
+            else if (i==2)
+                rayOffset = transform.right * 0.4f;
+            else
+                rayOffset = -transform.right * 0.4f;
+
+            Debug.DrawRay(transform.position + Vector3.up*0.1f + rayOffset, -Vector3.up*0.4f, Color.red);
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.1f + rayOffset, -Vector3.up, 0.4f))
+                return true;
         }
+        //if all of the above fails, then still not grounded;
+        return false;
     }
 
     void Sprinting () {

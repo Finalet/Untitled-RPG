@@ -43,6 +43,15 @@ public class CameraControll : MonoBehaviour
             CanvasScript.instance.gameObject.SetActive(!CanvasScript.instance.gameObject.activeInHierarchy);
             PeaceCanvas.instance.gameObject.SetActive(!PeaceCanvas.instance.gameObject.activeInHierarchy);
         }
+
+        //Stop camera rotation when UI is open
+        if (PeaceCanvas.instance.anyPanelOpen) {
+            CM_cam.m_YAxis.m_InputAxisName = "";
+            CM_cam.m_XAxis.m_InputAxisName = "";
+        } else {
+            CM_cam.m_YAxis.m_InputAxisName = "Mouse Y";
+            CM_cam.m_XAxis.m_InputAxisName = "Mouse X";
+        }
     }
 
     void FixedUpdate() {
