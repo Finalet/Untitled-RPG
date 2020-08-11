@@ -7,6 +7,7 @@ using MalbersAnimations.Scriptables;
 using MalbersAnimations.Controller;
 using System.Collections;
 using System.Linq;
+using Cinemachine;
 
 namespace MalbersAnimations.HAP
 {
@@ -197,6 +198,7 @@ namespace MalbersAnimations.HAP
 
         #endregion
 
+
         void Awake()
         {
             t = transform;
@@ -276,8 +278,15 @@ namespace MalbersAnimations.HAP
             if (!CanMount) return;
 
             Anim?.SetLayerWeight(MountLayerIndex, 1);                     //Enable the Mounting layer  
+
+            //Finale games additions
             PlayerControlls.instance.isMounted = true;
-            
+            CinemachineFreeLook CM_cam = Montura.GetComponentInChildren<CinemachineFreeLook>();
+            CM_cam.m_XAxis.Value = PlayerControlls.instance.CM_Camera.m_XAxis.Value; //Inherit camera rotation
+            CM_cam.m_YAxis.Value = PlayerControlls.instance.CM_Camera.m_YAxis.Value;
+            CM_cam.Priority = 2;
+            //Finale end
+
             if (!Montura.InstantMount)                                                  //If is instant Mount play it      
             {
                 Anim?.Play(MountTrigger.MountAnimation, MountLayerIndex);      //Play the Mounting Animations
@@ -314,6 +323,11 @@ namespace MalbersAnimations.HAP
 
                 t.position = MTrigger.transform.position + (MTrigger.transform.forward * -0.2f);   //Move the rider directly to the mounttrigger
             }
+
+            CinemachineFreeLook CM_cam = Montura.GetComponentInChildren<CinemachineFreeLook>();
+            PlayerControlls.instance.CM_Camera.m_XAxis.Value = CM_cam.m_XAxis.Value; //Inherit camera rotation
+            PlayerControlls.instance.CM_Camera.m_YAxis.Value = CM_cam.m_YAxis.Value;
+            CM_cam.Priority = 0;
         }
 
 
@@ -526,7 +540,10 @@ namespace MalbersAnimations.HAP
         internal virtual void End_Dismounting()
         {
             IsOnHorse = false;                                                              //Is no longer on the Animal
+            
             PlayerControlls.instance.isMounted = false;            
+            PlayerControlls.instance.desiredLookDirection = PlayerControlls.instance.transform.eulerAngles.y;
+            PlayerControlls.instance.lookDirection = PlayerControlls.instance.desiredLookDirection;
 
             if (Montura)
             {

@@ -39,8 +39,8 @@ public class PlayerControlls : MonoBehaviour
     float sprintingDirection;
     float desiredSprintingDirection;
 
-    float desiredLookDirection;
-    float lookDirection;
+    [System.NonSerialized] public float desiredLookDirection; //Accessed by M_Rider fix rotation when on animal
+    [System.NonSerialized] public float lookDirection; 
 
     [Header("Jumping")]
     public float jumpHeight = 2;
@@ -274,10 +274,8 @@ public class PlayerControlls : MonoBehaviour
     void UpdateRotation () {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, lookDirection + sprintingDirection + rollDirection, transform.eulerAngles.z);
         
-        if (!PeaceCanvas.instance.anyPanelOpen && !isIdle) {
+        if (!PeaceCanvas.instance.anyPanelOpen && !isIdle) { //If idle, player show not rotate
             desiredLookDirection = CM_Camera.m_XAxis.Value;
-        } else {
-            desiredLookDirection = lookDirection;
         }
     }
 
