@@ -15,8 +15,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     [Header("Skill panel")]
     public Skill skillInSlot;
     [Space]
-    public KeyCode mainAssignedKey; //Main key "E"
-    public KeyCode secondaryAssignedKey; //Secondary key "Shift" to make "shift-e"
+    public KeyCode assignedKey; //Main key "E"
 
 
     protected override void Awake() {
@@ -27,7 +26,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         emptySlotSprite = GetComponent<Image>().sprite;
     }
 
-    void Update() {
+    protected virtual void Update() {
         if (skillInSlot != null) {
             DisplaySkill();
         } else if (itemInSlot != null) {
@@ -102,28 +101,14 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
     }
 
-    void DetectKeyPress() {
-        if (secondaryAssignedKey == KeyCode.None) {
-            if (Input.GetKey(KeyCode.LeftAlt))
-                return;
-
-            if (Input.GetKeyDown(mainAssignedKey)) {
-                StartCoroutine(UI_General.PressAnimation(slotIcon, mainAssignedKey));
-            } else if (Input.GetKeyUp(mainAssignedKey)) {
-                if (skillInSlot != null) //If slot is taken with a skill
-                    skillInSlot.Use();
-                else if (itemInSlot != null) //If slot is taken with an item
-                    UseItem();
-            }
-        } else if (Input.GetKey(secondaryAssignedKey)) {
-            if (Input.GetKeyDown(mainAssignedKey)) {
-                StartCoroutine(UI_General.PressAnimation(slotIcon, mainAssignedKey));
-            } else if (Input.GetKeyUp(mainAssignedKey)) {
-                if (skillInSlot != null) //If slot i taken with a skill
-                    skillInSlot.Use();
-                else if (itemInSlot != null) //If slot is taken with an item
-                    UseItem();
-            }
+    protected virtual void DetectKeyPress() {
+        if (Input.GetKeyDown(assignedKey)) {
+                StartCoroutine(UI_General.PressAnimation(slotIcon, assignedKey));
+        } else if (Input.GetKeyUp(assignedKey)) {
+            if (skillInSlot != null) //If slot is taken with a skill
+                skillInSlot.Use();
+            else if (itemInSlot != null) //If slot is taken with an item
+                UseItem();
         }
     }
 
@@ -142,10 +127,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     void DisplayKey () {
-        if (secondaryAssignedKey == KeyCode.None)
-            keyText.text = KeyCodeDictionary.keys[mainAssignedKey];
-        else 
-            keyText.text = KeyCodeDictionary.keys[secondaryAssignedKey] + " " + KeyCodeDictionary.keys[mainAssignedKey];
+        keyText.text = KeyCodeDictionary.keys[assignedKey];
     }
 
     public override void Save() {

@@ -113,7 +113,7 @@ public abstract class Skill : MonoBehaviour
     protected virtual void PickArea () {
         if (instanciatedAP == null) {
             instanciatedAP = Instantiate(areaPickerPrefab);
-            CanvasScript.instance.ShowSCB(this);
+            CanvasScript.instance.PickAreaForSkill(this);
         }
 
         RaycastHit hit;
@@ -130,21 +130,16 @@ public abstract class Skill : MonoBehaviour
 
         instanciatedAP.transform.position = pickPosition;
         instanciatedAP.transform.localScale = Vector3.one * areaPickerSize / 10f;
-
-
-        if (Input.GetKeyUp(KeyCode.Mouse0)) {
-            playerControlls.isPickingArea = false;
-            pickedPosition = instanciatedAP.transform.position;
-            CanvasScript.instance.HideSCB();
-            Destroy(instanciatedAP);
-        } else if (Input.GetKeyUp(KeyCode.Mouse1)) {
-            CancelPickingArea();
-        }
     }
 
-    void CancelPickingArea () {
+    public void ConfirmPickArea(){
         playerControlls.isPickingArea = false;
-        CanvasScript.instance.HideSCB();
+        pickedPosition = instanciatedAP.transform.position;
+        Destroy(instanciatedAP);
+    }
+
+    public void CancelPickingArea () {
+        playerControlls.isPickingArea = false;
         Destroy(instanciatedAP);
         skillCanceled = true;
     }

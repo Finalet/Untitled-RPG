@@ -22,9 +22,10 @@ public class CanvasScript : MonoBehaviour
     public TextMeshProUGUI enemyName;
     public TextMeshProUGUI enemyHealth;
 
-    [Header("Skill Confirm Buttons")]
-    public bool scbActive;
-    public GameObject scb;
+    [Header("Middle Skill Panel")]
+    public UI_MiddleSkillPanelButtons LMB;
+    public UI_MiddleSkillPanelButtons RMB;
+    public Sprite cancelSprite;
 
     Characteristics characteristics;
 
@@ -39,7 +40,6 @@ public class CanvasScript : MonoBehaviour
 
     void Update() {
         DisplayHPandStamina();
-        if (scbActive) CheckSCBPresses();
     }
 
     void DisplayHPandStamina () {
@@ -116,26 +116,8 @@ public class CanvasScript : MonoBehaviour
         castingBar.SetActive(false);
     }
 
-    public void ShowSCB (Skill skill) {
-        scb.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>().localScale = Vector2.one;
-        scb.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().localScale = Vector2.one;
-
-        scb.SetActive(true);
-        scbActive = true;
-        scb.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = skill.icon;
-    }
-    public void HideSCB () {
-        scb.SetActive(false);
-        scbActive = false;
-    }
-    void CheckSCBPresses() {
-        //Left Image
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-            StartCoroutine(UI_General.PressAnimation(scb.transform.GetChild(0).GetChild(0).GetComponent<Image>(), KeyCode.Mouse0));
-
-        //Right Image
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-            StartCoroutine(UI_General.PressAnimation(scb.transform.GetChild(1).GetChild(0).GetComponent<Image>(), KeyCode.Mouse1));
-
+    public void PickAreaForSkill (Skill skill) {
+        LMB.areaPickerSkill = skill;
+        RMB.areaPickerSkill = skill;
     }
 }

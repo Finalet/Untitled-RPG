@@ -117,6 +117,11 @@ public class KeyCodeDictionary
         {KeyCode.Pipe, "|"},   
         {KeyCode.Percent, "%"},
 
+        //Mouse Buttons
+        {KeyCode.Mouse0, "LMB"},
+        {KeyCode.Mouse1, "RMB"},
+        {KeyCode.Mouse2, "MMB"},
+
         //KeyCode none
         {KeyCode.None, ""},
     };

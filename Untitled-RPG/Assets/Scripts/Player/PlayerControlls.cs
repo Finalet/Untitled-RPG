@@ -232,7 +232,7 @@ public class PlayerControlls : MonoBehaviour
         }
  
         velocityY += gravity * Time.deltaTime;
-        velocityY = Mathf.Clamp(velocityY, gravity * 3, -gravity * 3);
+        velocityY = Mathf.Clamp(velocityY, gravity, -gravity);
 
         if (isSprinting || isRolling) {
             forward = fwd * transform.forward;
@@ -429,6 +429,7 @@ public class PlayerControlls : MonoBehaviour
 
     bool IsGrounded () {
         Vector3 rayOffset;
+        RaycastHit hit;
         for (int i = 0; i < 4; i++) {
             if (i==0)
                 rayOffset = transform.forward * 0.4f;
@@ -439,10 +440,17 @@ public class PlayerControlls : MonoBehaviour
             else
                 rayOffset = -transform.right * 0.4f;
 
-            Debug.DrawRay(transform.position + Vector3.up*0.1f + rayOffset, -Vector3.up*0.4f, Color.red);
+            //Debug.DrawRay(transform.position + Vector3.up*0.1f + rayOffset, -Vector3.up*0.4f, Color.red);
+            if (Physics.Raycast(transform.position + Vector3.up * 0.1f + rayOffset, -Vector3.up, out hit, 0.4f)) {
+                if (hit.transform.CompareTag("Ship") && transform.parent != hit.transform) //If player is on the ship, he should be parented to the ship, so he follows its movement.
+                    transform.parent = hit.transform;
 
-            if (Physics.Raycast(transform.position + Vector3.up * 0.1f + rayOffset, -Vector3.up, 0.4f))
                 return true;
+            }
+        }
+        if (transform.parent != null) { //If player left the ship, he should have no parents.
+            transform.parent = playerCamera.transform; //First parent to the camera (or any other object in the Player_Ojbect scene) to move player to the Player_Object scene.
+            transform.parent = null; //Then un-parent him.
         }
         //if all of the above fails, then still not grounded;
         return false;
