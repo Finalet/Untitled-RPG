@@ -187,32 +187,15 @@ public abstract class Skill : MonoBehaviour
         }
     }
 
-
-    protected virtual void PlaySound(AudioClip clip) {
-        audioSource.volume = 1;
-        audioSource.pitch = 1;
-        audioSource.time = 0;
-        audioSource.clip = clip;
-        audioSource.Play();
-    }
-    protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch) {
-        audioSource.time = timeOffest;
-        audioSource.pitch = pitch;
-        audioSource.clip = clip;
-        audioSource.Play();
-    }
-    protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch, float delay) {
-        audioSource.clip = clip;
-        audioSource.time = timeOffest;
-        audioSource.pitch = pitch;
-        audioSource.PlayDelayed(delay);
-    }
-    protected virtual void PlaySound(AudioClip clip, float timeOffest, float pitch, float delay, float volume) {
+    protected virtual void PlaySound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {
         audioSource.clip = clip;
         audioSource.time = timeOffest;
         audioSource.pitch = pitch;
         audioSource.volume = volume;
-        audioSource.PlayDelayed(delay);
+        if (delay == 0)
+            audioSource.Play();
+        else
+            audioSource.PlayDelayed(delay);
     }
 
     protected virtual void StopSounds () {

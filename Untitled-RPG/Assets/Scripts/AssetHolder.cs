@@ -26,11 +26,20 @@ public class AssetHolder : MonoBehaviour
                 if (consumables[i].ID == ID)
                     return consumables[i];
             }
-            Debug.LogError($"Item with ID = {ID} is not found");
+            Debug.LogError($"Item with ID = {ID} not found");
             return null;
         } else {
             Debug.LogError($"ID = {ID} is out of range");
             return null;
         }
+    }
+
+    public Skill getSkill (int ID) {
+        for (int i = 0; i < Skills.Length; i ++) {
+            if (Skills[i].ID == ID)
+                return Skills[i];
+        }
+        Debug.LogError($"Skill with ID = {ID} not found");
+        return null;
     }
 }

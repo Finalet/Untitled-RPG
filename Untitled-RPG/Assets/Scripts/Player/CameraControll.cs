@@ -23,6 +23,9 @@ public class CameraControll : MonoBehaviour
     const float center = 0;
     float desiredOffset;
 
+    float mouseXsensitivity;
+    float mouseYsensitivity;
+
     void Start()
     {
         cam = GetComponent<Camera>();
@@ -30,6 +33,9 @@ public class CameraControll : MonoBehaviour
         CM_offset = GetComponentInChildren<CinemachineCameraOffset>();
 
         desiredOffset = CM_offset.m_Offset.x;
+
+        mouseXsensitivity = CM_cam.m_XAxis.m_MaxSpeed;
+        mouseYsensitivity = CM_cam.m_YAxis.m_MaxSpeed;
     }
 
     void Update()
@@ -46,11 +52,11 @@ public class CameraControll : MonoBehaviour
 
         //Stop camera rotation when UI is open
         if (PeaceCanvas.instance.anyPanelOpen) {
-            CM_cam.m_YAxis.m_InputAxisName = "";
-            CM_cam.m_XAxis.m_InputAxisName = "";
+            CM_cam.m_XAxis.m_MaxSpeed = 0;
+            CM_cam.m_YAxis.m_MaxSpeed = 0;
         } else {
-            CM_cam.m_YAxis.m_InputAxisName = "Mouse Y";
-            CM_cam.m_XAxis.m_InputAxisName = "Mouse X";
+            CM_cam.m_XAxis.m_MaxSpeed = mouseXsensitivity;
+            CM_cam.m_YAxis.m_MaxSpeed = mouseYsensitivity;
         }
     }
 

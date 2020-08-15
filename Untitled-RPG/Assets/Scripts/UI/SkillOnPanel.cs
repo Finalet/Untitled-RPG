@@ -12,12 +12,12 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     GameObject go;
 
     void Start() {
-        GetComponent<Image>().sprite = AssetHolder.instance.Skills[skillID].GetComponent<Skill>().icon;
-        name1.text = AssetHolder.instance.Skills[skillID].GetComponent<Skill>().skillName;
+        GetComponent<Image>().sprite = AssetHolder.instance.getSkill(skillID).icon;
+        name1.text = AssetHolder.instance.getSkill(skillID).skillName;
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
-       PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, AssetHolder.instance.Skills[skillID], null);
+       PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, AssetHolder.instance.getSkill(skillID), null);
     }
 
     public void OnDrag (PointerEventData pointerData) {

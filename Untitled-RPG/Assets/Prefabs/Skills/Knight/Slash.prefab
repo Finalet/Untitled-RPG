@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6762687854657974090}
   - component: {fileID: 1761418248}
-  - component: {fileID: -7617217213813271958}
-  - component: {fileID: -7500555913756199391}
+  - component: {fileID: 5183694784569525578}
+  - component: {fileID: 4148119885532389350}
   m_Layer: 0
-  m_Name: K.O.
+  m_Name: Slash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,41 +44,9 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 1.5, z: 1.5}
-  m_Center: {x: 0, y: 0.8, z: 0.9}
---- !u!114 &-7617217213813271958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6762687854657974093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24ec06cba375f1f4b8b566ff58d7a84f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: 3
-  skillName: KO
-  description: Knocks the target on the ground dealing damage.
-  icon: {fileID: 21300000, guid: 6c0ffdb69f061fc44a602518ad321153, type: 3}
-  skillTree: 0
-  skillType: 0
-  staminaRequired: 200
-  baseDamage: 1000
-  coolDown: 10
-  coolDownTimer: 0
-  isCoolingDown: 0
-  castingTime: 0
-  nomralizedCastingAnim: 0
-  finishedCast: 0
-  needToPickArea: 0
-  areaPickerPrefab: {fileID: 0}
-  areaPickerSize: 0
-  sounds:
-  - {fileID: 8300000, guid: 28c4cbe3766495a419ee76ea5777aa1a, type: 3}
-  - {fileID: 8300000, guid: f417372b11fe024408b6595c67c0ba7b, type: 3}
---- !u!82 &-7500555913756199391
+  m_Size: {x: 1.5, y: 1.5, z: 1.8314658}
+  m_Center: {x: 0, y: 0.79999995, z: 1.0657327}
+--- !u!82 &5183694784569525578
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,10 +57,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -6621450033256751156, guid: 876c84e2c7654764f9483b4add6c8fe5,
     type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 56361a190aa1d4c4eb11825ef785710c, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 0.7
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -175,3 +143,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4148119885532389350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6762687854657974093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b29a3a094f4299645983631b7a773789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  skillName: Slash
+  description: Slashes in-front three times as a basic attack
+  icon: {fileID: 21300000, guid: abd0b44fc0e203d439ab1ae8491d7c64, type: 3}
+  skillTree: 0
+  skillType: 0
+  staminaRequired: -50
+  baseDamage: 100
+  coolDown: -1
+  coolDownTimer: 0
+  isCoolingDown: 0
+  castingTime: 0
+  nomralizedCastingAnim: 0
+  finishedCast: 0
+  needToPickArea: 0
+  areaPickerPrefab: {fileID: 0}
+  areaPickerSize: 0
+  sounds:
+  - {fileID: 8300000, guid: 2307d157efc34844b9776813b4f691c1, type: 3}
+  - {fileID: 8300000, guid: 39e06de49fa37ad429ecaf33d2e21cff, type: 3}
+  - {fileID: 8300000, guid: 8ba4f04dd775e324ba6bd0f37c7dc3c4, type: 3}
+  - {fileID: 8300000, guid: 61c141508cfed63449cbe01e1dbb7325, type: 3}

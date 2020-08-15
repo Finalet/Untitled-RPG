@@ -30,6 +30,8 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     }
 
     protected override void DetectKeyPress() {
+        if (PeaceCanvas.instance.anyPanelOpen)
+            return;
         //If not picking area, then act like a regular skill slot
         if (!PlayerControlls.instance.isPickingArea) {
             base.DetectKeyPress();

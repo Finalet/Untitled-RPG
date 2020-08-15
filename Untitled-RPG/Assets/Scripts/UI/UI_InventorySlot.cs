@@ -17,6 +17,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     public Image slotIcon;
     public TextMeshProUGUI itemAmountText;
 
+    protected Color baseSlotColor;
+
     protected string savefilePath; 
 
     protected virtual void Awake() {
@@ -24,6 +26,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     protected virtual void Start() {
+        baseSlotColor = slotIcon.color;
         Load();
     }
 
@@ -57,7 +60,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     void DisplayItem () {
         slotIcon.sprite = itemInSlot.itemIcon;
         itemAmountText.text = itemAmount.ToString();
-        slotIcon.color = new Color(1,1,1,1);
+        slotIcon.color = baseSlotColor;
     }
 
     public virtual void Save () {

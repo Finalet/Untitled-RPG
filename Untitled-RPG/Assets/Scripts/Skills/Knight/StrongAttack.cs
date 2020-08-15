@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StrongAttack : Skill
 {
-    public List<GameObject> enemiesInTrigger = new List<GameObject>();
+    List<GameObject> enemiesInTrigger = new List<GameObject>();
 
     protected override void Update() {
         base.Update();

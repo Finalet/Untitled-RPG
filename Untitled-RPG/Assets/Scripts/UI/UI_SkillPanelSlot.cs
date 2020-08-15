@@ -17,7 +17,6 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     [Space]
     public KeyCode assignedKey; //Main key "E"
 
-
     protected override void Awake() {
         savefilePath = "saves/skillPanelSlots.txt";
     }
@@ -44,7 +43,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         itemInSlot = null;
 
         keyText.color = Color.white;
-        slotIcon.color = Color.white;
+        slotIcon.color = baseSlotColor;
         cooldownImage.color = new Color(0, 0, 0, 0);
 
         cooldownImage.fillAmount = 1;
@@ -102,6 +101,9 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     protected virtual void DetectKeyPress() {
+        if (PeaceCanvas.instance.anyPanelOpen)
+            return;
+
         if (Input.GetKeyDown(assignedKey)) {
                 StartCoroutine(UI_General.PressAnimation(slotIcon, assignedKey));
         } else if (Input.GetKeyUp(assignedKey)) {
@@ -141,7 +143,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         byte type = ES3.Load<byte>($"slot_{slotID}_type", savefilePath, 0);
         if (type == 2) { //Load skill
             byte ID = ES3.Load<byte>($"slot_{slotID}_itemID", savefilePath, 0);
-            AddSkill(AssetHolder.instance.Skills[ID], null);
+            AddSkill(AssetHolder.instance.getSkill(ID), null);
             return;
         }
         base.Load(type);

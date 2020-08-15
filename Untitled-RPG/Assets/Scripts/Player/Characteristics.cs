@@ -164,19 +164,19 @@ public class Characteristics : MonoBehaviour
         icon.GetComponent<BuffIcon>().skill = skill;
 
         switch (skill.ID) {
-            case 4: //Rage 
+            case 5: //Rage 
                 float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
                 meleeMultiplier += buffIncrease/100;
                 attackSpeedPercentageAdjustement += buffIncrease/100;
                 icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Rage>().duration;
                 break;
-            case 10: //Power sphere
+            case 12: //Power sphere
                 magicPowerMultiplier += skill.GetComponent<PowerSphere>().magicDamageIncrease;
                 castingSpeedPercentageAdjustement += skill.GetComponent<PowerSphere>().castSpeedIncrease;
                 defenseMultiplier += skill.GetComponent<PowerSphere>().defenseIncrease;
                 //No timer since its active while player is indside;
                 break;
-            case 12: // Levitation
+            case 14: // Levitation
                 magicSkillDistanceIncrease += skill.GetComponent<Levitation>().skillDistanceIncrease;
                 magicPowerMultiplier += skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
                 icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Levitation>().flightDuration;
@@ -188,17 +188,17 @@ public class Characteristics : MonoBehaviour
 
     public void RemoveBuff(Skill skill) {
         switch (skill.ID) {
-            case 4:
+            case 5:
                 float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
                 meleeMultiplier -= buffIncrease/100;
                 attackSpeedPercentageAdjustement -= buffIncrease/100;
                 break;
-            case 10:
+            case 12:
                 magicPowerMultiplier -= skill.GetComponent<PowerSphere>().magicDamageIncrease;
                 castingSpeedPercentageAdjustement -= skill.GetComponent<PowerSphere>().castSpeedIncrease;
                 defenseMultiplier -= skill.GetComponent<PowerSphere>().defenseIncrease;
                 break;
-            case 12:
+            case 14:
                 magicSkillDistanceIncrease -= skill.GetComponent<Levitation>().skillDistanceIncrease;
                 magicPowerMultiplier -= skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
                 break;

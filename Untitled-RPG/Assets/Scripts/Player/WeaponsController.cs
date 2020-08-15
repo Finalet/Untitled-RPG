@@ -150,12 +150,4 @@ public class WeaponsController : MonoBehaviour
         LeftHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
         RightHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
     }
-
-    public void PlaySlashSound (int handID) { //ID = 0 left hand, ID = 1 right hand
-        if (handID == 0){
-            LeftHandEquipement.GetComponent<WeaponAudioController>().PlayNext();
-        } else if (handID == 1){
-            RightHandEquipement.GetComponent<WeaponAudioController>().PlayNext();
-        }
-    }
 }

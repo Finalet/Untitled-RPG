@@ -138,7 +138,7 @@ public class PlayerControlls : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
 
-        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) {
+        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking && !isCastingSkill) {
             isIdle = true;
         } else {
             isIdle = false;
