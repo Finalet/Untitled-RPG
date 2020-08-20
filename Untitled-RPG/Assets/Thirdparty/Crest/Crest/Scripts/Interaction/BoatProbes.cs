@@ -44,11 +44,11 @@ namespace Crest
         [SerializeField, FormerlySerializedAs("TurnPower")]
         float _turnPower = 0.5f;
         [SerializeField]
-        bool _playerControlled = true;
+        public bool _playerControlled = true;
         [Tooltip("Used to automatically add throttle input"), SerializeField]
-        float _engineBias = 0f;
+        public float _engineBias = 0f;
         [Tooltip("Used to automatically add turning input"), SerializeField]
-        float _turnBias = 0f;
+        public float _turnBias = 0f;
 
 
         private const float WATER_DENSITY = 1000;

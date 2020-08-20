@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Cinemachine;
 
 public class PeaceCanvas : MonoBehaviour
 {
     public delegate void SaveLoadSlots();
-    public static event SaveLoadSlots onSkillsPanelClose; 
+    public static event SaveLoadSlots saveGame; 
 
     public static PeaceCanvas instance;  
 
@@ -15,6 +16,8 @@ public class PeaceCanvas : MonoBehaviour
     public bool anyPanelOpen;
 
     [Space]
+    public CinemachineVirtualCamera CM_MenuCam;
+    public Transform menuLookAt;
     public GameObject SkillsPanel;
     public GameObject Inventory;
 
@@ -44,17 +47,25 @@ public class PeaceCanvas : MonoBehaviour
             anyPanelOpen = false;
 
         if (Input.GetButtonDown("OpenSkillsPanel")) {
-            if (SkillsPanel.activeInHierarchy)
-                onSkillsPanelClose();
+            if (SkillsPanel.activeInHierarchy) { //Close skills
+                SkillsPanel.SetActive(false);
+                CM_MenuCam.Priority = 0;
+            } else { //Open skills
+                SkillsPanel.SetActive(true);
+                OpenMenuCamera();
+            }
             
-            SkillsPanel.SetActive(!SkillsPanel.activeInHierarchy);
         }
 
         if (Input.GetButtonDown("OpenInventory")) {
-            if (Inventory.activeInHierarchy)
-                onSkillsPanelClose();
+            if (Inventory.activeInHierarchy) { //Close inventory
+                Inventory.SetActive(false);
+                CM_MenuCam.Priority = 0;
+            } else { //Open inventory;
+                Inventory.SetActive(true);
+                OpenMenuCamera();
+            }
             
-            Inventory.SetActive(!Inventory.activeInHierarchy);
         }
 
         if (Input.GetKeyDown(KeyCode.F1)) {
@@ -123,6 +134,24 @@ public class PeaceCanvas : MonoBehaviour
         initialSlot = null;
         
         Destroy(dragGO);
+    }
+
+    void OpenMenuCamera () {
+        Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 1.5f;
+        pos.y = PlayerControlls.instance.transform.position.y + 1.5f;
+
+        menuLookAt.position = pos;
+        menuLookAt.eulerAngles = new Vector3(0,  PlayerControlls.instance.playerCamera.transform.eulerAngles.y,0);
+
+        pos += menuLookAt.transform.forward * -3.5f;
+        pos.y = PlayerControlls.instance.transform.position.y + 2f;
+
+        CM_MenuCam.transform.position = pos; 
+        CM_MenuCam.Priority = 10;
+    }
+
+    public void SaveButton() {
+        saveGame();
     }
 
 }

@@ -30,6 +30,8 @@ public class PowerSphere : Skill
     protected override void InterruptCasting() {
         base.InterruptCasting();
         RemoveParticles();
+        if (instanciatedSphere != null)
+            Destroy(instanciatedSphere);
     }
 
     protected override void CastingAnim() {
@@ -60,7 +62,7 @@ public class PowerSphere : Skill
 
         PlaySound(shootSound, 0.1f, 1.2f);
         RemoveParticles();
-        instanciatedSphere.GetComponent<PowerSphereProjectile>().shoot = true;
+        if (instanciatedSphere != null) instanciatedSphere.GetComponent<PowerSphereProjectile>().shoot = true; //Sometimes gives an error when canceling skill since it still tries to shoot it
     }
 
     void AddParticles() {

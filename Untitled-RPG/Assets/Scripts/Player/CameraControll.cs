@@ -50,14 +50,6 @@ public class CameraControll : MonoBehaviour
             PeaceCanvas.instance.gameObject.SetActive(!PeaceCanvas.instance.gameObject.activeInHierarchy);
         }
 
-        //Stop camera rotation when UI is open
-        if (PeaceCanvas.instance.anyPanelOpen) {
-            CM_cam.m_XAxis.m_MaxSpeed = 0;
-            CM_cam.m_YAxis.m_MaxSpeed = 0;
-        } else {
-            CM_cam.m_XAxis.m_MaxSpeed = mouseXsensitivity;
-            CM_cam.m_YAxis.m_MaxSpeed = mouseYsensitivity;
-        }
     }
 
     void FixedUpdate() {
@@ -116,9 +108,11 @@ public class CameraControll : MonoBehaviour
         if (position == Vector3.zero)
             position = transform.position;
 
-        GetComponent<CinemachineImpulseSource>().m_ImpulseDefinition.m_FrequencyGain = frequency;
-        GetComponent<CinemachineImpulseSource>().m_ImpulseDefinition.m_AmplitudeGain = amplitude;
-        GetComponent<CinemachineImpulseSource>().m_ImpulseDefinition.m_TimeEnvelope.m_SustainTime = duration;
-        GetComponent<CinemachineImpulseSource>().GenerateImpulseAt(position, Vector3.one);
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        
+        impulseSource.m_ImpulseDefinition.m_FrequencyGain = frequency;
+        impulseSource.m_ImpulseDefinition.m_AmplitudeGain = amplitude;
+        impulseSource.m_ImpulseDefinition.m_TimeEnvelope.m_SustainTime = duration;
+        impulseSource.GenerateImpulseAt(position, Vector3.one);
     }
 }

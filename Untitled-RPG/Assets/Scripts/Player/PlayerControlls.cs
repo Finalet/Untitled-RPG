@@ -274,7 +274,7 @@ public class PlayerControlls : MonoBehaviour
     void UpdateRotation () {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, lookDirection + sprintingDirection + rollDirection, transform.eulerAngles.z);
         
-        if (!PeaceCanvas.instance.anyPanelOpen && !isIdle) { //If idle, player show not rotate
+        if (!PeaceCanvas.instance.anyPanelOpen && !isIdle) { //If idle, player should not rotate
             desiredLookDirection = CM_Camera.m_XAxis.Value;
         }
     }
@@ -468,7 +468,7 @@ public class PlayerControlls : MonoBehaviour
 
     void MountAnimal () {
         if (Input.GetKeyDown(KeyCode.F)) {
-            if (!isMounted) {
+            if (!isMounted && !isFlying) {
                 GetComponent<MRider>().MountAnimal();
                 SprintOff();
             }

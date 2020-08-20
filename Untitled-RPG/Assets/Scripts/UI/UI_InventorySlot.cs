@@ -23,6 +23,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
     protected virtual void Awake() {
         savefilePath = "saves/inventorySlots.txt";
+        if (slotID == -1) slotID = System.Convert.ToInt16(name.Substring(name.IndexOf('(') + 1, 2));
     }
 
     protected virtual void Start() {
@@ -31,10 +32,10 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     void OnEnable() {
-        PeaceCanvas.onSkillsPanelClose += Save;
+        PeaceCanvas.saveGame += Save;
     }
     void OnDisable() {
-        PeaceCanvas.onSkillsPanelClose -= Save;
+        PeaceCanvas.saveGame -= Save;
     }
 
     public virtual void AddItem (Item item, int amount, UI_InventorySlot initialSlot) { //Initial slot for switching items places when dropping one onto another
@@ -60,7 +61,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     void DisplayItem () {
         slotIcon.sprite = itemInSlot.itemIcon;
         itemAmountText.text = itemAmount.ToString();
-        slotIcon.color = baseSlotColor;
+        slotIcon.color = Color.white;
     }
 
     public virtual void Save () {

@@ -32,6 +32,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
             DisplayItem();
         } else {
             slotIcon.sprite = emptySlotSprite;
+            slotIcon.color = baseSlotColor;
         }
 
         DisplayKey();
@@ -42,9 +43,10 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         skillInSlot = null;
         itemInSlot = null;
 
-        keyText.color = Color.white;
+        if (keyText != null) keyText.color = Color.white;
         slotIcon.color = baseSlotColor;
         cooldownImage.color = new Color(0, 0, 0, 0);
+        cooldownTimerText.text = "";
 
         cooldownImage.fillAmount = 1;
         
@@ -67,10 +69,10 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
         if (skillInSlot.skillActive()) {
             slotIcon.color = Color.white;
-            keyText.color = Color.white;
+            if (keyText != null) keyText.color = Color.white;
         } else {
             slotIcon.color = new Color (0.3f, 0.3f, 0.3f, 1);
-            keyText.color = new Color(0.6f, 0, 0, 1); 
+            if (keyText != null) keyText.color = new Color(0.6f, 0, 0, 1); 
         }
     }
 
@@ -129,7 +131,8 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     void DisplayKey () {
-        keyText.text = KeyCodeDictionary.keys[assignedKey];
+        if (keyText != null)
+            keyText.text = KeyCodeDictionary.keys[assignedKey];
     }
 
     public override void Save() {

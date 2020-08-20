@@ -5,6 +5,7 @@ using AwesomeTechnologies.VegetationSystem;
 using StylizedGrass;
 using Crest;
 
+//Drop on GameObject which needs to reference Players position or camera
 public class CameraGrabber : MonoBehaviour
 {
 
@@ -23,6 +24,6 @@ public class CameraGrabber : MonoBehaviour
         
         if (VSP != null) VSP.AddCamera(PlayerControlls.instance.playerCamera);
         if (SGR != null) SGR.followTarget = PlayerControlls.instance.transform; 
-        if (OR != null) OR.Viewpoint = PlayerControlls.instance.playerCamera.transform;
+        if (OR != null) OR.Viewpoint = PlayerControlls.instance.transform;
     }
 }

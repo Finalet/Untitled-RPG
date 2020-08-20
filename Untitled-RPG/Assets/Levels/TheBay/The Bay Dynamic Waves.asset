@@ -9,12 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19dae60af28271c45a418e0869b9b921, type: 3}
-  m_Name: The Bay Foam
+  m_Script: {fileID: 11500000, guid: 467d18cefc08f7f44bd5688ce841f075, type: 3}
+  m_Name: The Bay Dynamic Waves
   m_EditorClassIdentifier: 
-  _foamFadeRate: 0.8
-  _waveFoamStrength: 3
-  _waveFoamCoverage: 0.8
-  _shorelineFoamMaxDepth: 0.7
-  _shorelineFoamStrength: 2.5
-  _renderTextureFormat: 15
+  _minGridSize: 0
+  _maxGridSize: 0
+  _damping: 1
+  _courantNumber: 3
+  _maxSimStepsPerFrame: 3
+  _horizDisplace: 10
+  _displaceClamp: 0.3
+  _gravityMultiplier: 12

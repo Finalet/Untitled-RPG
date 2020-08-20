@@ -25,6 +25,8 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
         cooldownImage.color = new Color(0, 0, 0, 0);
         cooldownImage.fillAmount = 1;
         cooldownTimerText.text = "";
+
+        slotIcon.color = Color.white;
         
         DetectKeyPress();
     }
