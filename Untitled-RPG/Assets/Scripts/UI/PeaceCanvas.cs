@@ -20,6 +20,7 @@ public class PeaceCanvas : MonoBehaviour
     public Transform menuLookAt;
     public GameObject SkillsPanel;
     public GameObject Inventory;
+    public GameObject EquipmentSlots;
 
     [Space]
     public GameObject DebugChatPanel;
@@ -60,9 +61,11 @@ public class PeaceCanvas : MonoBehaviour
         if (Input.GetButtonDown("OpenInventory")) {
             if (Inventory.activeInHierarchy) { //Close inventory
                 Inventory.SetActive(false);
+                EquipmentSlots.SetActive(false);
                 CM_MenuCam.Priority = 0;
             } else { //Open inventory;
                 Inventory.SetActive(true);
+                EquipmentSlots.SetActive(true);
                 OpenMenuCamera();
             }
             
@@ -75,9 +78,11 @@ public class PeaceCanvas : MonoBehaviour
         if (!anyPanelOpen) {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            PlayerControlls.instance.disableControl = false;
         } else {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            PlayerControlls.instance.disableControl = true;
         }
     }
 
@@ -97,7 +102,7 @@ public class PeaceCanvas : MonoBehaviour
         dragGO.transform.localScale = Vector3.one * 1.1f;
         dragGO.GetComponent<RectTransform>().sizeDelta = iconSize;
         dragGO.GetComponent<Image>().sprite = img;
-        if (amountOfDraggedItem == 0) {
+        if (amountOfDraggedItem == 0 || itemBeingDragged is Equipment) {
             dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
         } else {
             dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = amountOfDraggedItem.ToString();
@@ -137,17 +142,25 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void OpenMenuCamera () {
-        Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 1.5f;
-        pos.y = PlayerControlls.instance.transform.position.y + 1.5f;
-
-        menuLookAt.position = pos;
-        menuLookAt.eulerAngles = new Vector3(0,  PlayerControlls.instance.playerCamera.transform.eulerAngles.y,0);
-
-        pos += menuLookAt.transform.forward * -3.5f;
-        pos.y = PlayerControlls.instance.transform.position.y + 2f;
-
-        CM_MenuCam.transform.position = pos; 
+        StartCoroutine(OpenMenuCameraIE()); //Ensures when the player is moving, the inventory camera position still updates
         CM_MenuCam.Priority = 10;
+    }
+    IEnumerator OpenMenuCameraIE () {
+        float x = 0.7f;
+        while (x > 0 ) {
+            x -= Time.fixedDeltaTime;
+            Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 1.5f;
+            pos.y = PlayerControlls.instance.transform.position.y + 1.5f;
+
+            menuLookAt.position = pos;
+            menuLookAt.eulerAngles = new Vector3(0,  PlayerControlls.instance.playerCamera.transform.eulerAngles.y,0);
+
+            pos += menuLookAt.transform.forward * -3.5f;
+            pos.y = PlayerControlls.instance.transform.position.y + 2f;
+
+            CM_MenuCam.transform.position = pos; 
+            yield return null;
+        }
     }
 
     public void SaveButton() {

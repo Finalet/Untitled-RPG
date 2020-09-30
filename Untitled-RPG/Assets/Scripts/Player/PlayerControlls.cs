@@ -35,6 +35,8 @@ public class PlayerControlls : MonoBehaviour
 
     [Space]
     public bool castInterrupted;
+    [Space]
+    public bool disableControl;
 
     float sprintingDirection;
     float desiredSprintingDirection;
@@ -123,10 +125,10 @@ public class PlayerControlls : MonoBehaviour
     {
         isGrounded = IsGrounded();
 
-        if (!isMounted && !isFlying) {
+        if (!isMounted && !isFlying && !disableControl) {
             GroundMovement();
             GroundAnimations();
-        } else if (isFlying) {
+        } else if (isFlying && !disableControl) {
             FlyingMovement();
             FlyingAnimations();
         }
@@ -319,6 +321,11 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void InputMagnitudeFunc () {
+        if (disableControl){
+            InputMagnitude = 0;
+            return;
+        }
+
         if (Input.GetButton("Horizontal") || Input.GetButton("Vertical")) {
             InputMagnitude = 1;
             InterruptCasting();
@@ -457,6 +464,9 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void Sprinting () {
+        if (disableControl)
+            isSprinting = false;
+
         if (isSprinting && !sprintTrails.isPlaying)
             sprintTrails.Play();
         else if (!isSprinting && sprintTrails.isPlaying) 

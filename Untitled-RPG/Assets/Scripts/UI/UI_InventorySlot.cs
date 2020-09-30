@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
     [Header("Inventory slot")]
     public int slotID;
@@ -38,6 +38,37 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         PeaceCanvas.saveGame -= Save;
     }
 
+    public virtual void UseItem () {
+        if (itemInSlot is Consumable) {
+            Consumable c = (Consumable)itemInSlot;
+            if (c.isCoolingDown || !c.canBeUsed())
+                return;
+            
+            itemInSlot.Use();
+            StartCoroutine( itemInSlot.UseEnum() );
+            itemAmount --;
+            if (itemAmount == 0)
+                ClearSlot();
+        } else if (itemInSlot is Equipment) {
+            EquipUnequip();
+        }
+    }
+
+    public virtual void EquipUnequip () {
+        if (itemInSlot is Weapon) {
+            Weapon w = (Weapon)itemInSlot;
+            if (w.weaponType == WeaponType.OneHanded) {
+                if (EquipmentManager.instance.mainHand.itemInSlot == null)
+                    EquipmentManager.instance.mainHand.AddItem(itemInSlot, 1, this);
+                else if (EquipmentManager.instance.secondaryHand.itemInSlot == null)
+                    EquipmentManager.instance.secondaryHand.AddItem(itemInSlot, 1, this);
+                else
+                    return;
+            }
+        }
+        ClearSlot();
+    }
+
     public virtual void AddItem (Item item, int amount, UI_InventorySlot initialSlot) { //Initial slot for switching items places when dropping one onto another
         if (itemInSlot == item && itemInSlot is Consumable) { //Adding the same item
             itemAmount += amount;
@@ -55,18 +86,19 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         slotIcon.sprite = null;
         slotIcon.color = new Color(0,0,0,0);
         itemAmount = 0;
-        itemAmountText.text = "";
+        if (itemAmountText != null) itemAmountText.text = "";
     }
 
     void DisplayItem () {
         slotIcon.sprite = itemInSlot.itemIcon;
-        itemAmountText.text = itemAmount.ToString();
+        if (itemInSlot is Equipment) itemAmountText.text = "";
+        else itemAmountText.text = itemAmount.ToString();
         slotIcon.color = Color.white;
     }
 
     public virtual void Save () {
         if (itemInSlot != null) { //Saving item
-            BasicSave(1, (byte)itemInSlot.ID, (byte)itemAmount);
+            BasicSave(1, (short)itemInSlot.ID, (byte)itemAmount);
         } else { //Slot is empty
             BasicSave(0, 0, 0);
         }
@@ -79,9 +111,9 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         LoadItem(preloadedType);  
     }
 
-    protected void BasicSave (byte type, byte ID, byte amount) {
+    protected void BasicSave (byte type, short ID, byte amount) {
         ES3.Save<byte>($"slot_{slotID}_type", type, savefilePath);
-        ES3.Save<byte>($"slot_{slotID}_itemID", ID, savefilePath);
+        ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath);
         ES3.Save<byte>($"slot_{slotID}_itemAmount", amount, savefilePath);
     }
     void LoadItem(byte type) {
@@ -90,14 +122,14 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
             return;
         }
         //Add item
-        byte ID = ES3.Load<byte>($"slot_{slotID}_itemID", savefilePath, 0);
+        short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath, 0);
         byte amount = ES3.Load<byte>($"slot_{slotID}_itemAmount", savefilePath, 0);
         AddItem(AssetHolder.instance.getItem(ID), amount, null);
     }
 
     //--------------------------------Drag----------------------------------//
     public virtual void OnBeginDrag (PointerEventData pointerData) {
-        if (itemInSlot == null)
+        if (itemInSlot == null || pointerData.button == PointerEventData.InputButton.Right)
             return;
 
         PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, itemInSlot, itemAmount, this);
@@ -105,10 +137,16 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     public virtual void OnDrag (PointerEventData pointerData) {
+        if (pointerData.button == PointerEventData.InputButton.Right)
+            return; 
+
         PeaceCanvas.instance.DragItem(pointerData.delta.x, pointerData.delta.y);
     }
 
     public virtual void OnEndDrag (PointerEventData pointerData) {
+        if(pointerData.button == PointerEventData.InputButton.Right)
+            return;
+
         PeaceCanvas.instance.EndDrag();
     }
 
@@ -116,5 +154,11 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         if (PeaceCanvas.instance.itemBeingDragged != null) { //Dropping Item
             AddItem(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, PeaceCanvas.instance.initialSlot);
         }
+    }
+
+    public virtual void OnPointerClick (PointerEventData pointerData) {
+        if (pointerData.button == PointerEventData.InputButton.Right && itemInSlot != null){
+            UseItem();
+        }      
     }
 }

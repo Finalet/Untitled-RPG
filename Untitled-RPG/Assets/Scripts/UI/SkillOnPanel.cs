@@ -17,14 +17,23 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
-       PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, AssetHolder.instance.getSkill(skillID), null);
+        if(eventData.button == PointerEventData.InputButton.Right)
+            return;
+
+        PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, AssetHolder.instance.getSkill(skillID), null);
     }
 
     public void OnDrag (PointerEventData pointerData) {
+        if(pointerData.button == PointerEventData.InputButton.Right)
+            return;
+
         PeaceCanvas.instance.DragItem(pointerData.delta.x, pointerData.delta.y);
     }
 
     public void OnEndDrag(PointerEventData eventData) {
+        if(eventData.button == PointerEventData.InputButton.Right)
+            return;
+            
         PeaceCanvas.instance.EndDrag();
     }
 

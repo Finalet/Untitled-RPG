@@ -14,6 +14,7 @@ public class AssetHolder : MonoBehaviour
     public Skill[] Skills;
 
     public List<Item> consumables = new List<Item>();
+    public List<Item> weapons = new List<Item>();
 
     void Awake() {
         if (instance == null)
@@ -25,6 +26,13 @@ public class AssetHolder : MonoBehaviour
             for (int i = 0; i < consumables.Count; i ++) {
                 if (consumables[i].ID == ID)
                     return consumables[i];
+            }
+            Debug.LogError($"Item with ID = {ID} not found");
+            return null;
+        } else if (ID >= 1000) { //Returns weapons 
+            for (int i = 0; i < weapons.Count; i ++) {
+                if (weapons[i].ID == ID)
+                    return weapons[i];
             }
             Debug.LogError($"Item with ID = {ID} not found");
             return null;

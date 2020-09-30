@@ -116,20 +116,6 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
     }
 
-    void UseItem () {
-        if (itemInSlot is Consumable) {
-            Consumable c = (Consumable)itemInSlot;
-            if (c.isCoolingDown || !c.canBeUsed())
-                return;
-            
-            StartCoroutine( itemInSlot.UseEnum() );
-            itemAmount --;
-            if (itemAmount == 0)
-                ClearSlot();
-        }
-
-    }
-
     void DisplayKey () {
         if (keyText != null)
             keyText.text = KeyCodeDictionary.keys[assignedKey];
@@ -182,6 +168,9 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
 
     //--------------------------------Drag----------------------------------//
     public override void OnBeginDrag (PointerEventData pointerData) {
+        if (pointerData.button == PointerEventData.InputButton.Right)
+            return;
+        
         if (skillInSlot != null) { //Dragging skill
             PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, skillInSlot, this);
             ClearSlot();
