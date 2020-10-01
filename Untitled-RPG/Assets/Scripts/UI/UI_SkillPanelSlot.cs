@@ -7,9 +7,7 @@ using TMPro;
 
 public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    Sprite emptySlotSprite;
-    public Image cooldownImage;
-    public TextMeshProUGUI cooldownTimerText;
+    public Image key;
     public TextMeshProUGUI keyText;
 
     [Header("Skill panel")]
@@ -22,36 +20,26 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
     protected override void Start() {
         base.Start();
-        emptySlotSprite = GetComponent<Image>().sprite;
     }
 
-    protected virtual void Update() {
+    protected override void Update() {
         if (skillInSlot != null) {
             DisplaySkill();
         } else if (itemInSlot != null) {
             DisplayItem();
         } else {
-            slotIcon.sprite = emptySlotSprite;
-            slotIcon.color = baseSlotColor;
+            slotIcon.sprite = null; //In case when RMB canceled picking area.
         }
 
         DisplayKey();
         DetectKeyPress();
     }
 
-    protected override void ClearSlot() {
+    public override void ClearSlot() {
         skillInSlot = null;
-        itemInSlot = null;
-
         if (keyText != null) keyText.color = Color.white;
-        slotIcon.color = baseSlotColor;
-        cooldownImage.color = new Color(0, 0, 0, 0);
-        cooldownTimerText.text = "";
-
-        cooldownImage.fillAmount = 1;
         
-        itemAmount = 0;
-        itemAmountText.text = "";
+        base.ClearSlot();
     }
 
     void DisplaySkill() {
@@ -76,38 +64,12 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
     }
 
-    void DisplayItem () {
-        slotIcon.sprite = itemInSlot.itemIcon;
-        itemAmountText.text = itemAmount.ToString();
-
-        if (!(itemInSlot is Consumable))
-            return;
-        
-        Consumable c = (Consumable)itemInSlot;
-        if(c.isCoolingDown) {
-            cooldownImage.color = new Color(0, 0, 0, 0.9f);
-            cooldownImage.fillAmount = c.cooldownTimer/c.cooldownTime;
-            cooldownTimerText.text = Mathf.RoundToInt(c.cooldownTimer).ToString();
-        } else {
-            cooldownImage.color = new Color(0, 0, 0, 0);
-            cooldownImage.fillAmount = 1;
-            cooldownTimerText.text = "";
-        }
-        if (c.canBeUsed()) {
-            slotIcon.color = Color.white;
-            keyText.color = Color.white;
-        } else {
-            slotIcon.color = new Color (0.3f, 0.3f, 0.3f, 1);
-            keyText.color = new Color(0.6f, 0, 0, 1); 
-        }
-    }
-
     protected virtual void DetectKeyPress() {
         if (PeaceCanvas.instance.anyPanelOpen)
             return;
 
         if (Input.GetKeyDown(assignedKey)) {
-                StartCoroutine(UI_General.PressAnimation(slotIcon, assignedKey));
+                StartCoroutine(UI_General.PressAnimation(key, assignedKey));
         } else if (Input.GetKeyUp(assignedKey)) {
             if (skillInSlot != null) //If slot is taken with a skill
                 skillInSlot.Use();

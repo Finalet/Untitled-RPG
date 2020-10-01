@@ -16,37 +16,83 @@ public class UI_EquipmentSlot : UI_InventorySlot
     }
 
     public override void Save (){
-        //save slot
+        short ID;
+        if (itemInSlot != null)
+            ID = (short)itemInSlot.ID;
+        else
+            ID = -1; //Slot is empty
+
+        ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath);
     }
     public override void Load () {
-        //load slot
+        short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath, -1);
+
+        if (ID < 0) {
+            ClearSlot();
+            return; //Slot is empty
+        }
+        AddItem(AssetHolder.instance.getItem(ID), 1, null);
     }
     public override void AddItem (Item item, int amount, UI_InventorySlot initialSlot) {
         if (equipmentSlotType == EquipmentSlotType.MainHand) {
-            if ( !(item is Weapon) ) {
-                initialSlot.AddItem(item, amount, null); //if its not weapon, return it to initial slot;
-                return;
-            }
+            MainHandAdd(item, amount, initialSlot);
         } else if (equipmentSlotType == EquipmentSlotType.SecondaryHand) {
-            if ( !(item is Weapon) ) {
-                initialSlot.AddItem(item, amount, null); //if its not weapon, return it to initial slot;
-                return;
-            }
+            SecondaryHandAdd(item, amount, initialSlot);    
         } else {
-            initialSlot.AddItem(item, amount, null); //if its not equipment, return it to initial slot
+            //if its not equipment, return it to initial slot. LATER IMPLEMENT EVERY BODY PART.
+            initialSlot.AddItem(item, amount, null); 
             return;
+        }        
+    }
+
+    protected override void DisplayItem() {
+        slotIcon.sprite = itemInSlot.itemIcon;
+        slotIcon.color = Color.white;
+    }
+
+    void SharedAdd (Item item, int amount, UI_InventorySlot initialSlot) {
+        if (initialSlot != null) initialSlot.ClearSlot(); //at this point we are 100% equiping the item, so its safe to clear initial slot. Initial slot might be null if we drop item in a wrong area and it just returns back
+        if (itemInSlot != null) {
+            initialSlot.AddItem(itemInSlot, itemAmount, null);
         }
+
         itemInSlot = item;
+        itemAmount = amount;
         DisplayItem();
     }
 
-    public override void EquipUnequip()
-    {
-        print("Unequip by click not implemented yet");
+    void MainHandAdd (Item item, int amount, UI_InventorySlot initialSlot) {
+        if ( !(item is Weapon) ) {  //if its not weapon, return it to initial slot;
+            initialSlot.AddItem(item, amount, null); 
+            return;
+        }
+
+        Weapon w = (Weapon)item;
+        if (w.weaponType == WeaponType.TwoHanded && EquipmentManager.instance.secondaryHand.itemInSlot != null) { //if its two handed and second hand is busy, clear the second hand.
+            InventoryManager.instance.AddItemToInventory(EquipmentManager.instance.secondaryHand.itemInSlot, EquipmentManager.instance.secondaryHand.itemAmount, initialSlot);
+            EquipmentManager.instance.secondaryHand.ClearSlot();
+        }
+
+        SharedAdd(item, amount, initialSlot);
     }
 
-    void DisplayItem() {
-        slotIcon.sprite = itemInSlot.itemIcon;
-        slotIcon.color = Color.white;
+    void SecondaryHandAdd (Item item, int amount, UI_InventorySlot initialSlot) {
+        if ( !(item is Weapon) ) {   //if its not weapon, return it to initial slot;
+            initialSlot.AddItem(item, amount, null); 
+            return;
+        }
+        
+        Weapon w = (Weapon)item;
+        if (w.weaponType == WeaponType.TwoHanded) {  //if weapon is two handed, return it to initial slot
+            initialSlot.AddItem(item, amount, initialSlot); 
+            return;
+        } else if (w.weaponType == WeaponType.OneHanded) { //if weapon is onehanded, but main hand is already carryign two handed weapon, return to initial slot
+            w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+            if (w != null && w.weaponType == WeaponType.TwoHanded) {
+                initialSlot.AddItem(item, amount, null); 
+                return;
+            }
+        }    
+        SharedAdd(item, amount, initialSlot);
     }
 }

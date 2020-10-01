@@ -231,7 +231,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 12097642}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.8554688, y: 0, z: -2.9296875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1935318681}
@@ -25408,6 +25408,8 @@ GameObject:
   - component: {fileID: 1352281724}
   - component: {fileID: 1352281722}
   - component: {fileID: 1352281723}
+  - component: {fileID: 1352281727}
+  - component: {fileID: 1352281726}
   m_Layer: 0
   m_Name: VegetationSystemPro
   m_TagString: Untagged
@@ -25434,7 +25436,7 @@ MonoBehaviour:
   PersistentVegetationStorage: {fileID: 1352281722}
   PredictiveCellLoaderCellsPerFrame: 1
   LoadPotentialVegetationCells: 1
-  CurrentTabIndex: 4
+  CurrentTabIndex: 5
   VegetationPackageIndex: 0
   SeaLevel: 0
   ExcludeSeaLevelCells: 0
@@ -25529,17 +25531,17 @@ MonoBehaviour:
   ShowTerrainTextureRulesMenu: 0
   ShowTextureMaskRulesMenu: 0
   ShowVegetationMaskRulesMenu: 0
-  ShowShaderSettingsMenu: 0
+  ShowShaderSettingsMenu: 1
   ShowPositionMenu: 0
   ShowDistanceFalloffMenu: 0
   ShowBiomeRulesMenu: 0
   ShowConcaveLocationRulesMenu: 0
-  ShowColliderRulesMenu: 1
-  ShowBillboardsMenu: 1
-  ShowVegetationItemSettingsMenu: 1
+  ShowColliderRulesMenu: 0
+  ShowBillboardsMenu: 0
+  ShowVegetationItemSettingsMenu: 0
   ShowTerrainSourceSettingsMenu: 0
   ShowAddVegetationItemMenu: 1
-  ShowLODMenu: 0
+  ShowLODMenu: 1
   VegetationStudioTerrainObjectList:
   - {fileID: 445141072}
   VegetationPackageProList:
@@ -25999,6 +26001,47 @@ MonoBehaviour:
   VegetationPackageTextureIndex: 0
   ShowCurvesMenu: 1
   ShowNoiseMenu: 1
+--- !u!114 &1352281726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba66482a899069458f3209be0c75311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1352281727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352281719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88c6c0bd2ee8e9439ca69a1bbb88368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bendRenderer: {fileID: 11400000, guid: 6646d2562bb9379498d38addaba2d66d, type: 2}
+  debug: 0
+  followSceneCamera: 0
+  renderExtends: 32
+  followTarget: {fileID: 0}
+  vectorRT: {fileID: 0}
+  renderCam: {fileID: 0}
+  maskEdges: 0
+  resolution: 1024
+  colorMap: {fileID: 11400000, guid: 917bf280b9f9b444d898a1960faf11bf, type: 2}
+  listenToWindZone: 0
+  windZone: {fileID: 0}
+  actualFollowTarget: {fileID: 0}
+  lastPos: {x: 0, y: 0, z: 0}
+  bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 32, y: 32, z: 32}
 --- !u!1 &1367001630
 GameObject:
   m_ObjectHideFlags: 0
@@ -35939,6 +35982,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2015659299}
   - component: {fileID: 2015659298}
+  - component: {fileID: 2015659300}
   m_Layer: 0
   m_Name: VegetationStudioPro
   m_TagString: Untagged
@@ -35980,6 +36024,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2015659300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015659297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2de55126dda534cac6d505fc89f393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorMap: {fileID: 11400000, guid: 917bf280b9f9b444d898a1960faf11bf, type: 2}
+  terrainObjects:
+  - {fileID: 445141072}
+  resIdx: 5
+  resolution: 2048
+  renderLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  useLayers: 0
+  renderCam: {fileID: 0}
+  showBounds: 1
 --- !u!1001 &2022427228
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36850,8 +36917,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062934319}
-  m_LocalRotation: {x: 0.09699215, y: -0.69166803, z: 0.09458993, w: 0.70939463}
-  m_LocalPosition: {x: -44.04248, y: 10.657074, z: 80.12662}
+  m_LocalRotation: {x: 0.23277225, y: 0.26942226, z: -0.06657744, w: 0.93209237}
+  m_LocalPosition: {x: -1.8903737, y: 3.7845461, z: -2.99429}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1352281721}

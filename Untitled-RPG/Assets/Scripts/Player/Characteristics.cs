@@ -19,11 +19,11 @@ public class Characteristics : MonoBehaviour
     public int agility;
     public int intellect;
     [Header("Attacks")]
-    public int meleeAttack; public float meleeMultiplier;
-    public int rangedAttack; public float rangedMultiplier;
-    public int magicPower; public float magicPowerMultiplier;
-    public int healingPower; public float healingPowerMultiplier;
-    public int defense; public float defenseMultiplier;
+    public int meleeAttack; public int meleeAttackFromEquip; public float meleeMultiplier;
+    public int rangedAttack; public int rangedAttackFromEquip; public float rangedMultiplier;
+    public int magicPower; public int magicPowerFromEquip; public float magicPowerMultiplier;
+    public int healingPower; public int healingPowerFromEquip; public float healingPowerMultiplier;
+    public int defense; public int defenseFromEquip; public float defenseMultiplier;
     
     [Header("Misc")]
 
@@ -82,11 +82,11 @@ public class Characteristics : MonoBehaviour
         HP = Mathf.Clamp(HP, 0, maxHP);
         Stamina = Mathf.Clamp(Stamina, 0, maxStamina);
 
-        meleeAttack = Mathf.RoundToInt( (strength / statsRatio) * meleeMultiplier);
-        rangedAttack = Mathf.RoundToInt( (agility / statsRatio) * rangedMultiplier);
-        magicPower = Mathf.RoundToInt( (intellect / statsRatio) * magicPowerMultiplier);
-        healingPower = Mathf.RoundToInt( (intellect / statsRatio) * healingPowerMultiplier);
-        defense = Mathf.RoundToInt( (strength / statsRatio + agility / statsRatio) * defenseMultiplier);
+        meleeAttack = Mathf.RoundToInt( ( (strength / statsRatio) + meleeAttackFromEquip) * meleeMultiplier);
+        rangedAttack = Mathf.RoundToInt( ( (agility / statsRatio) + rangedAttackFromEquip) * rangedMultiplier);
+        magicPower = Mathf.RoundToInt( ( (intellect / statsRatio) + magicPowerFromEquip) * magicPowerMultiplier);
+        healingPower = Mathf.RoundToInt( ( (intellect / statsRatio) + healingPowerFromEquip) * healingPowerMultiplier);
+        defense = Mathf.RoundToInt( ( (strength / statsRatio + agility / statsRatio) + defenseFromEquip) * defenseMultiplier);
 
         attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement;
         attackSpeedPercentageInverted = 1/attackSpeedPercentage;

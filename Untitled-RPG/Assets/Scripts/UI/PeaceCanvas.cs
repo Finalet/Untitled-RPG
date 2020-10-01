@@ -34,6 +34,7 @@ public class PeaceCanvas : MonoBehaviour
     public int amountOfDraggedItem;
     public UI_InventorySlot initialSlot;
 
+    [Space]
     public int maxChatLines;
     int chatLines;
 
@@ -99,7 +100,7 @@ public class PeaceCanvas : MonoBehaviour
 
     void BasicDrag (Vector2 iconSize, Sprite img) {
         dragGO = Instantiate(dragObject, Input.mousePosition, Quaternion.identity, transform);
-        dragGO.transform.localScale = Vector3.one * 1.1f;
+        dragGO.transform.localScale = Vector3.one * 1.05f;
         dragGO.GetComponent<RectTransform>().sizeDelta = iconSize;
         dragGO.GetComponent<Image>().sprite = img;
         if (amountOfDraggedItem == 0 || itemBeingDragged is Equipment) {
@@ -129,9 +130,13 @@ public class PeaceCanvas : MonoBehaviour
         dragGO.transform.position += new Vector3(deltaX, deltaY, 0);
     }
 
+    [System.NonSerialized] public bool dragSuccess;
     public void EndDrag () {
         if (dragGO == null)
             return;
+            
+        if (!dragSuccess && PeaceCanvas.instance.itemBeingDragged != null) PeaceCanvas.instance.initialSlot.AddItem(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, null);
+        dragSuccess = false;
 
         PeaceCanvas.instance.itemBeingDragged = null;
         PeaceCanvas.instance.skillBeingDragged = null;
@@ -147,9 +152,10 @@ public class PeaceCanvas : MonoBehaviour
     }
     IEnumerator OpenMenuCameraIE () {
         float x = 0.7f;
+        float right = 0.755f * Mathf.Log(Screen.width) - 4f; //Used excel to find trendline with points 1131, 1.3; 1448, 1.5; 1920, 1.7;
         while (x > 0 ) {
             x -= Time.fixedDeltaTime;
-            Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 1.5f;
+            Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * right;
             pos.y = PlayerControlls.instance.transform.position.y + 1.5f;
 
             menuLookAt.position = pos;

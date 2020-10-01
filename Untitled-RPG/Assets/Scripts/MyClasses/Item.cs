@@ -10,5 +10,6 @@ public abstract class Item : ScriptableObject
     public GameObject itemPrefab;
 
     public abstract void Use ();
+    public abstract void Use (UI_InventorySlot initialSlot);
     public abstract IEnumerator UseEnum ();
 }

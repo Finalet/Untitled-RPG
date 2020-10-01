@@ -19,8 +19,41 @@ public class EquipmentManager : MonoBehaviour
     public UI_EquipmentSlot secondaryHand;
     public UI_EquipmentSlot bow;
 
+    Characteristics characteristics;
+
     void Awake() {
         if (instance == null)
             instance = this;
+    }
+
+    void Start() {
+        characteristics = Characteristics.instance;
+    }
+
+    void FixedUpdate() {
+        ResetStats();
+
+        Weapon w = (Weapon)mainHand.itemInSlot;
+        if (w != null)
+            AddStats(w);
+        w = (Weapon)secondaryHand.itemInSlot;
+        if (w != null)
+            AddStats(w);
+    }
+
+    void AddStats (Weapon w) {
+        characteristics.meleeAttackFromEquip += w.MeleeAttack;
+        characteristics.rangedAttackFromEquip += w.RangedAttack;
+        characteristics.magicPowerFromEquip += w.MagicPower;
+        characteristics.healingPowerFromEquip += w.HealingPower;
+        characteristics.defenseFromEquip += w.Defense;
+    }
+
+    void ResetStats () {
+        characteristics.meleeAttackFromEquip = 0;
+        characteristics.rangedAttackFromEquip = 0;
+        characteristics.magicPowerFromEquip = 0;
+        characteristics.healingPowerFromEquip = 0;
+        characteristics.defenseFromEquip = 0;
     }
 }

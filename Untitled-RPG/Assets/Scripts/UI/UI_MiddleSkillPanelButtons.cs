@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
 {
@@ -41,7 +42,7 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
         }
 
         if (Input.GetKeyDown(assignedKey)) {
-                StartCoroutine(UI_General.PressAnimation(slotIcon, assignedKey));
+                StartCoroutine(UI_General.PressAnimation(key, assignedKey));
         } else if (Input.GetKeyUp(assignedKey)) {
             if (isLBM)
                 ConfirmArea();

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public static class UI_General
 {
     public static IEnumerator PressAnimation (Image image, KeyCode pressedKey) {
-        float animationDepth = 0.8f;
+        float animationDepth = 0.85f;
         float animationSpeed = 10f;
         Vector2 currentSize = image.GetComponent<RectTransform>().localScale;
         while (currentSize.x > animationDepth) {

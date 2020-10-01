@@ -15,6 +15,7 @@ public class Consumable : Item
     public float cooldownTimer;
 
     public override void Use () {}
+    public override void Use (UI_InventorySlot initialSlot){}
 
     public override IEnumerator UseEnum() {
         if (consumableType == ConsumableType.HP)

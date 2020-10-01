@@ -16,8 +16,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     [Header("Do not edit")]
     public Image slotIcon;
     public TextMeshProUGUI itemAmountText;
-
-    protected Color baseSlotColor;
+    public Image cooldownImage;
+    public TextMeshProUGUI cooldownTimerText;
 
     protected string savefilePath; 
 
@@ -27,8 +27,12 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     protected virtual void Start() {
-        baseSlotColor = slotIcon.color;
         Load();
+    }
+
+    protected virtual void Update () {
+        if (itemInSlot != null)
+            DisplayItem();
     }
 
     void OnEnable() {
@@ -50,23 +54,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
             if (itemAmount == 0)
                 ClearSlot();
         } else if (itemInSlot is Equipment) {
-            EquipUnequip();
+            itemInSlot.Use(this); //"this" to let the item clear the current a slot if item was equiped
         }
-    }
-
-    public virtual void EquipUnequip () {
-        if (itemInSlot is Weapon) {
-            Weapon w = (Weapon)itemInSlot;
-            if (w.weaponType == WeaponType.OneHanded) {
-                if (EquipmentManager.instance.mainHand.itemInSlot == null)
-                    EquipmentManager.instance.mainHand.AddItem(itemInSlot, 1, this);
-                else if (EquipmentManager.instance.secondaryHand.itemInSlot == null)
-                    EquipmentManager.instance.secondaryHand.AddItem(itemInSlot, 1, this);
-                else
-                    return;
-            }
-        }
-        ClearSlot();
     }
 
     public virtual void AddItem (Item item, int amount, UI_InventorySlot initialSlot) { //Initial slot for switching items places when dropping one onto another
@@ -81,19 +70,45 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         itemAmount = amount;
         DisplayItem();
     }
-    protected virtual void ClearSlot () {   
+    public virtual void ClearSlot () {   
+        //Clear item in slot
         itemInSlot = null;
+        itemAmount = 0;
         slotIcon.sprite = null;
         slotIcon.color = new Color(0,0,0,0);
-        itemAmount = 0;
         if (itemAmountText != null) itemAmountText.text = "";
+        
+        //Clear cooldown
+        if (cooldownImage == null) return; //Stop if no cooldown in the slot (like equipment slots)
+        cooldownImage.color = new Color(0,0,0,0);
+        cooldownImage.fillAmount = 1;
+        cooldownTimerText.text = "";
     }
 
-    void DisplayItem () {
+    protected virtual void DisplayItem () {
         slotIcon.sprite = itemInSlot.itemIcon;
         if (itemInSlot is Equipment) itemAmountText.text = "";
         else itemAmountText.text = itemAmount.ToString();
         slotIcon.color = Color.white;
+
+        if (!(itemInSlot is Consumable))
+            return;
+
+        Consumable c = (Consumable)itemInSlot;
+        if(c.isCoolingDown) {
+            cooldownImage.color = new Color(0, 0, 0, 0.9f);
+            cooldownImage.fillAmount = c.cooldownTimer/c.cooldownTime;
+            cooldownTimerText.text = Mathf.RoundToInt(c.cooldownTimer).ToString();
+        } else {
+            cooldownImage.color = new Color(0, 0, 0, 0);
+            cooldownImage.fillAmount = 1;
+            cooldownTimerText.text = "";
+        }
+        if (c.canBeUsed()) {
+            slotIcon.color = Color.white;
+        } else {
+            slotIcon.color = new Color (0.3f, 0.3f, 0.3f, 1);
+        }
     }
 
     public virtual void Save () {
@@ -152,6 +167,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
     public virtual void OnDrop (PointerEventData pointerData) {
         if (PeaceCanvas.instance.itemBeingDragged != null) { //Dropping Item
+            PeaceCanvas.instance.dragSuccess = true;
             AddItem(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, PeaceCanvas.instance.initialSlot);
         }
     }
