@@ -36,6 +36,8 @@ public class Fireball : Skill
             instanciatedEffects.Add(ps);
             ps.gameObject.SetActive(true);
         }
+
+        playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = true;
     }
 
     protected override void CustomUse() {}
@@ -44,6 +46,7 @@ public class Fireball : Skill
         float actualDistance = distance + characteristics.magicSkillDistanceIncrease;
 
         finishedCast = true;
+        playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = false;
          
         StopEffects();
         //play sound

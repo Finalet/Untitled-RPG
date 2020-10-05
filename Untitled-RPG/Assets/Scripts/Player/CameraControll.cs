@@ -6,8 +6,10 @@ using UnityEngine.Animations.Rigging;
 
 public class CameraControll : MonoBehaviour
 {
-    public float camDistance = 5;
+    public float camDistance = 5; //set manually for skills distance calculations NEED TO FIX
     
+    public bool isAiming;
+    public GameObject crosshair;
     [Header("Animation IK")]
     public Transform headAimTarget;
     
@@ -15,11 +17,12 @@ public class CameraControll : MonoBehaviour
     Vector3 shake;
 
     Camera cam;
-    CinemachineFreeLook CM_cam;
-    CinemachineCameraOffset CM_offset;
+    [Space]
+    public CinemachineFreeLook CM_cam;
+    public CinemachineCameraOffset CM_offset;
 
-    const float leftShoulder = -0.5f;
-    const float rightShoulder = 0.5f;
+    const float leftShoulder = -1f;
+    const float rightShoulder = 1f;
     const float center = 0;
     float desiredOffset;
 
@@ -29,8 +32,6 @@ public class CameraControll : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        CM_cam = GetComponentInChildren<CinemachineFreeLook>();
-        CM_offset = GetComponentInChildren<CinemachineCameraOffset>();
 
         desiredOffset = CM_offset.m_Offset.x;
 
@@ -49,7 +50,6 @@ public class CameraControll : MonoBehaviour
             CanvasScript.instance.gameObject.SetActive(!CanvasScript.instance.gameObject.activeInHierarchy);
             PeaceCanvas.instance.gameObject.SetActive(!PeaceCanvas.instance.gameObject.activeInHierarchy);
         }
-
     }
 
     void FixedUpdate() {
@@ -68,14 +68,32 @@ public class CameraControll : MonoBehaviour
     float rotationX;
     void LateUpdate()
     { 
-        SprintCameraFOV();
+        FOV();
 
         if (CM_offset.m_Offset.x != desiredOffset) {
             CM_offset.m_Offset.x = Mathf.MoveTowards(CM_offset.m_Offset.x, desiredOffset, 4 * Time.deltaTime);
         }
     }
 
-    void SprintCameraFOV () {
+    void FOV () {
+        if (!isAiming)
+            SprintingFOV();
+        else
+            AimCamera();
+
+        crosshair.SetActive(isAiming);
+    }
+
+    void SprintingFOV () {
+        desiredOffset = center;
+
+        if (CM_cam.m_Lens.FieldOfView < 60 && wasAiming) { //After aiming
+            CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 62, 7 * Time.deltaTime);
+            return;
+        }
+
+        wasAiming = false;
+        
         if (PlayerControlls.instance.isSprinting) {
             if (CM_cam.m_Lens.FieldOfView < 80)
                 CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 82, 7 * Time.deltaTime);
@@ -102,6 +120,15 @@ public class CameraControll : MonoBehaviour
             default: desiredOffset = center;
                 break;
         }
+    }
+
+    bool wasAiming;
+    public void AimCamera () {
+        if (CM_cam.m_Lens.FieldOfView > 30)
+            CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 29, 7 * Time.deltaTime);
+
+        desiredOffset = rightShoulder;
+        wasAiming = true;
     }
 
     public void CameraShake(float frequency = 0.2f, float amplitude = 2f, float duration = 0.1f, Vector3 position = new Vector3()) {

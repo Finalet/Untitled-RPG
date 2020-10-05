@@ -43,10 +43,16 @@ public class CanvasScript : MonoBehaviour
     }
 
     void DisplayHPandStamina () {
-        healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.HP/characteristics.maxHP, 0.1f);
+        healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.HP/characteristics.maxHP, Time.deltaTime * 10);
         healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.HP.ToString();
-        staminaBar.fillAmount = Mathf.Lerp(staminaBar.fillAmount, (float)characteristics.Stamina/characteristics.maxStamina, 0.1f);
-        staminaBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.Stamina.ToString();
+        staminaBar.fillAmount = Mathf.Lerp(staminaBar.fillAmount, (float)characteristics.Stamina/characteristics.maxStamina, Time.deltaTime * 10);
+    }
+
+    public void HideStamina () {
+        staminaBar.transform.parent.gameObject.SetActive(false);
+    }
+    public void ShowStamina () {
+        staminaBar.transform.parent.gameObject.SetActive(true);
     }
 
     public void DisplayEnemyInfo (string name, float healthFillAmount, int health) {

@@ -94,7 +94,7 @@ public class PlayerControlls : MonoBehaviour
         audioController = GetComponent<PlayerAudioController>();
 
         playerCamera = Camera.main;
-        CM_Camera = playerCamera.GetComponentInChildren<CinemachineFreeLook>();
+        CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
 
         prevPos = transform.position;
         walkSpeed = baseWalkSpeed;
@@ -159,7 +159,7 @@ public class PlayerControlls : MonoBehaviour
         //Smooth rotation after sprinting
         //LerpAngle since need to go from -179 to 179 smoothely
         if (Mathf.Abs(sprintingDirection - desiredSprintingDirection) > 1) {
-            sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 7);
+            sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 10);
         } else {
             sprintingDirection = desiredSprintingDirection;
         }
@@ -179,6 +179,7 @@ public class PlayerControlls : MonoBehaviour
 
 #region Ground movement
     bool staminaRanOutFromSprinting;
+    float runningStaminaTimer;
     void GroundMovement()
     {
         if (Input.GetButtonDown("Jump"))
@@ -263,9 +264,16 @@ public class PlayerControlls : MonoBehaviour
                 //sprintingDirection = 360 + InputDirection;
                 desiredSprintingDirection =  InputDirection;
             }
+
+            if (Time.time - runningStaminaTimer >= 0.02f) {
+                Characteristics.instance.UseOrRestoreStamina(1);
+                Characteristics.instance.canRegenerateStamina = false;
+                runningStaminaTimer = Time.time;
+            }
         } else {
             // sprintingDirection = 0;
             desiredSprintingDirection = 0;
+            Characteristics.instance.canRegenerateStamina = true;
         }
 
         if (isAttacking) {

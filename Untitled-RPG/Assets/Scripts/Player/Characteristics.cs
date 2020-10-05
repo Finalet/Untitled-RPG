@@ -41,8 +41,7 @@ public class Characteristics : MonoBehaviour
     public bool canRegenerateHealth; 
     public int HealthPointsPerSecond; 
     public bool canRegenerateStamina; 
-    public int baseStaminaPerSecond; 
-    int StaminaPerSecond; 
+    public int StaminaPerSecond;
 
     public GameObject buffIcon;
 
@@ -77,7 +76,7 @@ public class Characteristics : MonoBehaviour
 
     void StatsCalculations () {
         maxHP = 1000 + strength / statsRatio;
-        maxStamina = 1000 + (agility + intellect) / statsRatio;
+        maxStamina = 0 + (agility + intellect) / statsRatio;
 
         HP = Mathf.Clamp(HP, 0, maxHP);
         Stamina = Mathf.Clamp(Stamina, 0, maxStamina);
@@ -118,22 +117,26 @@ public class Characteristics : MonoBehaviour
         }
     }
     float staminaTimer = 1;
+    bool hidingStamina;
+    float timer = 0;
     void regenerateStamina() {
-        if (Stamina == maxStamina)
+        if (Stamina == maxStamina) {
+            if (!hidingStamina){
+                hidingStamina = true;
+                timer = Time.time;
+            }
+            if (Time.time - timer >= 1.5f) {
+                CanvasScript.instance.HideStamina();
+            }
             return;
-
-        if (PlayerControlls.instance.isSprinting) {
-            StaminaPerSecond = -40;
-        } else {
-            StaminaPerSecond = baseStaminaPerSecond;
         }
+        CanvasScript.instance.ShowStamina();
+        hidingStamina = false;
 
         if (canRegenerateStamina) {
-            if (staminaTimer <= 0) {
-                Stamina += StaminaPerSecond/10;
-                staminaTimer = 0.1f;
-            } else {
-                staminaTimer -= Time.deltaTime;
+            if (Time.time - staminaTimer >= 1f/StaminaPerSecond) {
+                Stamina ++;
+                staminaTimer = Time.time;
             }
         }
     }
