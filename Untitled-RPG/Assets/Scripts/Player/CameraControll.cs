@@ -9,6 +9,7 @@ public class CameraControll : MonoBehaviour
     public float camDistance = 5; //set manually for skills distance calculations NEED TO FIX
     
     public bool isAiming;
+    public bool isShortAiming;
     public GameObject crosshair;
     [Header("Animation IK")]
     public Transform headAimTarget;
@@ -76,12 +77,15 @@ public class CameraControll : MonoBehaviour
     }
 
     void FOV () {
-        if (!isAiming)
+        if (!isAiming && !isShortAiming)
             SprintingFOV();
         else
             AimCamera();
 
-        crosshair.SetActive(isAiming);
+        if (isAiming || isShortAiming)
+            crosshair.SetActive(true);
+        else
+            crosshair.SetActive(false);
     }
 
     void SprintingFOV () {
@@ -124,8 +128,12 @@ public class CameraControll : MonoBehaviour
 
     bool wasAiming;
     public void AimCamera () {
-        if (CM_cam.m_Lens.FieldOfView > 30)
-            CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 29, 7 * Time.deltaTime);
+        float desiredFOV = 30;
+        if (isShortAiming)
+            desiredFOV = 50;
+
+        if (CM_cam.m_Lens.FieldOfView > desiredFOV)
+            CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, desiredFOV-1, 7 * Time.deltaTime);
 
         desiredOffset = rightShoulder;
         wasAiming = true;

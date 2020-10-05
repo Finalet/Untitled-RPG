@@ -59,6 +59,7 @@ public class Lightning : Skill
     }  
     
     void ShootLightning () {
+        playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = true;
         shots++;
         continueShooting = false;
         playerControlls.isAttacking = true;
@@ -97,6 +98,7 @@ public class Lightning : Skill
         coolDownTimer = coolDown;
         shots = 0;
         icon = skillIcons[0];
+        playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = false;
     }
 
     void PlayAnimation () {

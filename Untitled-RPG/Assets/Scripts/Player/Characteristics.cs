@@ -40,7 +40,7 @@ public class Characteristics : MonoBehaviour
     [Header("Stats regeneration")]
     public bool canRegenerateHealth; 
     public int HealthPointsPerSecond; 
-    public bool canRegenerateStamina; 
+    public bool canRegenerateStamina; public bool canUseStamina;
     public int StaminaPerSecond;
 
     public GameObject buffIcon;
@@ -116,9 +116,10 @@ public class Characteristics : MonoBehaviour
             }
         }
     }
-    float staminaTimer = 1;
     bool hidingStamina;
+    float staminaTimer = 0;
     float timer = 0;
+    float afterUseTimer = 0;
     void regenerateStamina() {
         if (Stamina == maxStamina) {
             if (!hidingStamina){
@@ -128,8 +129,17 @@ public class Characteristics : MonoBehaviour
             if (Time.time - timer >= 1.5f) {
                 CanvasScript.instance.HideStamina();
             }
+            canUseStamina = true;
             return;
         }
+        if (Stamina <= 0) { //blocks use of stamina untill fully restored;
+            canUseStamina = false;
+        }
+
+        if (Time.time - afterUseTimer >= 2) { //adds a break between stamina use and stamina regeneration
+            canRegenerateStamina = true;
+        }
+
         CanvasScript.instance.ShowStamina();
         hidingStamina = false;
 
@@ -158,6 +168,8 @@ public class Characteristics : MonoBehaviour
     }
 
     public void UseOrRestoreStamina (int amount) {
+        canRegenerateStamina = false;
+        afterUseTimer = Time.time;
         Stamina -= amount;
     }
 

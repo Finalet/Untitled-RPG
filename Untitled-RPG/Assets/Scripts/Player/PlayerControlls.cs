@@ -151,7 +151,7 @@ public class PlayerControlls : MonoBehaviour
 
         //Smooth rotation after rolling
         if (Mathf.Abs(rollDirection - desiredRollDirection) > 1) {
-            rollDirection = Mathf.Lerp(rollDirection, desiredRollDirection, Time.deltaTime * 10);
+            rollDirection = Mathf.Lerp(rollDirection, desiredRollDirection, Time.deltaTime * 15);
         } else {
             rollDirection = desiredRollDirection;
         }
@@ -159,7 +159,7 @@ public class PlayerControlls : MonoBehaviour
         //Smooth rotation after sprinting
         //LerpAngle since need to go from -179 to 179 smoothely
         if (Mathf.Abs(sprintingDirection - desiredSprintingDirection) > 1) {
-            sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 10);
+            sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 15);
         } else {
             sprintingDirection = desiredSprintingDirection;
         }
@@ -221,7 +221,7 @@ public class PlayerControlls : MonoBehaviour
                 isSprinting = false;
         }
 
-        if(GetComponent<Characteristics>().Stamina <= 0) {
+        if(Characteristics.instance.Stamina <= 0 || !Characteristics.instance.canUseStamina) {
             isSprinting = false;
             staminaRanOutFromSprinting = true;
         }
@@ -267,13 +267,11 @@ public class PlayerControlls : MonoBehaviour
 
             if (Time.time - runningStaminaTimer >= 0.02f) {
                 Characteristics.instance.UseOrRestoreStamina(1);
-                Characteristics.instance.canRegenerateStamina = false;
                 runningStaminaTimer = Time.time;
             }
         } else {
             // sprintingDirection = 0;
             desiredSprintingDirection = 0;
-            Characteristics.instance.canRegenerateStamina = true;
         }
 
         if (isAttacking) {
@@ -411,7 +409,7 @@ public class PlayerControlls : MonoBehaviour
         if (isAttacking || isRolling || isFlying) {
             return;
         }
-        if (GetComponent<Characteristics>().Stamina < staminaReqToRoll) {
+        if (!Characteristics.instance.canUseStamina) {
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }

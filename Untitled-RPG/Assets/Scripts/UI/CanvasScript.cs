@@ -11,6 +11,8 @@ public class CanvasScript : MonoBehaviour
     [Header("Player")]
     public Image healthBar;
     public Image staminaBar;
+    Color baseStaminaColor;
+    Color baseBackgroundStaminaColor;
     public GameObject buffs;
     public GameObject castingBar;
 
@@ -35,7 +37,9 @@ public class CanvasScript : MonoBehaviour
     }
 
     void Start() {
-        characteristics = PlayerControlls.instance.GetComponent<Characteristics>();
+        characteristics = Characteristics.instance;
+        baseStaminaColor = staminaBar.color;
+        baseBackgroundStaminaColor = staminaBar.transform.parent.GetComponent<Image>().color;
     }
 
     void Update() {
@@ -46,6 +50,14 @@ public class CanvasScript : MonoBehaviour
         healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.HP/characteristics.maxHP, Time.deltaTime * 10);
         healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.HP.ToString();
         staminaBar.fillAmount = Mathf.Lerp(staminaBar.fillAmount, (float)characteristics.Stamina/characteristics.maxStamina, Time.deltaTime * 10);
+
+        if (!Characteristics.instance.canUseStamina) {
+            staminaBar.color = Color.Lerp(staminaBar.color, new Color(0.8f,0,0,0.8f), 10 * Time.deltaTime); //dark red
+            staminaBar.transform.parent.GetComponent<Image>().color = Color.Lerp(staminaBar.transform.parent.GetComponent<Image>().color, new Color(0.4f,0,0,0.8f), 10 * Time.deltaTime); //even darker red
+        } else {
+            staminaBar.color = Color.Lerp(staminaBar.color, baseStaminaColor, 10 * Time.deltaTime);
+            staminaBar.transform.parent.GetComponent<Image>().color = Color.Lerp(staminaBar.transform.parent.GetComponent<Image>().color, baseBackgroundStaminaColor, 10 * Time.deltaTime);
+        }
     }
 
     public void HideStamina () {
