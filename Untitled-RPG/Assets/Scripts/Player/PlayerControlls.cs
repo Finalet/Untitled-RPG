@@ -178,7 +178,6 @@ public class PlayerControlls : MonoBehaviour
     }
 
 #region Ground movement
-    bool staminaRanOutFromSprinting;
     float runningStaminaTimer;
     void GroundMovement()
     {
@@ -196,13 +195,12 @@ public class PlayerControlls : MonoBehaviour
             {
                 if (!toggleRunning)
                     isRunning = true;
-                else if (!isCrouch && !isAttacking && !isRolling && !staminaRanOutFromSprinting)
+                else if (!isCrouch && !isAttacking && !isRolling)
                     isSprinting = true; //Start sprinting
             } else if (Input.GetButtonUp("Run"))
             {
                 if (toggleRunning && !isRolling) {
                     isSprinting = false;
-                    staminaRanOutFromSprinting = false;
                 } else {
                     isRunning = false;
                 }
@@ -221,9 +219,8 @@ public class PlayerControlls : MonoBehaviour
                 isSprinting = false;
         }
 
-        if(Characteristics.instance.Stamina <= 0 || !Characteristics.instance.canUseStamina) {
+        if( (Characteristics.instance.Stamina <= 0 || !Characteristics.instance.canUseStamina) && !isRolling) {
             isSprinting = false;
-            staminaRanOutFromSprinting = true;
         }
 
         if(isCrouch) {

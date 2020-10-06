@@ -126,7 +126,7 @@ public class Characteristics : MonoBehaviour
                 hidingStamina = true;
                 timer = Time.time;
             }
-            if (Time.time - timer >= 1.5f) {
+            if (Time.time - timer >= 1f) {
                 CanvasScript.instance.HideStamina();
             }
             canUseStamina = true;
@@ -136,7 +136,7 @@ public class Characteristics : MonoBehaviour
             canUseStamina = false;
         }
 
-        if (Time.time - afterUseTimer >= 2) { //adds a break between stamina use and stamina regeneration
+        if (Time.time - afterUseTimer >= 1.5f) { //adds a break between stamina use and stamina regeneration
             canRegenerateStamina = true;
         }
 

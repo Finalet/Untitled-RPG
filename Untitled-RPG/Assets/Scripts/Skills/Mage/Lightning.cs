@@ -22,7 +22,7 @@ public class Lightning : Skill
 
     protected override void LocalUse () {
         playerControlls.InterruptCasting();
-        playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
+        //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
     }
 

@@ -18,6 +18,9 @@ public class PeaceCanvas : MonoBehaviour
     [Space]
     public CinemachineVirtualCamera CM_MenuCam;
     public Transform menuLookAt;
+
+    [Header("Inventory")]
+    public GameObject MainContainer;
     public GameObject SkillsPanel;
     public GameObject Inventory;
     public GameObject EquipmentSlots;
@@ -48,28 +51,28 @@ public class PeaceCanvas : MonoBehaviour
         else   
             anyPanelOpen = false;
 
-        if (Input.GetButtonDown("OpenSkillsPanel")) {
-            if (SkillsPanel.activeInHierarchy) { //Close skills
-                SkillsPanel.SetActive(false);
-                CM_MenuCam.Priority = 0;
-            } else { //Open skills
-                SkillsPanel.SetActive(true);
-                OpenMenuCamera();
-            }
-            
+        if (Input.GetButtonDown("OpenSkillsPanel") && !SkillsPanel.activeInHierarchy) {
+            MainContainer.SetActive(true);
+            SkillsPanel.SetActive(true);
+            EquipmentSlots.SetActive(true);
+            Inventory.SetActive(false);
+            OpenMenuCamera();            
         }
 
-        if (Input.GetButtonDown("OpenInventory")) {
-            if (Inventory.activeInHierarchy) { //Close inventory
-                Inventory.SetActive(false);
-                EquipmentSlots.SetActive(false);
-                CM_MenuCam.Priority = 0;
-            } else { //Open inventory;
-                Inventory.SetActive(true);
-                EquipmentSlots.SetActive(true);
-                OpenMenuCamera();
-            }
-            
+        if (Input.GetButtonDown("OpenInventory") && !Inventory.activeInHierarchy) {
+            MainContainer.SetActive(true);
+            Inventory.SetActive(true);
+            EquipmentSlots.SetActive(true);
+            SkillsPanel.SetActive(false);
+            OpenMenuCamera();            
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            MainContainer.SetActive(false);
+            SkillsPanel.SetActive(false);
+            Inventory.SetActive(false);
+            EquipmentSlots.SetActive(false);
+            CM_MenuCam.Priority = 0;
         }
 
         if (Input.GetKeyDown(KeyCode.F1)) {

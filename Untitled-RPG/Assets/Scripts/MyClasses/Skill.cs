@@ -96,13 +96,15 @@ public abstract class Skill : MonoBehaviour
     protected virtual void LocalUse () {
         playerControlls.InterruptCasting();
         coolDownTimer = coolDown;
-        playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
+        //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
     }
 
     protected virtual void CastingAnim () {}
     protected virtual void InterruptCasting () {
         StopSounds();
+        playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = false;
+        playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = false;
     }
 
     protected virtual float actualDistance() { //this distance is for picking area
@@ -118,7 +120,7 @@ public abstract class Skill : MonoBehaviour
 
         RaycastHit hit;
         Vector3 pickPosition;
-        int layerMask =~ LayerMask.GetMask("Enemy");
+        int layerMask =~ LayerMask.GetMask("Enemy", "Player");
         float dis = actualDistance() + playerControlls.playerCamera.GetComponent<CameraControll>().camDistance;
         if (Physics.Raycast(playerControlls.playerCamera.transform.position, playerControlls.playerCamera.transform.forward, out hit, dis, layerMask)) {
             pickPosition = hit.point + hit.normal * 0.3f;

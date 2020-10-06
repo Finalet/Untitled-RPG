@@ -4,9 +4,11 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.Animations.Rigging;
 
+enum CamSettings {Smooth, Hard};
+
 public class CameraControll : MonoBehaviour
 {
-    public float camDistance = 5; //set manually for skills distance calculations NEED TO FIX
+    [System.NonSerialized] public float camDistance;
     
     public bool isAiming;
     public bool isShortAiming;
@@ -30,6 +32,8 @@ public class CameraControll : MonoBehaviour
     float mouseXsensitivity;
     float mouseYsensitivity;
 
+    CamSettings currentCamSettings = CamSettings.Smooth;
+
     void Start()
     {
         cam = GetComponent<Camera>();
@@ -51,6 +55,8 @@ public class CameraControll : MonoBehaviour
             CanvasScript.instance.gameObject.SetActive(!CanvasScript.instance.gameObject.activeInHierarchy);
             PeaceCanvas.instance.gameObject.SetActive(!PeaceCanvas.instance.gameObject.activeInHierarchy);
         }
+
+        camDistance = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position + Vector3.up*1.6f);
     }
 
     void FixedUpdate() {
@@ -93,6 +99,8 @@ public class CameraControll : MonoBehaviour
 
         if (CM_cam.m_Lens.FieldOfView < 60 && wasAiming) { //After aiming
             CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 62, 7 * Time.deltaTime);
+            CM_cam.m_XAxis.m_MaxSpeed = 1.5f;   //return sensitivity
+            CM_cam.m_YAxis.m_MaxSpeed = 0.01f; //return sensitivity
             return;
         }
 
@@ -108,6 +116,9 @@ public class CameraControll : MonoBehaviour
                 CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 58, 7 * Time.deltaTime);
             else CM_cam.m_Lens.FieldOfView = 60;
         }
+
+        if (currentCamSettings == CamSettings.Hard)
+            SmoothCameraSettings();
     }
 
     void SwitchShouderCam() {
@@ -128,15 +139,45 @@ public class CameraControll : MonoBehaviour
 
     bool wasAiming;
     public void AimCamera () {
-        float desiredFOV = 30;
-        if (isShortAiming)
+        float desiredFOV = 0;
+        if (isAiming) {
+            desiredFOV = 30;
+            CM_cam.m_XAxis.m_MaxSpeed = 0.5f;   //lower sensitivity
+            CM_cam.m_YAxis.m_MaxSpeed = 0.0033f; //lower sensitivity
+        } else {
             desiredFOV = 50;
+        }
 
         if (CM_cam.m_Lens.FieldOfView > desiredFOV)
             CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, desiredFOV-1, 7 * Time.deltaTime);
 
         desiredOffset = rightShoulder;
         wasAiming = true;
+
+        if (currentCamSettings == CamSettings.Smooth)
+            HardCameraSettings();
+    }
+
+    void SmoothCameraSettings() {
+        CM_cam.m_XAxis.m_DecelTime = 0.2f;
+        CM_cam.m_YAxis.m_DecelTime = 0.2f;
+
+        CinemachineTransposer CM_trans = CM_cam.GetRig(1).GetCinemachineComponent<CinemachineTransposer>();
+        CM_trans.m_XDamping = 0.8f;
+        CM_trans.m_ZDamping = 0.8f;
+
+        currentCamSettings = CamSettings.Smooth;
+    }
+
+    void HardCameraSettings () {
+        CM_cam.m_XAxis.m_DecelTime = 0;
+        CM_cam.m_YAxis.m_DecelTime = 0;
+
+        CinemachineTransposer CM_trans = CM_cam.GetRig(1).GetCinemachineComponent<CinemachineTransposer>();
+        CM_trans.m_XDamping = 0;
+        CM_trans.m_ZDamping = 0;
+
+        currentCamSettings = CamSettings.Hard;
     }
 
     public void CameraShake(float frequency = 0.2f, float amplitude = 2f, float duration = 0.1f, Vector3 position = new Vector3()) {

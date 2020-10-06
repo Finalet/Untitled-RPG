@@ -28,7 +28,9 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         } else if (itemInSlot != null) {
             DisplayItem();
         } else {
-            slotIcon.sprite = null; //In case when RMB canceled picking area.
+            //In case when RMB canceled picking area.
+            slotIcon.sprite = null; 
+            slotIcon.color = new Color(0,0,0,0);
         }
 
         DisplayKey();
