@@ -51,6 +51,8 @@ public class CanvasScript : MonoBehaviour
         healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.HP.ToString();
         staminaBar.fillAmount = Mathf.Lerp(staminaBar.fillAmount, (float)characteristics.Stamina/characteristics.maxStamina, Time.deltaTime * 10);
 
+        StaminaBarPosition();
+
         if (!Characteristics.instance.canUseStamina) {
             staminaBar.color = Color.Lerp(staminaBar.color, new Color(0.8f,0,0,0.8f), 10 * Time.deltaTime); //dark red
             staminaBar.transform.parent.GetComponent<Image>().color = Color.Lerp(staminaBar.transform.parent.GetComponent<Image>().color, new Color(0.4f,0,0,0.8f), 10 * Time.deltaTime); //even darker red
@@ -58,6 +60,12 @@ public class CanvasScript : MonoBehaviour
             staminaBar.color = Color.Lerp(staminaBar.color, baseStaminaColor, 10 * Time.deltaTime);
             staminaBar.transform.parent.GetComponent<Image>().color = Color.Lerp(staminaBar.transform.parent.GetComponent<Image>().color, baseBackgroundStaminaColor, 10 * Time.deltaTime);
         }
+    }
+
+    void StaminaBarPosition () {
+        Vector3 currentPos = staminaBar.transform.parent.GetComponent<RectTransform>().position;
+        Vector3 desPos = Camera.main.WorldToScreenPoint(PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 0.7f + Vector3.up * 1.2f);
+        staminaBar.transform.parent.GetComponent<RectTransform>().position = Vector3.Lerp(currentPos, desPos, 10 * Time.deltaTime);
     }
 
     public void HideStamina () {

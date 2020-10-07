@@ -82,6 +82,8 @@ public class PlayerControlls : MonoBehaviour
 
     bool rolled;
 
+    [System.NonSerialized] public bool[] emptyAttackAnimatorStates = new bool[2];
+
     void Awake() {
         if (instance == null) 
             instance = this;
@@ -136,6 +138,7 @@ public class PlayerControlls : MonoBehaviour
         MountAnimal();
         SetAnimatorVarialbes();
         InputMagnitudeFunc();
+        CheckIsAttacking();
 
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
@@ -156,7 +159,7 @@ public class PlayerControlls : MonoBehaviour
             rollDirection = desiredRollDirection;
         }
 
-        //Smooth rotation after sprinting
+        //Smooth rotation sprinting
         //LerpAngle since need to go from -179 to 179 smoothely
         if (Mathf.Abs(sprintingDirection - desiredSprintingDirection) > 1) {
             sprintingDirection = Mathf.LerpAngle(sprintingDirection, desiredSprintingDirection, Time.deltaTime * 15);
@@ -564,5 +567,13 @@ public class PlayerControlls : MonoBehaviour
         animator.CrossFade("Attacks.Empty", 0.15f);
         castInterrupted = true;
         isCastingSkill = false;
+    }
+
+    void CheckIsAttacking () {
+        for (int i = 0; i < emptyAttackAnimatorStates.Length; i++) {
+            if (emptyAttackAnimatorStates[i] == false)
+                return;
+        }
+        isAttacking = false;
     }
 }
