@@ -13,7 +13,7 @@ public abstract class Skill : MonoBehaviour
     [Tooltip("From what tree the skill is")] public SkillTree skillTree; 
     public SkillType skillType; 
     public int staminaRequired; 
-    [Tooltip("Base damage without player's characteristics")] public int baseDamage;
+    [Tooltip("Damage in % from players attack")] public int baseDamagePercentage;
     public float coolDown;
     public float coolDownTimer;
     public bool isCoolingDown;
@@ -180,9 +180,9 @@ public abstract class Skill : MonoBehaviour
     protected virtual int actualDamage () {
         switch (skillTree) {
             case SkillTree.Knight:
-                return Mathf.RoundToInt(baseDamage * (float)characteristics.meleeAttack/100f);
+                return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.meleeAttack);
             case SkillTree.Mage:
-                return Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f);
+                return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.magicPower);
             default: 
                 Debug.LogError("Fuck you this can never happen");
                 return 0;

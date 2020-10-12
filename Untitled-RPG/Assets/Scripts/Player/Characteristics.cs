@@ -134,6 +134,8 @@ public class Characteristics : MonoBehaviour
         }
         if (Stamina <= 0) { //blocks use of stamina untill fully restored;
             canUseStamina = false;
+        } else if (Stamina >= 0.2f*maxStamina) {
+            canUseStamina = true;
         }
 
         if (Time.time - afterUseTimer >= 1.5f) { //adds a break between stamina use and stamina regeneration

@@ -169,8 +169,8 @@ public abstract class Enemy : MonoBehaviour
 
     protected IEnumerator HitStop () {
         float timer = Time.realtimeSinceStartup;
-        Time.timeScale = 0.8f;
-        while(Time.realtimeSinceStartup - timer < 0.1f) {
+        Time.timeScale = 0.5f;
+        while(Time.realtimeSinceStartup - timer < 0.07f) {
             yield return null;
         }
         Time.timeScale = 1;

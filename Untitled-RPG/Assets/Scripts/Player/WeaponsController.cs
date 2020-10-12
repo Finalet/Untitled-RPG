@@ -143,11 +143,11 @@ public class WeaponsController : MonoBehaviour
     }
 
     public void EnableTrails() {
-        LeftHandEquipement.GetComponentInChildren<ParticleSystem>().Play();
-        RightHandEquipement.GetComponentInChildren<ParticleSystem>().Play();
+        //LeftHandEquipement.GetComponentInChildren<ParticleSystem>().Play();
+        //RightHandEquipement.GetComponentInChildren<ParticleSystem>().Play();
     }
     public void DisableTrails() {
-        LeftHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
-        RightHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
+        //LeftHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
+        //RightHandEquipement.GetComponentInChildren<ParticleSystem>().Stop();
     }
 }

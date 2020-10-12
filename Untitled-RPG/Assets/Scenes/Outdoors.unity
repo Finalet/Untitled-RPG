@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 1, g: 0.99215686, b: 0.79607844, a: 1}
   m_FogMode: 2
   m_FogDensity: 0.005
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1848637268}
-  m_IndirectSpecularColor: {r: 0.46669614, g: 0.539855, b: 0.6437807, a: 1}
+  m_IndirectSpecularColor: {r: 0.46671683, g: 0.53974044, b: 0.6434829, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: d163aa34803697e4ab0504ddfee0fce3,
+  m_LightingDataAsset: {fileID: 112000002, guid: 29cbcaefa4991124db12edc1cf8dfb0f,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -3018,7 +3018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 218703244}
   - component: {fileID: 218703243}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: support
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6224,7 +6224,8 @@ GameObject:
   - component: {fileID: 445141075}
   - component: {fileID: 445141074}
   - component: {fileID: 445141076}
-  m_Layer: 0
+  - component: {fileID: 445141077}
+  m_Layer: 11
   m_Name: First
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6275,14 +6276,14 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 50
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
   m_DrawHeightmap: 1
   m_DrawInstanced: 0
   m_DrawTreesAndFoliage: 0
   m_ReflectionProbeUsage: 1
-  m_MaterialTemplate: {fileID: 2100000, guid: c5067b54da3734144b15dfc51ea73564, type: 2}
+  m_MaterialTemplate: {fileID: 0}
   m_BakeLightProbesForTrees: 1
   m_PreserveTreePrototypeLayers: 0
   m_DeringLightProbesForTrees: 1
@@ -6309,6 +6310,43 @@ MonoBehaviour:
   AutoAddToVegegetationSystem: 0
   TerrainSourceID: 0
   TerrainPosition: {x: -250, y: -50, z: -250}
+--- !u!114 &445141077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445141072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6525fd4a9fb974b7f878dee70144de99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  templateMaterial: {fileID: 2100000, guid: 73bdaf0863339dd4d91a68d22f740673, type: 2}
+  blendMat: {fileID: 0}
+  blendMatInstance: {fileID: 0}
+  keywordSO: {fileID: 11400000, guid: fd08c7fb5b9cf764badb18f98c9cf6c8, type: 2}
+  perPixelNormal: {fileID: 0}
+  terrainDesc: {fileID: 0}
+  descriptorFormat: 0
+  streamTexture: {fileID: 0}
+  vsGrassMap: {fileID: 0}
+  vsShadowMap: {fileID: 0}
+  advDetailControl: {fileID: 0}
+  propData: {fileID: 11400000, guid: 642e527c2854e29438f20fa8b91e8ea8, type: 2}
+  addPass: {fileID: 0}
+  terrain: {fileID: 445141075}
+  customControl0: {fileID: 0}
+  customControl1: {fileID: 0}
+  customControl2: {fileID: 0}
+  customControl3: {fileID: 0}
+  customControl4: {fileID: 0}
+  customControl5: {fileID: 0}
+  customControl6: {fileID: 0}
+  customControl7: {fileID: 0}
+  reenabled: 1
+  sTerrainDirty: 0
+  importSplatMaps: []
 --- !u!1001 &457352964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9542,7 +9580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4109834554446322, guid: 387d93711c1d03a48b083591256c560c, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.8132
+      value: 2.3337696
       objectReference: {fileID: 0}
     - target: {fileID: 4109834554446322, guid: 387d93711c1d03a48b083591256c560c, type: 3}
       propertyPath: m_LocalScale.y
@@ -17381,7 +17419,7 @@ PrefabInstance:
     - target: {fileID: 5631274229459446444, guid: 8b7a7d2c63c77c349a33faca366b5f67,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.17699969
+      value: 0.31
       objectReference: {fileID: 0}
     - target: {fileID: 5631274229459446444, guid: 8b7a7d2c63c77c349a33faca366b5f67,
         type: 3}
@@ -32765,7 +32803,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1848637269}
   - component: {fileID: 1848637268}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33355,7 +33393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1876823865}
   - component: {fileID: 1876823864}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Directional Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36079,8 +36117,8 @@ MonoBehaviour:
   resolution: 2048
   renderLayer:
     serializedVersion: 2
-    m_Bits: 0
-  useLayers: 0
+    m_Bits: 10240
+  useLayers: 1
   renderCam: {fileID: 0}
   showBounds: 1
 --- !u!1001 &2022427228
@@ -36965,8 +37003,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062934319}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.1774854, y: 0.67712724, z: -0.17348348, w: 0.692749}
+  m_LocalPosition: {x: -55.33841, y: 0.5333134, z: 101.35578}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1352281721}

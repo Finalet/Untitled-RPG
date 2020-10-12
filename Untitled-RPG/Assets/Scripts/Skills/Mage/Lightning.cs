@@ -27,7 +27,7 @@ public class Lightning : Skill
     }
 
     protected override int actualDamage() {
-        return Mathf.RoundToInt(baseDamage * (float)characteristics.magicPower/100f) + shots*300;
+        return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.magicPower * (1+shots/10f));
     }
 
     protected override void Update() {

@@ -6,6 +6,12 @@ public class EquipmentManager : MonoBehaviour
 {
     public static EquipmentManager instance; 
 
+    [Header("Transforms")]
+    public Transform TwoHandedWeaponSlot;
+    public Transform MainHandSlot;
+    public Transform SecondaryHandSlot;
+
+    [Header("Slots")]
     public UI_EquipmentSlot helmet;
     public UI_EquipmentSlot chest;
     public UI_EquipmentSlot belt;
@@ -55,5 +61,31 @@ public class EquipmentManager : MonoBehaviour
         characteristics.magicPowerFromEquip = 0;
         characteristics.healingPowerFromEquip = 0;
         characteristics.defenseFromEquip = 0;
+    }
+
+    public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
+        Transform parent;
+        if (weapon.weaponType == WeaponType.TwoHanded) { //Two handed weapon
+            parent = TwoHandedWeaponSlot;
+        } else if (!secondary) {  // Main hand
+            parent = MainHandSlot;
+        } else { //Secondary hand
+            parent = SecondaryHandSlot;
+        }
+        Instantiate(weapon.itemPrefab, parent);
+    }
+
+    public void UnequipWeaponPrefab (bool twoHanded, bool secondary = false) {
+        Transform slot;
+        if (twoHanded) {
+            slot = TwoHandedWeaponSlot;
+        } else if (!secondary) {
+            slot = MainHandSlot;
+        } else {
+            slot = SecondaryHandSlot;
+        }
+        foreach (Transform child in slot) {
+            Destroy(child.gameObject);
+        }
     }
 }

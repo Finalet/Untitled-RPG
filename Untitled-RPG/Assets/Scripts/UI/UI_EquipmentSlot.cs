@@ -56,6 +56,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
             initialSlot.AddItem(itemInSlot, itemAmount, null);
         }
 
+        ClearSlot();
         itemInSlot = item;
         itemAmount = amount;
         DisplayItem();
@@ -74,6 +75,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
 
         SharedAdd(item, amount, initialSlot);
+        EquipmentManager.instance.EquipWeaponPrefab(w);
     }
 
     void SecondaryHandAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -87,12 +89,30 @@ public class UI_EquipmentSlot : UI_InventorySlot
             initialSlot.AddItem(item, amount, initialSlot); 
             return;
         } else if (w.weaponType == WeaponType.OneHanded) { //if weapon is onehanded, but main hand is already carryign two handed weapon, return to initial slot
-            w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w != null && w.weaponType == WeaponType.TwoHanded) {
+            Weapon mw = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+            if (mw != null && mw.weaponType == WeaponType.TwoHanded) {
                 initialSlot.AddItem(item, amount, null); 
                 return;
             }
         }    
         SharedAdd(item, amount, initialSlot);
+        EquipmentManager.instance.EquipWeaponPrefab(w, true);
+    }
+
+    public override void ClearSlot()
+    {
+        Weapon w = (Weapon)itemInSlot;
+        if (w != null) {
+            if (w.weaponType == WeaponType.TwoHanded) {
+                EquipmentManager.instance.UnequipWeaponPrefab(true);
+            } else if (w.weaponType == WeaponType.OneHanded) {
+                if (equipmentSlotType == EquipmentSlotType.MainHand) {
+                    EquipmentManager.instance.UnequipWeaponPrefab(false);
+                } else {
+                    EquipmentManager.instance.UnequipWeaponPrefab(false, true);
+                }
+            }
+        }
+        base.ClearSlot();
     }
 }

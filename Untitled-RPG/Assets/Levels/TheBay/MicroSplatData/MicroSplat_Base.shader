@@ -4,12 +4,12 @@
 //
 // Auto-generated shader code, don't hand edit!
 //   Compiled with MicroSplat 3.4
-//   Unity : 2019.4.6f1
+//   Unity : 2019.4.8f1
 //   Platform : WindowsEditor
 //   RenderLoop : Unity LD
 //////////////////////////////////////////////////////
 
-Shader "Hidden/MicroSplat/Terrain_Base2064807213" {
+Shader "Hidden/MicroSplat/TheBayTerrain_Base-1250068081" {
    Properties {
       [HideInInspector] _Control0 ("Control0", 2D) = "red" {}
       [HideInInspector] _Control1 ("Control1", 2D) = "black" {}
@@ -124,7 +124,6 @@ _TerrainNormalmapTexture("InstancedPerPixelNormal", 2D) = "bump" {}
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _PERTEXDETAILNOISESTRENGTH 1
       #define _DISTANCENOISE 1
       #define _DISTANCERESAMPLE 1
       #define _NORMALNOISE 1
@@ -5445,7 +5444,6 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _PERTEXDETAILNOISESTRENGTH 1
       #define _DISTANCENOISE 1
       #define _DISTANCERESAMPLE 1
       #define _NORMALNOISE 1
@@ -10628,7 +10626,6 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _PERTEXDETAILNOISESTRENGTH 1
       #define _DISTANCENOISE 1
       #define _DISTANCERESAMPLE 1
       #define _NORMALNOISE 1
@@ -15782,7 +15779,6 @@ GraphVertexInput ApplyMeshModification(inout GraphVertexInput input)
       #define _PERTEXCURVEWEIGHT 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _PERTEXDETAILNOISESTRENGTH 1
       #define _DISTANCENOISE 1
       #define _DISTANCERESAMPLE 1
       #define _NORMALNOISE 1

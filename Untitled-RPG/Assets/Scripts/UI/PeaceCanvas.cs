@@ -24,6 +24,8 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject SkillsPanel;
     public GameObject Inventory;
     public GameObject EquipmentSlots;
+    public TextMeshProUGUI statsLeftText;
+    public TextMeshProUGUI statsRightText;
 
     [Space]
     public GameObject DebugChatPanel;
@@ -87,6 +89,7 @@ public class PeaceCanvas : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             PlayerControlls.instance.disableControl = true;
+            UpdateStats();
         }
     }
 
@@ -170,6 +173,11 @@ public class PeaceCanvas : MonoBehaviour
             CM_MenuCam.transform.position = pos; 
             yield return null;
         }
+    }
+
+    void UpdateStats() {
+        statsLeftText.text = $"Max health {Characteristics.instance.maxHP}\nMax stamina {Characteristics.instance.maxStamina}\nStrength {Characteristics.instance.strength}\nAgility {Characteristics.instance.agility}\nIntellect {Characteristics.instance.intellect}";
+        statsRightText.text = $"Melee attack {Characteristics.instance.meleeAttack}\nRanged attack {Characteristics.instance.rangedAttack}\nMagic power {Characteristics.instance.magicPower}\nHealing power {Characteristics.instance.healingPower}\nDefense {Characteristics.instance.defense}\nCasting time {Characteristics.instance.castingSpeed.x*100f}%\n";
     }
 
     public void SaveButton() {

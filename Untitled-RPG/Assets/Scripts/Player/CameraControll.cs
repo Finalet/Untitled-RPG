@@ -163,8 +163,8 @@ public class CameraControll : MonoBehaviour
         CM_cam.m_YAxis.m_DecelTime = 0.2f;
 
         CinemachineTransposer CM_trans = CM_cam.GetRig(1).GetCinemachineComponent<CinemachineTransposer>();
-        CM_trans.m_XDamping = 0.8f;
-        CM_trans.m_ZDamping = 0.8f;
+        CM_trans.m_XDamping = 0.5f;
+        CM_trans.m_ZDamping = 0.5f;
 
         currentCamSettings = CamSettings.Smooth;
     }
