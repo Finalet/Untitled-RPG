@@ -158,19 +158,10 @@ public abstract class Skill : MonoBehaviour
     }
 
     public virtual bool skillActive () {
-        if (playerControlls.isMounted || playerControlls.isPickingArea)
+        if (playerControlls.isMounted || playerControlls.isPickingArea || PeaceCanvas.instance.anyPanelOpen)
             return false;
-
-        if (skillTree == SkillTree.Knight) {
-            if (playerControlls.isWeaponOut)
-                return true;
-            else 
-                return false;
-        } else if (skillTree == SkillTree.Mage) {
+        else 
             return true;
-        } else {
-            return false;
-        }
     }
 
     protected virtual int damage () {

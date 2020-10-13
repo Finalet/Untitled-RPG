@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WeaponsController : MonoBehaviour
 {
+    public static WeaponsController instance;
+
     public bool isWeaponOut;
     Animator animator;
 
@@ -17,34 +19,20 @@ public class WeaponsController : MonoBehaviour
     public GameObject LeftHandEquipement;
     public GameObject RightHandEquipement;
 
+    public Transform LeftHand;
+    public Transform RightHand;
+
     public AudioClip[] sheathSounds;
 
     void Start () {
+        if (instance == null)
+            instance = this;
+
         animator = GetComponent<Animator>();
         DisableTrails();
     }
 
-    bool started;
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.H) && !PlayerControlls.instance.isAttacking) {
-            if (isWeaponOut && !started)
-                StartCoroutine(Sheathe());
-            else if (!isWeaponOut && !started)
-                StartCoroutine(UnSheathe());
-        }
-
-        animator.SetBool("isDualHands", isDualHands);
-
-        if (isLeftHandEquiped && isRightHandEquiped) {
-            isDualHands = true;
-        } else {
-            isDualHands = false;
-        }
-    }
-
-    IEnumerator UnSheathe () {
-        started = true;
-
+    public IEnumerator UnSheathe () {
         animator.SetTrigger("UnSheath");
         GetComponent<AudioSource>().clip = sheathSounds[0];
         GetComponent<AudioSource>().PlayDelayed(0.3f);
@@ -85,12 +73,9 @@ public class WeaponsController : MonoBehaviour
         }
         animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), 0);
         animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 0);
-
-        started = false;
     }
-    IEnumerator Sheathe () {
-        started = true;
-
+    public IEnumerator Sheathe () {
+        isWeaponOut = false;
         animator.SetTrigger("Sheath");
 
         GetComponent<AudioSource>().clip = sheathSounds[1];
@@ -106,7 +91,6 @@ public class WeaponsController : MonoBehaviour
             weight += Time.deltaTime * overlaySpeed;
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        isWeaponOut = false;
 
         if (isRightHandEquiped)
             animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), 1);
@@ -138,8 +122,16 @@ public class WeaponsController : MonoBehaviour
             animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 0);
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 0);
         }
-        
-        started = false;
+    }
+
+    public void InstantUnsheathe () {
+        EquipmentManager.instance.MainHandSlot.GetChild(0).SetParent(RightHand);
+        RightHand.GetChild(0).transform.localPosition = Vector3.zero;
+        RightHand.GetChild(0).transform.localEulerAngles = Vector3.zero;
+        EquipmentManager.instance.SecondaryHandSlot.GetChild(0).SetParent(LeftHand);
+        LeftHand.GetChild(0).transform.localPosition = Vector3.zero;
+        LeftHand.GetChild(0).transform.localEulerAngles = Vector3.zero;
+        isWeaponOut = true;
     }
 
     public void EnableTrails() {

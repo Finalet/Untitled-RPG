@@ -32,6 +32,10 @@ public class PlayerControlls : MonoBehaviour
     public bool isCastingSkill;
     public bool isFlying;
     public bool isPickingArea;
+    [Header("Battle")]
+    public bool inBattle;
+    public float inBattleExitTime = 5; //How long after exisiting the battle will the player remain "in battle"
+    float inBattleTimer;
 
     [Space]
     public bool castInterrupted;
@@ -139,6 +143,7 @@ public class PlayerControlls : MonoBehaviour
         SetAnimatorVarialbes();
         InputMagnitudeFunc();
         CheckIsAttacking();
+        InBattleCheck();
 
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
@@ -575,5 +580,18 @@ public class PlayerControlls : MonoBehaviour
                 return;
         }
         isAttacking = false;
+    }
+
+    void InBattleCheck () {
+        if (isAttacking || isGettingHit) {
+            inBattle = true;
+            inBattleTimer = Time.time;
+            if (!isWeaponOut)
+                WeaponsController.instance.InstantUnsheathe();
+        } else if (Time.time - inBattleTimer >= inBattleExitTime) {
+            if (isWeaponOut)
+                StartCoroutine(WeaponsController.instance.Sheathe());
+            inBattle = false;
+        }
     }
 }
