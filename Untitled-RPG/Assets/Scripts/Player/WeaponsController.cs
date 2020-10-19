@@ -39,7 +39,6 @@ public class WeaponsController : MonoBehaviour
 
     void Start () {
         animator = GetComponent<Animator>();
-        DisableTrails();
     }
 
     void Update() {
@@ -160,12 +159,12 @@ public class WeaponsController : MonoBehaviour
     }
 
     public void EnableTrails() {
-        LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
-        RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
+        if (LeftHandEquipObj != null) LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
+        if (RightHandEquipObj != null) RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
     }
     public void DisableTrails() {
-        LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
-        RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
+        if (LeftHandEquipObj != null) LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
+        if (RightHandEquipObj != null) RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
     }
 
     void CheckHandsEquip() {
