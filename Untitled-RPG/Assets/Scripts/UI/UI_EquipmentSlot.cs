@@ -15,6 +15,11 @@ public class UI_EquipmentSlot : UI_InventorySlot
         savefilePath = "saves/equipmentSlots.txt";
     }
 
+    protected override void Start()
+    {
+        //Not loading anything because already loaded when game launched from the EquipmentManager.
+    }
+
     public override void Save (){
         short ID;
         if (itemInSlot != null)
@@ -25,6 +30,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
         ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath);
     }
     public override void Load () {
+        savefilePath = "saves/equipmentSlots.txt";
+
         short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath, -1);
 
         if (ID < 0) {

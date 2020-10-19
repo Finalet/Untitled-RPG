@@ -7,9 +7,9 @@ public class EquipmentManager : MonoBehaviour
     public static EquipmentManager instance; 
 
     [Header("Transforms")]
-    public Transform TwoHandedWeaponSlot;
-    public Transform MainHandSlot;
-    public Transform SecondaryHandSlot;
+    Transform TwoHandedWeaponSlot;
+    Transform MainHandSlot;
+    Transform SecondaryHandSlot;
 
     [Header("Slots")]
     public UI_EquipmentSlot helmet;
@@ -34,6 +34,25 @@ public class EquipmentManager : MonoBehaviour
 
     void Start() {
         characteristics = Characteristics.instance;
+        TwoHandedWeaponSlot = WeaponsController.instance.twohandedWeaponSlot;
+        MainHandSlot = WeaponsController.instance.leftHipSlot;
+        SecondaryHandSlot = WeaponsController.instance.rightHipSlot;
+        LoadEquip();
+    }
+
+    void LoadEquip(){
+        helmet.Load();
+        chest.Load();
+        belt.Load();
+        gloves.Load();
+        pants.Load();
+        boots.Load();
+        necklace.Load();
+        ring.Load();
+        secondRing.Load();
+        mainHand.Load();
+        secondaryHand.Load();
+        bow.Load();
     }
 
     void FixedUpdate() {
@@ -72,7 +91,12 @@ public class EquipmentManager : MonoBehaviour
         } else { //Secondary hand
             parent = SecondaryHandSlot;
         }
-        Instantiate(weapon.itemPrefab, parent);
+        GameObject w = Instantiate(weapon.itemPrefab, parent);
+        if (parent == TwoHandedWeaponSlot || parent == MainHandSlot) {
+            WeaponsController.instance.RightHandEquipObj = w;
+        } else if (parent == SecondaryHandSlot) {
+            WeaponsController.instance.LeftHandEquipObj = w;
+        }
     }
 
     public void UnequipWeaponPrefab (bool twoHanded, bool secondary = false) {
