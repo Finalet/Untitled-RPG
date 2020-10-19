@@ -100,6 +100,7 @@ public abstract class Skill : MonoBehaviour
         CustomUse();
         if (weaponOutRequired && !playerControlls.isWeaponOut)
                 WeaponsController.instance.InstantUnsheathe();
+        playerControlls.isAttacking = true;
     }
 
     protected virtual void CastingAnim () {}
