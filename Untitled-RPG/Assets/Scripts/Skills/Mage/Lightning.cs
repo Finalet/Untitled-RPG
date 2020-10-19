@@ -24,6 +24,8 @@ public class Lightning : Skill
         playerControlls.InterruptCasting();
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
+        if (weaponOutRequired && !playerControlls.isWeaponOut)
+                WeaponsController.instance.InstantUnsheathe();
     }
 
     protected override int actualDamage() {

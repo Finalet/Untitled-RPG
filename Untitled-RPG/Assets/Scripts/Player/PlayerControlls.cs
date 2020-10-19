@@ -586,8 +586,6 @@ public class PlayerControlls : MonoBehaviour
         if (isAttacking || isGettingHit) {
             inBattle = true;
             inBattleTimer = Time.time;
-            if (!isWeaponOut)
-                WeaponsController.instance.InstantUnsheathe();
         } else if (Time.time - inBattleTimer >= inBattleExitTime) {
             if (isWeaponOut)
                 StartCoroutine(WeaponsController.instance.Sheathe());

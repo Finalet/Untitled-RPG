@@ -33,9 +33,9 @@ public class Slash : Skill
 
     protected override void CustomUse() {
         if (hits == 1 || hits == 2)
-            timing = 0.46f * characteristics.attackSpeed.z;
+            timing = 0.5f * characteristics.attackSpeed.z;
         else 
-            timing = 0.7f * characteristics.attackSpeed.z;
+            timing = 0.74f * characteristics.attackSpeed.z;
 
         if (Time.time - lastHitTime > timing)
             Attack();

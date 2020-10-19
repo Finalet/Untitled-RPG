@@ -17,12 +17,12 @@ public abstract class Skill : MonoBehaviour
     public float coolDown;
     public float coolDownTimer;
     public bool isCoolingDown;
+    [Tooltip("If the weapon needs to be out for the skill, for example all melee skills require swords to be out")]public bool weaponOutRequired;
 
     [Header("Timings")]
     [Tooltip("Time needed to prepare and attack")] public float castingTime; 
     [Range(0, 1)] public float nomralizedCastingAnim;
     public bool finishedCast;
-
 
     protected PlayerControlls playerControlls;
     protected Animator animator;
@@ -98,6 +98,8 @@ public abstract class Skill : MonoBehaviour
         coolDownTimer = coolDown;
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
+        if (weaponOutRequired && !playerControlls.isWeaponOut)
+                WeaponsController.instance.InstantUnsheathe();
     }
 
     protected virtual void CastingAnim () {}
