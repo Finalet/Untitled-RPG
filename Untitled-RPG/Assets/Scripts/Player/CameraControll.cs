@@ -15,6 +15,7 @@ public class CameraControll : MonoBehaviour
     public GameObject crosshair;
     [Header("Animation IK")]
     public Transform headAimTarget;
+    public MultiAimConstraint headAimIK;
     
 
     Vector3 shake;
@@ -61,9 +62,9 @@ public class CameraControll : MonoBehaviour
 
     void FixedUpdate() {
         if (PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight < 0.7f) {
-            headAimTarget.GetComponentInParent<MultiAimConstraint>().weight += Time.deltaTime;
+            headAimIK.weight += Time.deltaTime;
         } else if (!PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight > 0) {
-            headAimTarget.GetComponentInParent<MultiAimConstraint>().weight -= Time.deltaTime;
+            headAimIK.weight -= Time.deltaTime;
         }
 
         Vector3 aimPos = transform.position + transform.forward * 13;
@@ -144,14 +145,16 @@ public class CameraControll : MonoBehaviour
             desiredFOV = 30;
             CM_cam.m_XAxis.m_MaxSpeed = 0.5f;   //lower sensitivity
             CM_cam.m_YAxis.m_MaxSpeed = 0.0033f; //lower sensitivity
+            desiredOffset = rightShoulder;
         } else {
             desiredFOV = 50;
+            desiredOffset = rightShoulder/2;
         }
+
 
         if (CM_cam.m_Lens.FieldOfView > desiredFOV)
             CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, desiredFOV-1, 7 * Time.deltaTime);
 
-        desiredOffset = rightShoulder;
         wasAiming = true;
 
         if (currentCamSettings == CamSettings.Smooth)

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Fireball : Skill
 {
     [Header("Custom Vars")]
-    public LayerMask ignorePlayer;
+    LayerMask ignorePlayer;
     public float speed;
     public float distance;
 
@@ -47,7 +47,7 @@ public class Fireball : Skill
 
         finishedCast = true;
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = false;
-         
+        ignorePlayer =~ LayerMask.GetMask("Player");
         StopEffects();
         //play sound
         GameObject Fireball = Instantiate(fireball, shootPosition.position, Quaternion.identity);

@@ -106,14 +106,14 @@ public class Lightning : Skill
     void PlayAnimation () {
         if (!playerControlls.isFlying) {
             if (shots == 1 || shots == 3 || shots == 5) 
-                playerControlls.animator.CrossFade("AttacksUpperBody.Mage.Lightning_right", 0.25f);
+                animator.CrossFade("AttacksUpperBody.Mage.Lightning_right", 0.25f);
             else 
-                playerControlls.animator.CrossFade("AttacksUpperBody.Mage.Lightning_left", 0.25f);
+                animator.CrossFade("AttacksUpperBody.Mage.Lightning_left", 0.25f);
         } else {
             if (shots == 1 || shots == 3 || shots == 5) 
-                playerControlls.animator.CrossFade("Attacks.Mage.Lightning_flying_right", 0.25f);
+                animator.CrossFade("Attacks.Mage.Lightning_flying_right", 0.25f);
             else 
-                playerControlls.animator.CrossFade("Attacks.Mage.Lightning_flying_left", 0.25f);
+                animator.CrossFade("Attacks.Mage.Lightning_flying_left", 0.25f);
         }
     }
 

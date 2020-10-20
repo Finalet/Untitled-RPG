@@ -173,7 +173,7 @@ public class WeaponsController : MonoBehaviour
         Weapon l = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
 
         //Assign single hand status
-        if (RightHandEquipObj != null) {
+        if (RightHandEquipObj != null && r != null) {
             if (r.weaponType == WeaponType.OneHanded) {
                 rightHandStatus = SingleHandStatus.OneHanded;
             } else if (r.weaponType == WeaponType.TwoHanded) {
@@ -182,7 +182,7 @@ public class WeaponsController : MonoBehaviour
         } else {
             rightHandStatus = SingleHandStatus.Empty;
         }
-        if (LeftHandEquipObj != null) {
+        if (LeftHandEquipObj != null && l != null) {
             if (l.weaponType == WeaponType.OneHanded) {
                 leftHandStatus = SingleHandStatus.OneHanded;
             } else if (l.weaponType == WeaponType.Shield) {
