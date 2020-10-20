@@ -29,7 +29,7 @@ public class DarkMatterProjectile : MonoBehaviour
         begPos = transform.position;
 
         GetComponent<AudioSource>().time = 0.1f; 
-        GetComponent<AudioSource>().pitch = 1.2f; 
+        GetComponent<AudioSource>().pitch = 1.7f; 
         GetComponent<AudioSource>().Play(); 
         explosionRadius = GetComponent<SphereCollider>().radius * 3;
     }

@@ -22,9 +22,9 @@ public class Weapon : Equipment
     }
 
     void Equip (UI_InventorySlot initialSlot) {
-        if (weaponType == WeaponType.OneHanded) {
+        if (weaponType == WeaponType.OneHandedSword || weaponType == WeaponType.OneHandedStaff) {
             OneHandedEquip(initialSlot);
-        } else if (weaponType == WeaponType.TwoHanded) {
+        } else if (weaponType == WeaponType.TwoHandedSword || weaponType == WeaponType.TwoHandedStaff) {
             TwoHandedEquip(initialSlot);
         }
     }
@@ -39,7 +39,7 @@ public class Weapon : Equipment
             EquipmentManager.instance.mainHand.AddItem(this, 1, initialSlot);
         } else if (EquipmentManager.instance.secondaryHand.itemInSlot == null) { 
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponType == WeaponType.OneHanded) { //if main hand is busy with one handed weapon, and secondary hand is free, equip if there
+            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) { //if main hand is busy with one handed weapon, and secondary hand is free, equip if there
                 EquipmentManager.instance.secondaryHand.AddItem(this, 1, initialSlot);
             } else {
                 EquipmentManager.instance.mainHand.AddItem(this, 1, initialSlot); //if main hand is busy with two handed weapon, replace it;

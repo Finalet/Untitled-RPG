@@ -20,7 +20,7 @@ public class DarkMatter : Skill
     {
         playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = true;
         string anim = left ? "AttacksUpperBody.Mage.DarkMatter_left" : "AttacksUpperBody.Mage.DarkMatter_right";
-        animator.CrossFade(anim, 0.2f);
+        animator.CrossFade(anim, 0.25f);
 
         Invoke("FireProjectile", 0.15f * characteristics.attackSpeed.z);
 
@@ -59,5 +59,15 @@ public class DarkMatter : Skill
         if (Time.time - aimingTimer >= 0.6f) {
             playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = false;
         }
+    }
+
+    protected override void LocalUse () {
+        playerControlls.InterruptCasting();
+        coolDownTimer = coolDown * characteristics.attackSpeed.z;
+        //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
+        CustomUse();
+        if (weaponOutRequired && !playerControlls.isWeaponOut)
+                WeaponsController.instance.InstantUnsheathe();
+        playerControlls.isAttacking = true;
     }
 }

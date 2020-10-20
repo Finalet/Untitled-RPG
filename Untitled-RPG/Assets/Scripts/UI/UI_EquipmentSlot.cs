@@ -76,7 +76,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
 
         Weapon w = (Weapon)item;
-        if (w.weaponType == WeaponType.TwoHanded && EquipmentManager.instance.secondaryHand.itemInSlot != null) { //if its two handed and second hand is busy, clear the second hand.
+        if ( (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) && EquipmentManager.instance.secondaryHand.itemInSlot != null) { //if its two handed and second hand is busy, clear the second hand.
             InventoryManager.instance.AddItemToInventory(EquipmentManager.instance.secondaryHand.itemInSlot, EquipmentManager.instance.secondaryHand.itemAmount, initialSlot);
             EquipmentManager.instance.secondaryHand.ClearSlot();
         }
@@ -92,12 +92,12 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
         
         Weapon w = (Weapon)item;
-        if (w.weaponType == WeaponType.TwoHanded) {  //if weapon is two handed, return it to initial slot
+        if (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) {  //if weapon is two handed, return it to initial slot
             initialSlot.AddItem(item, amount, initialSlot); 
             return;
-        } else if (w.weaponType == WeaponType.OneHanded) { //if weapon is onehanded, but main hand is already carryign two handed weapon, return to initial slot
+        } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) { //if weapon is onehanded, but main hand is already carryign two handed weapon, return to initial slot
             Weapon mw = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (mw != null && mw.weaponType == WeaponType.TwoHanded) {
+            if (mw != null && (mw.weaponType == WeaponType.TwoHandedSword || mw.weaponType == WeaponType.TwoHandedStaff) ) {
                 initialSlot.AddItem(item, amount, null); 
                 return;
             }
@@ -110,9 +110,9 @@ public class UI_EquipmentSlot : UI_InventorySlot
     {
         Weapon w = (Weapon)itemInSlot;
         if (w != null) {
-            if (w.weaponType == WeaponType.TwoHanded) {
+            if (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) {
                 EquipmentManager.instance.UnequipWeaponPrefab(true);
-            } else if (w.weaponType == WeaponType.OneHanded) {
+            } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) {
                 if (equipmentSlotType == EquipmentSlotType.MainHand) {
                     EquipmentManager.instance.UnequipWeaponPrefab(false);
                 } else {

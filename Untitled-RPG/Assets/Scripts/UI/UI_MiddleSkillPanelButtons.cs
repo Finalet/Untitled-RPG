@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
@@ -14,6 +15,7 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
             PickingArea();
             return;
         }
+        AssignSkill();
         base.Update();
     }
 
@@ -57,5 +59,40 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     void CancelPickingArea(){
         areaPickerSkill.CancelPickingArea();
         areaPickerSkill = null;
+    }
+
+    void AssignSkill () {
+        if (!isLBM) {
+            ClearSlot();
+            return;
+        }
+
+        SingleHandStatus rhs = WeaponsController.instance.rightHandStatus;
+        if (rhs == SingleHandStatus.OneHandedSword || rhs == SingleHandStatus.TwoHandedSword) {
+            AddSkill(AssetHolder.instance.getSkill(0), null);            
+        } else if (rhs == SingleHandStatus.OneHandedStaff || rhs == SingleHandStatus.TwoHandedStaff) {
+            AddSkill(AssetHolder.instance.getSkill(16), null);
+        }
+    }
+
+    //--------------------------------Drag----------------------------------//
+    public override void OnBeginDrag (PointerEventData pointerData) {
+        return;
+    }
+
+    public override void OnDrag (PointerEventData pointerData) {
+        return;
+    }
+
+    public override void OnEndDrag (PointerEventData pointerData) {
+        return;
+    }
+
+    public override void OnDrop (PointerEventData pointerData) {
+        return;
+    }
+
+    public override void OnPointerClick (PointerEventData pointerData) {
+        return;    
     }
 }

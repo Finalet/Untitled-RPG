@@ -10,6 +10,8 @@ public class EquipmentManager : MonoBehaviour
     Transform TwoHandedWeaponSlot;
     Transform MainHandSlot;
     Transform SecondaryHandSlot;
+    Transform LeftHandTrans;
+    Transform RightHandTrans;
 
     [Header("Slots")]
     public UI_EquipmentSlot helmet;
@@ -37,6 +39,8 @@ public class EquipmentManager : MonoBehaviour
         TwoHandedWeaponSlot = WeaponsController.instance.twohandedWeaponSlot;
         MainHandSlot = WeaponsController.instance.leftHipSlot;
         SecondaryHandSlot = WeaponsController.instance.rightHipSlot;
+        LeftHandTrans = WeaponsController.instance.LeftHandTrans;
+        RightHandTrans = WeaponsController.instance.RightHandTrans;
         LoadEquip();
     }
 
@@ -84,17 +88,32 @@ public class EquipmentManager : MonoBehaviour
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
         Transform parent;
-        if (weapon.weaponType == WeaponType.TwoHanded) { //Two handed weapon
-            parent = TwoHandedWeaponSlot;
+        if (weapon.weaponType == WeaponType.TwoHandedSword || weapon.weaponType == WeaponType.TwoHandedStaff) { //Two handed weapon
+            if (!PlayerControlls.instance.isWeaponOut) {
+                parent = TwoHandedWeaponSlot;
+            } else {
+                parent = RightHandTrans;
+            }
         } else if (!secondary) {  // Main hand
-            parent = MainHandSlot;
+            if (!PlayerControlls.instance.isWeaponOut) {
+                parent = MainHandSlot;
+            } else {
+                parent = RightHandTrans;
+            }
         } else { //Secondary hand
-            parent = SecondaryHandSlot;
+            if (!PlayerControlls.instance.isWeaponOut) {
+                parent = SecondaryHandSlot;
+            } else {
+                parent = LeftHandTrans;
+            }
         }
         GameObject w = Instantiate(weapon.itemPrefab, parent);
-        if (parent == TwoHandedWeaponSlot || parent == MainHandSlot) {
+        w.transform.localPosition = Vector3.zero;
+        w.transform.localEulerAngles = Vector3.zero;
+        w.transform.localScale = Vector3.one;
+        if (parent == TwoHandedWeaponSlot || parent == MainHandSlot || parent == RightHandTrans) {
             WeaponsController.instance.RightHandEquipObj = w;
-        } else if (parent == SecondaryHandSlot) {
+        } else if (parent == SecondaryHandSlot || parent == LeftHandTrans) {
             WeaponsController.instance.LeftHandEquipObj = w;
         }
     }
@@ -102,11 +121,23 @@ public class EquipmentManager : MonoBehaviour
     public void UnequipWeaponPrefab (bool twoHanded, bool secondary = false) {
         Transform slot;
         if (twoHanded) {
-            slot = TwoHandedWeaponSlot;
+            if (!PlayerControlls.instance.isWeaponOut) {
+                slot = TwoHandedWeaponSlot;
+            } else {
+                slot = RightHandTrans;
+            }
         } else if (!secondary) {
-            slot = MainHandSlot;
+            if (!PlayerControlls.instance.isWeaponOut) {
+                slot = MainHandSlot;
+            } else {
+                slot = RightHandTrans;
+            }
         } else {
-            slot = SecondaryHandSlot;
+            if (!PlayerControlls.instance.isWeaponOut) {
+                slot = SecondaryHandSlot;
+            } else {
+                slot = LeftHandTrans;
+            }
         }
         foreach (Transform child in slot) {
             Destroy(child.gameObject);
