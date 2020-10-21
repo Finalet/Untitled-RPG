@@ -46,9 +46,16 @@ public class WeaponsController : MonoBehaviour
     void Update() {
         CheckHandsEquip();
         ReleaseEmptyHandAnim();
+
+        //Manual Sheath
+        if (Input.GetKeyDown(KeyCode.H) && isWeaponOut) {
+            StartCoroutine(Sheathe());
+        }
     }
 
     public IEnumerator UnSheathe () {
+        print("UnSheath");
+
         sheathingUnsheathing = true;
         animator.SetTrigger("UnSheath");
         GetComponent<AudioSource>().clip = sheathSounds[0];
@@ -86,9 +93,11 @@ public class WeaponsController : MonoBehaviour
         sheathingUnsheathing = false;
     }
     public IEnumerator Sheathe () {
+        print("Sheath");
+        
         sheathingUnsheathing = true;
         isWeaponOut = false;
-        animator.SetTrigger("Sheath");
+        animator.SetTrigger("Sheath"); 
 
         GetComponent<AudioSource>().clip = sheathSounds[1];
         GetComponent<AudioSource>().PlayDelayed(0.3f);
@@ -135,6 +144,9 @@ public class WeaponsController : MonoBehaviour
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             SetParentAndTransorm(ref LeftHandEquipObj, LeftHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
+            animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
+        } else if (bothHandsStatus == BothHandsStatus.TwoHandedSword || bothHandsStatus == BothHandsStatus.TwoHandedStaff) {
+            SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
         } else {
             Debug.LogError("Instant unsheathing for this type of weapon is not implemented yet");

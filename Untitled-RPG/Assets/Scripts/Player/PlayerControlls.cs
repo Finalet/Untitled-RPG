@@ -86,7 +86,7 @@ public class PlayerControlls : MonoBehaviour
 
     bool rolled;
 
-    [System.NonSerialized] public bool[] emptyAttackAnimatorStates = new bool[2];
+    public bool[] emptyAttackAnimatorStates = new bool[3];
 
     void Awake() {
         if (instance == null) 
@@ -575,11 +575,8 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void CheckIsAttacking () {
-        for (int i = 0; i < emptyAttackAnimatorStates.Length; i++) {
-            if (emptyAttackAnimatorStates[i] == false)
-                return;
-        }
-        isAttacking = false;
+        if ( ( emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] ) && emptyAttackAnimatorStates[2])
+            isAttacking = false;
     }
 
     void InBattleCheck () {
