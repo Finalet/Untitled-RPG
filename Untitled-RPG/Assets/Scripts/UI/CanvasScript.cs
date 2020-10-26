@@ -11,8 +11,7 @@ public class CanvasScript : MonoBehaviour
     [Header("Player")]
     public Image healthBar;
     public Image staminaBar;
-    Color baseStaminaColor;
-    Color baseBackgroundStaminaColor;
+
     public GameObject buffs;
     public GameObject castingBar;
 
@@ -38,41 +37,46 @@ public class CanvasScript : MonoBehaviour
 
     void Start() {
         characteristics = Characteristics.instance;
-        baseStaminaColor = staminaBar.color;
-        baseBackgroundStaminaColor = staminaBar.transform.parent.GetComponent<Image>().color;
     }
 
     void Update() {
         DisplayHPandStamina();
     }
 
+    float staminaColorLerp;
+    float staminaFillAmount;
     void DisplayHPandStamina () {
         healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.HP/characteristics.maxHP, Time.deltaTime * 10);
         healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.HP.ToString();
-        staminaBar.fillAmount = Mathf.Lerp(staminaBar.fillAmount, (float)characteristics.Stamina/characteristics.maxStamina, Time.deltaTime * 10);
+        staminaFillAmount = Mathf.Lerp(staminaFillAmount, (float)characteristics.Stamina/characteristics.maxStamina, Time.deltaTime * 10);
 
         StaminaBarPosition();
 
         if (!Characteristics.instance.canUseStamina) {
-            staminaBar.color = Color.Lerp(staminaBar.color, new Color(0.8f,0,0,0.8f), 10 * Time.deltaTime); //dark red
-            staminaBar.transform.parent.GetComponent<Image>().color = Color.Lerp(staminaBar.transform.parent.GetComponent<Image>().color, new Color(0.4f,0,0,0.8f), 10 * Time.deltaTime); //even darker red
+            if (staminaColorLerp < 1)
+                staminaColorLerp += Time.deltaTime * 10;
         } else {
-            staminaBar.color = Color.Lerp(staminaBar.color, baseStaminaColor, 10 * Time.deltaTime);
-            staminaBar.transform.parent.GetComponent<Image>().color = Color.Lerp(staminaBar.transform.parent.GetComponent<Image>().color, baseBackgroundStaminaColor, 10 * Time.deltaTime);
+            if (staminaColorLerp > 0)
+                staminaColorLerp -= Time.deltaTime * 10;
         }
+        staminaColorLerp = Mathf.Clamp01(staminaColorLerp);
+        staminaFillAmount = Mathf.Clamp01(staminaFillAmount);
+        
+        staminaBar.material.SetFloat("_ColorLerp", staminaColorLerp);
+        staminaBar.material.SetFloat("_FillAmount", staminaFillAmount);
     }
 
     void StaminaBarPosition () {
-        Vector3 currentPos = staminaBar.transform.parent.GetComponent<RectTransform>().position;
-        Vector3 desPos = Camera.main.WorldToScreenPoint(PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 0.7f + Vector3.up * 1.2f);
-        staminaBar.transform.parent.GetComponent<RectTransform>().position = Vector3.Lerp(currentPos, desPos, 10 * Time.deltaTime);
+        Vector3 currentPos = staminaBar.transform.GetComponent<RectTransform>().position;
+        Vector3 desPos = Camera.main.WorldToScreenPoint(PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 0.5f + Vector3.up * 1.2f);
+        staminaBar.transform.GetComponent<RectTransform>().position = Vector3.Lerp(currentPos, desPos, 10 * Time.deltaTime);
     }
 
     public void HideStamina () {
-        staminaBar.transform.parent.gameObject.SetActive(false);
+        staminaBar.transform.gameObject.SetActive(false);
     }
     public void ShowStamina () {
-        staminaBar.transform.parent.gameObject.SetActive(true);
+        staminaBar.transform.gameObject.SetActive(true);
     }
 
     public void DisplayEnemyInfo (string name, float healthFillAmount, int health) {
