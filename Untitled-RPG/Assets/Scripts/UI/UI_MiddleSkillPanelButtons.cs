@@ -71,7 +71,7 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
         if (rhs == SingleHandStatus.OneHandedSword || rhs == SingleHandStatus.TwoHandedSword) {
             AddSkill(AssetHolder.instance.getSkill(0), null);            
         } else if (rhs == SingleHandStatus.OneHandedStaff || rhs == SingleHandStatus.TwoHandedStaff) {
-            AddSkill(AssetHolder.instance.getSkill(16), null);
+            AddSkill(AssetHolder.instance.getSkill(8), null);
         }
     }
 

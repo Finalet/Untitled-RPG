@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,9 +10,9 @@ public class InventoryManager : MonoBehaviour
     [Header("Add Items to Inventory Here")]
     public int itemAmountToAdd = 1;
     public Item itemToAdd;
-    public bool add;
     [Space]
-
+    public InputField inputText;
+    [Space]
     public GameObject slots;
     UI_InventorySlot[] allSlots;
 
@@ -27,13 +28,26 @@ public class InventoryManager : MonoBehaviour
     void FixedUpdate() {
         if (itemToAdd is Equipment)
             itemAmountToAdd = 1;
-            
-        if (itemToAdd != null && add) {
-            AddItemToInventory(itemToAdd, itemAmountToAdd);
+
+        if (inputText.text != "" && ( Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) )
+            AddItemToInventoryDEBUG();
+    }
+
+    public void AddItemToInventoryDEBUG () {
+        string input = inputText.text;
+        if (input.IndexOf('.') != -1 ) {
+            itemToAdd = AssetHolder.instance.getItem(int.Parse(input.Substring(0, input.IndexOf('.'))));
+            itemAmountToAdd = int.Parse(input.Substring(input.IndexOf('.') + 1));
+        } else {
+            itemToAdd = AssetHolder.instance.getItem(int.Parse(input));
             itemAmountToAdd = 1;
-            itemToAdd = null;
-            add = false;
         }
+
+        if (itemToAdd == null)
+            return;
+        
+        AddItemToInventory (itemToAdd, itemAmountToAdd, null);
+        inputText.text = "";
     }
 
     public void AddItemToInventory (Item item, int amount, UI_InventorySlot slotToExclude = null) {

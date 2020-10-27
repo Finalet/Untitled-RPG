@@ -68,7 +68,7 @@ public class DarkMatterProjectile : MonoBehaviour
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
             if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), true, false, transform.position, "Dark Matter");
+                other.GetComponent<Enemy>().GetHit(damage(), false, false, transform.position, "Dark Matter");
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
@@ -76,7 +76,6 @@ public class DarkMatterProjectile : MonoBehaviour
     }
 
     void Explode () {
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f, 0.1f, transform.position);
         explostionSparks.Play();
         fire.Stop();
         light1.SetActive(false);

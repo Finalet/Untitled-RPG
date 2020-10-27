@@ -33,6 +33,7 @@ public class WeaponsController : MonoBehaviour
     public AudioClip[] sheathSounds;
 
     bool sheathingUnsheathing;
+    bool blockSheathe;
 
     void Awake() {
         if (instance == null)
@@ -54,8 +55,8 @@ public class WeaponsController : MonoBehaviour
     }
 
     public IEnumerator UnSheathe () {
-        print("UnSheath");
-
+        blockSheathe = true; //So that you cant immediately sheathe after unsheathing;
+        
         sheathingUnsheathing = true;
         animator.SetTrigger("UnSheath");
         GetComponent<AudioSource>().clip = sheathSounds[0];
@@ -91,10 +92,14 @@ public class WeaponsController : MonoBehaviour
         animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 0);
 
         sheathingUnsheathing = false;
+
+        yield return new WaitForSeconds(2);
+        blockSheathe = false;
     }
     public IEnumerator Sheathe () {
-        print("Sheath");
-        
+        if (blockSheathe)
+            yield break;
+
         sheathingUnsheathing = true;
         isWeaponOut = false;
         animator.SetTrigger("Sheath"); 
@@ -152,6 +157,9 @@ public class WeaponsController : MonoBehaviour
             Debug.LogError("Instant unsheathing for this type of weapon is not implemented yet");
         }
         isWeaponOut = true;
+        
+        blockSheathe = true;
+        Invoke("UnblockSheath", 2);
     }
     void SheathObj () {
         if (bothHandsStatus == BothHandsStatus.DualSwords) {
@@ -263,5 +271,9 @@ public class WeaponsController : MonoBehaviour
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 0);
             animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 0);
         }
+    }
+
+    void UnblockSheath() {
+        blockSheathe = false;
     }
 }
