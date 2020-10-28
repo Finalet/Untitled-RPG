@@ -18,6 +18,7 @@ public class PeaceCanvas : MonoBehaviour
     [Space]
     public CinemachineVirtualCamera CM_MenuCam;
     public Transform menuLookAt;
+    public Camera UICamera;
 
     [Header("Inventory")]
     public GameObject MainContainer;
@@ -79,6 +80,8 @@ public class PeaceCanvas : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F1)) {
             DebugChatPanel.SetActive(!DebugChatPanel.activeInHierarchy);
+        } else if (Input.GetKeyDown(KeyCode.F3)) {
+            UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }
 
         if (!anyPanelOpen) {
@@ -105,9 +108,13 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void BasicDrag (Vector2 iconSize, Sprite img) {
-        dragGO = Instantiate(dragObject, Input.mousePosition, Quaternion.identity, transform);
+        Vector2 startPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), Input.mousePosition, PeaceCanvas.instance.UICamera, out startPos);
+
+        dragGO = Instantiate(dragObject, Vector3.zero, Quaternion.identity, transform);
         dragGO.transform.localScale = Vector3.one * 1.05f;
         dragGO.GetComponent<RectTransform>().sizeDelta = iconSize;
+        dragGO.GetComponent<RectTransform>().anchoredPosition3D = new Vector3 (startPos.x, startPos.y, 0);
         dragGO.GetComponent<Image>().sprite = img;
         if (amountOfDraggedItem == 0 || itemBeingDragged is Equipment) {
             dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
@@ -129,11 +136,12 @@ public class PeaceCanvas : MonoBehaviour
         BasicDrag(iconSize, skill.icon);
     }
 
-    public void DragItem(float deltaX, float deltaY) {
+    public void DragItem(Vector2 pos) {
         if (dragGO == null)
             return;
 
-        dragGO.transform.position += new Vector3(deltaX, deltaY, 0);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), pos, PeaceCanvas.instance.UICamera, out pos);
+        dragGO.GetComponent<RectTransform>().anchoredPosition = pos;
     }
 
     [System.NonSerialized] public bool dragSuccess;

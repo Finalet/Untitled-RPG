@@ -67,9 +67,10 @@ public class CanvasScript : MonoBehaviour
     }
 
     void StaminaBarPosition () {
-        Vector3 currentPos = staminaBar.transform.GetComponent<RectTransform>().position;
-        Vector3 desPos = Camera.main.WorldToScreenPoint(PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 0.5f + Vector3.up * 1.2f);
-        staminaBar.transform.GetComponent<RectTransform>().position = Vector3.Lerp(currentPos, desPos, 10 * Time.deltaTime);
+        Vector3 currentPos = staminaBar.transform.GetComponent<RectTransform>().anchoredPosition;
+        Vector2 desPos = Camera.main.WorldToScreenPoint(PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 0.5f + Vector3.up * 1.2f);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), desPos, PeaceCanvas.instance.UICamera, out desPos);
+        staminaBar.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(currentPos, desPos, 10 * Time.deltaTime);
     }
 
     public void HideStamina () {

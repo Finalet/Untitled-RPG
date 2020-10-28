@@ -27,7 +27,7 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if(pointerData.button == PointerEventData.InputButton.Right)
             return;
 
-        PeaceCanvas.instance.DragItem(pointerData.delta.x, pointerData.delta.y);
+        PeaceCanvas.instance.DragItem(pointerData.position);
     }
 
     public void OnEndDrag(PointerEventData eventData) {

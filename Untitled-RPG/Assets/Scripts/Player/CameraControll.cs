@@ -50,12 +50,6 @@ public class CameraControll : MonoBehaviour
         //Shoulder camera switching
         if (Input.GetKeyUp(KeyCode.Mouse2))
             SwitchShouderCam();
-        
-        //Turn on/off UI
-        if (Input.GetKeyUp(KeyCode.F3)) {
-            CanvasScript.instance.gameObject.SetActive(!CanvasScript.instance.gameObject.activeInHierarchy);
-            PeaceCanvas.instance.gameObject.SetActive(!PeaceCanvas.instance.gameObject.activeInHierarchy);
-        }
 
         camDistance = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position + Vector3.up*1.6f);
     }

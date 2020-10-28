@@ -155,7 +155,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         if (pointerData.button == PointerEventData.InputButton.Right)
             return; 
 
-        PeaceCanvas.instance.DragItem(pointerData.delta.x, pointerData.delta.y);
+        PeaceCanvas.instance.DragItem(pointerData.position);
     }
 
     public virtual void OnEndDrag (PointerEventData pointerData) {
