@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrainingDummy : Enemy
+public class TrainingDummy : StaticEnemy
 {
     float rotationX;
     float rotationZ;
@@ -14,9 +14,9 @@ public class TrainingDummy : Enemy
     GameObject rotationObj;
     
     protected override void Start() {
+        base.Start();
         rotationObj = transform.GetChild(0).gameObject;
         canGetHit = true;
-        stabsAudioSource = GetComponent<AudioSource>();
     }
 
     protected override void Update() {
@@ -25,7 +25,7 @@ public class TrainingDummy : Enemy
 
         transform.rotation = Quaternion.Euler(0,0,0);
 
-        health = maxHealth;
+        currentHealth = maxHealth;
 
         if (rotationX > 0.5f || rotationX < -0.5f) {
             rotationX = Mathf.Lerp(rotationX, 0, 10*Time.deltaTime);
@@ -46,15 +46,24 @@ public class TrainingDummy : Enemy
         rotationObj.transform.rotation = Quaternion.Euler(x, rotationObj.transform.eulerAngles.y, z);
     }
 
-    protected override void BasicGetHit(int damage, string skillName) {
-        actualDamage = calculateActualDamage(damage);
+    public override void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, Vector3 damageTextPos = new Vector3 ()) {
+        if (isDead || !canGetHit)
+            return;
+        
+        int actualDamage = calculateActualDamage(damage);
 
         rotationX = direction.normalized.z * 30 * (1 + (float)damage/5000);
         rotationZ = -direction.normalized.x * 30 * (1 + (float)damage/5000);
-        HitParticles();
+
+        currentHealth -= actualDamage;
+        PlayHitParticles(); 
         PlayGetHitSounds();
         PlayStabSounds();
-    
+        
+        if (stopHit) StartCoroutine(HitStop());
+        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
+        DisplayDamageNumber(actualDamage, damageTextPos);
+
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }
 
@@ -64,7 +73,7 @@ public class TrainingDummy : Enemy
     public override void Hit(){
         //Does nothing
     }
-
+    
     protected override void PlayStabSounds () {
         int playID;
         float x = Random.Range(0f, 1f);
@@ -73,8 +82,7 @@ public class TrainingDummy : Enemy
         } else {
             playID = 1;
         }
-        stabsAudioSource.clip = stabsClips[playID];
-        stabsAudioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
-        stabsAudioSource.Play();
-    }
+        audioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
+        audioSource.PlayOneShot(stabSounds[playID]);
+    } 
 }

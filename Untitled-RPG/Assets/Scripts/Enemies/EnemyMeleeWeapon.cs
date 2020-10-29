@@ -10,8 +10,8 @@ public class EnemyMeleeWeapon : MonoBehaviour
         enemy = GetComponentInParent<Enemy>();
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("Player") && other.GetType() == typeof(CharacterController)) { // Checks if charater got hit, and nots its triggers
+    void OnTriggerStay(Collider other) {
+        if (other.CompareTag("Player") && other.GetType() == typeof(CharacterController) && enemy.canHit()) { // Checks if charater got hit, and not its triggers
             enemy.Hit();
         }
     }

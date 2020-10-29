@@ -93,7 +93,7 @@ public class Slash : Skill
 
     public void Hit () {
         for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
-            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage(), true, true, skillName);
+            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true);
         }
     }
 

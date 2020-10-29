@@ -178,6 +178,7 @@ public class Characteristics : MonoBehaviour
     public void AddBuff(Skill skill) {
         activeBuffs.Add(skill);
         GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
+        icon.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         icon.GetComponent<BuffIcon>().skill = skill;
 
         switch (skill.ID) {

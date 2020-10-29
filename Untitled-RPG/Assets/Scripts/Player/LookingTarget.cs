@@ -19,7 +19,7 @@ public class LookingTarget : MonoBehaviour
             Enemy en = target.GetComponent<Enemy>();
             if (en != null) {
                 targetIsEnemy = true;
-                CanvasScript.instance.DisplayEnemyInfo(en.enemyName, (float)en.health/en.maxHealth, en.health);
+                CanvasScript.instance.DisplayEnemyInfo(en.enemyName, (float)en.currentHealth/en.maxHealth, en.currentHealth);
                 distanceToTarget = Vector3.Distance(en.gameObject.transform.position, gameObject.transform.position);
             } else {
                 target = null;

@@ -17,6 +17,8 @@ public class EnemySpawner : MonoBehaviour
     }
 
     void Update() {
+        CleanList();
+
         if (listOfAllEnemies.Count < numberOfEnemies && timer <= 0) {
             Spawn();
             timer = 1/spawnFrequency;
@@ -29,10 +31,16 @@ public class EnemySpawner : MonoBehaviour
         Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-5f, 5f), transform.position.y, transform.position.z + Random.Range(-5f, 5f) );
         Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360),0);
         GameObject en = Instantiate(enemy, spawnPos, rotation);
-        en.GetComponent<Enemy>().spawner = transform;
         en.transform.SetParent(transform);
         listOfAllEnemies.Add(en);
         particles.transform.position = spawnPos;
         particles.Play();
+    }
+
+    void CleanList () {
+        for (int i = 0; i < listOfAllEnemies.Count; i++) {
+            if (listOfAllEnemies[i] == null)
+                listOfAllEnemies.Remove(listOfAllEnemies[i]);
+        }
     }
 }

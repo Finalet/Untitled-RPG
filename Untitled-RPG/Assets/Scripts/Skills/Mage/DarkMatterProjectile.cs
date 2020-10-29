@@ -68,7 +68,7 @@ public class DarkMatterProjectile : MonoBehaviour
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
             if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), false, false, transform.position, "Dark Matter");
+                other.GetComponent<Enemy>().GetHit(damage(), "Dark Matter", false, false, transform.position);
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }

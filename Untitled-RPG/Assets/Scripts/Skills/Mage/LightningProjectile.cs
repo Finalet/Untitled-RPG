@@ -21,7 +21,7 @@ public class LightningProjectile : MonoBehaviour
             return;
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
-            other.GetComponent<Enemy>().GetHit(damage(), false, true, transform.position, "Lightning");
+            other.GetComponent<Enemy>().GetHit(damage(), "Lightning", false, true, transform.position);
         }
     }
 

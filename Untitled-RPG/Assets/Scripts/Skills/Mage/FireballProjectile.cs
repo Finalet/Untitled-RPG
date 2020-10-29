@@ -68,7 +68,7 @@ public class FireballProjectile : MonoBehaviour
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
             if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), true, false, transform.position, "Fireball");
+                other.GetComponent<Enemy>().GetHit(damage(), "Fireball", true, false, transform.position);
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
