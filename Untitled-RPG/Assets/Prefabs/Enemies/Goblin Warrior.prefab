@@ -1586,7 +1586,7 @@ Transform:
   - {fileID: 154495484993313969}
   - {fileID: 154495484993284521}
   - {fileID: 154495484993222077}
-  - {fileID: 5267772721348374182}
+  - {fileID: 7109296432418988414}
   m_Father: {fileID: 154495484993208337}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1660,9 +1660,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.4
-  m_Height: 2
+  m_Height: 1.85
   m_Direction: 1
-  m_Center: {x: 0, y: 0.95, z: 0}
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!54 &1326702835891782521
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1689,7 +1689,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 10
+  m_Speed: 3
   m_Acceleration: 25
   avoidancePriority: 50
   m_AngularSpeed: 360
@@ -1698,7 +1698,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.15
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &154495484993145589
@@ -1710,26 +1710,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 3546369989262933049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 287645950d47e3946997ca1b53e8e052, type: 3}
+  m_Script: {fileID: 11500000, guid: 3361f9aab7813ae4d9d2cf3945b3c023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyName: Goblin Warrior
-  maxHealth: 1000
+  maxHealth: 10000
   currentHealth: 0
   baseDamage: 100
-  playerDetectRadius: 10
-  attackRange: 1.5
+  playerDetectRadius: 12
+  attackRange: 2
+  hitType: 0
   currentState: 0
   isCoolingDown: 0
-  attackCoolDown: 2
-  agrTime: 10
+  attackCoolDown: 5
+  agrTime: 5
   TargetSkillDamagePercentage: 0
-  isWalking: 0
   isAttacking: 0
-  isGettingHit: 0
+  isGettingInterrupted: 0
   isDead: 0
   isKnockedDown: 0
-  isReturning: 0
   canGetHit: 1
   agr: 0
   healthBar: {fileID: 2670621119448169147}
@@ -1737,12 +1736,12 @@ MonoBehaviour:
   getHitSounds:
   - {fileID: 8300000, guid: de6a0cbc00cac1a469c6db357b026fe9, type: 3}
   - {fileID: 8300000, guid: ff195d281cff2af48823ac917da2ec2b, type: 3}
+  - {fileID: 8300000, guid: ba2d45a5b195aa44da54b423f0440772, type: 3}
   - {fileID: 8300000, guid: 31dbb70ea9c836a47b7811c2412bbe0e, type: 3}
   - {fileID: 8300000, guid: fb5bbfcd95aa6ea43854bf4c0ad6d771, type: 3}
   stabSounds:
   - {fileID: 8300000, guid: c4126bd0c33f32e4aa6ced9c680d3573, type: 3}
   - {fileID: 8300000, guid: 2de8bd1b8491d7c43a5f500710e8ef18, type: 3}
-  - {fileID: 8300000, guid: 6e05d61264b04e34e8f6c26b9749c9f6, type: 3}
 --- !u!82 &-3264816953089149180
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1964,7 +1963,7 @@ Transform:
   m_Father: {fileID: 3546369989262500327}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5267772721348123048
+--- !u!1 &7109296432419297918
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1972,47 +1971,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5267772721348374182}
-  - component: {fileID: 5267772721345036706}
-  - component: {fileID: 5267772721346069156}
-  - component: {fileID: 1263827864737186294}
-  - component: {fileID: 1066453213790950224}
+  - component: {fileID: 7109296432418988414}
+  - component: {fileID: 7109296432422389654}
+  - component: {fileID: 7109296432421208144}
+  - component: {fileID: 7071120837694198383}
+  - component: {fileID: 2413481049890888958}
   m_Layer: 0
-  m_Name: SM_Wep_Bone_02
+  m_Name: SM_Wep_Goblin_Club_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5267772721348374182
+--- !u!4 &7109296432418988414
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5267772721348123048}
-  m_LocalRotation: {x: 0.67752564, y: -1.7763564e-15, z: -0, w: 0.7354991}
-  m_LocalPosition: {x: 12.5, y: 2.5, z: -22.1}
+  m_GameObject: {fileID: 7109296432419297918}
+  m_LocalRotation: {x: 0, y: 0.7355002, z: -0.6775245, w: 0}
+  m_LocalPosition: {x: 12.5, y: 2.61, z: 1.29}
   m_LocalScale: {x: 100.00002, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 3546369989262499897}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 85.301, y: 0, z: 0}
---- !u!33 &5267772721345036706
+  m_LocalEulerAnglesHint: {x: 85.301, y: 180, z: 0}
+--- !u!33 &7109296432422389654
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5267772721348123048}
-  m_Mesh: {fileID: 4300000, guid: 4e5fda3e000facd4eb4d6f46ae549f79, type: 3}
---- !u!23 &5267772721346069156
+  m_GameObject: {fileID: 7109296432419297918}
+  m_Mesh: {fileID: 4300000, guid: 869cad4730ca8f543b5400cca4acfda6, type: 3}
+--- !u!23 &7109296432421208144
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5267772721348123048}
+  m_GameObject: {fileID: 7109296432419297918}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -2047,31 +2046,31 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1263827864737186294
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5267772721348123048}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.172863, y: 0.8496039, z: 0.09491252}
-  m_Center: {x: 0.00000011920929, y: 0.00000023841851, z: -1.7763568e-15}
---- !u!114 &1066453213790950224
+--- !u!114 &7071120837694198383
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5267772721348123048}
+  m_GameObject: {fileID: 7109296432419297918}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &2413481049890888958
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7109296432419297918}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.3, y: 1.2489252, z: 0.3}
+  m_Center: {x: -0.0000007220843, y: 0.45815164, z: 0.01571291}
 --- !u!1 &7818600167278889317
 GameObject:
   m_ObjectHideFlags: 0

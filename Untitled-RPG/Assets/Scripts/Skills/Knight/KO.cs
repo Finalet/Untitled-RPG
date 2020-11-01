@@ -48,9 +48,10 @@ public class KO : Skill
     public void Hit (float knockDown) {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
             if (knockDown == 1) {
-                enemiesInTrigger[i].GetComponent<Enemy>().GetKnockedDown();
+                enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true, HitType.Knockdown);
+            } else {
+                enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true, HitType.Normal);
             }
-            enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true);
         }
     }
 

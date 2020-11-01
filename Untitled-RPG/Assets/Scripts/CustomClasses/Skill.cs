@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum HitType {Normal, Interrupt, Kickback, Knockdown};
+
 public abstract class Skill : MonoBehaviour
 {
     public int ID;

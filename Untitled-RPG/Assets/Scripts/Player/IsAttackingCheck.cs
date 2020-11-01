@@ -13,7 +13,7 @@ public class IsAttackingCheck : StateMachineBehaviour
         if (Player){
             animator.gameObject.GetComponent<PlayerControlls>().isAttacking = false;
         } else {
-            animator.gameObject.GetComponent<Enemy>().isAttacking = true;
+            animator.gameObject.GetComponent<Enemy>().isAttacking = false;
         }
     }
     override public void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) {
@@ -23,7 +23,7 @@ public class IsAttackingCheck : StateMachineBehaviour
             if (!animator.gameObject.GetComponent<PlayerControlls>().isCastingSkill)
                 animator.gameObject.GetComponent<PlayerControlls>().isAttacking = true;
         } else {
-            animator.gameObject.GetComponent<Enemy>().isAttacking = false;
+            animator.gameObject.GetComponent<Enemy>().isAttacking = true;
         }
     }
 

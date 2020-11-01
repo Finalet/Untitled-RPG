@@ -228,34 +228,26 @@ public class Characteristics : MonoBehaviour
     }
 
 #region Get hit overloads 
-    bool checkFailed () {
-        if (!canGetHit)
-            return true;
-        else   
-            return false;
-    }
 
-    void BasicGetHit (int damage) {
-        PlayerControlls.instance.InterruptCasting();
-        PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.25f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
+    public void GetHit (int damage, HitType hitType = HitType.Normal, float cameraShakeFrequency = 0, float cameraShakeAmplitude = 0) {
+        if (!canGetHit)
+            return;
+
+
+        if (hitType == HitType.Normal) {
+            PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHitUpperBody"), 0);
+        } else if (hitType == HitType.Interrupt) {
+            PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
+            PlayerControlls.instance.InterruptCasting();
+        }
+
         int actualDamage = Mathf.RoundToInt(damage); 
         HP -= damage;
         DisplayDamageNumber(damage);
         GetComponent<PlayerAudioController>().PlayGetHitSound();
-    }
 
-    public void GetHit (int damage) {
-        if (checkFailed())
-            return;
-
-        BasicGetHit(damage);
-    }
-    public void GetHit (int damage, float cameraShakeFrequency, float cameraShakeAmplitude) {
-        if (checkFailed())
-            return;
-
-        BasicGetHit(damage);
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
+        if (cameraShakeFrequency != 0 && cameraShakeAmplitude != 0)
+            PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
     }
 
 #endregion

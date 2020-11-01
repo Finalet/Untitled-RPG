@@ -35,7 +35,7 @@ public class FirewallWall : MonoBehaviour
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
             if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), "Firewall");
+                other.GetComponent<Enemy>().GetHit(damage(), "Firewall", false, false, HitType.Interrupt);
                 StartCoroutine(List(other.GetComponent<Enemy>()));
             }
         }

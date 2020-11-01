@@ -17,9 +17,6 @@ public class DarkMatterProjectile : MonoBehaviour
     Vector3 begPos;
     bool done;
 
-    bool explosionExpand;
-    float explosionRadius;
-
     List<Enemy> enemiesHit = new List<Enemy>();
     void Start() {
         if (doNotDestroy)
@@ -31,7 +28,6 @@ public class DarkMatterProjectile : MonoBehaviour
         GetComponent<AudioSource>().time = 0.1f; 
         GetComponent<AudioSource>().pitch = 1.7f; 
         GetComponent<AudioSource>().Play(); 
-        explosionRadius = GetComponent<SphereCollider>().radius * 3;
     }
 
     void Update() {
@@ -44,13 +40,6 @@ public class DarkMatterProjectile : MonoBehaviour
         }
 
         transform.Rotate(randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime);
-    
-        if(explosionExpand) {
-            if (GetComponent<SphereCollider>().radius <= explosionRadius)
-                GetComponent<SphereCollider>().radius += Time.deltaTime*10;
-            else 
-                GetComponent<Collider>().enabled = false;    
-        }
     }
 
     int damage () {
@@ -68,7 +57,7 @@ public class DarkMatterProjectile : MonoBehaviour
         
         if (other.gameObject.GetComponent<Enemy>() != null) {
             if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), "Dark Matter", false, false, transform.position);
+                other.GetComponent<Enemy>().GetHit(damage(), "Dark Matter", false, false, HitType.Normal, transform.position);
                 enemiesHit.Add(other.GetComponent<Enemy>());
             }
         }
@@ -80,7 +69,6 @@ public class DarkMatterProjectile : MonoBehaviour
         fire.Stop();
         light1.SetActive(false);
         GetComponent<Rigidbody>().isKinematic = true;
-        explosionExpand = true;
         GetComponent<MeshRenderer>().enabled = false;
         Destroy(gameObject,0.51f);
     }

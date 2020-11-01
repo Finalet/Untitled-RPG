@@ -14,6 +14,7 @@ public abstract class Enemy : MonoBehaviour
     public int baseDamage;
     public float playerDetectRadius;
     public float attackRange;
+    public HitType hitType;
 
     [Header("AI State")]
     public EnemyState currentState;
@@ -32,15 +33,12 @@ public abstract class Enemy : MonoBehaviour
 
     //FOR TESTING ONLY
     [Header("States")]
-    public bool isWalking;
     public bool isAttacking;
-    public bool isGettingHit; //using
+    public bool isGettingInterrupted; //using
     public bool isDead; //using
     public bool isKnockedDown; //using
-    public bool isReturning;
     public bool canGetHit = true; //using
     public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
-    bool hitOnce;
 
     [Space]
     public GameObject healthBar;
@@ -80,8 +78,12 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected virtual void AI () {
+        if (distanceToPlayer <= playerDetectRadius) {
+            Agr();
+        }
+        
         if (agr) {
-            if (distanceToPlayer > attackRange) {
+            if (distanceToPlayer > attackRange && !isAttacking) {
                 currentState = EnemyState.Approaching;
             } else {
                 currentState = EnemyState.Attacking;
@@ -112,11 +114,12 @@ public abstract class Enemy : MonoBehaviour
         if (isCoolingDown || isDead || isKnockedDown)
             return;
         
+        navAgent.isStopped = true;
         coolDownTimer = attackCoolDown;
         AttackTarget();
     }
     protected abstract void AttackTarget();
-    protected abstract void FaceTarget();
+    protected abstract void FaceTarget(bool instant = false);
     protected abstract void ReturnToPosition();
     protected abstract void Idle();
     
@@ -135,14 +138,22 @@ public abstract class Enemy : MonoBehaviour
         //Add health regeneration
     }
 
-    public virtual void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, Vector3 damageTextPos = new Vector3 ()) {
+    public virtual void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
         if (isDead || !canGetHit)
             return;
         
+        Agr();
+
         int actualDamage = calculateActualDamage(damage);
 
-        if (!isKnockedDown)
-            animator.CrossFade("GetHit.GetHit", 0.25f, animator.GetLayerIndex("GetHit"), 0);
+        if (hitType == HitType.Normal)
+            animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
+        else if (hitType == HitType.Interrupt)
+            animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
+        else if (hitType == HitType.Kickback)
+            StartCoroutine(KickBack());
+        else if (hitType == HitType.Knockdown)
+            StartCoroutine(KnockedDown());
 
         currentHealth -= actualDamage;
         PlayHitParticles();
@@ -177,11 +188,7 @@ public abstract class Enemy : MonoBehaviour
         Time.timeScale = 1;
     }
     
-    public virtual void GetKnockedDown() {
-        if (!isDead)
-            StartCoroutine(KnockedDown());
-    }
-    IEnumerator KnockedDown () {
+    protected IEnumerator KnockedDown () {
         animator.Play("GetHit.KnockDown");
         isKnockedDown = true;
         float timer = 3;
@@ -193,6 +200,20 @@ public abstract class Enemy : MonoBehaviour
         }
         animator.Play("GetHit.GetUp");
         yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(animator.GetLayerIndex("GetHit")).Length);
+        isKnockedDown = false;
+    }
+    protected IEnumerator KickBack () {
+        animator.CrossFade("GetHit.GetHitKickback", 0.1f);
+        isKnockedDown = true;
+        float timer = 1.5f;
+        while (timer>0) {
+            timer -= Time.fixedDeltaTime;
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            if (isDead)
+                yield break;
+        }
+        animator.CrossFade("GetHit.GetUp", 0.1f);
+        yield return new WaitForSeconds(2);
         isKnockedDown = false;
     }
 
@@ -220,9 +241,6 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected virtual void CheckAgr () {
-        if (distanceToPlayer <= playerDetectRadius || isGettingHit)
-            agrTimer = agrTime;
-        
         if (agrTimer > 0) {
             agr = true;
             agrTimer -= Time.deltaTime;
@@ -231,16 +249,24 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
+    protected virtual void Agr() {
+        if (!agr) {
+            target = PlayerControlls.instance.transform;
+            agr = true;
+            FaceTarget(true);
+        }
+        agrTimer = agrTime;
+    }
+
     public virtual void Hit () {
-        if (hitOnce || !canHit())
+        if (!canHit())
             return;
 
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), 0.2f, 1f);
-        hitOnce = true;
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1f);
     }
 
     public bool canHit () {
-        if (animator.GetFloat("CanHit") >= 0.5f && !isGettingHit)
+        if (animator.GetFloat("CanHit") >= 0.5f)
             return true;
         else 
             return false;
@@ -256,7 +282,6 @@ public abstract class Enemy : MonoBehaviour
             isCoolingDown = true;
         } else {
             isCoolingDown = false;
-            hitOnce = false;
         }
     }
 

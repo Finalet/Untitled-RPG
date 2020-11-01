@@ -52,13 +52,15 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
             cooldownImage.color = new Color(0, 0, 0, 0.9f);
             cooldownImage.fillAmount = skillInSlot.coolDownTimer/skillInSlot.coolDown;
             cooldownTimerText.text = Mathf.RoundToInt(skillInSlot.coolDownTimer).ToString();
+            slotIcon.color = new Color(0.65f,0.65f,0.65f,1);
         } else {
             cooldownImage.color = new Color(0, 0, 0, 0);
             cooldownImage.fillAmount = 1;
             cooldownTimerText.text = "";
+            slotIcon.color = Color.white;
         }
         if (skillInSlot.skillActive()) {
-            slotIcon.color = Color.white;
+            if (!skillInSlot.isCoolingDown) slotIcon.color = Color.white;
             if (keyText != null) keyText.color = Color.white;
         } else {
             slotIcon.color = new Color (0.3f, 0.3f, 0.3f, 1);

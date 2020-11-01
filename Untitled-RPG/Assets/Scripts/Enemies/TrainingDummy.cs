@@ -46,7 +46,7 @@ public class TrainingDummy : StaticEnemy
         rotationObj.transform.rotation = Quaternion.Euler(x, rotationObj.transform.eulerAngles.y, z);
     }
 
-    public override void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, Vector3 damageTextPos = new Vector3 ()) {
+    public override void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
         if (isDead || !canGetHit)
             return;
         
@@ -67,9 +67,6 @@ public class TrainingDummy : StaticEnemy
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }
 
-    public override void GetKnockedDown () {
-        //Do nothing
-    }
     public override void Hit(){
         //Does nothing
     }

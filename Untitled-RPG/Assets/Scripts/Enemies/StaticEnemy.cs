@@ -12,7 +12,7 @@ public class StaticEnemy : Enemy
     {
         //do nothing;
     }
-    protected override void FaceTarget()
+    protected override void FaceTarget(bool instant)
     {
         //do nothing;
     }
