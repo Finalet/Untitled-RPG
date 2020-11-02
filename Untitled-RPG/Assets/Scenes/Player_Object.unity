@@ -123,7 +123,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 4438d3085843cef49abc3e12851c2a70, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 455447a0cc90f1443a62856a217adb90, type: 2}
 --- !u!224 &6517288 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1846251581690008110, guid: 4e9a25e2724b85a4fa6a2a3a49fe4abf,
@@ -4382,7 +4382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791726730}
   m_LocalRotation: {x: -0.02018696, y: -0.00000000234758, z: 4.2411186e-10, w: 0.9997963}
-  m_LocalPosition: {x: -4.440892e-16, y: 0.98740524, z: -0.15821172}
+  m_LocalPosition: {x: -4.4408985e-17, y: 0.09874066, z: -0.015821194}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1000134482}
@@ -5572,9 +5572,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000134480}
-  m_LocalRotation: {x: 0.049004197, y: 0.000000041860453, z: -0.0000000071759323,
-    w: 0.99879855}
-  m_LocalPosition: {x: 6.1212475e-15, y: 0.00000018047268, z: -0.0000000374491}
+  m_LocalRotation: {x: 0.049004205, y: -0.000000037144105, z: 0.000000006184644, w: 0.99879855}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 719456222}
@@ -7429,9 +7428,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1432566913}
-  m_LocalRotation: {x: 0.0031397617, y: 0.000000032403854, z: -0.0000000040574446,
+  m_LocalRotation: {x: 0.003139773, y: -0.000000024024622, z: 0.0000000028407077,
     w: 0.99999505}
-  m_LocalPosition: {x: 2.6645353e-15, y: -2.0071142e-24, z: -1.25534954e-23}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2062220083}
@@ -10830,8 +10829,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1971303315}
-  m_LocalRotation: {x: 0.020186938, y: 0.00000004969051, z: -0.0000000070325723, w: 0.9997963}
-  m_LocalPosition: {x: 2.6645353e-15, y: -2.0071142e-24, z: -1.25534954e-23}
+  m_LocalRotation: {x: 0.020186953, y: -0.000000045466233, z: 0.0000000062500805,
+    w: 0.9997963}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 863545863}
@@ -18661,9 +18661,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2317584040581330327}
-  m_LocalRotation: {x: 0.079356104, y: 0.000000032785483, z: -0.0000000026099591,
-    w: 0.9968464}
-  m_LocalPosition: {x: 0, y: 3.5, z: -5}
+  m_LocalRotation: {x: 0.07935612, y: -0.000000033805367, z: 0.0000000026911497, w: 0.9968464}
+  m_LocalPosition: {x: -69.2, y: 0.20000005, z: 87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2317584040993416503}
@@ -26488,7 +26487,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4675846284446074611}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: -69.2, y: -2.3, z: 92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1425218821638915672}
@@ -26671,6 +26670,7 @@ GameObject:
   - component: {fileID: 7240333224357428003}
   - component: {fileID: 4675846284446074612}
   - component: {fileID: 4675846284446074614}
+  - component: {fileID: 4675846284446074615}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -26739,6 +26739,22 @@ MonoBehaviour:
   raycastDistance: 0.5
   fixedVerticalBodyPositionOffset: 0.02
   lerpValue: 0.25
+--- !u!208 &4675846284446074615
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4675846284446074611}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.2, y: 1, z: 0.2}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!199 &4823061926972117064
 ParticleSystemRenderer:
   serializedVersion: 6

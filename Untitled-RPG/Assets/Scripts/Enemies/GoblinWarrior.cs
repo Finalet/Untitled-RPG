@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class GoblinWarrior : Enemy
 {
-    float baseAngularSpeed;
     float approachDelay = 1.7f;
     float approachDelayTimer;
 
@@ -13,14 +12,16 @@ public class GoblinWarrior : Enemy
     {
         base.Start();
         navAgent = GetComponent<NavMeshAgent>();
-        baseAngularSpeed = navAgent.angularSpeed;
+        navAgent.avoidancePriority = 50 + Random.Range(-20, 20);
     }
 
     protected override void Update()
     {
         animator.SetBool("Agr", agr);
         animator.SetBool("KnockedDown", isKnockedDown);
+        
         base.Update();
+
         if (isDead || PlayerControlls.instance == null || isKnockedDown) { //Player instance is null when level is only loading.
             navAgent.isStopped = true;
             return;
@@ -35,14 +36,7 @@ public class GoblinWarrior : Enemy
             animator.SetBool("Returning", true);
         } else {
             animator.SetBool("Returning", false);
-        }
-
-        //Stops from rotating when attacking
-        if (isAttacking){
-            navAgent.angularSpeed = 0;
-        } else {
-            navAgent.angularSpeed = baseAngularSpeed;
-        }
+        }       
     }
 
 
@@ -64,7 +58,7 @@ public class GoblinWarrior : Enemy
             StartCoroutine(InstantFaceTarget());
             return;
         }
-
+        
         navAgent.isStopped = isGettingInterrupted ? true : false;
 
         Vector3 direction = (target.position - transform.position).normalized;
@@ -96,7 +90,7 @@ public class GoblinWarrior : Enemy
     IEnumerator InstantFaceTarget () {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        while (Quaternion.Angle(transform.rotation, lookRotation) > 2) {
+        while (Quaternion.Angle(transform.rotation, lookRotation) > 1) {
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 30f);
             yield return null;
         }

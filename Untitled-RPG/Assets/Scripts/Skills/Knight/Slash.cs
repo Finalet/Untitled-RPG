@@ -14,6 +14,7 @@ public class Slash : Skill
     float timing;
 
     Vector3 baseColliderSize;
+    HitType hitType;
 
     protected override void Start() {
         base.Start();
@@ -44,22 +45,21 @@ public class Slash : Skill
     void Attack() {
         hits++;
 
-        if (hits == 1)
-            animator.CrossFade("Attacks.Knight.Slash_1", 0.2f);
-        else if (hits == 2)
-            animator.CrossFade("Attacks.Knight.Slash_2", 0.2f);
-        else if (hits == 3)
-            animator.CrossFade("Attacks.Knight.Slash_3", 0.2f);
-
         lastHitTime = Time.time;
 
         if (hits == 1) {
+            animator.CrossFade("Attacks.Knight.Slash_1", 0.2f);
+            hitType = HitType.Normal;
             PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.z);
             GetComponent<BoxCollider>().size = baseColliderSize;
         } else if (hits == 2) {
+            animator.CrossFade("Attacks.Knight.Slash_2", 0.2f);
+            hitType = HitType.Normal;
             PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.z);
             GetComponent<BoxCollider>().size = baseColliderSize;
         } else if (hits == 3) {
+            animator.CrossFade("Attacks.Knight.Slash_3", 0.2f);
+            hitType = HitType.Kickback;
             PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.z);
             Invoke("PlayLastSound", 0.45f * characteristics.attackSpeed.z); //Invoke because otherwise the sound does not play
 
@@ -93,7 +93,7 @@ public class Slash : Skill
 
     public void Hit () {
         for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
-            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true);
+            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true, hitType);
         }
     }
 

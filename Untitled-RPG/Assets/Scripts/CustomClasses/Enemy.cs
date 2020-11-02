@@ -56,7 +56,16 @@ public abstract class Enemy : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         currentHealth = maxHealth;
+
+        SetInitialPosition();
+    }
+
+    void SetInitialPosition() {
         initialPos = transform.position;
+        //if spawned in the air - drop on the floor
+        RaycastHit hit;
+        if (Physics.Raycast(initialPos, -Vector3.up, out hit, 4f)) 
+            initialPos = hit.point;
     }
 
     protected virtual void Update() {
@@ -74,7 +83,6 @@ public abstract class Enemy : MonoBehaviour
 
         AI();
 
-        CollisionProtection(); //Creates collision between enemies, but makes kinematic when interacting with player to stop him from applying force.
     }
 
     protected virtual void AI () {
@@ -131,7 +139,6 @@ public abstract class Enemy : MonoBehaviour
             isDead = true;
             animator.CrossFade("GetHit.Die", 0.25f);
             GetComponent<Collider>().enabled = false;
-            GetComponent<Rigidbody>().isKinematic = true;
             Destroy(gameObject, 10f);
         }
 
@@ -189,8 +196,6 @@ public abstract class Enemy : MonoBehaviour
     }
     
     protected IEnumerator KnockedDown () {
-        navAgent.updatePosition = false;    //for some reason navmesh messes with KickBack animation and goblin does not fly as far. so i have to turn off update pos and then reenable it below
-
         animator.CrossFade("GetHit.KnockDown", 0.1f);
         isKnockedDown = true;
         yield return new WaitForSeconds(3);
@@ -199,13 +204,8 @@ public abstract class Enemy : MonoBehaviour
         animator.CrossFade("GetHit.GetUp", 0.1f);
         yield return new WaitForSeconds(0.7f);
         isKnockedDown = false;
-
-        navAgent.nextPosition = transform.position;
-        navAgent.updatePosition = true;
     }
     protected IEnumerator KickBack () {
-        navAgent.updatePosition = false;
-
         animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
         yield return new WaitForSeconds(2);
@@ -214,9 +214,6 @@ public abstract class Enemy : MonoBehaviour
         animator.CrossFade("GetHit.GetUp", 0.1f);
         yield return new WaitForSeconds(2);
         isKnockedDown = false;
-
-        navAgent.nextPosition = transform.position; 
-        navAgent.updatePosition = true;
     }
 
     protected virtual void ShowHealthBar () {
@@ -227,7 +224,7 @@ public abstract class Enemy : MonoBehaviour
 
         if (distanceToPlayer <= PlayerControlls.instance.playerCamera.GetComponent<LookingTarget>().viewDistance / 1.5f) {
             healthBar.transform.GetChild(0).localScale = new Vector3((float)currentHealth/maxHealth, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
-            healthBar.transform.LookAt (PlayerControlls.instance.playerCamera.transform);
+            healthBar.transform.LookAt (healthBar.transform.position + PlayerControlls.instance.playerCamera.transform.rotation * Vector3.back, PlayerControlls.instance.playerCamera.transform.rotation * Vector3.up);
             healthBar.SetActive(true);
         } else {
             healthBar.SetActive(false);
@@ -308,16 +305,5 @@ public abstract class Enemy : MonoBehaviour
         int playID = Random.Range(0, stabSounds.Length);
         audioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
         audioSource.PlayOneShot(stabSounds[playID]);
-    }
-
-    protected virtual void CollisionProtection () {
-        if (isDead || isKnockedDown) {
-            GetComponent<Rigidbody>().isKinematic = true;
-        } else {
-            //if (distanceToPlayer <= 1f)
-            //    GetComponent<Rigidbody>().isKinematic = true;
-            //else 
-                GetComponent<Rigidbody>().isKinematic = false;
-        } 
     }
 }
