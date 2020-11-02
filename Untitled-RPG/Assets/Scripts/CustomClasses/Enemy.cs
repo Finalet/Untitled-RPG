@@ -189,32 +189,34 @@ public abstract class Enemy : MonoBehaviour
     }
     
     protected IEnumerator KnockedDown () {
-        animator.Play("GetHit.KnockDown");
+        navAgent.updatePosition = false;    //for some reason navmesh messes with KickBack animation and goblin does not fly as far. so i have to turn off update pos and then reenable it below
+
+        animator.CrossFade("GetHit.KnockDown", 0.1f);
         isKnockedDown = true;
-        float timer = 3;
-        while (timer>0) {
-            timer -= Time.fixedDeltaTime;
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-            if (isDead)
-                yield break;
-        }
-        animator.Play("GetHit.GetUp");
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(animator.GetLayerIndex("GetHit")).Length);
+        yield return new WaitForSeconds(3);
+        if (isDead)
+            yield break;
+        animator.CrossFade("GetHit.GetUp", 0.1f);
+        yield return new WaitForSeconds(0.7f);
         isKnockedDown = false;
+
+        navAgent.nextPosition = transform.position;
+        navAgent.updatePosition = true;
     }
     protected IEnumerator KickBack () {
-        animator.CrossFade("GetHit.GetHitKickback", 0.1f);
+        navAgent.updatePosition = false;
+
+        animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
-        float timer = 1.5f;
-        while (timer>0) {
-            timer -= Time.fixedDeltaTime;
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-            if (isDead)
-                yield break;
-        }
+        yield return new WaitForSeconds(2);
+        if (isDead)
+            yield break;
         animator.CrossFade("GetHit.GetUp", 0.1f);
         yield return new WaitForSeconds(2);
         isKnockedDown = false;
+
+        navAgent.nextPosition = transform.position; 
+        navAgent.updatePosition = true;
     }
 
     protected virtual void ShowHealthBar () {
@@ -312,10 +314,10 @@ public abstract class Enemy : MonoBehaviour
         if (isDead || isKnockedDown) {
             GetComponent<Rigidbody>().isKinematic = true;
         } else {
-            if (distanceToPlayer <= 1.5f)
-                GetComponent<Rigidbody>().isKinematic = true;
-            else 
-                GetComponent<Rigidbody>().isKinematic = false; 
-        }
+            //if (distanceToPlayer <= 1f)
+            //    GetComponent<Rigidbody>().isKinematic = true;
+            //else 
+                GetComponent<Rigidbody>().isKinematic = false;
+        } 
     }
 }

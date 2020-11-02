@@ -18,13 +18,13 @@ public class GoblinWarrior : Enemy
 
     protected override void Update()
     {
+        animator.SetBool("Agr", agr);
+        animator.SetBool("KnockedDown", isKnockedDown);
         base.Update();
         if (isDead || PlayerControlls.instance == null || isKnockedDown) { //Player instance is null when level is only loading.
             navAgent.isStopped = true;
             return;
         }
-        navAgent.nextPosition = transform.position;
-        animator.SetBool("Agr", agr);
 
         if (currentState == EnemyState.Approaching) {
             animator.SetBool("Approaching", true);
@@ -52,7 +52,6 @@ public class GoblinWarrior : Enemy
             return;
         }
 
-        navAgent.updatePosition = true;
         navAgent.isStopped = isGettingInterrupted ? true : false;
         navAgent.destination = target.position;
     }
