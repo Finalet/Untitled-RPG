@@ -29,6 +29,9 @@ public class IsAttackingCheck : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (!Player)
+            return;
+            
         PlayerControlls.instance.emptyAttackAnimatorStates[ID] = true;
     }
 }

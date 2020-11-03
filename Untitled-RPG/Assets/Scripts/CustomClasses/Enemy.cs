@@ -82,7 +82,6 @@ public abstract class Enemy : MonoBehaviour
         CheckAgr();
 
         AI();
-
     }
 
     protected virtual void AI () {
@@ -138,7 +137,7 @@ public abstract class Enemy : MonoBehaviour
         if (currentHealth <= 0) {
             isDead = true;
             animator.CrossFade("GetHit.Die", 0.25f);
-            GetComponent<Collider>().enabled = false;
+            GetComponentInChildren<Collider>().enabled = false;
             Destroy(gameObject, 10f);
         }
 

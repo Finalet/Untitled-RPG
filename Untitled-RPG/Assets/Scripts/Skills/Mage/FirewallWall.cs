@@ -30,20 +30,19 @@ public class FirewallWall : MonoBehaviour
     }
 
     void OnTriggerStay(Collider other) {
-        if (other.isTrigger || other.CompareTag("Player"))
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (other.gameObject.GetComponent<Enemy>() != null) {
-            if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), "Firewall", false, false, HitType.Interrupt);
-                StartCoroutine(List(other.GetComponent<Enemy>()));
-            }
+        if (!enemiesHit.Contains(en)) {
+            en.GetHit(damage(), "Firewall", false, false, HitType.Interrupt);
+            StartCoroutine(List(en));
         }
     }
 
     IEnumerator List (Enemy enemy) {
         enemiesHit.Add(enemy);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.7f);
         enemiesHit.Remove(enemy);
     }
 

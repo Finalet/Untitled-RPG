@@ -17,12 +17,11 @@ public class LightningProjectile : MonoBehaviour
     }  
 
     void OnTriggerEnter(Collider other) {
-        if (other.isTrigger || other.CompareTag("Player"))
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (other.gameObject.GetComponent<Enemy>() != null) {
-            other.GetComponent<Enemy>().GetHit(damage(), "Lightning", false, true, HitType.Normal, transform.position);
-        }
+        en.GetHit(damage(), "Lightning", false, true, HitType.Normal, transform.position);
     }
 
     void EnableCollider () {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StrongAttack : Skill
 {
-    List<GameObject> enemiesInTrigger = new List<GameObject>();
+    List<Enemy> enemiesInTrigger = new List<Enemy>();
 
     protected override void Update() {
         base.Update();
@@ -17,21 +17,23 @@ public class StrongAttack : Skill
     }  
 
     void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInTrigger.Add(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
 
+        enemiesInTrigger.Add(en);
     }
-
     void OnTriggerExit(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInTrigger.Remove(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        enemiesInTrigger.Remove(en);
     }
 
     public void Hit () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true);
+            enemiesInTrigger[i].GetHit(damage(), skillName, true, true);
         }
     }
 

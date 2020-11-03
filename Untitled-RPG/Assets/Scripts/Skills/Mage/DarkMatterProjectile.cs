@@ -52,14 +52,13 @@ public class DarkMatterProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.isTrigger || other.CompareTag("Player") || doNotDestroy)
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (other.isTrigger || other.CompareTag("Player") || doNotDestroy || en == null)
             return;
         
-        if (other.gameObject.GetComponent<Enemy>() != null) {
-            if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), "Dark Matter", false, false, HitType.Normal, transform.position);
-                enemiesHit.Add(other.GetComponent<Enemy>());
-            }
+        if (!enemiesHit.Contains(en)) {
+            en.GetHit(damage(), "Dark Matter", false, false, HitType.Normal, transform.position);
+            enemiesHit.Add(en);
         }
         Explode();
     }

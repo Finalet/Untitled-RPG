@@ -7,7 +7,7 @@ public class Slash : Skill
     [Header("Custom vars")]
     public AudioClip[] sounds;
 
-    List<GameObject> enemiesInCombatTrigger = new List<GameObject>();
+    List<Enemy> enemiesInCombatTrigger = new List<Enemy>();
 
     int hits;
     float lastHitTime;
@@ -81,19 +81,23 @@ public class Slash : Skill
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInCombatTrigger.Add(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        enemiesInCombatTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInCombatTrigger.Remove(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        enemiesInCombatTrigger.Remove(en);
     }
 
     public void Hit () {
         for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
-            enemiesInCombatTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true, hitType);
+            enemiesInCombatTrigger[i].GetHit(damage(), skillName, true, true, hitType);
         }
     }
 

@@ -16,7 +16,7 @@ public class LookingTarget : MonoBehaviour
     {
         if (Physics.Raycast(transform.position, transform.forward, out hit, viewDistance)){
             target = hit.transform.gameObject;
-            Enemy en = target.GetComponent<Enemy>();
+            Enemy en = target.GetComponentInParent<Enemy>();
             if (en != null) {
                 targetIsEnemy = true;
                 CanvasScript.instance.DisplayEnemyInfo(en.enemyName, (float)en.currentHealth/en.maxHealth, en.currentHealth);

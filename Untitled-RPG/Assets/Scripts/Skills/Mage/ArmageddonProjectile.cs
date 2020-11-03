@@ -19,15 +19,15 @@ public class ArmageddonProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.isTrigger || other.CompareTag("Player"))
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (other.gameObject.GetComponent<Enemy>() != null) {
-            if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), "Armageddon");
-                enemiesHit.Add(other.GetComponent<Enemy>());
-            }
+        if (!enemiesHit.Contains(en)) {
+            en.GetHit(damage(), "Armageddon");
+            enemiesHit.Add(en);
         }
+
         hitParticles.Play();
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2*(1+damage()/2000), 0.2f, transform.position);
         GetComponent<AudioSource>().clip = explosionSounds[Random.Range(0, explosionSounds.Length)];

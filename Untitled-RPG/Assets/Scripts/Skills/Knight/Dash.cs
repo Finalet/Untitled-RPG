@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dash : Skill
 {
-    List<GameObject> enemiesHit = new List<GameObject>();
+    List<Enemy> enemiesHit = new List<Enemy>();
 
     [Header("Custom Vars")]
     public float dashDistance;
@@ -32,11 +32,13 @@ public class Dash : Skill
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.GetComponent<Enemy>() != null && !other.isTrigger) {
-            if (!enemiesHit.Contains(other.gameObject)) {
-                other.GetComponent<Enemy>().GetHit(damage(), skillName, true, true);
-                enemiesHit.Add(other.gameObject);
-            }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        if (!enemiesHit.Contains(en)) {
+            en.GetHit(damage(), skillName, true, true);
+            enemiesHit.Add(en);
         }
     }
 

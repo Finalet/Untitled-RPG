@@ -34,7 +34,7 @@ public class PlayerControlls : MonoBehaviour
     public bool isPickingArea;
     [Header("Battle")]
     public bool inBattle;
-    public float inBattleExitTime = 5; //How long after exisiting the battle will the player remain "in battle"
+    public float inBattleExitTime = 7; //How long after exisiting the battle will the player remain "in battle"
     float inBattleTimer;
 
     [Space]
@@ -503,8 +503,7 @@ public class PlayerControlls : MonoBehaviour
 
 #region Flying movement
 
-    [Header("Flying variables")]
-    public float flySpeed = 2;
+    [System.NonSerialized] public float flySpeed;
 
     void FlyingMovement() {
         forward = flySpeed * transform.forward * (1+fwd) * Input.GetAxis("Vertical") + independentFromInputFwd * transform.forward;
@@ -588,28 +587,5 @@ public class PlayerControlls : MonoBehaviour
                 StartCoroutine(WeaponsController.instance.Sheathe());
             inBattle = false;
         }
-    }
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Rigidbody body = hit.collider.attachedRigidbody;
-
-        // no rigidbody
-        if (body == null || body.isKinematic)
-            return;
-
-        // We dont want to push objects below us
-        if (hit.moveDirection.y < -0.3f)
-            return;
-
-        // Calculate push direction from move direction,
-        // we only push objects to the sides never up and down
-        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-
-        // If you know how fast your character is trying to move,
-        // then you can also multiply the push velocity by that.
-
-        // Apply the push
-        body.velocity = pushDir * 2f;
     }
 }

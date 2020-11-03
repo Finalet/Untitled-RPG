@@ -34,14 +34,13 @@ public class HailstoneProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.isTrigger || other.CompareTag("Player"))
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (other.gameObject.GetComponent<Enemy>() != null) {
-            if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-                other.GetComponent<Enemy>().GetHit(damage(), "Hailstone");
-                enemiesHit.Add(other.GetComponent<Enemy>());
-            }
+        if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
+            en.GetHit(damage(), "Hailstone");
+            enemiesHit.Add(en);
         }
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f* (1+damage()/2000), 0.1f, transform.position);
 

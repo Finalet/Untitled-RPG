@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Whirlwind : Skill
 {
-    List<GameObject> enemiesInTrigger = new List<GameObject>();
+    List<Enemy> enemiesInTrigger = new List<Enemy>();
 
     [Header("CustomVars")]
     public float moveSpeed;
@@ -63,19 +63,23 @@ public class Whirlwind : Skill
     }   
 
     void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInTrigger.Add(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        enemiesInTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInTrigger.Remove(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        enemiesInTrigger.Remove(en);
     }
 
     public void Hit () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, false, true);
+            enemiesInTrigger[i].GetHit(damage(), skillName, false, true);
         }
     }
 

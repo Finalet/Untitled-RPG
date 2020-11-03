@@ -9,7 +9,7 @@ public class StoneHit : Skill
     Vector3 baseCenter;
     Vector3 newCenter;
 
-    List<GameObject> enemiesHit = new List<GameObject>();
+    List<Enemy> enemiesHit = new List<Enemy>();
 
     public AudioClip first;
     public AudioClip last;
@@ -74,11 +74,13 @@ public class StoneHit : Skill
         if (!yes)
             return;
 
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            if (!enemiesHit.Contains(other.gameObject)) {
-                other.GetComponent<Enemy>().GetHit(damage(), skillName, true, true, HitType.Knockdown);
-                enemiesHit.Add(other.gameObject);
-            }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        if (!enemiesHit.Contains(en)) {
+            en.GetHit(damage(), skillName, true, true, HitType.Knockdown);
+            enemiesHit.Add(en);
         }
     }
 

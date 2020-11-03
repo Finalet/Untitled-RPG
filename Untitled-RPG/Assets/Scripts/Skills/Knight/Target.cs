@@ -35,7 +35,7 @@ public class Target : Skill
         timer = 0;
         
         GameObject newTargetPrefab = Instantiate(targetPrefab, Vector3.zero, Quaternion.identity, SkillTarget.transform);
-        SkillTarget.GetComponent<Enemy>().TargetSkillDamagePercentage = damageIncrease;
+        SkillTarget.GetComponentInParent<Enemy>().TargetSkillDamagePercentage = damageIncrease;
 
         newTargetPrefab.SetActive(true);
         newTargetPrefab.transform.localPosition = Vector3.up * 2.3f;
@@ -47,11 +47,11 @@ public class Target : Skill
             y += Time.fixedDeltaTime * 4;
             newTargetPrefab.transform.localPosition = Vector3.up * (2.3f + Mathf.Sin(y)/10);
             newTargetPrefab.transform.Rotate(Vector3.up, 1f);
-            if (SkillTarget.GetComponent<Enemy>().isDead)
+            if (SkillTarget.GetComponentInParent<Enemy>().isDead)
                 timer = -100;
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
         Destroy(newTargetPrefab);
-        SkillTarget.GetComponent<Enemy>().TargetSkillDamagePercentage = 0;
+        SkillTarget.GetComponentInParent<Enemy>().TargetSkillDamagePercentage = 0;
     }
 }

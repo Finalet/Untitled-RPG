@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KO : Skill
 {
-    List<GameObject> enemiesInTrigger = new List<GameObject>();
+    List<Enemy> enemiesInTrigger = new List<Enemy>();
 
     [Header("Custom vars")]
     public AudioClip[] sounds;
@@ -35,22 +35,26 @@ public class KO : Skill
     } 
 
     void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInTrigger.Add(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        enemiesInTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
-        if (other.GetComponent<Enemy>() != null && !other.isTrigger) {
-            enemiesInTrigger.Remove(other.gameObject);
-        }
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        if (en == null || other.isTrigger)
+            return;
+
+        enemiesInTrigger.Remove(en);
     }
 
     public void Hit (float knockDown) {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
             if (knockDown == 1) {
-                enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true, HitType.Knockdown);
+                enemiesInTrigger[i].GetHit(damage(), skillName, true, true, HitType.Knockdown);
             } else {
-                enemiesInTrigger[i].GetComponent<Enemy>().GetHit(damage(), skillName, true, true, HitType.Normal);
+                enemiesInTrigger[i].GetHit(damage(), skillName, true, true, HitType.Normal);
             }
         }
     }

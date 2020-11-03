@@ -8,6 +8,7 @@ public class Levitation : Skill
     [Tooltip("Increase distance of mage skill by meters")] public float skillDistanceIncrease = 10;
     public float magicPowerPercentageIncrease = 20;
     [Tooltip("Duration in seconds")] public float flightDuration = 120;
+    public float flySpeed = 2;
 
     public Transform[] feetsAndHands;
     public ParticleSystem bodypartsVFX;
@@ -27,6 +28,7 @@ public class Levitation : Skill
     }
 
     protected override void CustomUse() {
+        PlayerControlls.instance.flySpeed = flySpeed;
         PlayerControlls.instance.TakeOff();
         GetComponent<AudioSource>().PlayDelayed(0.4f);
         characteristics.AddBuff(this);
