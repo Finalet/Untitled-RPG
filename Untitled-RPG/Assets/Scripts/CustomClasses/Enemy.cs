@@ -116,8 +116,14 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    protected abstract void ApproachTarget();
+    protected virtual void ApproachTarget() {
+        if (!PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
+            PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Add(this);
+    }
     protected virtual void TryAttackTarget() {
+        if (!PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
+            PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Add(this);
+
         if (isCoolingDown || isDead || isKnockedDown)
             return;
         
@@ -127,8 +133,14 @@ public abstract class Enemy : MonoBehaviour
     }
     protected abstract void AttackTarget();
     protected abstract void FaceTarget(bool instant = false);
-    protected abstract void ReturnToPosition();
-    protected abstract void Idle();
+    protected virtual void ReturnToPosition() {
+        if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
+            PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
+    }
+    protected virtual void Idle() {
+        if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
+            PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
+    }
     
     protected virtual void Health () {
         if (isDead)
@@ -187,8 +199,8 @@ public abstract class Enemy : MonoBehaviour
 
     protected IEnumerator HitStop () {
         float timer = Time.realtimeSinceStartup;
-        Time.timeScale = 0.5f;
-        while(Time.realtimeSinceStartup - timer < 0.07f) {
+        Time.timeScale = 0.3f;
+        while(Time.realtimeSinceStartup - timer < 0.05f) {
             yield return null;
         }
         Time.timeScale = 1;
@@ -205,6 +217,9 @@ public abstract class Enemy : MonoBehaviour
         isKnockedDown = false;
     }
     protected IEnumerator KickBack () {
+        //rotate to face the player so the enemy would fly away from the player
+        StartCoroutine(InstantFaceTarget());
+
         animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
         yield return new WaitForSeconds(2);
@@ -213,6 +228,14 @@ public abstract class Enemy : MonoBehaviour
         animator.CrossFade("GetHit.GetUp", 0.1f);
         yield return new WaitForSeconds(2);
         isKnockedDown = false;
+    }
+    protected IEnumerator InstantFaceTarget () {
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        while (Quaternion.Angle(transform.rotation, lookRotation) > 1) {
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 30f);
+            yield return null;
+        }
     }
 
     protected virtual void ShowHealthBar () {

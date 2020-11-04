@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Combat : MonoBehaviour
 {
+
+    public List<Enemy> enemiesInBattle = new List<Enemy>();
+
     Animator animator;
 
     void Start() {  
@@ -12,6 +15,7 @@ public class Combat : MonoBehaviour
 
     void Update() {
         SetAnimationSpeed();
+        PlayerControlls.instance.attackedByEnemies = enemiesInBattle.Count == 0 ? false : true;
     }
 
     void SetAnimationSpeed () {

@@ -41,6 +41,8 @@ public class GoblinWarrior : Enemy
 
 
     protected override void ApproachTarget () {
+        base.ApproachTarget();
+
         if (approachDelayTimer > 0) {
             approachDelayTimer -= Time.deltaTime;
             return;
@@ -79,20 +81,13 @@ public class GoblinWarrior : Enemy
     }
 
     protected override void ReturnToPosition () {
+        base.ReturnToPosition();
         navAgent.destination = initialPos;
     }
 
     protected override void Idle () {
+        base.Idle();
         navAgent.isStopped = true;
         approachDelayTimer = approachDelay;
-    }
-
-    IEnumerator InstantFaceTarget () {
-        Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        while (Quaternion.Angle(transform.rotation, lookRotation) > 1) {
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 30f);
-            yield return null;
-        }
     }
 }

@@ -36,6 +36,7 @@ public class PlayerControlls : MonoBehaviour
     public bool inBattle;
     public float inBattleExitTime = 7; //How long after exisiting the battle will the player remain "in battle"
     float inBattleTimer;
+    public bool attackedByEnemies;
 
     [Space]
     public bool castInterrupted;
@@ -393,6 +394,7 @@ public class PlayerControlls : MonoBehaviour
         isJumping = false;
     }
     IEnumerator DetectLanding (bool afterFlying) {
+        velocityY = 0;
         yield return new WaitForSeconds(0.1f);
         while (!isGrounded) {
             velocityY += gravity/2.5f * Time.deltaTime;
@@ -471,6 +473,8 @@ public class PlayerControlls : MonoBehaviour
             transform.parent = null; //Then un-parent him.
         }
         //if all of the above fails, then still not grounded;
+        if (isGrounded && !isJumping) //this means that player walked of the cliff;
+            velocityY = 0;
         return false;
     }
 
@@ -579,7 +583,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void InBattleCheck () {
-        if (isAttacking || isGettingHit) {
+        if (isAttacking || isGettingHit || attackedByEnemies) {
             inBattle = true;
             inBattleTimer = Time.time;
         } else if (Time.time - inBattleTimer >= inBattleExitTime) {
