@@ -5,12 +5,12 @@ using UnityEngine.AI;
 
 public class GoblinWarrior : Enemy
 {
-    float approachDelay = 1.7f;
-    float approachDelayTimer;
 
     protected override void Start()
     {
         base.Start();
+        agrDelay = 1.7f;
+
         navAgent = GetComponent<NavMeshAgent>();
         navAgent.avoidancePriority = 50 + Random.Range(-20, 20);
     }
@@ -42,11 +42,6 @@ public class GoblinWarrior : Enemy
 
     protected override void ApproachTarget () {
         base.ApproachTarget();
-
-        if (approachDelayTimer > 0) {
-            approachDelayTimer -= Time.deltaTime;
-            return;
-        }
 
         navAgent.isStopped = isGettingInterrupted ? true : false;
         navAgent.destination = target.position;
@@ -88,6 +83,5 @@ public class GoblinWarrior : Enemy
     protected override void Idle () {
         base.Idle();
         navAgent.isStopped = true;
-        approachDelayTimer = approachDelay;
     }
 }

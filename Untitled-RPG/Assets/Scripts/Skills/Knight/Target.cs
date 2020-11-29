@@ -30,12 +30,12 @@ public class Target : Skill
         audioSource.time = 0.21f;
         audioSource.Play();
 
-        SkillTarget = playerControlls.playerCamera.GetComponent<LookingTarget>().target;
+        SkillTarget = playerControlls.playerCamera.GetComponent<LookingTarget>().target.GetComponentInParent<Enemy>().gameObject;
         
         timer = 0;
         
         GameObject newTargetPrefab = Instantiate(targetPrefab, Vector3.zero, Quaternion.identity, SkillTarget.transform);
-        SkillTarget.GetComponentInParent<Enemy>().TargetSkillDamagePercentage = damageIncrease;
+        SkillTarget.GetComponent<Enemy>().TargetSkillDamagePercentage = damageIncrease;
 
         newTargetPrefab.SetActive(true);
         newTargetPrefab.transform.localPosition = Vector3.up * 2.3f;

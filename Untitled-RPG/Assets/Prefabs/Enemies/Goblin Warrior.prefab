@@ -1664,7 +1664,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 1.7
   m_BaseOffset: -0.15
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -1684,7 +1684,7 @@ MonoBehaviour:
   maxHealth: 10000
   currentHealth: 0
   baseDamage: 100
-  playerDetectRadius: 12
+  playerDetectRadius: 20
   attackRange: 2
   hitType: 0
   currentState: 0
@@ -1692,6 +1692,7 @@ MonoBehaviour:
   attackCoolDown: 5
   agrTime: 5
   TargetSkillDamagePercentage: 0
+  distanceToPlayer: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
@@ -2058,6 +2059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  value: 1
 --- !u!65 &2413481049890888958
 BoxCollider:
   m_ObjectHideFlags: 0

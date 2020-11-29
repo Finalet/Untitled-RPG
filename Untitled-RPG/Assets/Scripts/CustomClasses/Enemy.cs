@@ -15,6 +15,8 @@ public abstract class Enemy : MonoBehaviour
     public float playerDetectRadius;
     public float attackRange;
     public HitType hitType;
+    public bool immuneToKnockDown;
+    public bool immuneToKickBack;
 
     [Header("AI State")]
     public EnemyState currentState;
@@ -29,15 +31,14 @@ public abstract class Enemy : MonoBehaviour
     [Header("Adjustements from debuffs")]
     public float TargetSkillDamagePercentage;
 
-    protected float distanceToPlayer;
+    public float distanceToPlayer;
 
-    //FOR TESTING ONLY
     [Header("States")]
     public bool isAttacking;
-    public bool isGettingInterrupted; //using
-    public bool isDead; //using
-    public bool isKnockedDown; //using
-    public bool canGetHit = true; //using
+    public bool isGettingInterrupted;
+    public bool isDead;
+    public bool isKnockedDown;
+    public bool canGetHit = true;
     public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
 
     [Space]
@@ -45,12 +46,18 @@ public abstract class Enemy : MonoBehaviour
     public ParticleSystem hitParticles;
     public AudioClip[] getHitSounds;
     public AudioClip[] stabSounds;
+    public AudioClip[] stepsSounds;
+    public AudioClip[] attackSounds;
 
     protected Animator animator;
     protected NavMeshAgent navAgent;
     protected Transform target;
     protected AudioSource audioSource;
     protected Vector3 initialPos;
+
+    protected float agrDelay; 
+    protected float agrDelayTimer;
+    protected bool delayingAgr;
 
     protected virtual void Start() {
         animator = GetComponent<Animator>();
@@ -80,6 +87,13 @@ public abstract class Enemy : MonoBehaviour
         distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
     
         CheckAgr();
+    
+        if (agrDelayTimer > 0) {
+            agrDelayTimer -= Time.deltaTime;
+            delayingAgr = true;
+        } else {
+            delayingAgr = false;
+        }
 
         AI();
     }
@@ -90,8 +104,8 @@ public abstract class Enemy : MonoBehaviour
         }
         
         if (agr) {
-            if (distanceToPlayer > attackRange && !isAttacking) {
-                currentState = EnemyState.Approaching;
+            if (distanceToPlayer > attackRange) {
+                if (!isAttacking) currentState = EnemyState.Approaching;
             } else {
                 currentState = EnemyState.Attacking;
             } 
@@ -102,6 +116,9 @@ public abstract class Enemy : MonoBehaviour
                 currentState = EnemyState.Idle;
             }
         }
+
+        if (delayingAgr)
+            return;
 
         if (currentState == EnemyState.Idle) {
             Idle();
@@ -164,6 +181,11 @@ public abstract class Enemy : MonoBehaviour
 
         int actualDamage = calculateActualDamage(damage);
 
+        if (immuneToKickBack && hitType == HitType.Kickback)
+            hitType = HitType.Normal;
+        if (immuneToKnockDown && hitType == HitType.Knockdown)
+            hitType = HitType.Normal;
+
         if (hitType == HitType.Normal)
             animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
         else if (hitType == HitType.Interrupt)
@@ -209,20 +231,20 @@ public abstract class Enemy : MonoBehaviour
     protected IEnumerator KnockedDown () {
         animator.CrossFade("GetHit.KnockDown", 0.1f);
         isKnockedDown = true;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(Random.Range(2.5f, 3.5f));
         if (isDead)
             yield break;
         animator.CrossFade("GetHit.GetUp", 0.1f);
         yield return new WaitForSeconds(0.7f);
         isKnockedDown = false;
     }
-    protected IEnumerator KickBack () {
+    protected virtual IEnumerator KickBack () {
         //rotate to face the player so the enemy would fly away from the player
         StartCoroutine(InstantFaceTarget());
 
         animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(Random.Range(1.8f, 2.2f));
         if (isDead)
             yield break;
         animator.CrossFade("GetHit.GetUp", 0.1f);
@@ -274,20 +296,19 @@ public abstract class Enemy : MonoBehaviour
         if (!agr) {
             target = PlayerControlls.instance.transform;
             agr = true;
+            agrDelayTimer = agrDelay;
+            delayingAgr = true;
             FaceTarget(true);
         }
         agrTimer = agrTime;
     }
 
     public virtual void Hit () {
-        if (!canHit())
-            return;
-
         PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1f);
     }
 
-    public bool canHit () {
-        if (animator.GetFloat("CanHit") >= 0.5f)
+    public bool checkCanHit (float value) {
+        if (animator.GetFloat("CanHit") == value)
             return true;
         else 
             return false;
@@ -327,5 +348,20 @@ public abstract class Enemy : MonoBehaviour
         int playID = Random.Range(0, stabSounds.Length);
         audioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
         audioSource.PlayOneShot(stabSounds[playID]);
+    }
+
+    public virtual void FootStep () {
+        if (stepsSounds.Length == 0)
+            return;
+
+        int playID = Random.Range(0, stepsSounds.Length);
+        audioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
+        audioSource.PlayOneShot(stepsSounds[playID]);
+    }
+
+    public virtual void PlayAttackSound (AnimationEvent animationEvent) {
+        float pitch = animationEvent.floatParameter == 0 ? 1 : animationEvent.floatParameter;
+        audioSource.pitch = pitch + Random.Range(-0.1f, 0.1f);
+        audioSource.PlayOneShot(attackSounds[animationEvent.intParameter]);
     }
 }
