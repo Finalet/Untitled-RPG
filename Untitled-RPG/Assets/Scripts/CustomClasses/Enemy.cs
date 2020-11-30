@@ -15,6 +15,7 @@ public abstract class Enemy : MonoBehaviour
     public float playerDetectRadius;
     public float attackRange;
     public HitType hitType;
+    public bool immuneToInterrupt;
     public bool immuneToKnockDown;
     public bool immuneToKickBack;
 
@@ -185,6 +186,8 @@ public abstract class Enemy : MonoBehaviour
             hitType = HitType.Normal;
         if (immuneToKnockDown && hitType == HitType.Knockdown)
             hitType = HitType.Normal;
+        if (immuneToInterrupt && hitType == HitType.Interrupt)
+            hitType = HitType.Normal;
 
         if (hitType == HitType.Normal)
             animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
@@ -304,7 +307,7 @@ public abstract class Enemy : MonoBehaviour
     }
 
     public virtual void Hit () {
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1f);
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1.5f);
     }
 
     public bool checkCanHit (float value) {

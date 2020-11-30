@@ -103,7 +103,7 @@ public class Slash : Skill
 
     void ClearTrigger () {
         for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
-            if (enemiesInCombatTrigger[i].gameObject == null) {
+            if (enemiesInCombatTrigger[i] == null) {
                 enemiesInCombatTrigger.RemoveAt(i);
             }
         }

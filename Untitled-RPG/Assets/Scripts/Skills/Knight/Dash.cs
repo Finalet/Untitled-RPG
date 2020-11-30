@@ -55,7 +55,7 @@ public class Dash : Skill
 
     void ClearTrigger () {
         for (int i = 0; i < enemiesHit.Count; i++) {
-            if (enemiesHit[i].gameObject == null) {
+            if (enemiesHit[i] == null) {
                 enemiesHit.RemoveAt(i);
             }
         }

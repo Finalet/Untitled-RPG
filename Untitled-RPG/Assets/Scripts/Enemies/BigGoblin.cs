@@ -111,14 +111,21 @@ public class BigGoblin : Enemy
     }
     
     IEnumerator YeetBoulder () {
+        immuneToInterrupt = true;
+        immuneToKnockDown = true;
         while(!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).IsName("Throw Stone")) {
             yield return null;
         }
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.15f) {
+            if (isDead)
+                yield break;
             yield return null;
         }
         diggingVFX.Play();
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.18f) {
+            if (isDead) {
+                yield break;
+            }
             yield return null;
         }
         Quaternion randRot = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
@@ -127,12 +134,20 @@ public class BigGoblin : Enemy
         go.GetComponent<EnemyProjectile>().baseDamage = Mathf.RoundToInt(baseDamage*1.5f);
         go.GetComponent<EnemyProjectile>().hitType = hitType;
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.3f) {
+            if (isDead) {
+                Destroy(go);
+                yield break;
+            }
             yield return null;
         }
         diggingVFX.Stop();
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.67f) {
             forceFaceTarget = true;
             FaceTarget();
+            if (isDead) {
+                Destroy(go);
+                yield break;
+            }
             yield return null;
         }
         Vector3 dir = PlayerControlls.instance.transform.position + Vector3.up * 2.5f + playerVelocity/0.8f - transform.position;
@@ -140,13 +155,17 @@ public class BigGoblin : Enemy
         go.GetComponent<Rigidbody>().isKinematic = false;
         dir = Vector3.ClampMagnitude(dir, 15);
         go.GetComponent<Rigidbody>().AddForce(dir, ForceMode.Impulse);
+        go.GetComponent<EnemyProjectile>().shot = true;
         forceFaceTarget = false;
+
+        immuneToInterrupt = false;
+        immuneToKnockDown = false;
     }
 
     public override void FootStep()
     {
         base.FootStep();
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 0.8f);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 0.8f, 0.1f, transform.position);
     }
     public override void PlayAttackSound(AnimationEvent animationEvent)
     {

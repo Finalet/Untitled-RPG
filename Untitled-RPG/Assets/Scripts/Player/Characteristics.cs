@@ -75,7 +75,7 @@ public class Characteristics : MonoBehaviour
     }
 
     void StatsCalculations () {
-        maxHP = 1000 + strength / statsRatio;
+        maxHP = 10000 + strength / statsRatio;
         maxStamina = 0 + (agility + intellect) / statsRatio;
 
         HP = Mathf.Clamp(HP, 0, maxHP);

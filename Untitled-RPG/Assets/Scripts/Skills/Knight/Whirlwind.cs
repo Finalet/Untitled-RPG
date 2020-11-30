@@ -85,7 +85,7 @@ public class Whirlwind : Skill
 
     void ClearTrigger () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            if (enemiesInTrigger[i].gameObject == null) {
+            if (enemiesInTrigger[i] == null) {
                 enemiesInTrigger.RemoveAt(i);
             }
         }

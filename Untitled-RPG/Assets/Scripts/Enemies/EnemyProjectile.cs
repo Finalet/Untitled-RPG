@@ -6,6 +6,8 @@ public class EnemyProjectile : MonoBehaviour
 {
     public int baseDamage;
     public HitType hitType;
+    public ParticleSystem hitParticles;
+    public bool shot;
 
     AudioSource audioSource;
 
@@ -15,11 +17,16 @@ public class EnemyProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
+        if (!shot)
+            return;
+            
         if (other.CompareTag("Player") && other.GetType() == typeof(CharacterController)) { // Checks if charater got hit, and not its triggers
             PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1f);
         }
-        if (!other.isTrigger)
-            audioSource.Play();
+        if (!other.isTrigger) {
+            audioSource.PlayOneShot(audioSource.clip);
+            hitParticles.Play();
+        }
     }
 
     int damage () {
