@@ -55,6 +55,7 @@ public abstract class Enemy : MonoBehaviour
     protected Transform target;
     protected AudioSource audioSource;
     protected Vector3 initialPos;
+    protected SkinnedMeshRenderer skinnedMesh;
 
     protected float agrDelay; 
     protected float agrDelayTimer;
@@ -66,9 +67,14 @@ public abstract class Enemy : MonoBehaviour
         currentHealth = maxHealth;
 
         SetInitialPosition();
+
+        //Create new instance of material to allow making changes without affecting other instances
+        skinnedMesh = GetComponentInChildren<SkinnedMeshRenderer>();
+        Material newMat = skinnedMesh.material;
+        skinnedMesh.material = newMat;
     }
 
-    void SetInitialPosition() {
+    protected void SetInitialPosition() {
         initialPos = transform.position;
         //if spawned in the air - drop on the floor
         RaycastHit hit;
@@ -168,10 +174,21 @@ public abstract class Enemy : MonoBehaviour
             isDead = true;
             animator.CrossFade("GetHit.Die", 0.25f);
             GetComponentInChildren<Collider>().enabled = false;
-            Destroy(gameObject, 10f);
+            StartCoroutine(die());
         }
 
         //Add health regeneration
+    }
+
+    IEnumerator die (){
+        yield return new WaitForSeconds (8);
+        float x = 0;
+        while (x <=1) {
+            skinnedMesh.material.SetFloat("_DisolveProgress", x);
+            x += Time.fixedDeltaTime/2;
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+        Destroy(gameObject);
     }
 
     public virtual void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
@@ -225,7 +242,7 @@ public abstract class Enemy : MonoBehaviour
     protected IEnumerator HitStop () {
         float timer = Time.realtimeSinceStartup;
         Time.timeScale = 0.3f;
-        while(Time.realtimeSinceStartup - timer < 0.05f) {
+        while(Time.realtimeSinceStartup - timer < 0.1f) {
             yield return null;
         }
         Time.timeScale = 1;

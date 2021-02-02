@@ -369,7 +369,7 @@ public class PlayerControlls : MonoBehaviour
         velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
         fwd += jumpDis;
         sideways += jumpDis;
-        animator.applyRootMotion = false;
+        //animator.applyRootMotion = false;
         StartCoroutine(DetectLanding());
 
         InterruptCasting();

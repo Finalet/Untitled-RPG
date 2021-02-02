@@ -14,7 +14,12 @@ public class TrainingDummy : StaticEnemy
     GameObject rotationObj;
     
     protected override void Start() {
-        base.Start();
+        animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        currentHealth = maxHealth;
+
+        SetInitialPosition();
+        
         rotationObj = transform.GetChild(0).gameObject;
         canGetHit = true;
     }
