@@ -65,7 +65,7 @@ public class CameraControll : MonoBehaviour
         aimPos.y = Mathf.Clamp(aimPos.y, PlayerControlls.instance.transform.position.y, PlayerControlls.instance.transform.position.y + 5);
         headAimTarget.transform.position = aimPos;
         headAimTarget.transform.localPosition = new Vector3(headAimTarget.transform.localPosition.x, headAimTarget.transform.localPosition.y, Mathf.Clamp(headAimTarget.transform.localPosition.z, 1, 10));
-    }
+    } 
 
     float rotationX;
     void LateUpdate()

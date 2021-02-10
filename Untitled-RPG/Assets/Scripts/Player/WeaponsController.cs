@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BothHandsStatus {RightHandSwordOnly, RightHandStaffOnly, RightStaffLeftSword, RightStaffLeftShield, LeftHandSwordOnly, DualSwords, SwordShield, ShieldOnly, TwoHandedSword, TwoHandedStaff, AllEmpty};
-public enum SingleHandStatus {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Shield, Empty};
+public enum BothHandsStatus {RightHandSwordOnly, RightHandStaffOnly, RightStaffLeftSword, RightStaffLeftShield, LeftHandSwordOnly, DualSwords, SwordShield, ShieldOnly, TwoHandedSword, TwoHandedStaff, Bow, AllEmpty};
+public enum SingleHandStatus {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Shield, Bow, Empty};
 
 public class WeaponsController : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class WeaponsController : MonoBehaviour
     [Header("Objects")]
     public GameObject LeftHandEquipObj;
     public GameObject RightHandEquipObj;
+    public GameObject BowObj;
     [Header("Hands")]
     public BothHandsStatus bothHandsStatus;
     [Space]
@@ -29,6 +30,7 @@ public class WeaponsController : MonoBehaviour
     public Transform leftHipSlot;
     public Transform rightHipSlot;
     public Transform twohandedWeaponSlot;
+    public Transform bowSlot;
 
     public AudioClip[] sheathSounds;
 
@@ -145,7 +147,7 @@ public class WeaponsController : MonoBehaviour
 
     public void InstantUnsheathe () {
         animator.SetTrigger("UnSheath");
-        if (bothHandsStatus == BothHandsStatus.DualSwords) { //Currently only dual swords supported, add ELSE IF to add more support 
+        if (bothHandsStatus == BothHandsStatus.DualSwords) { //Currently not all weapons types supported, add ELSE IF to add more support 
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             SetParentAndTransorm(ref LeftHandEquipObj, LeftHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
@@ -153,6 +155,9 @@ public class WeaponsController : MonoBehaviour
         } else if (bothHandsStatus == BothHandsStatus.TwoHandedSword || bothHandsStatus == BothHandsStatus.TwoHandedStaff) {
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
+        } else if (bothHandsStatus == BothHandsStatus.Bow) {
+            SetParentAndTransorm(ref BowObj, LeftHandTrans);
+            animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
         } else {
             Debug.LogError("Instant unsheathing for this type of weapon is not implemented yet");
         }
@@ -206,6 +211,8 @@ public class WeaponsController : MonoBehaviour
                 leftHandStatus = SingleHandStatus.OneHandedSword;
             } else if (l.weaponType == WeaponType.Shield) {
                 leftHandStatus = SingleHandStatus.Shield;
+            } else if (l.weaponType == WeaponType.Bow) {
+                leftHandStatus = SingleHandStatus.Bow;
             }
         } else {
             leftHandStatus = SingleHandStatus.Empty;
@@ -245,6 +252,9 @@ public class WeaponsController : MonoBehaviour
         } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.Shield) {
             bothHandsStatus = BothHandsStatus.ShieldOnly;
             animatorWeaponType = -1; //FIX LATER
+        } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.Bow) {
+            bothHandsStatus = BothHandsStatus.Bow;
+            animatorWeaponType = 2; 
         } else {
             animatorWeaponType = -1; //FIX LATER
         }

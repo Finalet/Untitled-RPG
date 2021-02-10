@@ -57,4 +57,11 @@ public class Levitation : Skill
 
         fullbodyVFX.Stop();
     }
+
+    protected override void LocalUse () {
+        playerControlls.InterruptCasting();
+        coolDownTimer = coolDown;
+        //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
+        CustomUse();
+    }
 }

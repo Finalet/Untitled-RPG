@@ -39,7 +39,7 @@ namespace MalbersAnimations.HAP
 
         void OnTriggerEnter(Collider other)
         {
-            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+            if (other != PlayerControlls.instance.GetComponent<CapsuleCollider>())
                 return;
 
             GetAnimal(other);
@@ -77,7 +77,7 @@ namespace MalbersAnimations.HAP
         
         void OnTriggerExit(Collider other)
         {
-            if (other != PlayerControlls.instance.GetComponent<CharacterController>())
+            if (other != PlayerControlls.instance.GetComponent<CapsuleCollider>())
                 return;
 
             rider = other.GetComponentInChildren<MRider>();

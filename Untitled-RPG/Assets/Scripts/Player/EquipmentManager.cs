@@ -10,6 +10,8 @@ public class EquipmentManager : MonoBehaviour
     Transform TwoHandedWeaponSlot;
     Transform MainHandSlot;
     Transform SecondaryHandSlot;
+    Transform BowSlot;
+
     Transform LeftHandTrans;
     Transform RightHandTrans;
 
@@ -37,6 +39,7 @@ public class EquipmentManager : MonoBehaviour
     void Start() {
         characteristics = Characteristics.instance;
         TwoHandedWeaponSlot = WeaponsController.instance.twohandedWeaponSlot;
+        BowSlot = WeaponsController.instance.bowSlot;
         MainHandSlot = WeaponsController.instance.leftHipSlot;
         SecondaryHandSlot = WeaponsController.instance.rightHipSlot;
         LeftHandTrans = WeaponsController.instance.LeftHandTrans;
@@ -94,18 +97,23 @@ public class EquipmentManager : MonoBehaviour
             } else {
                 parent = RightHandTrans;
             }
-        } else if (!secondary) {  // Main hand
+        } else if (!secondary && weapon.weaponType != WeaponType.Bow) {  // Main hand
             if (!PlayerControlls.instance.isWeaponOut) {
                 parent = MainHandSlot;
             } else {
                 parent = RightHandTrans;
             }
-        } else { //Secondary hand
+        } else if (secondary && weapon.weaponType != WeaponType.Bow) { //Secondary hand
             if (!PlayerControlls.instance.isWeaponOut) {
                 parent = SecondaryHandSlot;
             } else {
                 parent = LeftHandTrans;
             }
+        } else if (weapon.weaponType == WeaponType.Bow) {   //Bow
+            parent = BowSlot; //NOT YET IMPLEMENTED IF BOW IS SUPPOSED TO BE OUT IN HAND
+        } else {
+            Debug.LogError("Weapon type not yet supported");
+            return;
         }
         GameObject w = Instantiate(weapon.itemPrefab, parent);
         w.transform.localPosition = Vector3.zero;
@@ -115,10 +123,12 @@ public class EquipmentManager : MonoBehaviour
             WeaponsController.instance.RightHandEquipObj = w;
         } else if (parent == SecondaryHandSlot || parent == LeftHandTrans) {
             WeaponsController.instance.LeftHandEquipObj = w;
+        } else if (parent == BowSlot) {
+            WeaponsController.instance.BowObj = w;
         }
     }
 
-    public void UnequipWeaponPrefab (bool twoHanded, bool secondary = false) {
+    public void UnequipWeaponPrefab (bool twoHanded, bool secondary = false, bool bow = false) {
         Transform slot;
         if (twoHanded) {
             if (!PlayerControlls.instance.isWeaponOut) {
@@ -126,18 +136,27 @@ public class EquipmentManager : MonoBehaviour
             } else {
                 slot = RightHandTrans;
             }
-        } else if (!secondary) {
+        } else if (!secondary && !bow) {
             if (!PlayerControlls.instance.isWeaponOut) {
                 slot = MainHandSlot;
             } else {
                 slot = RightHandTrans;
             }
-        } else {
+        } else if (secondary && !bow) {
             if (!PlayerControlls.instance.isWeaponOut) {
                 slot = SecondaryHandSlot;
             } else {
                 slot = LeftHandTrans;
             }
+        } else if (bow) { //Bow
+            if (!PlayerControlls.instance.isWeaponOut) {
+                slot = BowSlot;
+            } else {
+                slot = LeftHandTrans;
+            }
+        } else {
+            Debug.LogError("Weapon type unsupported");
+            return;
         }
         foreach (Transform child in slot) {
             Destroy(child.gameObject);

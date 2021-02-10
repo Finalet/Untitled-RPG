@@ -20,8 +20,8 @@ public class IsAttackingCheck : StateMachineBehaviour
         if (Player){
             PlayerControlls.instance.emptyAttackAnimatorStates[ID] = false;
             
-            if (!animator.gameObject.GetComponent<PlayerControlls>().isCastingSkill)
-                animator.gameObject.GetComponent<PlayerControlls>().isAttacking = true;
+            if (!PlayerControlls.instance.isCastingSkill && !PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().isAiming)
+                PlayerControlls.instance.isAttacking = true;
         } else {
             animator.gameObject.GetComponent<Enemy>().isAttacking = true;
         }

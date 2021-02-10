@@ -79,6 +79,8 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
                 skillInSlot.Use();
             else if (itemInSlot != null) //If slot is taken with an item
                 UseItem();
+        } else if (Input.GetKey(assignedKey)) {
+            skillInSlot.UseHolding();
         }
     }
 

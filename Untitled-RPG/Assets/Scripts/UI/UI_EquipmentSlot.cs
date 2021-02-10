@@ -45,6 +45,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
             MainHandAdd(item, amount, initialSlot);
         } else if (equipmentSlotType == EquipmentSlotType.SecondaryHand) {
             SecondaryHandAdd(item, amount, initialSlot);    
+        } else if (equipmentSlotType == EquipmentSlotType.Bow) {
+            BowAdd(item, amount, initialSlot);    
         } else {
             //if its not equipment, return it to initial slot. LATER IMPLEMENT EVERY BODY PART.
             initialSlot.AddItem(item, amount, null); 
@@ -58,7 +60,9 @@ public class UI_EquipmentSlot : UI_InventorySlot
     }
 
     void SharedAdd (Item item, int amount, UI_InventorySlot initialSlot) {
-        if (initialSlot != null) initialSlot.ClearSlot(); //at this point we are 100% equiping the item, so its safe to clear initial slot. Initial slot might be null if we drop item in a wrong area and it just returns back
+        if (initialSlot != null) { //at this point we are 100% equiping the item, so its safe to clear initial slot. Initial slot might be null if we drop item in a wrong area and it just returns back
+            initialSlot.ClearSlot();
+        } 
         if (itemInSlot != null) {
             initialSlot.AddItem(itemInSlot, itemAmount, null);
         }
@@ -76,6 +80,12 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
 
         Weapon w = (Weapon)item;
+
+        if (w.weaponType == WeaponType.Bow) {
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
         if ( (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) && EquipmentManager.instance.secondaryHand.itemInSlot != null) { //if its two handed and second hand is busy, clear the second hand.
             InventoryManager.instance.AddItemToInventory(EquipmentManager.instance.secondaryHand.itemInSlot, EquipmentManager.instance.secondaryHand.itemAmount, initialSlot);
             EquipmentManager.instance.secondaryHand.ClearSlot();
@@ -92,7 +102,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
         
         Weapon w = (Weapon)item;
-        if (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) {  //if weapon is two handed, return it to initial slot
+
+        if (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff || w.weaponType == WeaponType.Bow) {  //if weapon is two handed or a bow, return it to initial slot
             initialSlot.AddItem(item, amount, initialSlot); 
             return;
         } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) { //if weapon is onehanded, but main hand is already carryign two handed weapon, return to initial slot
@@ -104,6 +115,23 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }    
         SharedAdd(item, amount, initialSlot);
         EquipmentManager.instance.EquipWeaponPrefab(w, true);
+    }
+
+    void BowAdd (Item item, int amount, UI_InventorySlot initialSlot) {
+        if (!(item is Weapon)) {    //If its not weapon, return to initial slot
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        Weapon w = (Weapon)item;
+
+        if (w.weaponType != WeaponType.Bow) {   //If its not a bow, return to initial slot
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        SharedAdd(item, amount, initialSlot);
+        EquipmentManager.instance.EquipWeaponPrefab(w);
     }
 
     public override void ClearSlot()
@@ -118,6 +146,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
                 } else {
                     EquipmentManager.instance.UnequipWeaponPrefab(false, true);
                 }
+            } else if (w.weaponType == WeaponType.Bow) {
+                EquipmentManager.instance.UnequipWeaponPrefab(false, false, true);
             }
         }
         base.ClearSlot();

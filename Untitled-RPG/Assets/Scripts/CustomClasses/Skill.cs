@@ -36,7 +36,7 @@ public abstract class Skill : MonoBehaviour
     public GameObject areaPickerPrefab;
     public float areaPickerSize;
     protected Vector3 pickedPosition;
-    GameObject instanciatedAP;
+    protected GameObject instanciatedAP;
     bool skillCanceled;
 
     protected virtual void Start() {
@@ -57,12 +57,23 @@ public abstract class Skill : MonoBehaviour
         StartCoroutine(StartUse());
     }
 
+    public virtual void UseHolding() {
+        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
+            return;
+
+        CustomUseOnHold();
+    }
+
+    protected virtual void CustomUseOnHold () {
+
+    }
+
     protected virtual IEnumerator StartUse () {
         if (needToPickArea) {
             playerControlls.isPickingArea = true;
             while (playerControlls.isPickingArea) {
                 PickArea();
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
             if (skillCanceled) {
                 skillCanceled = false;

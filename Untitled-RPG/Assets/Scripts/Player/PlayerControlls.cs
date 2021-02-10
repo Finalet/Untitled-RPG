@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using MalbersAnimations.HAP;
 using Cinemachine;
+using ECM.Controllers;
 
-
-[RequireComponent(typeof(CharacterController))]
 public class PlayerControlls : MonoBehaviour
 {
     public static PlayerControlls instance;
 
     [Header("Movement")]
-    public float currentSpeed = 0;
-    public float baseWalkSpeed;
+    float baseWalkSpeed = 1;
     float walkSpeed;
     public bool toggleRunning = false;
     public int staminaReqToRoll = 50;
@@ -49,28 +47,19 @@ public class PlayerControlls : MonoBehaviour
     [System.NonSerialized] public float desiredLookDirection; //Accessed by M_Rider fix rotation when on animal
     [System.NonSerialized] public float lookDirection; 
 
-    [Header("Jumping")]
-    public float jumpHeight = 2;
-    public float jumpDistance = 1.5f;
-    public float gravity = -50;
-    public float velocityY;
-    public float fwd;
-    public float independentFromInputFwd;
-    public float sideways;
-    Vector3 velocity;
-    
-    Vector3 forward;
-    Vector3 side;
-
     [Header("Rolling")]
     public float rollDistance; 
     float rollDirection;
     float desiredRollDirection;
 
-    [System.NonSerialized] public CharacterController controller;
+    [System.NonSerialized] public Rigidbody rb;
     [System.NonSerialized] public Camera playerCamera;
     [System.NonSerialized] public CinemachineFreeLook CM_Camera;
     [System.NonSerialized] public PlayerAudioController audioController;
+    [System.NonSerialized] public BaseCharacterController baseCharacterController;
+
+    [Space]
+    public bool forceRigidbodyMovement; //when TRUE rootAnimations will be ignored;
 
     Vector3 lastCamRotation;
 
@@ -82,12 +71,9 @@ public class PlayerControlls : MonoBehaviour
 
     public SkinnedMeshRenderer skinnedMesh;
 
-    float baseHeight;
-    float baseColliderCenterY;
-
     bool rolled;
 
-    public bool[] emptyAttackAnimatorStates = new bool[3];
+    public bool[] emptyAttackAnimatorStates = new bool[4];
 
     void Awake() {
         if (instance == null) 
@@ -96,49 +82,28 @@ public class PlayerControlls : MonoBehaviour
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         audioController = GetComponent<PlayerAudioController>();
+        baseCharacterController = GetComponent<BaseCharacterController>();
+        rb = GetComponent<Rigidbody>();
 
         playerCamera = Camera.main;
         CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
-
-        prevPos = transform.position;
         walkSpeed = baseWalkSpeed;
-
-        baseHeight = controller.height;
-        baseColliderCenterY = controller.center.y;
-    }
-
-    Vector3 prevPos;
-    float calculatingCurrentSpeedTimer;
-    float currentSpeedSums;
-    float instantCurrentSpeed;
-    void CalculateCurrentSpeed () {
-        if (calculatingCurrentSpeedTimer < 0.25f) {
-            calculatingCurrentSpeedTimer += Time.fixedDeltaTime;
-            instantCurrentSpeed = Vector3.Magnitude(transform.position - prevPos - new Vector3(0, transform.position.y, 0)) * 120;
-            prevPos = transform.position - new Vector3(0, transform.position.y, 0);
-            currentSpeedSums += instantCurrentSpeed;
-        } else {
-            currentSpeed = Mathf.Round( (currentSpeedSums/(0.25f/Time.fixedDeltaTime)) * 100f ) / 100f;
-            calculatingCurrentSpeedTimer = 0;
-            currentSpeedSums = 0;
-        }
-        
     }
 
     void Update()
     {
-        isGrounded = IsGrounded();
+        isGrounded = baseCharacterController.isGrounded; //IsGrounded(); LEGACY
+        isJumping = baseCharacterController.isJumping;
 
         if (!isMounted && !isFlying && !disableControl) {
             GroundMovement();
             GroundAnimations();
         } else if (isFlying && !disableControl) {
-            FlyingMovement();
             FlyingAnimations();
         }
+        UpdateRotation();
         Sprinting();
         MountAnimal();
         SetAnimatorVarialbes();
@@ -149,7 +114,7 @@ public class PlayerControlls : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.CapsLock))
             toggleRunning = !toggleRunning;
 
-        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking && !isCastingSkill) {
+        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) {
             isIdle = true;
         } else {
             isIdle = false;
@@ -182,16 +147,12 @@ public class PlayerControlls : MonoBehaviour
 
     }
 
-    void FixedUpdate() {
-        CalculateCurrentSpeed();
-    }
-
 #region Ground movement
     float runningStaminaTimer;
     void GroundMovement()
     {
-        if (Input.GetButtonDown("Jump"))
-            Jump();
+        //if (Input.GetButtonDown("Jump"))  //JUMPING IS NOW FONE THROUGH "BASE CHARACTER CONTROLLER"
+            //Jump();
 
         if (Input.GetButtonDown("Crouch"))
             Crouch();
@@ -231,36 +192,12 @@ public class PlayerControlls : MonoBehaviour
         if( (Characteristics.instance.Stamina <= 0 || !Characteristics.instance.canUseStamina) && !isRolling) {
             isSprinting = false;
         }
-
-        if(isCrouch) {
-            controller.height = 1.1f;
-            controller.center = new Vector3(controller.center.x, 0.6f, controller.center.z);
-        } else {
-            controller.height = baseHeight;
-            controller.center = new Vector3(controller.center.x, baseColliderCenterY, controller.center.z);
-        }
  
-        velocityY += gravity * Time.deltaTime;
-        velocityY = Mathf.Clamp(velocityY, gravity, -gravity);
-
-        if (isSprinting || isRolling) {
-            forward = fwd * transform.forward;
-            side = Vector3.zero;
-        } else {
-            forward = transform.forward * fwd * Input.GetAxis("Vertical") + independentFromInputFwd * transform.forward;
-            side = transform.right * sideways * Input.GetAxis("Horizontal");
-        }
-
-        velocity = Vector3.up * velocityY + forward + side;
-        controller.Move(velocity * Time.deltaTime); 
-
         if (Input.GetButtonDown("FreeCamera")) {
             lastCamRotation = playerCamera.transform.eulerAngles;
         } else if (Input.GetButtonUp("FreeCamera")) {
             playerCamera.transform.eulerAngles = lastCamRotation;
         }
-            
-        UpdateRotation();
 
         if (isSprinting) {
             if (InputDirection > 0) {
@@ -355,55 +292,20 @@ public class PlayerControlls : MonoBehaviour
     }
     
     float jumpDis;
-    void Jump ()
-    {
+    public bool canJump() {
         if (!isGrounded || isFlying || isCrouch || isRolling || isAttacking || isGettingHit || isJumping) {
-            return;
+            return false;
+        } else {
+            return true;
         }
-
+    }
+    public void Jump ()
+    {
         audioController.PlayJumpRollSound();
         animator.SetTrigger("Jump");
-        isJumping = true;
-        jumpDis = jumpDistance * currentSpeed/3;
-        jumpDis = Mathf.Clamp(jumpDis, 0, 8); //Limit max jumping distance
-        velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
-        fwd += jumpDis;
-        sideways += jumpDis;
-        //animator.applyRootMotion = false;
-        StartCoroutine(DetectLanding());
-
+        
         InterruptCasting();
     }
-
-    IEnumerator DetectLanding () {
-        yield return new WaitForSeconds(0.1f);
-        while (!isGrounded) {
-            if (isFlying) {
-                fwd -= jumpDis;
-                sideways -= jumpDis;
-                isJumping = false;
-                animator.CrossFade("Jump/Roll.Empty", 0.25f);
-                yield break;
-            }
-            yield return null;
-        }
-        fwd -= jumpDis;
-        sideways -= jumpDis;
-        animator.applyRootMotion = true;
-        yield return new WaitForSeconds(0.5f);
-        isJumping = false;
-    }
-    IEnumerator DetectLanding (bool afterFlying) {
-        velocityY = 0;
-        yield return new WaitForSeconds(0.1f);
-        while (!isGrounded) {
-            velocityY += gravity/2.5f * Time.deltaTime;
-            yield return null;
-        }
-        isFlying = false;
-        animator.applyRootMotion = true;
-    }
-
     void Crouch() {
         if (isGrounded)
             isCrouch = !isCrouch;
@@ -411,7 +313,6 @@ public class PlayerControlls : MonoBehaviour
         InterruptCasting();
     }
 
-    float rollDis;
     void Roll() {
         if (isAttacking || isRolling || isFlying) {
             return;
@@ -421,7 +322,6 @@ public class PlayerControlls : MonoBehaviour
             return;
         }
 
-        animator.applyRootMotion = false;
         GetComponent<Characteristics>().UseOrRestoreStamina(staminaReqToRoll);
         isRolling = true;
         if (InputDirection > 0 && !isSprinting && !isIdle) {
@@ -431,51 +331,13 @@ public class PlayerControlls : MonoBehaviour
         } 
         UpdateRotation();
         animator.SetTrigger("Roll");
-        rollDis = rollDistance + currentSpeed/6;
-        rollDis = Mathf.Clamp(rollDis, 0, 8);
-        fwd += rollDis;
-        sideways += rollDis;
         audioController.PlayJumpRollSound();
 
         InterruptCasting();
     }
-    public void StopRoll() {
+    public void StopRoll() { //Called from rolling animation
         isRolling = false;
-        fwd -= rollDis;
-        sideways -= rollDis;
         desiredRollDirection = 0;
-        animator.applyRootMotion = true;
-    }
-
-    bool IsGrounded () {
-        Vector3 rayOffset;
-        RaycastHit hit;
-        for (int i = 0; i < 4; i++) {
-            if (i==0)
-                rayOffset = transform.forward * 0.4f;
-            else if (i==1)
-                rayOffset = -transform.forward * 0.4f;
-            else if (i==2)
-                rayOffset = transform.right * 0.4f;
-            else
-                rayOffset = -transform.right * 0.4f;
-
-            //Debug.DrawRay(transform.position + Vector3.up*0.1f + rayOffset, -Vector3.up*0.4f, Color.red);
-            if (Physics.Raycast(transform.position + Vector3.up * 0.1f + rayOffset, -Vector3.up, out hit, 0.4f)) {
-                if (hit.transform.CompareTag("Ship") && transform.parent != hit.transform) //If player is on the ship, he should be parented to the ship, so he follows its movement.
-                    transform.parent = hit.transform;
-
-                return true;
-            }
-        }
-        if (transform.parent != null) { //If player left the ship, he should have no parents.
-            transform.parent = playerCamera.transform; //First parent to the camera (or any other object in the Player_Ojbect scene) to move player to the Player_Object scene.
-            transform.parent = null; //Then un-parent him.
-        }
-        //if all of the above fails, then still not grounded;
-        if (isGrounded && !isJumping) //this means that player walked of the cliff;
-            velocityY = 0;
-        return false;
     }
 
     void Sprinting () {
@@ -510,20 +372,6 @@ public class PlayerControlls : MonoBehaviour
     [System.NonSerialized] public float flySpeed;
 
     void FlyingMovement() {
-        forward = flySpeed * transform.forward * (1+fwd) * Input.GetAxis("Vertical") + independentFromInputFwd * transform.forward;
-        side = flySpeed * transform.right * (1+sideways) * Input.GetAxis("Horizontal");
-
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.LeftShift)) {
-            velocityY = Mathf.MoveTowards(velocityY, 1, 0.2f);
-        } else if (Input.GetKey(KeyCode.LeftControl)) {
-            velocityY = Mathf.MoveTowards(velocityY, -1, 0.2f);;
-        } else {
-            velocityY = Mathf.MoveTowards(velocityY, 0, 0.2f);
-        }
-        
-        velocity = Vector3.up * velocityY * 2 + forward + side;
-        controller.Move(velocity * flySpeed * Time.deltaTime); 
-
         UpdateRotation();
     }
 
@@ -540,18 +388,23 @@ public class PlayerControlls : MonoBehaviour
         isCrouch = false;
 
         animator.CrossFade("Main.Flying.Takeoff", 0.1f);
-        animator.applyRootMotion = false;
+        baseCharacterController.SwitchRootAnimation(false);
         isFlying = true;
     }
     public void LandFromFlying () {
         animator.CrossFade("Main.Flying.Land", 0.1f);
     }
     public void FlyUp () { //Called from take off animation
-        velocityY = 5f;
+        baseCharacterController.allowVerticalMovement = true;
+        baseCharacterController.movement.DisableGroundDetection();
+        baseCharacterController.movement.ApplyVerticalImpulse(10);
         SprintOff();
     }
     public void LandDown () { //Called from landing animation
-        StartCoroutine(DetectLanding(true));
+        baseCharacterController.allowVerticalMovement = false;
+        baseCharacterController.movement.EnableGroundDetection();
+        baseCharacterController.SwitchRootAnimation(true);
+        isFlying = false;
     }
 
 
@@ -578,7 +431,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void CheckIsAttacking () {
-        if ( ( emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] ) && emptyAttackAnimatorStates[2])
+        if ( ( emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] ) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]))
             isAttacking = false;
     }
 

@@ -20,7 +20,7 @@ public class EnemyProjectile : MonoBehaviour
         if (!shot)
             return;
             
-        if (other.CompareTag("Player") && other.GetType() == typeof(CharacterController)) { // Checks if charater got hit, and not its triggers
+        if (other.CompareTag("Player") && other.GetType() == typeof(CapsuleCollider)) { // Checks if charater got hit, and not its triggers
             PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1f);
         }
         if (!other.isTrigger) {

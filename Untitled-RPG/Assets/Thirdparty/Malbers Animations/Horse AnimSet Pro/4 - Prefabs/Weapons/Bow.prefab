@@ -45,7 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UseColliders: 0
   gizmoType: 1
-  alpha: 0.458
   debugSize: 0.015
   DebugColor: {r: 0.034482718, g: 1, b: 0, a: 1}
   DrawAxis: 0
@@ -126,7 +125,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UseColliders: 0
   gizmoType: 0
-  alpha: 0.458
   debugSize: 0.015
   DebugColor: {r: 0.034482718, g: 1, b: 0, a: 1}
   DrawAxis: 0
@@ -176,6 +174,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 0
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -187,6 +187,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -432,6 +433,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: c7f12621ba75c2346908c74ab73d7e8b, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 6
         m_Arguments:
@@ -443,6 +445,7 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 11400000, guid: cee5f7ae493b11e4d829fda47704796b, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 5
         m_Arguments:
@@ -454,6 +457,7 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 11400000, guid: eb38210b7bfa18d468125b92760c8382, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 5
         m_Arguments:
@@ -464,12 +468,11 @@ MonoBehaviour:
           m_StringArgument: Aim
           m_BoolArgument: 1
         m_CallState: 2
-    m_TypeName: MalbersAnimations.Weapons.WeaponEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnUnequiped:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: c7f12621ba75c2346908c74ab73d7e8b, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 6
         m_Arguments:
@@ -481,6 +484,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 11400000, guid: cee5f7ae493b11e4d829fda47704796b, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 5
         m_Arguments:
@@ -492,6 +496,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 11400000, guid: eb38210b7bfa18d468125b92760c8382, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 5
         m_Arguments:
@@ -502,8 +507,6 @@ MonoBehaviour:
           m_StringArgument: Attack2
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: MalbersAnimations.Weapons.WeaponEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   ShowEventEditor: 1
   knot: {fileID: 4000011658240002}
   arrowPoint: {fileID: 4000012813729316}
@@ -523,12 +526,11 @@ MonoBehaviour:
   OnLoadArrow:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnHold:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: c7f12621ba75c2346908c74ab73d7e8b, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 0
         m_Arguments:
@@ -539,12 +541,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnReleaseArrow:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 8e7e385b1b0a88a4c95a1f2cca5bd5f9, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Add
         m_Mode: 3
         m_Arguments:
@@ -555,8 +556,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   releaseArrow: 1
   BowIsSet: 1
   BonesFoldout: 1
@@ -686,6 +685,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114000013777553486}
+          m_TargetAssemblyTypeName: 
           m_MethodName: set_Active
           m_Mode: 6
           m_Arguments:
@@ -696,8 +696,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - name: When Arrows are added
     comparer: 3
     Value:
@@ -708,6 +706,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114000013777553486}
+          m_TargetAssemblyTypeName: 
           m_MethodName: set_Active
           m_Mode: 6
           m_Arguments:
@@ -718,8 +717,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1000013650790910
 GameObject:
   m_ObjectHideFlags: 0

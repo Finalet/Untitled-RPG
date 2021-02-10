@@ -1200,11 +1200,11 @@ namespace ECM.Components
         private void ApplyAirMovement(Vector3 desiredVelocity, float maxDesiredSpeed, float acceleration,
             float deceleration, float friction, float brakingFriction, bool onlyLateral = true)
         {
+            
             // If onlyLateral, discards any vertical velocity (leaves rigidbody's vertical velocity unaffected)
             
             var up = transform.up;
             var v = onlyLateral ? Vector3.ProjectOnPlane(velocity, up) : velocity;
-
             // If onlyLateral, discards any vertical velocity
 
             if (onlyLateral)

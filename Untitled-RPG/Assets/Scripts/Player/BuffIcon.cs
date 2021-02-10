@@ -7,12 +7,11 @@ public class BuffIcon : MonoBehaviour
     public Skill skill;
 
     public float timer;
-    TextMeshProUGUI timerText;
+    public TextMeshProUGUI timerText;
 
     bool noTimer;
     void Start() {
         GetComponent<Image>().sprite = skill.icon;
-        timerText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
         if (timer == 0) {
             noTimer = true;

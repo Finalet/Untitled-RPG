@@ -64,15 +64,18 @@ public class FireballProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other) {
         Enemy en = other.transform.GetComponentInParent<Enemy>();
-        if (other.isTrigger || other.CompareTag("Player") || doNotDestroy || en == null)
+        if (other.isTrigger || other.CompareTag("Player") || doNotDestroy)
             return;
         
+        Explode();
         
+        if (en == null)
+            return;
+
         if (!enemiesHit.Contains(en)) {
             en.GetHit(damage(), "Fireball", true, false, HitType.Kickback, transform.position);
             enemiesHit.Add(en);
         }
-        Explode();
     }
 
     void Explode () {

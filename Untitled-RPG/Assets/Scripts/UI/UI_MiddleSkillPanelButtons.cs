@@ -63,7 +63,7 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
 
     void AssignSkill () {
         if (!isLBM) {
-            ClearSlot();
+            AddSkill(AssetHolder.instance.getSkill(16), null);
             return;
         }
 

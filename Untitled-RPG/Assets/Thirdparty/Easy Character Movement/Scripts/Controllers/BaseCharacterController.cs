@@ -177,10 +177,18 @@ namespace ECM.Controllers
         /// Maximum movement speed (in m/s).
         /// </summary>
 
+        public float baseSpeed;
         public float speed
         {
-            get { return _speed; }
-            set { _speed = Mathf.Max(0.0f, value); }
+            get {
+                
+                return PlayerControlls.instance.isSprinting || PlayerControlls.instance.isRolling  ? baseSpeed * 2 : baseSpeed; 
+            
+            }
+            set {
+                _speed = Mathf.Max(0.0f, value);
+                baseSpeed = _speed;
+            }
         }
 
         /// <summary>
@@ -591,13 +599,20 @@ namespace ECM.Controllers
 
             // Is jump button pressed within pre jump tolerance time?
 
-            if (_jumpButtonHeldDownTimer > _jumpPreGroundedToleranceTime)
+            //if (_jumpButtonHeldDownTimer > _jumpPreGroundedToleranceTime)
+                //return;
+            if (blockJumpAfterGrounded)
                 return;
 
             // If not grounded or no post grounded tolerance time remains, return
 
             if (!movement.isGrounded && _jumpUngroundedTimer > _jumpPostGroundedToleranceTime)
                 return;
+
+            //Finale Conditions
+            if (!PlayerControlls.instance.canJump())
+                return;
+
 
             _canJump = false;           // Halt jump until jump button is released
             _isJumping = true;          // Update isJumping flag
@@ -614,6 +629,9 @@ namespace ECM.Controllers
             // 'Pause' grounding, allowing character to safely leave the 'ground'
 
             movement.DisableGrounding();
+
+            //Call Finale functions 
+            PlayerControlls.instance.Jump();
         }
 
         /// <summary>
@@ -759,7 +777,14 @@ namespace ECM.Controllers
 
             // else, convert input (moveDirection) to velocity vector
 
-            return moveDirection * speed;
+            if (PlayerControlls.instance.isSprinting) {
+                Quaternion camRot = PlayerControlls.instance.playerCamera.transform.rotation;
+                camRot.x = 0;
+                camRot.z = 0;
+                return camRot * moveDirection * speed; 
+            } else {
+                return PlayerControlls.instance.transform.rotation * moveDirection * speed; //CHANGED
+            }
         }
 
         /// <summary>
@@ -839,21 +864,21 @@ namespace ECM.Controllers
             // Toggle pause / resume.
             // By default, will restore character's velocity on resume (eg: restoreVelocityOnResume = true)
 
-            if (Input.GetKeyDown(KeyCode.P))
-                pause = !pause;
+            //if (Input.GetKeyDown(KeyCode.P))
+            //    pause = !pause;
 
             // Handle user input
 
             moveDirection = new Vector3
             {
                 x = Input.GetAxisRaw("Horizontal"),
-                y = 0.0f,
+                y = PlayerControlls.instance.isFlying ? Input.GetAxisRaw("Flying") : 0.0f,
                 z = Input.GetAxisRaw("Vertical")
             };
 
             jump = Input.GetButton("Jump");
 
-            crouch = Input.GetKey(KeyCode.C);
+            crouch = PlayerControlls.instance.isCrouch;
         }
 
         #endregion
@@ -907,9 +932,11 @@ namespace ECM.Controllers
             movement = GetComponent<CharacterMovement>();
             movement.platformUpdatesRotation = true;
 
-            animator = GetComponentInChildren<Animator>();
+            //animator = GetComponentInChildren<Animator>();
+            animator = GetComponent<Animator>();
 
-            rootMotionController = GetComponentInChildren<RootMotionController>();
+            //rootMotionController = GetComponentInChildren<RootMotionController>();
+            rootMotionController = GetComponent<RootMotionController>();
         }
 
         public virtual void FixedUpdate()
@@ -950,6 +977,41 @@ namespace ECM.Controllers
             // Perform character animation (if not paused)
 
             Animate();
+
+
+            //Finale's detect to stop play from jumping often
+            DetectLanding();
+        }
+
+        float timeLanded;
+        bool blockJumpAfterGrounded;
+        void DetectLanding () {
+            if (!movement.wasGrounded && movement.isGrounded) {
+                timeLanded = Time.realtimeSinceStartup;
+            }
+
+            if (Time.realtimeSinceStartup - timeLanded < 0.2f || PlayerControlls.instance.forceRigidbodyMovement) {
+                SwitchRootAnimation(false);
+            } else {
+                if (!PlayerControlls.instance.isFlying)
+                    SwitchRootAnimation(true);
+            }
+
+            if (Time.realtimeSinceStartup - timeLanded > 0.5f) {
+                blockJumpAfterGrounded = false;
+            } else {
+                blockJumpAfterGrounded = true;
+            }
+        }
+
+        public void SwitchRootAnimation(bool On) {
+            if (On) {
+                useRootMotion = true;
+                useRootMotionRotation = true;
+            } else {
+                useRootMotion = false;
+                useRootMotionRotation = false;
+            }
         }
         
         #endregion

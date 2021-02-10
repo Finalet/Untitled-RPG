@@ -242,7 +242,7 @@ public abstract class Enemy : MonoBehaviour
     protected IEnumerator HitStop () {
         float timer = Time.realtimeSinceStartup;
         Time.timeScale = 0.3f;
-        while(Time.realtimeSinceStartup - timer < 0.1f) {
+        while(Time.realtimeSinceStartup - timer < 0.12f) {
             yield return null;
         }
         Time.timeScale = 1;
@@ -286,7 +286,7 @@ public abstract class Enemy : MonoBehaviour
             return;
         }
 
-        if (distanceToPlayer <= PlayerControlls.instance.playerCamera.GetComponent<LookingTarget>().viewDistance / 1.5f) {
+        if (distanceToPlayer <= 25) {
             healthBar.transform.GetChild(0).localScale = new Vector3((float)currentHealth/maxHealth, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
             healthBar.transform.LookAt (healthBar.transform.position + PlayerControlls.instance.playerCamera.transform.rotation * Vector3.back, PlayerControlls.instance.playerCamera.transform.rotation * Vector3.up);
             healthBar.SetActive(true);

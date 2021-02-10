@@ -26,6 +26,10 @@ public class Weapon : Equipment
             OneHandedEquip(initialSlot);
         } else if (weaponType == WeaponType.TwoHandedSword || weaponType == WeaponType.TwoHandedStaff) {
             TwoHandedEquip(initialSlot);
+        } else if (weaponType == WeaponType.Bow) {
+            BowEquip(initialSlot);
+        } else {
+            //IMPLEMENT OTHER EQUIPMENT TYPES
         }
     }
 
@@ -51,5 +55,9 @@ public class Weapon : Equipment
 
     void TwoHandedEquip (UI_InventorySlot initialSlot) {
         EquipmentManager.instance.mainHand.AddItem(this, 1, initialSlot);
+    }
+
+    void BowEquip (UI_InventorySlot initialSlot) {
+        EquipmentManager.instance.bow.AddItem(this, 1, initialSlot);
     }
 }

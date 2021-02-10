@@ -42,13 +42,15 @@ public class Dash : Skill
         }
     }
 
+    float baseSpeed;
     public void Hit (float stopHit) {
         if (stopHit == 0) {
             GetComponent<BoxCollider>().enabled = true;
-            playerControlls.independentFromInputFwd += dashDistance;
+            baseSpeed = playerControlls.baseCharacterController.baseSpeed;
+            playerControlls.baseCharacterController.speed = baseSpeed*5;
         } else {
-            playerControlls.independentFromInputFwd -= dashDistance;
             GetComponent<BoxCollider>().enabled = false;
+            playerControlls.baseCharacterController.speed = baseSpeed;
             enemiesHit.Clear();
         }
     }

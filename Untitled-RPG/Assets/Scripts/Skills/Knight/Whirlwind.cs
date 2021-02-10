@@ -26,8 +26,8 @@ public class Whirlwind : Skill
         }
 
         if (!playerControlls.isFlying) {
-            playerControlls.fwd += moveSpeed;
-            playerControlls.sideways += moveSpeed;
+            playerControlls.forceRigidbodyMovement = true;
+            //I was setting speed/movement here before shifring to rigidbody
         } else {
             wasFlying = true;
         }
@@ -48,17 +48,16 @@ public class Whirlwind : Skill
             }
             //if was flying but the flight is over midway
             if (!playerControlls.isFlying && wasFlying == true) {
-                playerControlls.fwd += moveSpeed;
-                playerControlls.sideways += moveSpeed;
+                //I was setting speed/movement here before shifring to rigidbody
                 wasFlying = false;
             }
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
         if (!wasFlying) {
-            playerControlls.fwd -= moveSpeed;
-            playerControlls.sideways -= moveSpeed;
+            //I was setting speed/movement here before shifring to rigidbody
         }
         animator.CrossFade("Attacks.Knight.Whirlwind_end", 0.25f);
+        playerControlls.forceRigidbodyMovement = false;
         Characteristics.instance.canGetHit = true;
     }   
 

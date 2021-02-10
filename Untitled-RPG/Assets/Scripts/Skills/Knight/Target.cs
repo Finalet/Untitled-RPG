@@ -9,49 +9,119 @@ public class Target : Skill
     public float skillDistance;
     public float duration;
     public GameObject targetPrefab;
-    public GameObject SkillTarget;
+    public Enemy SkillTarget;
     public float damageIncrease = 20;
 
-    public override void Use() {
-        if(!playerControlls.playerCamera.GetComponent<LookingTarget>().targetIsEnemy) {
-            CanvasScript.instance.DisplayWarning("No enemy target!");
-            return;
-        }   
+    List<Enemy> enemiesInTarget = new List<Enemy>();
+    List<float> enemiesInTargetAngles = new List<float>();
 
-        base.Use();
+    protected override void LocalUse () {
+        var enemiesInTarget = Physics.OverlapSphere(pickedPosition, 1);
+        foreach (Collider en in enemiesInTarget) {
+            if (en.gameObject.GetComponent<Enemy>() != null) {
+                SkillTarget = en.gameObject.GetComponent<Enemy>();
+                break;
+            }
+        }
+
+        if (SkillTarget == null) {
+           CanvasScript.instance.DisplayWarning("No enemy target");
+           return;
+        }
+
+        playerControlls.InterruptCasting();
+        coolDownTimer = coolDown;
+        //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
+        CustomUse();
+        if (weaponOutRequired && !playerControlls.isWeaponOut)
+                WeaponsController.instance.InstantUnsheathe();
     }
+
+    protected override void PickArea () {
+        if (instanciatedAP == null) {
+            instanciatedAP = Instantiate(areaPickerPrefab);
+            CanvasScript.instance.PickAreaForSkill(this);
+        }
+
+        enemiesInTarget.Clear();
+        enemiesInTargetAngles.Clear();
+
+        // Find all colliders within ViewRange
+        var hits = Physics.OverlapSphere(transform.position, skillDistance + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance);
+
+        
+        foreach (var hit1 in hits) {
+            if ( hit1.gameObject == this.gameObject ) continue; // don't hit self
+            if ( hit1.gameObject.GetComponentInParent<Enemy>() == null) continue; // not an enemy
+
+            // Check FOV
+            var direction = (playerControlls.playerCamera.transform.position - hit1.transform.position);
+            var hDirn = Vector3.ProjectOnPlane(direction, playerControlls.playerCamera.transform.up).normalized; // Project onto transform-relative XY plane to check hFov
+            var vDirn = Vector3.ProjectOnPlane(direction, playerControlls.playerCamera.transform.right).normalized; // Project onto transform-relative YZ plane to check vFov
+
+            var hOffset = 180 - Vector3.Angle(hDirn, playerControlls.playerCamera.transform.forward); //Vector3.Dot(hDirn, playerControlls.playerCamera.transform.forward) * Mathf.Rad2Deg; // Calculate horizontal angular offset in Degrees
+            var vOffset = 180 - Vector3.Angle(vDirn, playerControlls.playerCamera.transform.forward); // Calculate vertical angular offset in Degrees
+
+            if (hOffset > 10 || vOffset > 10) continue; // Outside of FOV
+
+            enemiesInTarget.Add(hit1.GetComponentInParent<Enemy>());
+            enemiesInTargetAngles.Add(hOffset);
+        }
+
+        if (enemiesInTarget.Count <= 0) {
+            SkillTarget = null;
+        } else {
+            SkillTarget = enemiesInTarget[0];
+            for (int i = 0; i < enemiesInTargetAngles.Count; i++) {
+                if (i == 0) continue;
+                if (enemiesInTargetAngles[i] < enemiesInTargetAngles[i-1]) {
+                    SkillTarget = enemiesInTarget[i];
+                }
+            }
+        }
+
+        if (SkillTarget != null) {
+            Vector3 pos = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.position + Vector3.up * 0.2f : Vector3.up * 2;
+            instanciatedAP.transform.position = pos;
+            instanciatedAP.transform.localScale = Vector3.one * areaPickerSize / 10f;
+        } else {
+            instanciatedAP.transform.localScale = Vector3.zero;
+        }
+    }
+
+    protected override float actualDistance () {
+        return skillDistance;
+    } 
 
     protected override void CustomUse() { 
         StartCoroutine(Using());
     }
 
-    public float timer;
+    float startTime;
     IEnumerator Using () {
         audioSource.time = 0.21f;
         audioSource.Play();
-
-        SkillTarget = playerControlls.playerCamera.GetComponent<LookingTarget>().target.GetComponentInParent<Enemy>().gameObject;
         
-        timer = 0;
+        startTime = Time.realtimeSinceStartup;
         
         GameObject newTargetPrefab = Instantiate(targetPrefab, Vector3.zero, Quaternion.identity, SkillTarget.transform);
-        SkillTarget.GetComponent<Enemy>().TargetSkillDamagePercentage = damageIncrease;
+        SkillTarget.TargetSkillDamagePercentage = damageIncrease;
+
+        float height = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.localPosition.y + 0.2f : 2;
 
         newTargetPrefab.SetActive(true);
-        newTargetPrefab.transform.localPosition = Vector3.up * 2.3f;
+        newTargetPrefab.transform.localPosition = Vector3.up * height;
 
-        PlayerControlls.instance.GetComponent<PlayerControlls>().isAttacking = false;
-        float y =0;
-        while (duration + timer >= 0) {
-            timer -= Time.fixedDeltaTime;
+        float y = 0;
+        while (Time.realtimeSinceStartup - startTime < duration) {
             y += Time.fixedDeltaTime * 4;
-            newTargetPrefab.transform.localPosition = Vector3.up * (2.3f + Mathf.Sin(y)/10);
+            newTargetPrefab.transform.localPosition = Vector3.up * (height + Mathf.Sin(y)/10);
             newTargetPrefab.transform.Rotate(Vector3.up, 1f);
-            if (SkillTarget.GetComponentInParent<Enemy>().isDead)
-                timer = -100;
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            if (SkillTarget.isDead)
+                break;
+            yield return null;
         }
         Destroy(newTargetPrefab);
-        SkillTarget.GetComponentInParent<Enemy>().TargetSkillDamagePercentage = 0;
+        SkillTarget.TargetSkillDamagePercentage = 0;
     }
 }
