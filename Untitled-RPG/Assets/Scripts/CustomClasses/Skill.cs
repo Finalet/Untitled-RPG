@@ -57,17 +57,6 @@ public abstract class Skill : MonoBehaviour
         StartCoroutine(StartUse());
     }
 
-    public virtual void UseHolding() {
-        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
-            return;
-
-        CustomUseOnHold();
-    }
-
-    protected virtual void CustomUseOnHold () {
-
-    }
-
     protected virtual IEnumerator StartUse () {
         if (needToPickArea) {
             playerControlls.isPickingArea = true;

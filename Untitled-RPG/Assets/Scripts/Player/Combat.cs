@@ -4,10 +4,25 @@ using UnityEngine;
 
 public class Combat : MonoBehaviour
 {
+    public static Combat instanace;
 
     public List<Enemy> enemiesInBattle = new List<Enemy>();
+    AimingSkill aimingSkill;
+    public AimingSkill AimingSkill {
+        get {
+            return aimingSkill;
+        }
+        set {
+            aimingSkill = value;
+            PlayerControlls.instance.isAimingSkill = aimingSkill == null ? false : true;
+        }
+    }
 
     Animator animator;
+
+    void Awake() {
+        instanace = this;
+    }
 
     void Start() {  
         animator = GetComponent<Animator>();
@@ -15,6 +30,7 @@ public class Combat : MonoBehaviour
 
     void Update() {
         SetAnimationSpeed();
+
         PlayerControlls.instance.attackedByEnemies = enemiesInBattle.Count == 0 ? false : true;
     }
 

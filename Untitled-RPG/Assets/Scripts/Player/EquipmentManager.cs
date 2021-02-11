@@ -114,7 +114,11 @@ public class EquipmentManager : MonoBehaviour
                 parent = LeftHandTrans;
             }
         } else if (weapon.weaponType == WeaponType.Bow) {   //Bow
-            parent = BowSlot; //NOT YET IMPLEMENTED IF BOW IS SUPPOSED TO BE OUT IN HAND
+            if (!WeaponsController.instance.isBowOut) {
+                parent = BowSlot;
+            } else {
+                parent = LeftHandTrans;
+            }
         } else {
             Debug.LogError("Weapon type not yet supported");
             return;
@@ -123,12 +127,14 @@ public class EquipmentManager : MonoBehaviour
         w.transform.localPosition = Vector3.zero;
         w.transform.localEulerAngles = Vector3.zero;
         w.transform.localScale = Vector3.one;
+        if (weapon.weaponType == WeaponType.Bow) {
+            WeaponsController.instance.BowObj = w;
+            return;
+        }
         if (parent == TwoHandedWeaponSlot || parent == MainHandSlot || parent == RightHandTrans) {
             WeaponsController.instance.RightHandEquipObj = w;
         } else if (parent == SecondaryHandSlot || parent == LeftHandTrans) {
             WeaponsController.instance.LeftHandEquipObj = w;
-        } else if (parent == BowSlot) {
-            WeaponsController.instance.BowObj = w;
         }
     }
 
@@ -153,7 +159,7 @@ public class EquipmentManager : MonoBehaviour
                 slot = LeftHandTrans;
             }
         } else if (bow) { //Bow
-            if (!WeaponsController.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isBowOut) {
                 slot = BowSlot;
             } else {
                 slot = LeftHandTrans;

@@ -23,7 +23,7 @@ public class Arrow : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
-        trail.enabled = false;
+        trail.emitting = false;
     }
 
     protected virtual void Update() {
@@ -57,7 +57,7 @@ public class Arrow : MonoBehaviour
 
         timeShot = Time.realtimeSinceStartup;
         shot = true;
-        trail.enabled = true;
+        trail.emitting = true;
     }
 
     protected virtual void OnTriggerEnter(Collider other) {
@@ -65,7 +65,8 @@ public class Arrow : MonoBehaviour
         if (other.isTrigger || other.CompareTag("Player"))
             return;
         
-        Collision();
+
+        Collision(other.transform);
 
         if (en == null) 
             return;
@@ -73,10 +74,15 @@ public class Arrow : MonoBehaviour
         Hit(en);
     }
 
-    protected virtual void Collision () {
+    protected virtual void Collision (Transform collisionObj) {
+        transform.position -= rb.velocity * Time.fixedDeltaTime;
+        transform.SetParent(collisionObj);
+        
         rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
         rb.isKinematic = true;
+        
         GetComponent<CapsuleCollider>().enabled = false;
+        trail.emitting = false;
     }
 
     protected virtual void Hit (Enemy en) {

@@ -39,7 +39,7 @@ ParticleSystem:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1167162920491756489}
-  serializedVersion: 6
+  serializedVersion: 7
   lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
@@ -3669,19 +3669,20 @@ ParticleSystem:
     range: {x: 0, y: 1}
   CollisionModule:
     enabled: 0
-    serializedVersion: 3
+    serializedVersion: 4
     type: 0
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
     multiplyColliderForceByParticleSpeed: 0
     multiplyColliderForceByCollisionAngle: 1
-    plane0: {fileID: 0}
-    plane1: {fileID: 0}
-    plane2: {fileID: 0}
-    plane3: {fileID: 0}
-    plane4: {fileID: 0}
-    plane5: {fileID: 0}
+    m_Planes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     m_Dampen:
       serializedVersion: 2
       minMaxState: 0
@@ -3855,17 +3856,20 @@ ParticleSystem:
     interiorCollisions: 0
   TriggerModule:
     enabled: 0
-    collisionShape0: {fileID: 0}
-    collisionShape1: {fileID: 0}
-    collisionShape2: {fileID: 0}
-    collisionShape3: {fileID: 0}
-    collisionShape4: {fileID: 0}
-    collisionShape5: {fileID: 0}
+    serializedVersion: 2
     inside: 1
     outside: 0
     enter: 0
     exit: 0
+    colliderQueryMode: 0
     radiusScale: 1
+    primitives:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   SubModule:
     serializedVersion: 2
     enabled: 0
@@ -4922,6 +4926,8 @@ GameObject:
   - component: {fileID: 2080604787882170461}
   - component: {fileID: 6388598931538451956}
   - component: {fileID: 2643439094610490977}
+  - component: {fileID: 1925119413493135579}
+  - component: {fileID: 7657542736871335166}
   m_Layer: 9
   m_Name: model !ROTATE THIS!
   m_TagString: Untagged
@@ -4992,6 +4998,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &1925119413493135579
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3779637338654181046}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4711208715938537054, guid: 3a6cf13f0013c1e4297cf8b39c186755, type: 3}
+--- !u!54 &7657542736871335166
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3779637338654181046}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5631274229459446440
 GameObject:
   m_ObjectHideFlags: 0
@@ -5001,8 +5037,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5631274229459446444}
-  - component: {fileID: 5631274229459446445}
-  - component: {fileID: 5631274229459446446}
   - component: {fileID: 5631274229459446447}
   - component: {fileID: 8023516861763838166}
   m_Layer: 9
@@ -5027,36 +5061,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &5631274229459446445
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5631274229459446440}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!136 &5631274229459446446
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5631274229459446440}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5511034
-  m_Height: 1.9636711
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.98183554, z: -0.000000059604645}
 --- !u!114 &5631274229459446447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5075,17 +5079,20 @@ MonoBehaviour:
   baseDamage: 0
   playerDetectRadius: 0
   attackRange: 0
+  hitType: 0
+  immuneToInterrupt: 0
+  immuneToKnockDown: 0
+  immuneToKickBack: 0
   currentState: 0
   isCoolingDown: 0
   attackCoolDown: 0
   agrTime: 0
   TargetSkillDamagePercentage: 0
-  isWalking: 0
+  distanceToPlayer: 0
   isAttacking: 0
-  isGettingHit: 0
+  isGettingInterrupted: 0
   isDead: 0
   isKnockedDown: 0
-  isReturning: 0
   canGetHit: 1
   agr: 0
   healthBar: {fileID: 0}
@@ -5094,6 +5101,8 @@ MonoBehaviour:
   stabSounds:
   - {fileID: 8300000, guid: 6bbe09a5c075e5e46bb0856a0c0ce45b, type: 3}
   - {fileID: 8300000, guid: 19c49fe1f08784e46b54e08b5f9379d2, type: 3}
+  stepsSounds: []
+  attackSounds: []
 --- !u!82 &8023516861763838166
 AudioSource:
   m_ObjectHideFlags: 0

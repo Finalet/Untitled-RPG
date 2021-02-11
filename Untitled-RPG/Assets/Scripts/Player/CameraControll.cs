@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.Animations.Rigging;
+using DG.Tweening;
 
 enum CamSettings {Smooth, Hard};
 
@@ -12,7 +13,6 @@ public class CameraControll : MonoBehaviour
     
     public bool isAiming;
     public bool isShortAiming;
-    public float returnAfterAimingDelay = 1;
     public GameObject crosshair;
     [Header("Animation IK")]
     public Transform headAimTarget;
@@ -30,8 +30,6 @@ public class CameraControll : MonoBehaviour
     const float rightShoulder = 1f;
     const float center = 0;
     float desiredOffset;
-    float timeStopedAiming;
-    bool delaying;
 
     float mouseXsensitivity;
     float mouseYsensitivity;
@@ -75,7 +73,7 @@ public class CameraControll : MonoBehaviour
     { 
         FOV();
 
-        if (CM_offset.m_Offset.x != desiredOffset && Time.realtimeSinceStartup - timeStopedAiming >= returnAfterAimingDelay) {
+        if (CM_offset.m_Offset.x != desiredOffset) {
             CM_offset.m_Offset.x = Mathf.MoveTowards(CM_offset.m_Offset.x, desiredOffset, 4 * Time.deltaTime);
         }
     }
@@ -93,17 +91,6 @@ public class CameraControll : MonoBehaviour
     }
 
     void SprintingFOV () {
-        if (wasAiming && !delaying) {
-            timeStopedAiming = Time.realtimeSinceStartup;
-            delaying = true;
-            AimCamera();
-            return;
-        } else if (Time.realtimeSinceStartup - timeStopedAiming < returnAfterAimingDelay) {
-            AimCamera();
-            return;
-        } 
-        
-        
         desiredOffset = center;
 
         if (CM_cam.m_Lens.FieldOfView < 60 && wasAiming) { //After aiming
@@ -114,7 +101,6 @@ public class CameraControll : MonoBehaviour
         }
 
         wasAiming = false;
-        delaying = false;
         
         if (PlayerControlls.instance.isSprinting) {
             if (CM_cam.m_Lens.FieldOfView < 80)

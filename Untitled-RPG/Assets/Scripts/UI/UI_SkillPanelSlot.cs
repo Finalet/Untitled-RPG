@@ -73,14 +73,14 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
             return;
 
         if (Input.GetKeyDown(assignedKey)) {
-                StartCoroutine(UI_General.PressAnimation(key, assignedKey));
+            StartCoroutine(UI_General.PressAnimation(key, assignedKey));
+            if (skillInSlot != null && skillInSlot is AimingSkill) //If slot is taken with a skill
+                skillInSlot.GetComponent<AimingSkill>().UseButtonDown();
         } else if (Input.GetKeyUp(assignedKey)) {
             if (skillInSlot != null) //If slot is taken with a skill
                 skillInSlot.Use();
             else if (itemInSlot != null) //If slot is taken with an item
                 UseItem();
-        } else if (Input.GetKey(assignedKey)) {
-            skillInSlot.UseHolding();
         }
     }
 

@@ -29,6 +29,7 @@ public class PlayerControlls : MonoBehaviour
     public bool isCastingSkill;
     public bool isFlying;
     public bool isPickingArea;
+    public bool isAimingSkill;
     [Header("Battle")]
     public bool inBattle;
     public float inBattleExitTime = 7; //How long after exisiting the battle will the player remain "in battle"
