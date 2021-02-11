@@ -33,7 +33,7 @@ public class Target : Skill
         coolDownTimer = coolDown;
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
-        if (weaponOutRequired && !playerControlls.isWeaponOut)
+        if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
                 WeaponsController.instance.InstantUnsheathe();
     }
 

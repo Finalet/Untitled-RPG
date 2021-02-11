@@ -12,6 +12,7 @@ public class CameraControll : MonoBehaviour
     
     public bool isAiming;
     public bool isShortAiming;
+    public float returnAfterAimingDelay = 1;
     public GameObject crosshair;
     [Header("Animation IK")]
     public Transform headAimTarget;
@@ -29,6 +30,8 @@ public class CameraControll : MonoBehaviour
     const float rightShoulder = 1f;
     const float center = 0;
     float desiredOffset;
+    float timeStopedAiming;
+    bool delaying;
 
     float mouseXsensitivity;
     float mouseYsensitivity;
@@ -53,7 +56,7 @@ public class CameraControll : MonoBehaviour
 
         camDistance = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position + Vector3.up*1.6f);
     }
-
+    /*  DISABLED CAUSE ANIMATION RIGGING SINKS THE CHARACTER AND RUINS ROLLING ANIMATION
     void FixedUpdate() {
         if (PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight < 0.7f) {
             headAimIK.weight += Time.deltaTime;
@@ -65,14 +68,14 @@ public class CameraControll : MonoBehaviour
         aimPos.y = Mathf.Clamp(aimPos.y, PlayerControlls.instance.transform.position.y, PlayerControlls.instance.transform.position.y + 5);
         headAimTarget.transform.position = aimPos;
         headAimTarget.transform.localPosition = new Vector3(headAimTarget.transform.localPosition.x, headAimTarget.transform.localPosition.y, Mathf.Clamp(headAimTarget.transform.localPosition.z, 1, 10));
-    } 
+    } */
 
     float rotationX;
     void LateUpdate()
     { 
         FOV();
 
-        if (CM_offset.m_Offset.x != desiredOffset) {
+        if (CM_offset.m_Offset.x != desiredOffset && Time.realtimeSinceStartup - timeStopedAiming >= returnAfterAimingDelay) {
             CM_offset.m_Offset.x = Mathf.MoveTowards(CM_offset.m_Offset.x, desiredOffset, 4 * Time.deltaTime);
         }
     }
@@ -90,6 +93,17 @@ public class CameraControll : MonoBehaviour
     }
 
     void SprintingFOV () {
+        if (wasAiming && !delaying) {
+            timeStopedAiming = Time.realtimeSinceStartup;
+            delaying = true;
+            AimCamera();
+            return;
+        } else if (Time.realtimeSinceStartup - timeStopedAiming < returnAfterAimingDelay) {
+            AimCamera();
+            return;
+        } 
+        
+        
         desiredOffset = center;
 
         if (CM_cam.m_Lens.FieldOfView < 60 && wasAiming) { //After aiming
@@ -100,6 +114,7 @@ public class CameraControll : MonoBehaviour
         }
 
         wasAiming = false;
+        delaying = false;
         
         if (PlayerControlls.instance.isSprinting) {
             if (CM_cam.m_Lens.FieldOfView < 80)

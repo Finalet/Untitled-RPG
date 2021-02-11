@@ -66,7 +66,7 @@ public class DarkMatter : Skill
         coolDownTimer = coolDown * characteristics.attackSpeed.z;
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
-        if (weaponOutRequired && !playerControlls.isWeaponOut)
+        if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
                 WeaponsController.instance.InstantUnsheathe();
         playerControlls.isAttacking = true;
     }

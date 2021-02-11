@@ -25,7 +25,6 @@ public class PlayerControlls : MonoBehaviour
     public bool isMounted;
     public bool isAttacking;
     public bool isGettingHit;
-    public bool isWeaponOut;
     public bool isGrounded;
     public bool isCastingSkill;
     public bool isFlying;
@@ -54,6 +53,7 @@ public class PlayerControlls : MonoBehaviour
 
     [System.NonSerialized] public Rigidbody rb;
     [System.NonSerialized] public Camera playerCamera;
+    [System.NonSerialized] public CameraControll cameraControl;
     [System.NonSerialized] public CinemachineFreeLook CM_Camera;
     [System.NonSerialized] public PlayerAudioController audioController;
     [System.NonSerialized] public BaseCharacterController baseCharacterController;
@@ -89,6 +89,7 @@ public class PlayerControlls : MonoBehaviour
 
         playerCamera = Camera.main;
         CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
+        cameraControl = playerCamera.GetComponent<CameraControll>();
         walkSpeed = baseWalkSpeed;
     }
 
@@ -119,9 +120,6 @@ public class PlayerControlls : MonoBehaviour
         } else {
             isIdle = false;
         }
-
-        isWeaponOut = GetComponent<WeaponsController>().isWeaponOut;
-
 
         //Smooth rotation after rolling
         if (Mathf.Abs(rollDirection - desiredRollDirection) > 1) {
@@ -436,12 +434,13 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void InBattleCheck () {
-        if (isAttacking || isGettingHit || attackedByEnemies) {
+        if (isAttacking || isGettingHit || attackedByEnemies || cameraControl.isAiming || cameraControl.isShortAiming) {
             inBattle = true;
             inBattleTimer = Time.time;
-        } else if (Time.time - inBattleTimer >= inBattleExitTime) {
-            if (isWeaponOut)
+        } else if (Time.time - inBattleTimer >= inBattleExitTime && !WeaponsController.instance.sheathingUnsheathing) {
+            if (WeaponsController.instance.isWeaponOut || WeaponsController.instance.isBowOut) {
                 StartCoroutine(WeaponsController.instance.Sheathe());
+            }
             inBattle = false;
         }
     }

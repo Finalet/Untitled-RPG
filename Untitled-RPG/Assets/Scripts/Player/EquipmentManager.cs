@@ -66,11 +66,15 @@ public class EquipmentManager : MonoBehaviour
         ResetStats();
 
         Weapon w = (Weapon)mainHand.itemInSlot;
-        if (w != null)
-            AddStats(w);
+        if (w != null) AddStats(w);
+           
         w = (Weapon)secondaryHand.itemInSlot;
-        if (w != null)
-            AddStats(w);
+        if (w != null) AddStats(w);
+        
+        w = (Weapon)bow.itemInSlot;
+        if (w != null) AddStats(w);
+
+        //ADD ALL OTHER ITEMS
     }
 
     void AddStats (Weapon w) {
@@ -92,19 +96,19 @@ public class EquipmentManager : MonoBehaviour
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
         Transform parent;
         if (weapon.weaponType == WeaponType.TwoHandedSword || weapon.weaponType == WeaponType.TwoHandedStaff) { //Two handed weapon
-            if (!PlayerControlls.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isWeaponOut) {
                 parent = TwoHandedWeaponSlot;
             } else {
                 parent = RightHandTrans;
             }
         } else if (!secondary && weapon.weaponType != WeaponType.Bow) {  // Main hand
-            if (!PlayerControlls.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isWeaponOut) {
                 parent = MainHandSlot;
             } else {
                 parent = RightHandTrans;
             }
         } else if (secondary && weapon.weaponType != WeaponType.Bow) { //Secondary hand
-            if (!PlayerControlls.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isWeaponOut) {
                 parent = SecondaryHandSlot;
             } else {
                 parent = LeftHandTrans;
@@ -131,25 +135,25 @@ public class EquipmentManager : MonoBehaviour
     public void UnequipWeaponPrefab (bool twoHanded, bool secondary = false, bool bow = false) {
         Transform slot;
         if (twoHanded) {
-            if (!PlayerControlls.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isWeaponOut) {
                 slot = TwoHandedWeaponSlot;
             } else {
                 slot = RightHandTrans;
             }
         } else if (!secondary && !bow) {
-            if (!PlayerControlls.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isWeaponOut) {
                 slot = MainHandSlot;
             } else {
                 slot = RightHandTrans;
             }
         } else if (secondary && !bow) {
-            if (!PlayerControlls.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isWeaponOut) {
                 slot = SecondaryHandSlot;
             } else {
                 slot = LeftHandTrans;
             }
         } else if (bow) { //Bow
-            if (!PlayerControlls.instance.isWeaponOut) {
+            if (!WeaponsController.instance.isWeaponOut) {
                 slot = BowSlot;
             } else {
                 slot = LeftHandTrans;

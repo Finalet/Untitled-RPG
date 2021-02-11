@@ -111,7 +111,7 @@ public abstract class Skill : MonoBehaviour
         coolDownTimer = coolDown;
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
-        if (weaponOutRequired && !playerControlls.isWeaponOut)
+        if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
                 WeaponsController.instance.InstantUnsheathe();
         playerControlls.isAttacking = true;
     }
@@ -190,6 +190,8 @@ public abstract class Skill : MonoBehaviour
                 return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.meleeAttack);
             case SkillTree.Mage:
                 return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.magicPower);
+            case SkillTree.Hunter:
+                return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.rangedAttack);
             default: 
                 Debug.LogError("Fuck you this can never happen");
                 return 0;
