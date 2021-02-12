@@ -5,7 +5,7 @@ using UnityEngine;
 public class DarkMatterProjectile : MonoBehaviour
 {
     public float distance;
-    public int actualDamage;
+    public DamageInfo damageInfo;
 
     public bool doNotDestroy;
 
@@ -41,11 +41,6 @@ public class DarkMatterProjectile : MonoBehaviour
 
         transform.Rotate(randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime, randomRotation() * Time.deltaTime);
     }
-
-    int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
-    }    
-
     int randomRotation () {
         int rand = Random.Range(150, 250);
         return rand;
@@ -62,7 +57,7 @@ public class DarkMatterProjectile : MonoBehaviour
             return;
         
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damage(), "Dark Matter", false, false, HitType.Normal, transform.position);
+            en.GetHit(damageInfo, "Dark Matter", false, false, HitType.Normal, transform.position);
             enemiesHit.Add(en);
         }
     }

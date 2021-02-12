@@ -4,6 +4,10 @@ using UnityEngine;
 
 public abstract class AimingSkill : Skill
 {
+    public override void Use() {
+        //Empty because not supposed to be used from here
+    }
+
     public virtual void UseButtonDown() {
         if (!skillActive() || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
             return;

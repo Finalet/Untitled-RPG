@@ -81,7 +81,7 @@ public class Target : Skill
         }
 
         if (SkillTarget != null) {
-            Vector3 pos = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.position + Vector3.up * 0.2f : Vector3.up * 2;
+            Vector3 pos = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.position + Vector3.up * 0.2f : SkillTarget.transform.position + Vector3.up * 2;
             instanciatedAP.transform.position = pos;
             instanciatedAP.transform.localScale = Vector3.one * areaPickerSize / 10f;
         } else {

@@ -46,7 +46,7 @@ public class Hailstone : Skill
         finishedCast = true;
 
         GameObject go = Instantiate (projectile, pickedPosition, Quaternion.LookRotation(-playerControlls.transform.forward, Vector3.up));
-        go.transform.GetChild(0).GetComponent<HailstoneProjectile>().actualDamage = actualDamage();
+        go.transform.GetChild(0).GetComponent<HailstoneProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
         go.SetActive(true);
 
         PlaySound(fireSound);

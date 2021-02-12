@@ -5,7 +5,7 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
     string skillName;
-    int actualDamage;
+    DamageInfo damageInfo;
     
     public float lifeTime = 20;
     public float gravityScale = 0.4f;
@@ -42,12 +42,12 @@ public class Arrow : MonoBehaviour
             rb.AddForce(Physics.gravity * gravityScale);
     }
 
-    public virtual void Shoot (float _strength, Vector3 _shotPoint, int _actualDamage, string _skillName) {
+    public virtual void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo, string _skillName) {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
 
         skillName = _skillName;
-        actualDamage = _actualDamage;
+        damageInfo = _damageInfo;
         Vector3 direction = _shotPoint - transform.position; 
 
         rb.isKinematic = false;
@@ -87,12 +87,8 @@ public class Arrow : MonoBehaviour
 
     protected virtual void Hit (Enemy en) {
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damage(), skillName, false, false, HitType.Normal, transform.position);
+            en.GetHit(damageInfo, skillName, false, false, HitType.Normal, transform.position);
             enemiesHit.Add(en);
         }
-    }
-
-    protected virtual int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
-    }        
+    }    
 }

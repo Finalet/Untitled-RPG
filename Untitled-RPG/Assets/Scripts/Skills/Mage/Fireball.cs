@@ -64,7 +64,7 @@ public class Fireball : Skill
         Fireball.SetActive(true);
         Fireball.GetComponent<Rigidbody>().AddForce(direction.normalized * speed, ForceMode.Impulse);
         Fireball.GetComponent<FireballProjectile>().distance = actualDistance;
-        Fireball.GetComponent<FireballProjectile>().actualDamage = actualDamage();
+        Fireball.GetComponent<FireballProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
         Fireball.GetComponent<FireballProjectile>().doNotDestroy = false;
         playerControlls.isAttacking = false;
     }

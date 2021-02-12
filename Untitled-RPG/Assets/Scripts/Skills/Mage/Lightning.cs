@@ -27,11 +27,7 @@ public class Lightning : Skill
         if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
                 WeaponsController.instance.InstantUnsheathe();
     }
-
-    protected override int actualDamage() {
-        return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.magicPower * (1+shots/10f));
-    }
-
+    
     protected override void Update() {
         if (coolDownTimer >= 0) {
             coolDownTimer -= Time.deltaTime;
@@ -78,7 +74,7 @@ public class Lightning : Skill
         }
 
         GameObject go = Instantiate(lightningProjectile, shootPoint, Quaternion.identity);
-        go.GetComponent<LightningProjectile>().actualDamage = actualDamage();
+        go.GetComponent<LightningProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, Mathf.RoundToInt( baseDamagePercentage * (1+shots/10f) ));
         go.GetComponent<AudioSource>().clip = sounds[shots-1];
         switch (shots) {
             case 1: go.GetComponent<AudioSource>().time = 0.8f; //1

@@ -52,9 +52,9 @@ public class KO : Skill
     public void Hit (float knockDown) {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
             if (knockDown == 1) {
-                enemiesInTrigger[i].GetHit(damage(), skillName, true, true, HitType.Knockdown);
+                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
             } else {
-                enemiesInTrigger[i].GetHit(damage(), skillName, true, true, HitType.Normal);
+                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true, HitType.Normal);
             }
         }
     }

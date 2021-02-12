@@ -5,7 +5,7 @@ using UnityEngine;
 public class HailstoneProjectile : MonoBehaviour
 {
 
-    public int actualDamage;
+    public DamageInfo damageInfo;
     public ParticleSystem debris;
 
     public Transform debirsPos;
@@ -39,10 +39,10 @@ public class HailstoneProjectile : MonoBehaviour
             return;
         
         if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
-            en.GetHit(damage(), "Hailstone");
+            en.GetHit(damageInfo, "Hailstone");
             enemiesHit.Add(en);
         }
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f* (1+damage()/2000), 0.1f, transform.position);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f* (1+damageInfo.damage/2000), 0.1f, transform.position);
 
         finalDebrisPos = debirsPos.position;
         Instantiate(debris, finalDebrisPos, debris.transform.rotation, transform.parent).Play();
@@ -51,9 +51,5 @@ public class HailstoneProjectile : MonoBehaviour
             GetComponent<AudioSource>().time = 0.4f;
             GetComponent<AudioSource>().Play();
         }
-    }
-
-    int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
     }
 }

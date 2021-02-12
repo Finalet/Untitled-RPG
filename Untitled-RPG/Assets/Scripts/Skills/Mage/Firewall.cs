@@ -41,7 +41,7 @@ public class Firewall : Skill
 
         GameObject fw = Instantiate(firewall, spawnPos, Quaternion.LookRotation(playerControlls.transform.forward, Vector3.up));
         fw.GetComponent<FirewallWall>().duration = duration;
-        fw.GetComponent<FirewallWall>().actualDamage = actualDamage();
+        fw.GetComponent<FirewallWall>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
         fw.SetActive(true);
 
         DeleteEffects();

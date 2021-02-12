@@ -77,7 +77,7 @@ public class Armageddon : Skill
     void ShootOneMeteor() {
         Vector3 randPos = new Vector3(Random.Range(-area/2, area/2), 0, Random.Range(-area/2, area/2));
         GameObject go = Instantiate(projectile, mainPos + randPos, projectile.transform.rotation);
-        go.GetComponent<ArmageddonProjectile>().actualDamage = actualDamage();
+        go.GetComponent<ArmageddonProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
         go.GetComponent<ArmageddonProjectile>().speed = projectileSpeed;
         go.SetActive(true);
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(10);

@@ -48,7 +48,7 @@ public class DarkMatter : Skill
         prj.SetActive(true);
         prj.GetComponent<Rigidbody>().AddForce(direction.normalized * speed, ForceMode.Impulse);
         prj.GetComponent<DarkMatterProjectile>().distance = actualDistance;
-        prj.GetComponent<DarkMatterProjectile>().actualDamage = actualDamage();
+        prj.GetComponent<DarkMatterProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
         prj.GetComponent<DarkMatterProjectile>().doNotDestroy = false;
         playerControlls.isAttacking = false;
 

@@ -79,7 +79,7 @@ public class StoneHit : Skill
             return;
 
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damage(), skillName, true, true, HitType.Knockdown);
+            en.GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
             enemiesHit.Add(en);
         }
     }

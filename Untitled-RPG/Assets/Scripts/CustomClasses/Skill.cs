@@ -169,24 +169,6 @@ public abstract class Skill : MonoBehaviour
             return true;
     }
 
-    protected virtual int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage()*0.85f, actualDamage()*1.15f));
-    } 
-
-    protected virtual int actualDamage () {
-        switch (skillTree) {
-            case SkillTree.Knight:
-                return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.meleeAttack);
-            case SkillTree.Mage:
-                return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.magicPower);
-            case SkillTree.Hunter:
-                return Mathf.RoundToInt(baseDamagePercentage/100f * (float)characteristics.rangedAttack);
-            default: 
-                Debug.LogError("Fuck you this can never happen");
-                return 0;
-        }
-    }
-
     protected virtual void PlaySound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {
         audioSource.clip = clip;
         audioSource.time = timeOffest;

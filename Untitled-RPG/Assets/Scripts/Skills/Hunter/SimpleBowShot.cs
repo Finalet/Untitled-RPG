@@ -17,10 +17,7 @@ public class SimpleBowShot : AimingSkill
     LayerMask ignorePlayer;
     bool grabBowstring;
 
-    protected override void CustomUse()
-    {
-        throw new System.NotImplementedException();
-    }
+    protected override void CustomUse(){}
 
     protected override void StartAiming()
     {
@@ -84,7 +81,7 @@ public class SimpleBowShot : AimingSkill
 
         animator.Play("AttacksUpperBody.Hunter.Simple Bow Shot_release");
         coolDownTimer = coolDown;
-        newArrow.Shoot(strength, shootPoint, actualDamage(), skillName);
+        newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName);
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         grabBowstring = false;
         //spineIKtransform.weight = 0.0f;

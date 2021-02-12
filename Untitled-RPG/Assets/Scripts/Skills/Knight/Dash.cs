@@ -37,7 +37,7 @@ public class Dash : Skill
             return;
 
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damage(), skillName, true, true);
+            en.GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true);
             enemiesHit.Add(en);
         }
     }

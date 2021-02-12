@@ -5,7 +5,7 @@ using UnityEngine;
 public class FireballProjectile : MonoBehaviour
 {
     public float distance;
-    public int actualDamage;
+    public DamageInfo damageInfo;
 
     public bool doNotDestroy;
 
@@ -52,11 +52,6 @@ public class FireballProjectile : MonoBehaviour
                 GetComponent<Collider>().enabled = false;    
         }
     }
-
-    int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
-    }    
-
     int randomRotation () {
         int rand = Random.Range(150, 250);
         return rand;
@@ -73,7 +68,7 @@ public class FireballProjectile : MonoBehaviour
             return;
 
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damage(), "Fireball", true, false, HitType.Kickback, transform.position);
+            en.GetHit(damageInfo, "Fireball", true, false, HitType.Kickback, transform.position);
             enemiesHit.Add(en);
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class FirewallWall : MonoBehaviour
 {
     public float duration;
-    public int actualDamage;
+    public DamageInfo damageInfo;
 
     public Light light1;
     public Light light2;
@@ -35,7 +35,7 @@ public class FirewallWall : MonoBehaviour
             return;
         
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damage(), "Firewall", false, false, HitType.Interrupt);
+            en.GetHit(damageInfo, "Firewall", false, false, HitType.Interrupt);
             StartCoroutine(List(en));
         }
     }
@@ -45,11 +45,6 @@ public class FirewallWall : MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         enemiesHit.Remove(enemy);
     }
-
-    int damage () {
-        return Mathf.RoundToInt(Random.Range(actualDamage*0.85f, actualDamage*1.15f));
-    }   
-
     IEnumerator Lights(){
         light1.intensity =0;
         light2.intensity =0;

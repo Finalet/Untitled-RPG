@@ -51,23 +51,23 @@ public class TrainingDummy : StaticEnemy
         rotationObj.transform.rotation = Quaternion.Euler(x, rotationObj.transform.eulerAngles.y, z);
     }
 
-    public override void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
+    public override void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
         if (isDead || !canGetHit)
             return;
         
-        int actualDamage = calculateActualDamage(damage);
+        int actualDamage = calculateActualDamage(damageInfo.damage);
 
-        rotationX = direction.normalized.z * 30 * (1 + (float)damage/5000);
-        rotationZ = -direction.normalized.x * 30 * (1 + (float)damage/5000);
+        rotationX = direction.normalized.z * 30 * (1 + (float)damageInfo.damage/5000);
+        rotationZ = -direction.normalized.x * 30 * (1 + (float)damageInfo.damage/5000);
 
         currentHealth -= actualDamage;
         PlayHitParticles(); 
         PlayGetHitSounds();
         PlayStabSounds();
         
-        if (stopHit) StartCoroutine(HitStop());
+        if (stopHit || damageInfo.isCrit) StartCoroutine(HitStop(damageInfo.isCrit));
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
-        DisplayDamageNumber(actualDamage, damageTextPos);
+        DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.isCrit), damageTextPos);
 
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }

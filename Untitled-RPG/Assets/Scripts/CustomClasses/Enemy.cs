@@ -191,13 +191,13 @@ public abstract class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public virtual void GetHit (int damage, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
+    public virtual void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
         if (isDead || !canGetHit)
             return;
         
         Agr();
 
-        int actualDamage = calculateActualDamage(damage);
+        int actualDamage = calculateActualDamage(damageInfo.damage);
 
         if (immuneToKickBack && hitType == HitType.Kickback)
             hitType = HitType.Normal;
@@ -220,29 +220,30 @@ public abstract class Enemy : MonoBehaviour
         PlayGetHitSounds();
         PlayStabSounds();
         
-        if (stopHit) StartCoroutine(HitStop());
+        if (stopHit || damageInfo.isCrit) StartCoroutine(HitStop(damageInfo.isCrit));
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
-        DisplayDamageNumber(actualDamage, damageTextPos);
+        DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.isCrit), damageTextPos);
 
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }
 
-    protected void DisplayDamageNumber(int damage, Vector3 position = new Vector3()) {
+    protected void DisplayDamageNumber(DamageInfo damageInfo, Vector3 position = new Vector3()) {
         if (position == Vector3.zero)   //If position is not specified then place on standard spot
             position = transform.position + Vector3.up * 1.5f;
 
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, position, Quaternion.identity);
-        ddText.GetComponent<ddText>().damage = damage;
+        ddText.GetComponent<ddText>().damageInfo = damageInfo;
     }
 
     protected int calculateActualDamage (int damage) {
         return Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) );
     }
 
-    protected IEnumerator HitStop () {
-        float timer = Time.realtimeSinceStartup;
+    protected IEnumerator HitStop (bool isCrit) {
+        float timeStarted = Time.realtimeSinceStartup;
+        float time = isCrit ? 0.4f : 0.12f;
         Time.timeScale = 0.3f;
-        while(Time.realtimeSinceStartup - timer < 0.12f) {
+        while(Time.realtimeSinceStartup - timeStarted < time) {
             yield return null;
         }
         Time.timeScale = 1;

@@ -33,7 +33,7 @@ public class StrongAttack : Skill
 
     public void Hit () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetHit(damage(), skillName, true, true, HitType.Kickback);
+            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0.5f), skillName, true, true, HitType.Kickback);
         }
     }
 
