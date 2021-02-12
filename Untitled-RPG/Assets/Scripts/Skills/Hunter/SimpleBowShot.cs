@@ -9,11 +9,13 @@ public class SimpleBowShot : AimingSkill
     public float strength = 50;
     public MultiAimConstraint spineIKtransform;
     public GameObject arrowPrefab;
+    public Transform rightHand;
 
     Transform aimTarget;
     Arrow newArrow;
     Vector3 shootPoint;
     LayerMask ignorePlayer;
+    bool grabBowstring;
 
     protected override void CustomUse()
     {
@@ -22,6 +24,7 @@ public class SimpleBowShot : AimingSkill
 
     protected override void StartAiming()
     {
+
         animator.CrossFade("AttacksUpperBody.Hunter.Simple Bow Shot_prepare", 0.25f);
         playerControlls.InterruptCasting();
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = true;
@@ -41,6 +44,12 @@ public class SimpleBowShot : AimingSkill
         if(newArrow == null && coolDownTimer <= coolDown/2f) { //Releading
             StartAiming();
         }
+        
+        if (grabBowstring) WeaponsController.instance.BowObj.GetComponent<Bow>().bowstring.position = rightHand.transform.position;
+        if (newArrow != null) {
+            newArrow.transform.position = rightHand.position + 0.03f * newArrow.transform.forward;
+            newArrow.transform.LookAt(WeaponsController.instance.BowObj.transform);
+        }
     }
 
     public override void CancelAiming()
@@ -52,6 +61,9 @@ public class SimpleBowShot : AimingSkill
 
         if (newArrow != null) Destroy(newArrow.gameObject);
         newArrow = null;
+
+        WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
+        grabBowstring = false;
 
         Combat.instanace.AimingSkill = null;
     }
@@ -73,6 +85,8 @@ public class SimpleBowShot : AimingSkill
         animator.Play("AttacksUpperBody.Hunter.Simple Bow Shot_release");
         coolDownTimer = coolDown;
         newArrow.Shoot(strength, shootPoint, actualDamage(), skillName);
+        WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
+        grabBowstring = false;
         //spineIKtransform.weight = 0.0f;
         playerControlls.isAttacking = false;
 
@@ -88,6 +102,10 @@ public class SimpleBowShot : AimingSkill
         }
         Debug.DrawLine(newArrow.transform.position, shootPoint, Color.blue);
         Debug.DrawRay(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward * (strength + characteristics.magicSkillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance), Color.red);
+    }
+
+    public void GrabBowstring() {
+        grabBowstring = true;
     }
 
     // protected override void Update () {

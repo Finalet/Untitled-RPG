@@ -59,7 +59,7 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
   - {fileID: 6116067288644981262}
-  - {fileID: 2164053707570779717}
+  - {fileID: 902664082657341099}
   - {fileID: 4251742111751594192}
   - {fileID: 800651696862601054}
   m_Father: {fileID: 3748200809101553385}
@@ -105,6 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2871710245167064256}
+  - component: {fileID: 5697487240112449541}
   m_Layer: 0
   m_Name: WP_LegendaryBow
   m_TagString: Untagged
@@ -127,6 +128,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5697487240112449541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3211504055649582714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d18a563b68f4b41bb13f4d87c5c1fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bowstring: {fileID: 902664082657341099}
 --- !u!1 &3511167501439840551
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,6 +210,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3748200809101553385}
+  - component: {fileID: 8120670185905762645}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -219,6 +234,25 @@ Transform:
   m_Father: {fileID: 2871710245167064256}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!95 &8120670185905762645
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4562032530595001427}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4664617399103465958
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2164053707570779717}
   m_Layer: 0
-  m_Name: Bone.001
+  m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,11 +276,42 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4664617399103465958}
-  m_LocalRotation: {x: 0.7071048, y: 0.0016727225, z: -0.0016727324, w: 0.7071048}
-  m_LocalPosition: {x: -0.007700858, y: 6.459225e-10, z: -0.002086566}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.00026084247, y: -0.0021178236, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3000949220084751351}
+  m_Father: {fileID: 902664082657341099}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5182604711082396620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 902664082657341099}
+  m_Layer: 0
+  m_Name: Bowstring
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &902664082657341099
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5182604711082396620}
+  m_LocalRotation: {x: 0.7071048, y: 0.0016727276, z: -0.0016727274, w: 0.7071048}
+  m_LocalPosition: {x: -0.00743, y: 0, z: 0.00003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2164053707570779717}
   m_Father: {fileID: 3614087865128206382}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

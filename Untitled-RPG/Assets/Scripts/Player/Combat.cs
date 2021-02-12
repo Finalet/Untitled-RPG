@@ -68,6 +68,8 @@ public class Combat : MonoBehaviour
                 break;
             case 15: skill.GetComponent<Armageddon>().StartHell();
                 break;
+            case 16: skill.GetComponent<SimpleBowShot>().GrabBowstring();
+                break;
         }
     }
 
