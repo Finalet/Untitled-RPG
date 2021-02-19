@@ -51,7 +51,7 @@ public class ddText : MonoBehaviour
         colorAlphaZero.a = 0;
 
         Sequence mySequence = DOTween.Sequence()
-            .Append( transform.DOScale( damageInfo.isCrit ? 1.3f : 1, lifeTime/4) )
+            .Append( transform.DOScale( damageInfo.isCrit ? 1.4f : 1, lifeTime/4) )
             .AppendInterval(lifeTime - lifeTime/2)
             .Append( tmp.DOColor(colorAlphaZero, lifeTime/4) );
 

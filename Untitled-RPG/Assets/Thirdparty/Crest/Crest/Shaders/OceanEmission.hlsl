@@ -5,10 +5,14 @@
 #ifndef CREST_OCEAN_EMISSION_INCLUDED
 #define CREST_OCEAN_EMISSION_INCLUDED
 
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Version.hlsl"
+
 half3 ScatterColour(
 	in const half i_surfaceOceanDepth, in const float3 i_cameraPos,
 	in const half3 i_lightDir, in const half3 i_view, in const float i_shadow,
-	in const bool i_underwater, in const bool i_outscatterLight, const half3 lightColour, half sss)
+	in const bool i_underwater, in const bool i_outscatterLight, const half3 lightColour, half sss,
+	in const float i_meshScaleLerp, in const float i_scaleBase,
+	in const CascadeParams cascadeData0)
 {
 	half depth;
 	half shadow = 1.0;
@@ -20,7 +24,7 @@ half3 ScatterColour(
 		// 2. for the underwater skirt geometry, we don't have the lod data sampled from the verts with lod transitions etc,
 		//    so just approximate by sampling at the camera position.
 		// this used to sample LOD1 but that doesnt work in last LOD, the data will be missing.
-		const float3 uv_smallerLod = WorldToUV(i_cameraPos.xz);
+		const float3 uv_smallerLod = WorldToUV(i_cameraPos.xz, cascadeData0, _LD_SliceIndex);
 		depth = CREST_OCEAN_DEPTH_BASELINE;
 		SampleSeaDepth(_LD_TexArray_SeaFloorDepth, uv_smallerLod, 1.0, depth);
 
@@ -30,12 +34,17 @@ half3 ScatterColour(
 		// Pick lower res data for shadowing, helps to smooth out artifacts slightly
 		const float minSliceIndex = 4.0;
 		uint slice0, slice1; float lodAlpha;
-		PosToSliceIndices(samplePoint, minSliceIndex, _InstanceData.x, _LD_Pos_Scale[0].z, slice0, slice1, lodAlpha);
+		PosToSliceIndices(samplePoint, minSliceIndex, i_scaleBase, slice0, slice1, lodAlpha);
 
 		half2 shadowSoftHard = 0.0;
-		// TODO - fix data type of slice index in WorldToUV - #343
-		SampleShadow(_LD_TexArray_Shadow, WorldToUV(samplePoint, slice0), 1.0 - lodAlpha, shadowSoftHard);
-		SampleShadow(_LD_TexArray_Shadow, WorldToUV(samplePoint, slice1), lodAlpha, shadowSoftHard);
+		{
+			const float3 uv = WorldToUV(samplePoint, _CrestCascadeData[slice0], slice0);
+			SampleShadow(_LD_TexArray_Shadow, uv, 1.0 - lodAlpha, shadowSoftHard);
+		}
+		{
+			const float3 uv = WorldToUV(samplePoint, _CrestCascadeData[slice1], slice1);
+			SampleShadow(_LD_TexArray_Shadow, uv, lodAlpha, shadowSoftHard);
+		}
 
 		shadow = saturate(1.0 - shadowSoftHard.x);
 #endif
@@ -87,16 +96,16 @@ half3 ScatterColour(
 
 
 #if _CAUSTICS_ON
-void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const half3 i_lightDir, in const float i_sceneZ, in sampler2D i_normals, in const bool i_underwater, inout half3 io_sceneColour)
+void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const half3 i_lightDir, in const float i_sceneZ, in sampler2D i_normals, in const bool i_underwater, inout half3 io_sceneColour,
+	in const CascadeParams cascadeData0, in const CascadeParams cascadeData1)
 {
 	// could sample from the screen space shadow texture to attenuate this..
 	// underwater caustics - dedicated to P
-	const float3 scenePosUV = WorldToUV_BiggerLod(scenePos.xz);
+	const float3 scenePosUV = WorldToUV(scenePos.xz, cascadeData1, _LD_SliceIndex + 1);
 	half3 disp = 0.;
-	half sss = 0.;
 	// this gives height at displaced position, not exactly at query position.. but it helps. i cant pass this from vert shader
 	// because i dont know it at scene pos.
-	SampleDisplacements(_LD_TexArray_AnimatedWaves, scenePosUV, 1.0, disp, sss);
+	SampleDisplacements(_LD_TexArray_AnimatedWaves, scenePosUV, 1.0, disp);
 	half waterHeight = _OceanCenterPosWorld.y + disp.y;
 	half sceneDepth = waterHeight - scenePos.y;
 	// Compute mip index manually, with bias based on sea floor depth. We compute it manually because if it is computed automatically it produces ugly patches
@@ -105,12 +114,14 @@ void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const
 	float mipLod = log2(max(i_sceneZ, 1.0)) + abs(sceneDepth - _CausticsFocalDepth) / _CausticsDepthOfField;
 	// project along light dir, but multiply by a fudge factor reduce the angle bit - compensates for fact that in real life
 	// caustics come from many directions and don't exhibit such a strong directonality
+	// Removing the fudge factor (4.0) will cause the caustics to move around more with the waves. But this will also
+	// result in stretched/dilated caustics in certain areas. This is especially noticeable on angled surfaces.
 	float2 surfacePosXZ = scenePos.xz + i_lightDir.xz * sceneDepth / (4.*i_lightDir.y);
 	float4 cuv1 = float4((surfacePosXZ / _CausticsTextureScale + float2(0.044*_CrestTime + 17.16, -0.169*_CrestTime)), 0., mipLod);
 	float4 cuv2 = float4((1.37*surfacePosXZ / _CausticsTextureScale + float2(0.248*_CrestTime, 0.117*_CrestTime)), 0., mipLod);
 
 	// We'll use this distortion code for above water in single pass due to refraction bug.
-#if !UNITY_SINGLE_PASS_STEREO
+#if !defined(UNITY_SINGLE_PASS_STEREO) && !defined(UNITY_STEREO_INSTANCING_ENABLED)
 	if (i_underwater)
 #endif
 	{
@@ -120,23 +131,25 @@ void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const
 		cuv2.xy += 1.77 * causticN;
 	}
 
-	// Scale caustics strength by primary light, depth fog density and scene depth.
-	half3 causticsStrength = lerp(_CausticsStrength * i_lightCol, 0.0, saturate(1.0 - exp(-_DepthFogDensity.xyz * sceneDepth)));
+	half causticsStrength = _CausticsStrength;
 
 #if _SHADOWS_ON
 	{
+		// Calculate projected position again as we do not want the fudge factor. If we include the fudge factor, the
+		// caustics will not be aligned with shadows.
+		const float2 shadowSurfacePosXZ = scenePos.xz + i_lightDir.xz * sceneDepth / i_lightDir.y;
 		real2 causticShadow = 0.0;
 		// As per the comment for the underwater code in ScatterColour,
 		// LOD_1 data can be missing when underwater
 		if (i_underwater)
 		{
-			const float3 uv_smallerLod = WorldToUV(surfacePosXZ);
+			const float3 uv_smallerLod = WorldToUV(shadowSurfacePosXZ, cascadeData0, _LD_SliceIndex);
 			SampleShadow(_LD_TexArray_Shadow, uv_smallerLod, 1.0, causticShadow);
 		}
 		else
 		{
 			// only sample the bigger lod. if pops are noticeable this could lerp the 2 lods smoothly, but i didnt notice issues.
-			float3 uv_biggerLod = WorldToUV_BiggerLod(surfacePosXZ);
+			const float3 uv_biggerLod = WorldToUV(shadowSurfacePosXZ, cascadeData1, _LD_SliceIndex + 1);
 			SampleShadow(_LD_TexArray_Shadow, uv_biggerLod, 1.0, causticShadow);
 		}
 		causticsStrength *= 1.0 - causticShadow.y;
@@ -150,8 +163,9 @@ void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const
 
 
 half3 OceanEmission(in const half3 i_view, in const half3 i_n_pixel, in const half3 i_lightCol, in const float3 i_lightDir,
-	in const real3 i_grabPosXYW, in const float i_pixelZ, in const half2 i_uvDepth, in const float i_sceneZ, in const float i_sceneZ01,
-	in const half3 i_bubbleCol, in sampler2D i_normals, in const bool i_underwater, in const half3 i_scatterCol)
+	in const real3 i_grabPosXYW, in const float i_pixelZ, in const half2 i_uvDepth, in const float i_sceneZ,
+	in const half3 i_bubbleCol, in sampler2D i_normals, in const bool i_underwater, in const half3 i_scatterCol,
+	in const CascadeParams cascadeData0, in const CascadeParams cascadeData1)
 {
 	half3 col = i_scatterCol;
 
@@ -173,8 +187,9 @@ half3 OceanEmission(in const half3 i_view, in const half3 i_n_pixel, in const ha
 		const half2 refractOffset = _RefractionStrength * i_n_pixel.xz * min(1.0, 0.5*(i_sceneZ - i_pixelZ)) / i_sceneZ;
 		half2 uvBackgroundRefract = uvBackground + refractOffset;
 
+		// Raw depth is logarithmic for perspective, and linear (0-1) for orthographic.
 		const float sceneZRefractDevice = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, UnityStereoTransformScreenSpaceTex(i_uvDepth + refractOffset)).x;
-		const float sceneZRefract = LinearEyeDepth(sceneZRefractDevice, _ZBufferParams);
+		const float sceneZRefract = CrestLinearEyeDepth(sceneZRefractDevice);
 
 		float2 scenePosNDC = uvBackground;
 
@@ -197,17 +212,21 @@ half3 OceanEmission(in const half3 i_view, in const half3 i_n_pixel, in const ha
 
 		// TODO
 #if _CAUSTICS_ON
+// Was necessary before 7.4 but now breaks caustics. According to the changelog, Unity added some fixes to
+// UNITY_MATRIX_I_VP in 7.4.
+#if !VERSION_GREATER_EQUAL(7, 4)
 #if UNITY_UV_STARTS_AT_TOP
 		scenePosNDC.y = 1. - scenePosNDC.y;
 #endif
+#endif
 		// Refractions don't work correctly in single pass. Use same code from underwater instead for now.
-#if UNITY_SINGLE_PASS_STEREO
-		float3 cameraForward = mul((float3x3)unity_CameraToWorld, float3(0, 0, 1));
+#if defined(UNITY_SINGLE_PASS_STEREO) || defined(UNITY_STEREO_INSTANCING_ENABLED)
+		float3 cameraForward = _CameraForward;
 		float3 scenePos = (((i_view) / dot(i_view, cameraForward)) * i_sceneZ) + _WorldSpaceCameraPos;
 #else
 		float3 scenePos = ComputeWorldSpacePosition(scenePosNDC, sceneZRefractDevice, UNITY_MATRIX_I_VP);
 #endif
-		ApplyCaustics(scenePos, i_lightCol, i_lightDir, i_sceneZ, i_normals, i_underwater, sceneColour);
+		ApplyCaustics(scenePos, i_lightCol, i_lightDir, i_sceneZ, i_normals, i_underwater, sceneColour, cascadeData0, cascadeData1);
 #endif
 		alpha = 1.0 - exp(-_DepthFogDensity.xyz * depthFogDistance);
 	}

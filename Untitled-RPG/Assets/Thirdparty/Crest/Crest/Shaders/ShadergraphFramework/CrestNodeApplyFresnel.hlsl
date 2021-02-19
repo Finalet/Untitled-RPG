@@ -2,8 +2,8 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanGlobals.hlsl"
-
 
 float CalculateFresnelReflectionCoefficient(in const float cosTheta, in const float i_refractiveIndexOfAir, in const float i_refractiveIndexOfWater)
 {

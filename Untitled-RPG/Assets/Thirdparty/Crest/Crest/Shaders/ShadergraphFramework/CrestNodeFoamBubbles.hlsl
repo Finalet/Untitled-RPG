@@ -2,6 +2,7 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanGlobals.hlsl"
 
 half FoamBubblesTexture
@@ -14,7 +15,7 @@ half FoamBubblesTexture
 	in const float i_texelSize1,
 	in const float2 i_worldXZ,
 	in const float2 i_worldXZUndisplaced,
-	in const half3 i_n, 
+	in const half3 i_n,
 	in const half3 i_view,
 	in const half i_lodVal
 )

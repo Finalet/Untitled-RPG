@@ -2,8 +2,9 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanGlobals.hlsl"
-#include "../OceanConstants.hlsl"
+#include "../OceanInputsDriven.hlsl"
 #include "../OceanVertHelpers.hlsl"
 
 void GeoMorph_half
@@ -16,8 +17,9 @@ void GeoMorph_half
 	out float o_lodAlpha
 )
 {
+	const CascadeParams cascadeData0 = _CrestCascadeData[_LD_SliceIndex];
 	o_positionMorphedWS = i_positionWS;
 
 	// Vertex snapping and lod transition
-	SnapAndTransitionVertLayout(i_meshScaleAlpha, i_oceanPosScale0, i_geometryGridSize, o_positionMorphedWS, o_lodAlpha);
+	SnapAndTransitionVertLayout(i_meshScaleAlpha, cascadeData0, i_geometryGridSize, o_positionMorphedWS, o_lodAlpha);
 }

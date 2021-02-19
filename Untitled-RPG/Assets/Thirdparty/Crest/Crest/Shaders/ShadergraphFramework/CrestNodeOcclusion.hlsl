@@ -2,6 +2,8 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
+
 void CrestNodeOcclusion_half
 (
 	in const half i_occlusion,

@@ -2,12 +2,10 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
-float LinearToDeviceDepth(float linearDepth, float4 zBufferParam)
-{
-	//linear = 1.0 / (zBufferParam.z * device + zBufferParam.w);
-	float device = (1.0 / linearDepth - zBufferParam.w) / zBufferParam.z;
-	return device;
-}
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Version.hlsl"
+
+#include "OceanGraphConstants.hlsl"
+#include "../OceanShaderHelpers.hlsl"
 
 // HB - pull these two functions in, because the ComputeClipSpacePosition flips the UV and it kills the position :(
 float4 CrestComputeClipSpacePosition(float2 positionNDC, float deviceDepth)
@@ -54,7 +52,7 @@ void CrestNodeSceneColour_half
 	// Depth fog & caustics - only if view ray starts from above water
 	if (!i_underwater)
 	{
-		float sceneZRefract = LinearEyeDepth(sceneZRefractDevice, _ZBufferParams);
+		float sceneZRefract = CrestLinearEyeDepth(sceneZRefractDevice);
 
 		// Compute depth fog alpha based on refracted position if it landed on an underwater surface, or on unrefracted depth otherwise
 		if (sceneZRefract > i_pixelZ)
@@ -63,7 +61,11 @@ void CrestNodeSceneColour_half
 
 			o_sceneColour = SHADERGRAPH_SAMPLE_SCENE_COLOR(screenPosRefract.xy);
 
+#if VERSION_GREATER_EQUAL(7, 4)
+			o_scenePositionWS = ComputeWorldSpacePosition(screenPosRefract.xy, sceneZRefractDevice, UNITY_MATRIX_I_VP);
+#else
 			o_scenePositionWS = CrestComputeWorldSpacePosition(screenPosRefract.xy, sceneZRefractDevice, UNITY_MATRIX_I_VP);
+#endif
 		}
 		else
 		{
@@ -72,8 +74,12 @@ void CrestNodeSceneColour_half
 
 			o_sceneColour = i_sceneColourUnrefracted;
 
-			const float deviceDepthUnrefract = LinearToDeviceDepth(i_sceneZ, _ZBufferParams);
+			const float deviceDepthUnrefract = CrestLinearEyeDepth(i_sceneZ);
+#if VERSION_GREATER_EQUAL(7, 4)
+			o_scenePositionWS = ComputeWorldSpacePosition(i_screenPos.xy, deviceDepthUnrefract, UNITY_MATRIX_I_VP);
+#else
 			o_scenePositionWS = CrestComputeWorldSpacePosition(i_screenPos.xy, deviceDepthUnrefract, UNITY_MATRIX_I_VP);
+#endif
 		}
 	}
 	else
@@ -81,7 +87,11 @@ void CrestNodeSceneColour_half
 		// Depth fog is handled by underwater shader
 		o_sceneDistance = i_pixelZ;
 		o_sceneColour = SHADERGRAPH_SAMPLE_SCENE_COLOR(screenPosRefract.xy);
+#if VERSION_GREATER_EQUAL(7, 4)
+		o_scenePositionWS = ComputeWorldSpacePosition(screenPosRefract.xy, sceneZRefractDevice, UNITY_MATRIX_I_VP);
+#else
 		o_scenePositionWS = CrestComputeWorldSpacePosition(screenPosRefract.xy, sceneZRefractDevice, UNITY_MATRIX_I_VP);
+#endif
 	}
 
 	//#endif // _TRANSPARENCY_ON

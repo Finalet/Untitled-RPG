@@ -25,6 +25,7 @@ Shader "Crest/Inputs/Dynamic Waves/Dampen Circle"
 			CBUFFER_START(CrestPerOceanInput)
 			float _Radius;
 			float _DampenStrength;
+			float3 _DisplacementAtInputPosition;
 			CBUFFER_END
 
 			struct Attributes
@@ -43,7 +44,7 @@ Shader "Crest/Inputs/Dynamic Waves/Dampen Circle"
 				Varyings o;
 				o.positionCS = UnityObjectToClipPos(input.positionOS);
 
-				float3 worldPos = mul(unity_ObjectToWorld, float4(input.positionOS, 1.0));
+				float3 worldPos = mul(unity_ObjectToWorld, float4(input.positionOS, 1.0)).xyz;
 				float3 centerPos = unity_ObjectToWorld._m03_m13_m23;
 				o.worldOffsetScaled.xy = worldPos.xz - centerPos.xz;
 
@@ -51,6 +52,10 @@ Shader "Crest/Inputs/Dynamic Waves/Dampen Circle"
 				o.worldOffsetScaled.xy = sign(o.worldOffsetScaled.xy);
 				float4 newWorldPos = float4(centerPos, 1.0);
 				newWorldPos.xz += o.worldOffsetScaled.xy * _Radius;
+
+				// Correct for displacement
+				newWorldPos.xz -= _DisplacementAtInputPosition.xz;
+
 				o.positionCS = mul(UNITY_MATRIX_VP, newWorldPos);
 
 				return o;

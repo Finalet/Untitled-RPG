@@ -2,6 +2,7 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanGlobals.hlsl"
 
 void CrestNodeApplyCaustics_float
@@ -45,6 +46,8 @@ void CrestNodeApplyCaustics_float
 
 	// Project along light dir, but multiply by a fudge factor reduce the angle bit - compensates for fact that in real life
 	// caustics come from many directions and don't exhibit such a strong directonality
+	// Removing the fudge factor (4.0) will cause the caustics to move around more with the waves. But this will also
+	// result in stretched/dilated caustics in certain areas. This is especially noticeable on angled surfaces.
 	float2 surfacePosXZ = i_scenePos.xz + i_lightDir.xz * sceneDepth / (4.0*i_lightDir.y);
 	float2 cuv1 = surfacePosXZ / i_textureScale + float2(0.044*_CrestTime + 17.16, -0.169*_CrestTime);
 	float2 cuv2 = 1.37*surfacePosXZ / i_textureScale + float2(0.248*_CrestTime, 0.117*_CrestTime);
@@ -57,28 +60,35 @@ void CrestNodeApplyCaustics_float
 		cuv2.xy += 1.77 * causticN;
 	}
 
-	// Scale caustics strength by primary light, depth fog density and scene depth.
-	half3 causticsStrength = lerp(i_strength * i_lightCol, 0.0, saturate(1.0 - exp(-i_depthFogDensity.xyz * sceneDepth)));
+	half causticsStrength = i_strength;
 
-//#if _SHADOWS_ON
-//	{
-//		real2 causticShadow = 0.0;
-//		// As per the comment for the underwater code in ScatterColour,
-//		// LOD_1 data can be missing when underwater
-//		if (i_underwater)
-//		{
-//			const float3 uv_smallerLod = WorldToUV(surfacePosXZ);
-//			SampleShadow(_LD_TexArray_Shadow, uv_smallerLod, 1.0, causticShadow);
-//		}
-//		else
-//		{
-//			// only sample the bigger lod. if pops are noticeable this could lerp the 2 lods smoothly, but i didnt notice issues.
-//			float3 uv_biggerLod = WorldToUV_BiggerLod(surfacePosXZ);
-//			SampleShadow(_LD_TexArray_Shadow, uv_biggerLod, 1.0, causticShadow);
-//		}
-//		causticsStrength *= 1.0 - causticShadow.y;
-//	}
-//#endif // _SHADOWS_ON
+// #if CREST_SHADOWS_ON
+	{
+		// Calculate projected position again as we do not want the fudge factor. If we include the fudge factor, the
+		// caustics will not be aligned with shadows.
+		const float2 shadowSurfacePosXZ = i_scenePos.xz + i_lightDir.xz * sceneDepth / i_lightDir.y;
+		real2 causticShadow = 0.0;
+
+		// TODO - pass in to avoid reading here?
+		const CascadeParams cascadeData0 = _CrestCascadeData[_LD_SliceIndex];
+		const CascadeParams cascadeData1 = _CrestCascadeData[_LD_SliceIndex + 1];
+
+		// As per the comment for the underwater code in ScatterColour,
+		// LOD_1 data can be missing when underwater
+		if (i_underwater)
+		{
+			const float3 uv_smallerLod = WorldToUV(shadowSurfacePosXZ, cascadeData0, _LD_SliceIndex);
+			SampleShadow(_LD_TexArray_Shadow, uv_smallerLod, 1.0, causticShadow);
+		}
+		else
+		{
+			// only sample the bigger lod. if pops are noticeable this could lerp the 2 lods smoothly, but i didnt notice issues.
+			float3 uv_biggerLod = WorldToUV(shadowSurfacePosXZ, cascadeData1, _LD_SliceIndex + 1);
+			SampleShadow(_LD_TexArray_Shadow, uv_biggerLod, 1.0, causticShadow);
+		}
+		causticsStrength *= 1.0 - causticShadow.y;
+	}
+// #endif // CREST_SHADOWS_ON
 
 	o_sceneColour.xyz *= 1.0 + causticsStrength * (
 		0.5 * i_texture.SampleLevel(sampler_Crest_linear_repeat, cuv1, mipLod).xyz +

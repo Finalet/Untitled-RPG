@@ -2,6 +2,8 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
+
 void CrestNodeAmbientLight_half
 (
 	out half3 o_ambientLight

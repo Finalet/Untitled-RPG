@@ -2,6 +2,7 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanInputsDriven.hlsl"
 
 void CrestOceanSurfaceValues_half
@@ -21,14 +22,14 @@ void CrestOceanSurfaceValues_half
 	uint si0 = (uint)o_sliceIndex0;
 	uint si1 = si0 + 1;
 
-	o_oceanPosScale0 = _LD_Pos_Scale[si0];
-	o_oceanPosScale1 = _LD_Pos_Scale[si1];
+	o_oceanPosScale0 = float3(_CrestCascadeData[si0]._posSnapped, _CrestCascadeData[si0]._scale);
+	o_oceanPosScale1 = float3(_CrestCascadeData[si1]._posSnapped, _CrestCascadeData[si1]._scale);
 
-	o_oceanParams0 = _LD_Params[si0];
-	o_oceanParams1 = _LD_Params[si1];
+	o_oceanParams0 = float4(_CrestCascadeData[si0]._texelWidth, _CrestCascadeData[si0]._textureRes, _CrestCascadeData[si0]._weight, _CrestCascadeData[si0]._oneOverTextureRes);
+	o_oceanParams1 = float4(_CrestCascadeData[si1]._texelWidth, _CrestCascadeData[si1]._textureRes, _CrestCascadeData[si1]._weight, _CrestCascadeData[si1]._oneOverTextureRes);
 
-	o_meshScaleAlpha = _InstanceData.x;
+	o_meshScaleAlpha = _CrestPerCascadeInstanceData[si0]._meshScaleLerp;
 
-	o_lodDataTexelSize = _GeomData.x;
-	o_geometryGridSize = _GeomData.y;
+	o_lodDataTexelSize = _CrestCascadeData[si0]._texelWidth;
+	o_geometryGridSize = _CrestPerCascadeInstanceData[si0]._geoGridWidth;
 }

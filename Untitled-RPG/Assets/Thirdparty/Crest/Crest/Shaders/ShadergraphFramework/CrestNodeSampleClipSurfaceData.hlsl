@@ -2,10 +2,11 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanConstants.hlsl"
 #include "../OceanGlobals.hlsl"
-#include "../OceanHelpersNew.hlsl"
 #include "../OceanInputsDriven.hlsl"
+#include "../OceanHelpersNew.hlsl"
 
 void CrestNodeSampleClipSurfaceData_float
 (
@@ -30,12 +31,20 @@ void CrestNodeSampleClipSurfaceData_float
 	// Data that needs to be sampled at the undisplaced position
 	if (wt_smallerLod > 0.001)
 	{
-		const float3 uv_slice_smallerLod = WorldToUV(i_positionXZWS, i_oceanPosScale0, i_oceanParams0, i_sliceIndex0);
+		CascadeParams cascadeData = (CascadeParams)0;
+		cascadeData._posSnapped = i_oceanPosScale0.xy;
+		cascadeData._scale = i_oceanPosScale0.z;
+
+		const float3 uv_slice_smallerLod = WorldToUV(i_positionXZWS, cascadeData, i_sliceIndex0);
 		SampleClip(_LD_TexArray_ClipSurface, uv_slice_smallerLod, wt_smallerLod, o_clipSurface);
 	}
 	if (wt_biggerLod > 0.001)
 	{
-		const float3 uv_slice_biggerLod = WorldToUV(i_positionXZWS, i_oceanPosScale1, i_oceanParams1, i_sliceIndex0 + 1.0);
+		CascadeParams cascadeData = (CascadeParams)0;
+		cascadeData._posSnapped = i_oceanPosScale1.xy;
+		cascadeData._scale = i_oceanPosScale1.z;
+
+		const float3 uv_slice_biggerLod = WorldToUV(i_positionXZWS, cascadeData, i_sliceIndex0 + 1.0);
 		SampleClip(_LD_TexArray_ClipSurface, uv_slice_biggerLod, wt_biggerLod, o_clipSurface);
 	}
 

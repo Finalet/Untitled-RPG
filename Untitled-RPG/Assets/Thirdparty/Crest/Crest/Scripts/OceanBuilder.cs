@@ -160,6 +160,8 @@ namespace Crest
             ClearOutTiles(ocean, tiles);
 
             var root = new GameObject("Root");
+            Debug.Assert(root != null, "The ocean Root transform could not be immediately constructed. Please report this issue to the Crest developers via our support email or GitHub at https://github.com/wave-harmonic/crest/issues .");
+
             root.hideFlags = ocean._hideOceanTileGameObjects ? HideFlags.HideAndDontSave : HideFlags.DontSave;
             root.transform.parent = ocean.transform;
             root.transform.localPosition = Vector3.zero;
@@ -440,7 +442,7 @@ namespace Crest
             for (int i = 0; i < offsets.Length; i++)
             {
                 // instantiate and place patch
-                var patch = new GameObject(string.Format("Tile_L{0}", lodIndex));
+                var patch = new GameObject($"Tile_L{lodIndex}_{patchTypes[i]}");
                 patch.hideFlags = HideFlags.DontSave;
                 patch.layer = oceanLayer;
                 patch.transform.parent = parent;
@@ -471,6 +473,8 @@ namespace Crest
                 mr.receiveShadows = false; // this setting is ignored by unity for the transparent ocean shader
                 mr.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
                 mr.material = ocean.OceanMaterial;
+                // The rendering layer mask has different purposes per pipeline.
+                mr.renderingLayerMask = OceanRenderer.Instance.RenderingLayerMask;
 
                 // rotate side patches to point the +x side outwards
                 bool rotateXOutwards = patchTypes[i] == PatchType.FatX || patchTypes[i] == PatchType.FatXOuter || patchTypes[i] == PatchType.SlimX || patchTypes[i] == PatchType.SlimXFatZ;

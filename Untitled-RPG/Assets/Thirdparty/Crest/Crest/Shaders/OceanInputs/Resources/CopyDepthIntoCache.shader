@@ -6,7 +6,7 @@ Shader "Crest/Copy Depth Buffer Into Cache"
 {
 	SubShader
 	{
-		Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"}
+		Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
 
 		Pass
 		{
@@ -22,15 +22,11 @@ Shader "Crest/Copy Depth Buffer Into Cache"
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
+			#include "../../OceanGlobals.hlsl"
+
 			CBUFFER_START(CrestPerOceanInput)
 			float4 _HeightNearHeightFar;
 			float4 _CustomZBufferParams;
-			float3 _OceanCenterPosWorld;
-			float4 _LD_Params_0;
-			float4 _LD_Params_1;
-			float3 _LD_Pos_Scale_0;
-			float3 _LD_Pos_Scale_1;
-			float3 _GeomData;
 			CBUFFER_END
 
 			TEXTURE2D_FLOAT(_CamDepthBuffer);
@@ -38,7 +34,7 @@ Shader "Crest/Copy Depth Buffer Into Cache"
 
 			struct Attributes
 			{
-				float4 positionOS   : POSITION;
+				float3 positionOS   : POSITION;
 				float2 uv           : TEXCOORD0;
 			};
 
@@ -52,7 +48,7 @@ Shader "Crest/Copy Depth Buffer Into Cache"
 			{
 				Varyings output;
 				output.uv = input.uv;
-				output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+				output.positionCS = TransformObjectToHClip(input.positionOS);
 				return output;
 			}
 
@@ -62,19 +58,19 @@ Shader "Crest/Copy Depth Buffer Into Cache"
 				return (1.0 - z) / _CustomZBufferParams.y;
 			}
 
-			float frag(Varyings input) : SV_Target
+			float4 frag(Varyings input) : SV_Target
 			{
 				float deviceDepth = SAMPLE_DEPTH_TEXTURE(_CamDepthBuffer, sampler_CamDepthBuffer, input.uv);
 				float linear01Z = CustomLinear01Depth(deviceDepth);
 
 				float altitude;
 #if UNITY_REVERSED_Z
-					altitude = lerp(_HeightNearHeightFar.y, _HeightNearHeightFar.x, linear01Z);
+				altitude = lerp(_HeightNearHeightFar.y, _HeightNearHeightFar.x, linear01Z);
 #else
-					altitude = lerp(_HeightNearHeightFar.x, _HeightNearHeightFar.y, linear01Z);
+				altitude = lerp(_HeightNearHeightFar.x, _HeightNearHeightFar.y, linear01Z);
 #endif
 
-				return _OceanCenterPosWorld.y - altitude;
+				return float4(_OceanCenterPosWorld.y - altitude, 0.0, 0.0, 1.0);
 			}
 
 			ENDHLSL

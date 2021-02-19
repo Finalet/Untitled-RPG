@@ -10,13 +10,14 @@ Shader "Crest/Framework"
         _NormalsScale("Normals Scale", Range(0.01, 200)) = 40
         _NormalsStrength("Normals Strength", Range(0, 1)) = 0.5
         _ScatterColourBase("Scatter Colour Base", Color) = (0.384167, 0.6049405, 0.8396226, 0)
+        _ScatterColourShadow("Scatter Colour Shadow", Color) = (0, 0, 0.5019608, 0)
         _ScatterColourShallow("Scatter Colour Shallow", Color) = (0.3758455, 0.7105559, 0.7735849, 0)
         _ScatterColourShallowDepthMax("Scatter Colour Shallow Depth Max", Range(0, 50)) = 7
-        _ScatterColourShallowDepthFalloff("Scatter Colour Shallow Depth Falloff", Range(0, 10)) = 2.57
+        _ScatterColourShallowDepthFalloff("Scatter Colour Shallow Depth Falloff", Range(0.01, 10)) = 2.57
         _SSSIntensityBase("SSS Intensity Base", Range(0, 4)) = 1.04
         _SSSIntensitySun("SSS Intensity Sun", Range(0, 10)) = 4.46
         _SSSTint("SSS Tint", Color) = (0.089, 0.497, 0.456, 0)
-        _SSSSunFalloff("SSS Sun Falloff", Range(0, 16)) = 5
+        _SSSSunFalloff("SSS Sun Falloff", Range(0.01, 16)) = 5
         _Specular("Specular", Range(0, 1)) = 0.036
         _Occlusion("Occlusion", Range(0, 1)) = 0.332
         _Smoothness("Smoothness", Range(0, 1)) = 0.8
@@ -48,6 +49,9 @@ Shader "Crest/Framework"
         [Toggle]CREST_FOAM("FOAM", Float) = 1
         [Toggle]CREST_CAUSTICS("CAUSTICS", Float) = 1
         [Toggle]CREST_FLOW("FLOW", Float) = 0
+        [Header(Rendering)]
+        // What projection modes will this material support? Choosing perspective or orthographic is an optimisation.
+        [KeywordEnum(Both, Perspective, Orthographic)] _Projection("Projection Support", Float) = 0.0
     }
     SubShader
     {
@@ -105,6 +109,11 @@ Shader "Crest/Framework"
             #pragma shader_feature_local _ CREST_CAUSTICS_ON
             #pragma shader_feature_local _ CREST_FLOW_ON
             
+            #pragma shader_feature_local _ _PROJECTION_PERSPECTIVE _PROJECTION_ORTHOGRAPHIC
+            
+            // DE: Macro functions do not seem to work with nested preprocessor code. Use version defines directly as workaround.
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Version.hlsl"
+
             #if defined(CREST_FOAM_ON) && defined(CREST_CAUSTICS_ON) && defined(CREST_FLOW_ON)
                 #define KEYWORD_PERMUTATION_0
             #elif defined(CREST_FOAM_ON) && defined(CREST_CAUSTICS_ON)
@@ -211,7 +220,11 @@ Shader "Crest/Framework"
         #endif
         
             #define FEATURES_GRAPH_VERTEX
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+            #define SHADERPASS SHADERPASS_FORWARD
+#else
             #define SHADERPASS_FORWARD
+#endif
             #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
             #define REQUIRE_DEPTH_TEXTURE
             #endif
@@ -235,6 +248,7 @@ Shader "Crest/Framework"
             half _NormalsScale;
             half _NormalsStrength;
             half4 _ScatterColourBase;
+            half4 _ScatterColourShadow;
             float4 _ScatterColourShallow;
             half _ScatterColourShallowDepthMax;
             half _ScatterColourShallowDepthFalloff;
@@ -275,8 +289,8 @@ Shader "Crest/Framework"
         
             // Graph Functions
             
-            // 9f3b7d544a85bc9cd4da1bb4e1202c5d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeDrivenInputs.hlsl"
+            // 7930bc0969e8809b2f736334548e7655
+            #include "CrestNodeDrivenInputs.hlsl"
             
             struct Bindings_CrestDrivenData_40572ccadf7d9704a83d283fb4c9f19d
             {
@@ -303,8 +317,8 @@ Shader "Crest/Framework"
                 SliceIndex0_7 = _CustomFunction_CD9A5F8F_SliceIndex0_13;
             }
             
-            // 8729c57e907606c7ab53180e5cb5a4c8
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeGeoMorph.hlsl"
+            // 95a5b776fe0f6a50c11a35ee53a48d05
+            #include "CrestNodeGeoMorph.hlsl"
             
             struct Bindings_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad
             {
@@ -323,8 +337,13 @@ Shader "Crest/Framework"
                 LodAlpha_2 = _CustomFunction_C8F1D6C4_LodAlpha_5;
             }
             
-            // 9be2b27a806f502985c6500c9db407f1
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleOceanData.hlsl"
+            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
+            {
+                Out = lerp(A, B, T);
+            }
+            
+            // 6fc010e3fdfc122b45d351a84417b92f
+            #include "CrestNodeSampleOceanData.hlsl"
             
             struct Bindings_CrestSampleOceanData_f19d6d2aa60f8294e870f100303ee5a4
             {
@@ -359,8 +378,8 @@ Shader "Crest/Framework"
                 Out = A + B;
             }
             
-            // ae2a01933af17945723f58ad0690b66f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeComputeSamplingData.hlsl"
+            // 2c5c9f5d87d95ac8ac3932136ac3c1d4
+            #include "CrestNodeComputeSamplingData.hlsl"
             
             void Unity_Subtract_float2(float2 A, float2 B, out float2 Out)
             {
@@ -533,8 +552,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_7 = _GENERATEDSHADER_6BDC98D1_Out_0;
             }
             
-            // 77d00529f78b37802a52d7063216585a
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeLightData.hlsl"
+            // d8c22c31329196c75dae07a2e6236d46
+            #include "CrestNodeLightData.hlsl"
             
             struct Bindings_CrestLightData_b74b6e8c0b489314ca7aea3e2cc9c54c
             {
@@ -572,15 +591,15 @@ Shader "Crest/Framework"
                 OutBoolean_1 = _Not_3B19614D_Out_1;
             }
             
-            // 9717f328c7b671dd6435083c87fba1d4
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeNormalMapping.hlsl"
+            // 594b3267866044cd8c9c29430d3fb3be
+            #include "CrestNodeNormalMapping.hlsl"
             
             struct Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a
             {
                 float FaceSign;
             };
             
-            void SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(float3 Vector3_FE793823, float3 Vector3_C8190B61, float4 Vector4_F18E4948, float4 Vector4_43DD8E03, float Vector1_8771A258, TEXTURE2D_PARAM(Texture2D_6CA3A26C, samplerTexture2D_6CA3A26C), float4 Texture2D_6CA3A26C_TexelSize, float Vector1_418D6270, float Vector1_6EC9A7C0, float Vector1_5D9D8139, float2 Vector2_3ED47A62, float2 Vector2_891575B0, float3 Vector3_A9F402BF, float Vector1_2ABAF0E6, Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a IN, out half3 Normal_1)
+            void SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(float3 Vector3_FE793823, float3 Vector3_C8190B61, float4 Vector4_F18E4948, float4 Vector4_43DD8E03, float Vector1_8771A258, TEXTURE2D_PARAM(Texture2D_6CA3A26C, samplerTexture2D_6CA3A26C), float4 Texture2D_6CA3A26C_TexelSize, float Vector1_418D6270, float Vector1_6EC9A7C0, float Vector1_5D9D8139, float2 Vector2_3ED47A62, float2 Vector2_891575B0, float3 Vector3_A9F402BF, float Vector1_2ABAF0E6, Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a IN, out half3 Normal_1, out half SSS_2)
             {
                 float3 _Property_9021A08B_Out_0 = Vector3_FE793823;
                 float3 _Property_9C8BC1F1_Out_0 = Vector3_C8190B61;
@@ -599,12 +618,14 @@ Shader "Crest/Framework"
                 SG_CrestIsUnderwater_52f7750f15e114937b54a0fd27f0d2f2(_CrestIsUnderwater_BA18A1A, _CrestIsUnderwater_BA18A1A_OutBoolean_1);
                 float _Property_347CBD07_Out_0 = Vector1_2ABAF0E6;
                 half3 _CustomFunction_61A7F8B0_NormalTS_1;
-                OceanNormals_half(_Property_9021A08B_Out_0, _Property_9C8BC1F1_Out_0, _Property_BA13B38B_Out_0, _Property_587E24D5_Out_0, _Property_1A49C52D_Out_0, Texture2D_6CA3A26C, _Property_514FBFB9_Out_0, _Property_27A6DF1E_Out_0, _Property_A277E64F_Out_0, _Property_805F9A1D_Out_0, _Property_100A6EB8_Out_0, _Property_11AD0CE_Out_0, _CrestIsUnderwater_BA18A1A_OutBoolean_1, _Property_347CBD07_Out_0, _CustomFunction_61A7F8B0_NormalTS_1);
+                half _CustomFunction_61A7F8B0_SSS_30;
+                OceanNormals_half(_Property_9021A08B_Out_0, _Property_9C8BC1F1_Out_0, _Property_BA13B38B_Out_0, _Property_587E24D5_Out_0, _Property_1A49C52D_Out_0, Texture2D_6CA3A26C, _Property_514FBFB9_Out_0, _Property_27A6DF1E_Out_0, _Property_A277E64F_Out_0, _Property_805F9A1D_Out_0, _Property_100A6EB8_Out_0, _Property_11AD0CE_Out_0, _CrestIsUnderwater_BA18A1A_OutBoolean_1, _Property_347CBD07_Out_0, _CustomFunction_61A7F8B0_NormalTS_1, _CustomFunction_61A7F8B0_SSS_30);
                 Normal_1 = _CustomFunction_61A7F8B0_NormalTS_1;
+                SSS_2 = _CustomFunction_61A7F8B0_SSS_30;
             }
             
-            // 8e3c4891a0a191b55617faf4fca7b22b
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeApplyFresnel.hlsl"
+            // 27ab06aa925743f8f3fc088e73954735
+            #include "CrestNodeApplyFresnel.hlsl"
             
             struct Bindings_CrestFresnel_c6f6c13c4fdb04e42b427e4c2610d3c9
             {
@@ -628,8 +649,8 @@ Shader "Crest/Framework"
                 LightReflected_2 = _CustomFunction_6DEBC54E_LightReflected_10;
             }
             
-            // e3687425487019f3e71cd16a891f02e2
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeAmbientLight.hlsl"
+            // 9f4d9c624305bc05b9959812090ffab0
+            #include "CrestNodeAmbientLight.hlsl"
             
             struct Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013
             {
@@ -642,8 +663,8 @@ Shader "Crest/Framework"
                 Color_1 = _CustomFunction_84E91696_AmbientLighting_0;
             }
             
-            // 3632557ede6001b6ecb6f0413f45fa90
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeLightWaterVolume.hlsl"
+            // ed11482a103608d50a4cc3853f5d4591
+            #include "CrestNodeLightWaterVolume.hlsl"
             
             struct Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2
             {
@@ -683,16 +704,31 @@ Shader "Crest/Framework"
                 Out = SHADERGRAPH_SAMPLE_SCENE_COLOR(UV.xy);
             }
             
-            void Unity_SceneDepth_Eye_float(float4 UV, out float Out)
+            void Unity_SceneDepth_Raw_float(float4 UV, out float Out)
             {
-                Out = LinearEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy), _ZBufferParams);
+                Out = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy);
             }
             
-            // d20b265501ae4875cc4a70806a8e6acb
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeFoamBubbles.hlsl"
+            // 01064a450bf0e3fa16f7d26b6bb73648
+            #include "CrestNodeHelpers.hlsl"
             
-            // 3ae819bd257de84451fefca1ee78645f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeVolumeEmission.hlsl"
+            struct Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879
+            {
+            };
+            
+            void SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(float Vector1_84DFA93, Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 IN, out float Out_1)
+            {
+                float _Property_82FD3DA1_Out_0 = Vector1_84DFA93;
+                float _CustomFunction_86048733_LinearEyeDepth_1;
+                CrestNodeLinearEyeDepth_float(_Property_82FD3DA1_Out_0, _CustomFunction_86048733_LinearEyeDepth_1);
+                Out_1 = _CustomFunction_86048733_LinearEyeDepth_1;
+            }
+            
+            // 7bbe7882bf8ca174010307cbe423ec5c
+            #include "CrestNodeFoamBubbles.hlsl"
+            
+            // 4490b480fda761da4b3cee2dc7f71b22
+            #include "CrestNodeVolumeEmission.hlsl"
             
             void Unity_Add_float(float A, float B, out float Out)
             {
@@ -724,8 +760,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_9 = _CustomFunction_487C31E1_SSS_17;
             }
             
-            // d3bb4f720a39af4b0dbd1cddc779836d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeOceanGlobals.hlsl"
+            // 046ed75edc935d6a8dbbb44a144e7aa7
+            #include "CrestNodeOceanGlobals.hlsl"
             
             struct Bindings_CrestOceanGlobals_d50a85284893ec447a25a093505a2120
             {
@@ -746,8 +782,8 @@ Shader "Crest/Framework"
                 MeshScaleLerp_5 = _CustomFunction_9ED6B15_MeshScaleLerp_4;
             }
             
-            // 3ebdc2a39634b58194dbe1a48503ec17
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeApplyCaustics.hlsl"
+            // 247b13b7081d92e401f863e97bcb65e7
+            #include "CrestNodeApplyCaustics.hlsl"
             
             void Unity_Multiply_float(float3 A, float3 B, out float3 Out)
             {
@@ -767,11 +803,6 @@ Shader "Crest/Framework"
             void Unity_OneMinus_float3(float3 In, out float3 Out)
             {
                 Out = 1 - In;
-            }
-            
-            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
-            {
-                Out = lerp(A, B, T);
             }
             
             void Unity_Branch_float3(float Predicate, float3 True, float3 False, out float3 Out)
@@ -882,6 +913,11 @@ Shader "Crest/Framework"
                 float3 _Branch_D043DFC1_Out_3;
                 Unity_Branch_float3(_CrestIsUnderwater_6DC72EB9_OutBoolean_1, _CAUSTICS_6D445714_Out_0, _Lerp_E9270AE8_Out_3, _Branch_D043DFC1_Out_3);
                 EmittedLight_1 = _Branch_D043DFC1_Out_3;
+            }
+            
+            void Unity_Reflection_float3(float3 In, float3 Normal, out float3 Out)
+            {
+                Out = reflect(In, Normal);
             }
             
             void Unity_Divide_float(float A, float B, out float Out)
@@ -995,8 +1031,8 @@ Shader "Crest/Framework"
                 WeightB_4 = _FLOW_CB3A12C4_Out_0;
             }
             
-            // dfcd16226d95b1a66d66c0c937cc47e9
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeFoam.hlsl"
+            // 603c59a0a90b3c4f88a3eef8c21cd986
+            #include "CrestNodeFoam.hlsl"
             
             void Unity_Multiply_float(float A, float B, out float Out)
             {
@@ -1189,7 +1225,8 @@ Shader "Crest/Framework"
                 Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a _CrestComputeNormal_6DAE4B39;
                 _CrestComputeNormal_6DAE4B39.FaceSign = IN.FaceSign;
                 half3 _CrestComputeNormal_6DAE4B39_Normal_1;
-                SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(_CrestDrivenData_6635D6E9_OceanPosScale0_3, _CrestDrivenData_6635D6E9_OceanPosScale1_4, _CrestDrivenData_6635D6E9_OceanParams0_5, _CrestDrivenData_6635D6E9_OceanParams1_6, _CrestDrivenData_6635D6E9_SliceIndex0_7, TEXTURE2D_ARGS(Texture2D_40AB1455, samplerTexture2D_40AB1455), Texture2D_40AB1455_TexelSize, _Property_A636CE7E_Out_0, _Property_C1531E4C_Out_0, _Property_C7723E93_Out_0, _Property_94C56295_Out_0, _Property_E65AA85_Out_0, _Normalize_3574419A_Out_1, _Property_5A245779_Out_0, _CrestComputeNormal_6DAE4B39, _CrestComputeNormal_6DAE4B39_Normal_1);
+                half _CrestComputeNormal_6DAE4B39_SSS_2;
+                SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(_CrestDrivenData_6635D6E9_OceanPosScale0_3, _CrestDrivenData_6635D6E9_OceanPosScale1_4, _CrestDrivenData_6635D6E9_OceanParams0_5, _CrestDrivenData_6635D6E9_OceanParams1_6, _CrestDrivenData_6635D6E9_SliceIndex0_7, TEXTURE2D_ARGS(Texture2D_40AB1455, samplerTexture2D_40AB1455), Texture2D_40AB1455_TexelSize, _Property_A636CE7E_Out_0, _Property_C1531E4C_Out_0, _Property_C7723E93_Out_0, _Property_94C56295_Out_0, _Property_E65AA85_Out_0, _Normalize_3574419A_Out_1, _Property_5A245779_Out_0, _CrestComputeNormal_6DAE4B39, _CrestComputeNormal_6DAE4B39_Normal_1, _CrestComputeNormal_6DAE4B39_SSS_2);
                 Bindings_CrestIsUnderwater_52f7750f15e114937b54a0fd27f0d2f2 _CrestIsUnderwater_5AB8F4C9;
                 _CrestIsUnderwater_5AB8F4C9.FaceSign = IN.FaceSign;
                 float _CrestIsUnderwater_5AB8F4C9_OutBoolean_1;
@@ -1214,7 +1251,6 @@ Shader "Crest/Framework"
                 float _Property_9AD6466F_Out_0 = Vector1_2E8E2C59;
                 float _Property_4D8B881_Out_0 = Vector1_D74C6609;
                 float2 _Property_5A879B44_Out_0 = Vector2_AE8873FA;
-                float _Property_41C453D9_Out_0 = Vector1_255AB964;
                 Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013 _CrestAmbientLight_5A61E85E;
                 half3 _CrestAmbientLight_5A61E85E_Color_1;
                 SG_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013(_CrestAmbientLight_5A61E85E, _CrestAmbientLight_5A61E85E_Color_1);
@@ -1222,7 +1258,7 @@ Shader "Crest/Framework"
                 float3 _Property_2FA7DB0_Out_0 = Vector3_D2C93D25;
                 Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2 _CrestVolumeLighting_5A1A391;
                 half3 _CrestVolumeLighting_5A1A391_VolumeLighting_1;
-                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_479D2E13_Out_0, _Property_F631E4E0_Out_0, _Property_D9155CD7_Out_0, _Property_D8B923AB_Out_0, _Property_F7F4791A_Out_0, _Property_2ABF6C61_Out_0, _Property_22A5FA38_Out_0, _Property_C1E8071C_Out_0, _Property_9AD6466F_Out_0, _Property_4D8B881_Out_0, _Property_5A879B44_Out_0, _Property_41C453D9_Out_0, _Normalize_3574419A_Out_1, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_5A61E85E_Color_1, _Property_13E6764D_Out_0, _Property_2FA7DB0_Out_0, _CrestVolumeLighting_5A1A391, _CrestVolumeLighting_5A1A391_VolumeLighting_1);
+                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_479D2E13_Out_0, _Property_F631E4E0_Out_0, _Property_D9155CD7_Out_0, _Property_D8B923AB_Out_0, _Property_F7F4791A_Out_0, _Property_2ABF6C61_Out_0, _Property_22A5FA38_Out_0, _Property_C1E8071C_Out_0, _Property_9AD6466F_Out_0, _Property_4D8B881_Out_0, _Property_5A879B44_Out_0, _CrestComputeNormal_6DAE4B39_SSS_2, _Normalize_3574419A_Out_1, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_5A61E85E_Color_1, _Property_13E6764D_Out_0, _Property_2FA7DB0_Out_0, _CrestVolumeLighting_5A1A391, _CrestVolumeLighting_5A1A391_VolumeLighting_1);
                 float4 _ScreenPosition_42FE0E3E_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
                 float _Split_66230827_R_1 = IN.ViewSpacePosition[0];
                 float _Split_66230827_G_2 = IN.ViewSpacePosition[1];
@@ -1233,7 +1269,10 @@ Shader "Crest/Framework"
                 float3 _SceneColor_61626E7C_Out_1;
                 Unity_SceneColor_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneColor_61626E7C_Out_1);
                 float _SceneDepth_FD35F7D9_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_FD35F7D9_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_FD35F7D9_Out_1);
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_A5E3BD6;
+                float _CrestLinearEyeDepth_A5E3BD6_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_FD35F7D9_Out_1, _CrestLinearEyeDepth_A5E3BD6, _CrestLinearEyeDepth_A5E3BD6_Out_1);
                 float3 _Property_4DD76B1_Out_0 = Vector3_D2C93D25;
                 float3 _Property_DC1C088D_Out_0 = Vector3_B2D6AD84;
                 float _Property_8BC39E79_Out_0 = Vector1_9AE39B77;
@@ -1265,11 +1304,36 @@ Shader "Crest/Framework"
                 Bindings_CrestEmission_8c56460232fde1e46ae90d905a00f908 _CrestEmission_6580C0F9;
                 _CrestEmission_6580C0F9.FaceSign = IN.FaceSign;
                 float3 _CrestEmission_6580C0F9_EmittedLight_1;
-                SG_CrestEmission_8c56460232fde1e46ae90d905a00f908(_Property_2599690E_Out_0, _Property_A57CAD6E_Out_0, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Normalize_3574419A_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _ScreenPosition_42FE0E3E_Out_0, _Negate_5F3C7D3D_Out_1, _SceneColor_61626E7C_Out_1, _SceneDepth_FD35F7D9_Out_1, _Property_4DD76B1_Out_0, _Property_DC1C088D_Out_0, TEXTURE2D_ARGS(Texture2D_EB8C8549, samplerTexture2D_EB8C8549), Texture2D_EB8C8549_TexelSize, _Property_8BC39E79_Out_0, _Property_683CAF2_Out_0, _Property_B4B35559_Out_0, _Property_E694F888_Out_0, _Property_50A87698_Out_0, TEXTURE2D_ARGS(Texture2D_DA8A756A, samplerTexture2D_DA8A756A), Texture2D_DA8A756A_TexelSize, _Property_8BC9D755_Out_0, _Property_6F95DFBF_Out_0, _CustomFunction_3910AE92_Colour_16, _CrestEmission_6580C0F9, _CrestEmission_6580C0F9_EmittedLight_1);
+                SG_CrestEmission_8c56460232fde1e46ae90d905a00f908(_Property_2599690E_Out_0, _Property_A57CAD6E_Out_0, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Normalize_3574419A_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _ScreenPosition_42FE0E3E_Out_0, _Negate_5F3C7D3D_Out_1, _SceneColor_61626E7C_Out_1, _CrestLinearEyeDepth_A5E3BD6_Out_1, _Property_4DD76B1_Out_0, _Property_DC1C088D_Out_0, TEXTURE2D_ARGS(Texture2D_EB8C8549, samplerTexture2D_EB8C8549), Texture2D_EB8C8549_TexelSize, _Property_8BC39E79_Out_0, _Property_683CAF2_Out_0, _Property_B4B35559_Out_0, _Property_E694F888_Out_0, _Property_50A87698_Out_0, TEXTURE2D_ARGS(Texture2D_DA8A756A, samplerTexture2D_DA8A756A), Texture2D_DA8A756A_TexelSize, _Property_8BC9D755_Out_0, _Property_6F95DFBF_Out_0, _CustomFunction_3910AE92_Colour_16, _CrestEmission_6580C0F9, _CrestEmission_6580C0F9_EmittedLight_1);
                 float3 _Multiply_CFF25F4B_Out_2;
                 Unity_Multiply_float((_CrestFresnel_FD3200EB_LightTransmitted_1.xxx), _CrestEmission_6580C0F9_EmittedLight_1, _Multiply_CFF25F4B_Out_2);
+                float4 _Property_2B229CB_Out_0 = Vector4_2F6E352;
+                float3 _Property_EB21E5D5_Out_0 = Vector3_57B74D6A;
+                float4 _Property_C16A4E4D_Out_0 = Vector4_B3AD63B4;
+                float _Property_496C0D8_Out_0 = Vector1_FA688590;
+                float _Property_D1C2E8AB_Out_0 = Vector1_9835666E;
+                float _Property_62C11254_Out_0 = Vector1_B331E24E;
+                float _Property_5977537D_Out_0 = Vector1_951CF2DF;
+                float4 _Property_A64A7625_Out_0 = Vector4_ADCA8891;
+                float _Property_6BDEE46A_Out_0 = Vector1_2E8E2C59;
+                float _Property_26AD77F8_Out_0 = Vector1_D74C6609;
+                float2 _Property_80C3F22F_Out_0 = Vector2_AE8873FA;
+                float3 _Negate_99287013_Out_1;
+                Unity_Negate_float3(_Normalize_3574419A_Out_1, _Negate_99287013_Out_1);
+                float3 _Reflection_2C6907C_Out_2;
+                Unity_Reflection_float3(_Negate_99287013_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _Reflection_2C6907C_Out_2);
+                Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013 _CrestAmbientLight_744A95D5;
+                half3 _CrestAmbientLight_744A95D5_Color_1;
+                SG_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013(_CrestAmbientLight_744A95D5, _CrestAmbientLight_744A95D5_Color_1);
+                float3 _Property_FC57CF9F_Out_0 = Vector3_B2D6AD84;
+                float3 _Property_BAEF74C8_Out_0 = Vector3_D2C93D25;
+                Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2 _CrestVolumeLighting_B895C731;
+                half3 _CrestVolumeLighting_B895C731_VolumeLighting_1;
+                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_2B229CB_Out_0, _Property_EB21E5D5_Out_0, _Property_C16A4E4D_Out_0, _Property_496C0D8_Out_0, _Property_D1C2E8AB_Out_0, _Property_62C11254_Out_0, _Property_5977537D_Out_0, _Property_A64A7625_Out_0, _Property_6BDEE46A_Out_0, _Property_26AD77F8_Out_0, _Property_80C3F22F_Out_0, _CrestComputeNormal_6DAE4B39_SSS_2, _Reflection_2C6907C_Out_2, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_744A95D5_Color_1, _Property_FC57CF9F_Out_0, _Property_BAEF74C8_Out_0, _CrestVolumeLighting_B895C731, _CrestVolumeLighting_B895C731_VolumeLighting_1);
+                float3 _Multiply_C794DFA8_Out_2;
+                Unity_Multiply_float((_CrestFresnel_FD3200EB_LightReflected_2.xxx), _CrestVolumeLighting_B895C731_VolumeLighting_1, _Multiply_C794DFA8_Out_2);
                 float3 _Add_906C47A2_Out_2;
-                Unity_Add_float3(_Multiply_CFF25F4B_Out_2, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Add_906C47A2_Out_2);
+                Unity_Add_float3(_Multiply_CFF25F4B_Out_2, _Multiply_C794DFA8_Out_2, _Add_906C47A2_Out_2);
                 float3 _Branch_A82A52E6_Out_3;
                 Unity_Branch_float3(_CrestIsUnderwater_5AB8F4C9_OutBoolean_1, _Add_906C47A2_Out_2, _Multiply_CFF25F4B_Out_2, _Branch_A82A52E6_Out_3);
                 float _Property_5DA83C2A_Out_0 = Vector1_47308CC2;
@@ -1298,8 +1362,8 @@ Shader "Crest/Framework"
                 Specular_6 = _CrestFresnel_FD3200EB_LightReflected_2;
             }
             
-            // af89d2205c5dc03c016b842f3f74cf56
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeOcclusion.hlsl"
+            // d95513c88578aa1937e0c447139bbdd2
+            #include "CrestNodeOcclusion.hlsl"
             
             struct Bindings_CrestOcclusion_8f9c2c1ada00f40a6a372f3868116540
             {
@@ -1323,8 +1387,8 @@ Shader "Crest/Framework"
                 Out = OutMinMax.x + (In - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);
             }
             
-            // 134eaf4ca1df8927040c1ff9046ffd1d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleClipSurfaceData.hlsl"
+            // 473f15c2637ee291e2c6b2371a49ba9a
+            #include "CrestNodeSampleClipSurfaceData.hlsl"
             
             struct Bindings_CrestClipSurface_8c73b4813486448849bd38d01267f186
             {
@@ -1391,9 +1455,15 @@ Shader "Crest/Framework"
             
             struct VertexDescription
             {
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                float3 Position;
+                float3 Normal;
+                float3 Tangent;
+#else
                 float3 VertexPosition;
                 float3 VertexNormal;
                 float3 VertexTangent;
+#endif
 
                 // Crest -------------------
                 float LodAlpha;
@@ -1428,9 +1498,16 @@ Shader "Crest/Framework"
                 SG_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad(IN.AbsoluteWorldSpacePosition, _CrestDrivenData_A1078169_OceanPosScale0_3, _CrestDrivenData_A1078169_MeshScaleAlpha_1, _CrestDrivenData_A1078169_GeometryGridSize_2, _CrestGeoMorph_8F1A4FF1, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestGeoMorph_8F1A4FF1_LodAlpha_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
-                float _Split_CC063A43_R_1 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[0];
-                float _Split_CC063A43_G_2 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[1];
-                float _Split_CC063A43_B_3 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[2];
+                float _Vector1_EC81C14_Out_0 = 1.0001;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float3 _Lerp_69E3E2CE_Out_3;
+                Unity_Lerp_float3(SHADERGRAPH_OBJECT_POSITION, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, (_Vector1_EC81C14_Out_0.xxx), _Lerp_69E3E2CE_Out_3);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float _Split_CC063A43_R_1 = _Lerp_69E3E2CE_Out_3[0];
+                float _Split_CC063A43_G_2 = _Lerp_69E3E2CE_Out_3[1];
+                float _Split_CC063A43_B_3 = _Lerp_69E3E2CE_Out_3[2];
                 float _Split_CC063A43_A_4 = 0;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -1448,7 +1525,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Add_2D79A354_Out_2;
-                Unity_Add_float3(_CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
+                Unity_Add_float3(_Lerp_69E3E2CE_Out_3, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Transform_9C2ACF28_Out_1 = TransformWorldToObject(GetCameraRelativePositionWS(_Add_2D79A354_Out_2.xyz));
@@ -1459,9 +1536,15 @@ Shader "Crest/Framework"
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Transform_22BD1A85_Out_1 = TransformWorldToObjectDir(float3 (1, 0, 0).xyz);
                 #endif
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                description.Position = _Transform_9C2ACF28_Out_1;
+                description.Normal = _Transform_86205EE4_Out_1;
+                description.Tangent = _Transform_22BD1A85_Out_1;
+#else
                 description.VertexPosition = _Transform_9C2ACF28_Out_1;
                 description.VertexNormal = _Transform_86205EE4_Out_1;
                 description.VertexTangent = _Transform_22BD1A85_Out_1;
+#endif
 
                 // Crest -------------------
                 description.LodAlpha = _CrestGeoMorph_8F1A4FF1_LodAlpha_2;
@@ -1513,8 +1596,17 @@ Shader "Crest/Framework"
             
             struct SurfaceDescription
             {
+                // DE: URP 10.0 support.
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                float3 BaseColor;
+#else
                 float3 Albedo;
+#endif
                 float3 Normal;
+                // DE: URP 10.0 support.
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                float3 NormalTS;
+#endif
                 float3 Emission;
                 float3 Specular;
                 float Smoothness;
@@ -1601,6 +1693,9 @@ Shader "Crest/Framework"
                 half4 _Property_B5E474DF_Out_0 = _ScatterColourBase;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                half4 _Property_5D62FE57_Out_0 = _ScatterColourShadow;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float4 _Property_B98AE6FA_Out_0 = _ScatterColourShallow;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -1673,7 +1768,7 @@ Shader "Crest/Framework"
                 float3 _CrestOceanPixel_51593A7C_Emission_4;
                 float _CrestOceanPixel_51593A7C_Smoothness_5;
                 float _CrestOceanPixel_51593A7C_Specular_6;
-                SG_CrestOceanPixel_6f6706d805d8e8649adddaaa94260269(TEXTURE2D_ARGS(_TextureFoam, sampler_TextureFoam), _TextureFoam_TexelSize, _Vector2_15E252FB_Out_0, _Property_87E9391A_Out_0, _Property_BC30BCB6_Out_0, _Property_5E8CB038_Out_0, _Property_77A524C7_Out_0, _Property_CED296A4_Out_0, _Property_D1CA3C84_Out_0, (_Property_3BAB5FF_Out_0.xyz), _Property_EDC4DC3C_Out_0, _Property_E7925FBA_Out_0, _CrestUnpackData_C3998C1C_PositionXZWSUndisp_2, _CrestUnpackData_C3998C1C_LodAlpha_1, _CrestUnpackData_C3998C1C_OceanDepth_3, _CrestUnpackData_C3998C1C_Foam_4, _CrestUnpackData_C3998C1C_Shadow_5, _CrestUnpackData_C3998C1C_Flow_6, _CrestUnpackData_C3998C1C_SubSurfaceScattering_7, _Property_994CB3A3_Out_0, _Property_7079FD32_Out_0, _Property_FAEF961B_Out_0, _Property_35DA1E70_Out_0, TEXTURE2D_ARGS(_TextureNormals, sampler_TextureNormals), _TextureNormals_TexelSize, _Property_D1430252_Out_0, _Property_B882DB1E_Out_0, _Property_B5E474DF_Out_0, float3 (0, 0, 0), _Property_B98AE6FA_Out_0, _Property_CF7CEF3A_Out_0, _Property_698A3C81_Out_0, _Property_5924F1E9_Out_0, _Property_67308B5F_Out_0, _Property_A723E757_Out_0, _Property_5AD6818A_Out_0, _Property_888FA49_Out_0, _Property_F1315B19_Out_0, _CrestLightData_5AD806DD_Direction_1, _CrestLightData_5AD806DD_Intensity_2, TEXTURE2D_ARGS(_CausticsTexture, sampler_CausticsTexture), _CausticsTexture_TexelSize, _Property_A26763AB_Out_0, _Property_3230CB90_Out_0, _Property_6B2F7D3E_Out_0, _Property_D5C90779_Out_0, _Property_2743B36F_Out_0, TEXTURE2D_ARGS(_CausticsDistortionTexture, sampler_CausticsDistortionTexture), _CausticsDistortionTexture_TexelSize, _Property_61877218_Out_0, _Property_5F1E3794_Out_0, 1.33, 1, _Property_7BD0FFAF_Out_0, _CrestOceanPixel_51593A7C, _CrestOceanPixel_51593A7C_Albedo_2, _CrestOceanPixel_51593A7C_NormalTS_3, _CrestOceanPixel_51593A7C_Emission_4, _CrestOceanPixel_51593A7C_Smoothness_5, _CrestOceanPixel_51593A7C_Specular_6);
+                SG_CrestOceanPixel_6f6706d805d8e8649adddaaa94260269(TEXTURE2D_ARGS(_TextureFoam, sampler_TextureFoam), _TextureFoam_TexelSize, _Vector2_15E252FB_Out_0, _Property_87E9391A_Out_0, _Property_BC30BCB6_Out_0, _Property_5E8CB038_Out_0, _Property_77A524C7_Out_0, _Property_CED296A4_Out_0, _Property_D1CA3C84_Out_0, (_Property_3BAB5FF_Out_0.xyz), _Property_EDC4DC3C_Out_0, _Property_E7925FBA_Out_0, _CrestUnpackData_C3998C1C_PositionXZWSUndisp_2, _CrestUnpackData_C3998C1C_LodAlpha_1, _CrestUnpackData_C3998C1C_OceanDepth_3, _CrestUnpackData_C3998C1C_Foam_4, _CrestUnpackData_C3998C1C_Shadow_5, _CrestUnpackData_C3998C1C_Flow_6, _CrestUnpackData_C3998C1C_SubSurfaceScattering_7, _Property_994CB3A3_Out_0, _Property_7079FD32_Out_0, _Property_FAEF961B_Out_0, _Property_35DA1E70_Out_0, TEXTURE2D_ARGS(_TextureNormals, sampler_TextureNormals), _TextureNormals_TexelSize, _Property_D1430252_Out_0, _Property_B882DB1E_Out_0, _Property_B5E474DF_Out_0, (_Property_5D62FE57_Out_0.xyz), _Property_B98AE6FA_Out_0, _Property_CF7CEF3A_Out_0, _Property_698A3C81_Out_0, _Property_5924F1E9_Out_0, _Property_67308B5F_Out_0, _Property_A723E757_Out_0, _Property_5AD6818A_Out_0, _Property_888FA49_Out_0, _Property_F1315B19_Out_0, _CrestLightData_5AD806DD_Direction_1, _CrestLightData_5AD806DD_Intensity_2, TEXTURE2D_ARGS(_CausticsTexture, sampler_CausticsTexture), _CausticsTexture_TexelSize, _Property_A26763AB_Out_0, _Property_3230CB90_Out_0, _Property_6B2F7D3E_Out_0, _Property_D5C90779_Out_0, _Property_2743B36F_Out_0, TEXTURE2D_ARGS(_CausticsDistortionTexture, sampler_CausticsDistortionTexture), _CausticsDistortionTexture_TexelSize, _Property_61877218_Out_0, _Property_5F1E3794_Out_0, 1.33, 1, _Property_7BD0FFAF_Out_0, _CrestOceanPixel_51593A7C, _CrestOceanPixel_51593A7C_Albedo_2, _CrestOceanPixel_51593A7C_NormalTS_3, _CrestOceanPixel_51593A7C_Emission_4, _CrestOceanPixel_51593A7C_Smoothness_5, _CrestOceanPixel_51593A7C_Specular_6);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Property_A3329432_Out_0 = _Specular;
@@ -1693,7 +1788,12 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _SceneDepth_E2A24470_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_FF188689;
+                float _CrestLinearEyeDepth_FF188689_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_E2A24470_Out_1, _CrestLinearEyeDepth_FF188689, _CrestLinearEyeDepth_FF188689_Out_1);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Split_68C2565_R_1 = IN.ViewSpacePosition[0];
@@ -1707,7 +1807,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Subtract_B338E0_Out_2;
-                Unity_Subtract_float(_SceneDepth_E2A24470_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
+                Unity_Subtract_float(_CrestLinearEyeDepth_FF188689_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Remap_6CD3C222_Out_3;
@@ -1734,8 +1834,17 @@ Shader "Crest/Framework"
                 float _Saturate_A1AFAC8_Out_1;
                 Unity_Saturate_float(_Subtract_900E903A_Out_2, _Saturate_A1AFAC8_Out_1);
                 #endif
+                // DE: URP 10.0 support.
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                surface.BaseColor = _CrestOceanPixel_51593A7C_Albedo_2;
+#else
                 surface.Albedo = _CrestOceanPixel_51593A7C_Albedo_2;
+#endif
                 surface.Normal = _CrestOceanPixel_51593A7C_NormalTS_3;
+                // DE: URP 10.0 support.
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                surface.NormalTS = _CrestOceanPixel_51593A7C_NormalTS_3;
+#endif
                 surface.Emission = _CrestOceanPixel_51593A7C_Emission_4;
                 surface.Specular = (_Multiply_E01A7830_Out_2.xxx);
                 surface.Smoothness = _CrestOceanPixel_51593A7C_Smoothness_5;
@@ -2106,7 +2215,11 @@ Shader "Crest/Framework"
             // Main
         
             // Crest -------------------
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+            #include "CrestVaryingsURP_10.hlsl"
+#else
             #include "CrestVaryingsURP.hlsl"
+#endif
             // -------------------------
             //#include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/Varyings.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/PBRForwardPass.hlsl"
@@ -2128,7 +2241,7 @@ Shader "Crest/Framework"
             Cull Off
             ZTest LEqual
             ZWrite On
-            // ColorMask: <None>
+            ColorMask 0
             
         
             HLSLPROGRAM
@@ -2257,6 +2370,7 @@ Shader "Crest/Framework"
             half _NormalsScale;
             half _NormalsStrength;
             half4 _ScatterColourBase;
+            half4 _ScatterColourShadow;
             float4 _ScatterColourShallow;
             half _ScatterColourShallowDepthMax;
             half _ScatterColourShallowDepthFalloff;
@@ -2297,8 +2411,8 @@ Shader "Crest/Framework"
         
             // Graph Functions
             
-            // 9f3b7d544a85bc9cd4da1bb4e1202c5d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeDrivenInputs.hlsl"
+            // 7930bc0969e8809b2f736334548e7655
+            #include "CrestNodeDrivenInputs.hlsl"
             
             struct Bindings_CrestDrivenData_40572ccadf7d9704a83d283fb4c9f19d
             {
@@ -2325,8 +2439,8 @@ Shader "Crest/Framework"
                 SliceIndex0_7 = _CustomFunction_CD9A5F8F_SliceIndex0_13;
             }
             
-            // 8729c57e907606c7ab53180e5cb5a4c8
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeGeoMorph.hlsl"
+            // 95a5b776fe0f6a50c11a35ee53a48d05
+            #include "CrestNodeGeoMorph.hlsl"
             
             struct Bindings_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad
             {
@@ -2345,8 +2459,13 @@ Shader "Crest/Framework"
                 LodAlpha_2 = _CustomFunction_C8F1D6C4_LodAlpha_5;
             }
             
-            // 9be2b27a806f502985c6500c9db407f1
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleOceanData.hlsl"
+            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
+            {
+                Out = lerp(A, B, T);
+            }
+            
+            // 6fc010e3fdfc122b45d351a84417b92f
+            #include "CrestNodeSampleOceanData.hlsl"
             
             struct Bindings_CrestSampleOceanData_f19d6d2aa60f8294e870f100303ee5a4
             {
@@ -2381,9 +2500,24 @@ Shader "Crest/Framework"
                 Out = A + B;
             }
             
-            void Unity_SceneDepth_Eye_float(float4 UV, out float Out)
+            void Unity_SceneDepth_Raw_float(float4 UV, out float Out)
             {
-                Out = LinearEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy), _ZBufferParams);
+                Out = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy);
+            }
+            
+            // 01064a450bf0e3fa16f7d26b6bb73648
+            #include "CrestNodeHelpers.hlsl"
+            
+            struct Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879
+            {
+            };
+            
+            void SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(float Vector1_84DFA93, Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 IN, out float Out_1)
+            {
+                float _Property_82FD3DA1_Out_0 = Vector1_84DFA93;
+                float _CustomFunction_86048733_LinearEyeDepth_1;
+                CrestNodeLinearEyeDepth_float(_Property_82FD3DA1_Out_0, _CustomFunction_86048733_LinearEyeDepth_1);
+                Out_1 = _CustomFunction_86048733_LinearEyeDepth_1;
             }
             
             void Unity_Negate_float(float In, out float Out)
@@ -2406,8 +2540,8 @@ Shader "Crest/Framework"
                 Out = saturate(In);
             }
             
-            // ae2a01933af17945723f58ad0690b66f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeComputeSamplingData.hlsl"
+            // 2c5c9f5d87d95ac8ac3932136ac3c1d4
+            #include "CrestNodeComputeSamplingData.hlsl"
             
             void Unity_Subtract_float2(float2 A, float2 B, out float2 Out)
             {
@@ -2580,8 +2714,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_7 = _GENERATEDSHADER_6BDC98D1_Out_0;
             }
             
-            // 134eaf4ca1df8927040c1ff9046ffd1d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleClipSurfaceData.hlsl"
+            // 473f15c2637ee291e2c6b2371a49ba9a
+            #include "CrestNodeSampleClipSurfaceData.hlsl"
             
             struct Bindings_CrestClipSurface_8c73b4813486448849bd38d01267f186
             {
@@ -2675,9 +2809,16 @@ Shader "Crest/Framework"
                 SG_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad(IN.AbsoluteWorldSpacePosition, _CrestDrivenData_A1078169_OceanPosScale0_3, _CrestDrivenData_A1078169_MeshScaleAlpha_1, _CrestDrivenData_A1078169_GeometryGridSize_2, _CrestGeoMorph_8F1A4FF1, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestGeoMorph_8F1A4FF1_LodAlpha_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
-                float _Split_CC063A43_R_1 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[0];
-                float _Split_CC063A43_G_2 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[1];
-                float _Split_CC063A43_B_3 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[2];
+                float _Vector1_EC81C14_Out_0 = 1.0001;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float3 _Lerp_69E3E2CE_Out_3;
+                Unity_Lerp_float3(SHADERGRAPH_OBJECT_POSITION, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, (_Vector1_EC81C14_Out_0.xxx), _Lerp_69E3E2CE_Out_3);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float _Split_CC063A43_R_1 = _Lerp_69E3E2CE_Out_3[0];
+                float _Split_CC063A43_G_2 = _Lerp_69E3E2CE_Out_3[1];
+                float _Split_CC063A43_B_3 = _Lerp_69E3E2CE_Out_3[2];
                 float _Split_CC063A43_A_4 = 0;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -2695,7 +2836,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Add_2D79A354_Out_2;
-                Unity_Add_float3(_CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
+                Unity_Add_float3(_Lerp_69E3E2CE_Out_3, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Transform_9C2ACF28_Out_1 = TransformWorldToObject(GetCameraRelativePositionWS(_Add_2D79A354_Out_2.xyz));
@@ -2749,7 +2890,12 @@ Shader "Crest/Framework"
                 SurfaceDescription surface = (SurfaceDescription)0;
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _SceneDepth_E2A24470_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_FF188689;
+                float _CrestLinearEyeDepth_FF188689_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_E2A24470_Out_1, _CrestLinearEyeDepth_FF188689, _CrestLinearEyeDepth_FF188689_Out_1);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Split_68C2565_R_1 = IN.ViewSpacePosition[0];
@@ -2763,7 +2909,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Subtract_B338E0_Out_2;
-                Unity_Subtract_float(_SceneDepth_E2A24470_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
+                Unity_Subtract_float(_CrestLinearEyeDepth_FF188689_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Remap_6CD3C222_Out_3;
@@ -3229,6 +3375,7 @@ Shader "Crest/Framework"
             half _NormalsScale;
             half _NormalsStrength;
             half4 _ScatterColourBase;
+            half4 _ScatterColourShadow;
             float4 _ScatterColourShallow;
             half _ScatterColourShallowDepthMax;
             half _ScatterColourShallowDepthFalloff;
@@ -3269,8 +3416,8 @@ Shader "Crest/Framework"
         
             // Graph Functions
             
-            // 9f3b7d544a85bc9cd4da1bb4e1202c5d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeDrivenInputs.hlsl"
+            // 7930bc0969e8809b2f736334548e7655
+            #include "CrestNodeDrivenInputs.hlsl"
             
             struct Bindings_CrestDrivenData_40572ccadf7d9704a83d283fb4c9f19d
             {
@@ -3297,8 +3444,8 @@ Shader "Crest/Framework"
                 SliceIndex0_7 = _CustomFunction_CD9A5F8F_SliceIndex0_13;
             }
             
-            // 8729c57e907606c7ab53180e5cb5a4c8
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeGeoMorph.hlsl"
+            // 95a5b776fe0f6a50c11a35ee53a48d05
+            #include "CrestNodeGeoMorph.hlsl"
             
             struct Bindings_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad
             {
@@ -3317,8 +3464,13 @@ Shader "Crest/Framework"
                 LodAlpha_2 = _CustomFunction_C8F1D6C4_LodAlpha_5;
             }
             
-            // 9be2b27a806f502985c6500c9db407f1
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleOceanData.hlsl"
+            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
+            {
+                Out = lerp(A, B, T);
+            }
+            
+            // 6fc010e3fdfc122b45d351a84417b92f
+            #include "CrestNodeSampleOceanData.hlsl"
             
             struct Bindings_CrestSampleOceanData_f19d6d2aa60f8294e870f100303ee5a4
             {
@@ -3353,9 +3505,24 @@ Shader "Crest/Framework"
                 Out = A + B;
             }
             
-            void Unity_SceneDepth_Eye_float(float4 UV, out float Out)
+            void Unity_SceneDepth_Raw_float(float4 UV, out float Out)
             {
-                Out = LinearEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy), _ZBufferParams);
+                Out = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy);
+            }
+            
+            // 01064a450bf0e3fa16f7d26b6bb73648
+            #include "CrestNodeHelpers.hlsl"
+            
+            struct Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879
+            {
+            };
+            
+            void SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(float Vector1_84DFA93, Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 IN, out float Out_1)
+            {
+                float _Property_82FD3DA1_Out_0 = Vector1_84DFA93;
+                float _CustomFunction_86048733_LinearEyeDepth_1;
+                CrestNodeLinearEyeDepth_float(_Property_82FD3DA1_Out_0, _CustomFunction_86048733_LinearEyeDepth_1);
+                Out_1 = _CustomFunction_86048733_LinearEyeDepth_1;
             }
             
             void Unity_Negate_float(float In, out float Out)
@@ -3378,8 +3545,8 @@ Shader "Crest/Framework"
                 Out = saturate(In);
             }
             
-            // ae2a01933af17945723f58ad0690b66f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeComputeSamplingData.hlsl"
+            // 2c5c9f5d87d95ac8ac3932136ac3c1d4
+            #include "CrestNodeComputeSamplingData.hlsl"
             
             void Unity_Subtract_float2(float2 A, float2 B, out float2 Out)
             {
@@ -3552,8 +3719,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_7 = _GENERATEDSHADER_6BDC98D1_Out_0;
             }
             
-            // 134eaf4ca1df8927040c1ff9046ffd1d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleClipSurfaceData.hlsl"
+            // 473f15c2637ee291e2c6b2371a49ba9a
+            #include "CrestNodeSampleClipSurfaceData.hlsl"
             
             struct Bindings_CrestClipSurface_8c73b4813486448849bd38d01267f186
             {
@@ -3647,9 +3814,16 @@ Shader "Crest/Framework"
                 SG_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad(IN.AbsoluteWorldSpacePosition, _CrestDrivenData_A1078169_OceanPosScale0_3, _CrestDrivenData_A1078169_MeshScaleAlpha_1, _CrestDrivenData_A1078169_GeometryGridSize_2, _CrestGeoMorph_8F1A4FF1, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestGeoMorph_8F1A4FF1_LodAlpha_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
-                float _Split_CC063A43_R_1 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[0];
-                float _Split_CC063A43_G_2 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[1];
-                float _Split_CC063A43_B_3 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[2];
+                float _Vector1_EC81C14_Out_0 = 1.0001;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float3 _Lerp_69E3E2CE_Out_3;
+                Unity_Lerp_float3(SHADERGRAPH_OBJECT_POSITION, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, (_Vector1_EC81C14_Out_0.xxx), _Lerp_69E3E2CE_Out_3);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float _Split_CC063A43_R_1 = _Lerp_69E3E2CE_Out_3[0];
+                float _Split_CC063A43_G_2 = _Lerp_69E3E2CE_Out_3[1];
+                float _Split_CC063A43_B_3 = _Lerp_69E3E2CE_Out_3[2];
                 float _Split_CC063A43_A_4 = 0;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -3667,7 +3841,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Add_2D79A354_Out_2;
-                Unity_Add_float3(_CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
+                Unity_Add_float3(_Lerp_69E3E2CE_Out_3, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Transform_9C2ACF28_Out_1 = TransformWorldToObject(GetCameraRelativePositionWS(_Add_2D79A354_Out_2.xyz));
@@ -3721,7 +3895,12 @@ Shader "Crest/Framework"
                 SurfaceDescription surface = (SurfaceDescription)0;
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _SceneDepth_E2A24470_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_FF188689;
+                float _CrestLinearEyeDepth_FF188689_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_E2A24470_Out_1, _CrestLinearEyeDepth_FF188689, _CrestLinearEyeDepth_FF188689_Out_1);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Split_68C2565_R_1 = IN.ViewSpacePosition[0];
@@ -3735,7 +3914,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Subtract_B338E0_Out_2;
-                Unity_Subtract_float(_SceneDepth_E2A24470_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
+                Unity_Subtract_float(_CrestLinearEyeDepth_FF188689_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Remap_6CD3C222_Out_3;
@@ -4070,7 +4249,7 @@ Shader "Crest/Framework"
             Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
             Cull Off
             ZTest LEqual
-            ZWrite On
+            ZWrite Off
             // ColorMask: <None>
             
         
@@ -4094,6 +4273,9 @@ Shader "Crest/Framework"
             #pragma shader_feature_local _ CREST_FOAM_ON
             #pragma shader_feature_local _ CREST_CAUSTICS_ON
             #pragma shader_feature_local _ CREST_FLOW_ON
+
+            // DE: Macro functions do not seem to work with nested preprocessor code. Use version defines directly as workaround.
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Version.hlsl"
             
             #if defined(CREST_FOAM_ON) && defined(CREST_CAUSTICS_ON) && defined(CREST_FLOW_ON)
                 #define KEYWORD_PERMUTATION_0
@@ -4191,7 +4373,11 @@ Shader "Crest/Framework"
         #endif
         
             #define FEATURES_GRAPH_VERTEX
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+            #define SHADERPASS SHADERPASS_META
+#else
             #define SHADERPASS_META
+#endif
             #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
             #define REQUIRE_DEPTH_TEXTURE
             #endif
@@ -4215,6 +4401,7 @@ Shader "Crest/Framework"
             half _NormalsScale;
             half _NormalsStrength;
             half4 _ScatterColourBase;
+            half4 _ScatterColourShadow;
             float4 _ScatterColourShallow;
             half _ScatterColourShallowDepthMax;
             half _ScatterColourShallowDepthFalloff;
@@ -4255,8 +4442,8 @@ Shader "Crest/Framework"
         
             // Graph Functions
             
-            // 9f3b7d544a85bc9cd4da1bb4e1202c5d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeDrivenInputs.hlsl"
+            // 7930bc0969e8809b2f736334548e7655
+            #include "CrestNodeDrivenInputs.hlsl"
             
             struct Bindings_CrestDrivenData_40572ccadf7d9704a83d283fb4c9f19d
             {
@@ -4283,8 +4470,8 @@ Shader "Crest/Framework"
                 SliceIndex0_7 = _CustomFunction_CD9A5F8F_SliceIndex0_13;
             }
             
-            // 8729c57e907606c7ab53180e5cb5a4c8
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeGeoMorph.hlsl"
+            // 95a5b776fe0f6a50c11a35ee53a48d05
+            #include "CrestNodeGeoMorph.hlsl"
             
             struct Bindings_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad
             {
@@ -4303,8 +4490,13 @@ Shader "Crest/Framework"
                 LodAlpha_2 = _CustomFunction_C8F1D6C4_LodAlpha_5;
             }
             
-            // 9be2b27a806f502985c6500c9db407f1
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleOceanData.hlsl"
+            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
+            {
+                Out = lerp(A, B, T);
+            }
+            
+            // 6fc010e3fdfc122b45d351a84417b92f
+            #include "CrestNodeSampleOceanData.hlsl"
             
             struct Bindings_CrestSampleOceanData_f19d6d2aa60f8294e870f100303ee5a4
             {
@@ -4339,8 +4531,8 @@ Shader "Crest/Framework"
                 Out = A + B;
             }
             
-            // ae2a01933af17945723f58ad0690b66f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeComputeSamplingData.hlsl"
+            // 2c5c9f5d87d95ac8ac3932136ac3c1d4
+            #include "CrestNodeComputeSamplingData.hlsl"
             
             void Unity_Subtract_float2(float2 A, float2 B, out float2 Out)
             {
@@ -4513,8 +4705,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_7 = _GENERATEDSHADER_6BDC98D1_Out_0;
             }
             
-            // 77d00529f78b37802a52d7063216585a
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeLightData.hlsl"
+            // d8c22c31329196c75dae07a2e6236d46
+            #include "CrestNodeLightData.hlsl"
             
             struct Bindings_CrestLightData_b74b6e8c0b489314ca7aea3e2cc9c54c
             {
@@ -4552,15 +4744,15 @@ Shader "Crest/Framework"
                 OutBoolean_1 = _Not_3B19614D_Out_1;
             }
             
-            // 9717f328c7b671dd6435083c87fba1d4
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeNormalMapping.hlsl"
+            // 594b3267866044cd8c9c29430d3fb3be
+            #include "CrestNodeNormalMapping.hlsl"
             
             struct Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a
             {
                 float FaceSign;
             };
             
-            void SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(float3 Vector3_FE793823, float3 Vector3_C8190B61, float4 Vector4_F18E4948, float4 Vector4_43DD8E03, float Vector1_8771A258, TEXTURE2D_PARAM(Texture2D_6CA3A26C, samplerTexture2D_6CA3A26C), float4 Texture2D_6CA3A26C_TexelSize, float Vector1_418D6270, float Vector1_6EC9A7C0, float Vector1_5D9D8139, float2 Vector2_3ED47A62, float2 Vector2_891575B0, float3 Vector3_A9F402BF, float Vector1_2ABAF0E6, Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a IN, out half3 Normal_1)
+            void SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(float3 Vector3_FE793823, float3 Vector3_C8190B61, float4 Vector4_F18E4948, float4 Vector4_43DD8E03, float Vector1_8771A258, TEXTURE2D_PARAM(Texture2D_6CA3A26C, samplerTexture2D_6CA3A26C), float4 Texture2D_6CA3A26C_TexelSize, float Vector1_418D6270, float Vector1_6EC9A7C0, float Vector1_5D9D8139, float2 Vector2_3ED47A62, float2 Vector2_891575B0, float3 Vector3_A9F402BF, float Vector1_2ABAF0E6, Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a IN, out half3 Normal_1, out half SSS_2)
             {
                 float3 _Property_9021A08B_Out_0 = Vector3_FE793823;
                 float3 _Property_9C8BC1F1_Out_0 = Vector3_C8190B61;
@@ -4579,12 +4771,14 @@ Shader "Crest/Framework"
                 SG_CrestIsUnderwater_52f7750f15e114937b54a0fd27f0d2f2(_CrestIsUnderwater_BA18A1A, _CrestIsUnderwater_BA18A1A_OutBoolean_1);
                 float _Property_347CBD07_Out_0 = Vector1_2ABAF0E6;
                 half3 _CustomFunction_61A7F8B0_NormalTS_1;
-                OceanNormals_half(_Property_9021A08B_Out_0, _Property_9C8BC1F1_Out_0, _Property_BA13B38B_Out_0, _Property_587E24D5_Out_0, _Property_1A49C52D_Out_0, Texture2D_6CA3A26C, _Property_514FBFB9_Out_0, _Property_27A6DF1E_Out_0, _Property_A277E64F_Out_0, _Property_805F9A1D_Out_0, _Property_100A6EB8_Out_0, _Property_11AD0CE_Out_0, _CrestIsUnderwater_BA18A1A_OutBoolean_1, _Property_347CBD07_Out_0, _CustomFunction_61A7F8B0_NormalTS_1);
+                half _CustomFunction_61A7F8B0_SSS_30;
+                OceanNormals_half(_Property_9021A08B_Out_0, _Property_9C8BC1F1_Out_0, _Property_BA13B38B_Out_0, _Property_587E24D5_Out_0, _Property_1A49C52D_Out_0, Texture2D_6CA3A26C, _Property_514FBFB9_Out_0, _Property_27A6DF1E_Out_0, _Property_A277E64F_Out_0, _Property_805F9A1D_Out_0, _Property_100A6EB8_Out_0, _Property_11AD0CE_Out_0, _CrestIsUnderwater_BA18A1A_OutBoolean_1, _Property_347CBD07_Out_0, _CustomFunction_61A7F8B0_NormalTS_1, _CustomFunction_61A7F8B0_SSS_30);
                 Normal_1 = _CustomFunction_61A7F8B0_NormalTS_1;
+                SSS_2 = _CustomFunction_61A7F8B0_SSS_30;
             }
             
-            // 8e3c4891a0a191b55617faf4fca7b22b
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeApplyFresnel.hlsl"
+            // 27ab06aa925743f8f3fc088e73954735
+            #include "CrestNodeApplyFresnel.hlsl"
             
             struct Bindings_CrestFresnel_c6f6c13c4fdb04e42b427e4c2610d3c9
             {
@@ -4608,8 +4802,8 @@ Shader "Crest/Framework"
                 LightReflected_2 = _CustomFunction_6DEBC54E_LightReflected_10;
             }
             
-            // e3687425487019f3e71cd16a891f02e2
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeAmbientLight.hlsl"
+            // 9f4d9c624305bc05b9959812090ffab0
+            #include "CrestNodeAmbientLight.hlsl"
             
             struct Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013
             {
@@ -4622,8 +4816,8 @@ Shader "Crest/Framework"
                 Color_1 = _CustomFunction_84E91696_AmbientLighting_0;
             }
             
-            // 3632557ede6001b6ecb6f0413f45fa90
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeLightWaterVolume.hlsl"
+            // ed11482a103608d50a4cc3853f5d4591
+            #include "CrestNodeLightWaterVolume.hlsl"
             
             struct Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2
             {
@@ -4663,16 +4857,31 @@ Shader "Crest/Framework"
                 Out = SHADERGRAPH_SAMPLE_SCENE_COLOR(UV.xy);
             }
             
-            void Unity_SceneDepth_Eye_float(float4 UV, out float Out)
+            void Unity_SceneDepth_Raw_float(float4 UV, out float Out)
             {
-                Out = LinearEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy), _ZBufferParams);
+                Out = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy);
             }
             
-            // d20b265501ae4875cc4a70806a8e6acb
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeFoamBubbles.hlsl"
+            // 01064a450bf0e3fa16f7d26b6bb73648
+            #include "CrestNodeHelpers.hlsl"
             
-            // 3ae819bd257de84451fefca1ee78645f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeVolumeEmission.hlsl"
+            struct Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879
+            {
+            };
+            
+            void SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(float Vector1_84DFA93, Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 IN, out float Out_1)
+            {
+                float _Property_82FD3DA1_Out_0 = Vector1_84DFA93;
+                float _CustomFunction_86048733_LinearEyeDepth_1;
+                CrestNodeLinearEyeDepth_float(_Property_82FD3DA1_Out_0, _CustomFunction_86048733_LinearEyeDepth_1);
+                Out_1 = _CustomFunction_86048733_LinearEyeDepth_1;
+            }
+            
+            // 7bbe7882bf8ca174010307cbe423ec5c
+            #include "CrestNodeFoamBubbles.hlsl"
+            
+            // 4490b480fda761da4b3cee2dc7f71b22
+            #include "CrestNodeVolumeEmission.hlsl"
             
             void Unity_Add_float(float A, float B, out float Out)
             {
@@ -4704,8 +4913,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_9 = _CustomFunction_487C31E1_SSS_17;
             }
             
-            // d3bb4f720a39af4b0dbd1cddc779836d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeOceanGlobals.hlsl"
+            // 046ed75edc935d6a8dbbb44a144e7aa7
+            #include "CrestNodeOceanGlobals.hlsl"
             
             struct Bindings_CrestOceanGlobals_d50a85284893ec447a25a093505a2120
             {
@@ -4726,8 +4935,8 @@ Shader "Crest/Framework"
                 MeshScaleLerp_5 = _CustomFunction_9ED6B15_MeshScaleLerp_4;
             }
             
-            // 3ebdc2a39634b58194dbe1a48503ec17
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeApplyCaustics.hlsl"
+            // 247b13b7081d92e401f863e97bcb65e7
+            #include "CrestNodeApplyCaustics.hlsl"
             
             void Unity_Multiply_float(float3 A, float3 B, out float3 Out)
             {
@@ -4747,11 +4956,6 @@ Shader "Crest/Framework"
             void Unity_OneMinus_float3(float3 In, out float3 Out)
             {
                 Out = 1 - In;
-            }
-            
-            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
-            {
-                Out = lerp(A, B, T);
             }
             
             void Unity_Branch_float3(float Predicate, float3 True, float3 False, out float3 Out)
@@ -4862,6 +5066,11 @@ Shader "Crest/Framework"
                 float3 _Branch_D043DFC1_Out_3;
                 Unity_Branch_float3(_CrestIsUnderwater_6DC72EB9_OutBoolean_1, _CAUSTICS_6D445714_Out_0, _Lerp_E9270AE8_Out_3, _Branch_D043DFC1_Out_3);
                 EmittedLight_1 = _Branch_D043DFC1_Out_3;
+            }
+            
+            void Unity_Reflection_float3(float3 In, float3 Normal, out float3 Out)
+            {
+                Out = reflect(In, Normal);
             }
             
             void Unity_Divide_float(float A, float B, out float Out)
@@ -4975,8 +5184,8 @@ Shader "Crest/Framework"
                 WeightB_4 = _FLOW_CB3A12C4_Out_0;
             }
             
-            // dfcd16226d95b1a66d66c0c937cc47e9
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeFoam.hlsl"
+            // 603c59a0a90b3c4f88a3eef8c21cd986
+            #include "CrestNodeFoam.hlsl"
             
             void Unity_Multiply_float(float A, float B, out float Out)
             {
@@ -5169,7 +5378,8 @@ Shader "Crest/Framework"
                 Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a _CrestComputeNormal_6DAE4B39;
                 _CrestComputeNormal_6DAE4B39.FaceSign = IN.FaceSign;
                 half3 _CrestComputeNormal_6DAE4B39_Normal_1;
-                SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(_CrestDrivenData_6635D6E9_OceanPosScale0_3, _CrestDrivenData_6635D6E9_OceanPosScale1_4, _CrestDrivenData_6635D6E9_OceanParams0_5, _CrestDrivenData_6635D6E9_OceanParams1_6, _CrestDrivenData_6635D6E9_SliceIndex0_7, TEXTURE2D_ARGS(Texture2D_40AB1455, samplerTexture2D_40AB1455), Texture2D_40AB1455_TexelSize, _Property_A636CE7E_Out_0, _Property_C1531E4C_Out_0, _Property_C7723E93_Out_0, _Property_94C56295_Out_0, _Property_E65AA85_Out_0, _Normalize_3574419A_Out_1, _Property_5A245779_Out_0, _CrestComputeNormal_6DAE4B39, _CrestComputeNormal_6DAE4B39_Normal_1);
+                half _CrestComputeNormal_6DAE4B39_SSS_2;
+                SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(_CrestDrivenData_6635D6E9_OceanPosScale0_3, _CrestDrivenData_6635D6E9_OceanPosScale1_4, _CrestDrivenData_6635D6E9_OceanParams0_5, _CrestDrivenData_6635D6E9_OceanParams1_6, _CrestDrivenData_6635D6E9_SliceIndex0_7, TEXTURE2D_ARGS(Texture2D_40AB1455, samplerTexture2D_40AB1455), Texture2D_40AB1455_TexelSize, _Property_A636CE7E_Out_0, _Property_C1531E4C_Out_0, _Property_C7723E93_Out_0, _Property_94C56295_Out_0, _Property_E65AA85_Out_0, _Normalize_3574419A_Out_1, _Property_5A245779_Out_0, _CrestComputeNormal_6DAE4B39, _CrestComputeNormal_6DAE4B39_Normal_1, _CrestComputeNormal_6DAE4B39_SSS_2);
                 Bindings_CrestIsUnderwater_52f7750f15e114937b54a0fd27f0d2f2 _CrestIsUnderwater_5AB8F4C9;
                 _CrestIsUnderwater_5AB8F4C9.FaceSign = IN.FaceSign;
                 float _CrestIsUnderwater_5AB8F4C9_OutBoolean_1;
@@ -5194,7 +5404,6 @@ Shader "Crest/Framework"
                 float _Property_9AD6466F_Out_0 = Vector1_2E8E2C59;
                 float _Property_4D8B881_Out_0 = Vector1_D74C6609;
                 float2 _Property_5A879B44_Out_0 = Vector2_AE8873FA;
-                float _Property_41C453D9_Out_0 = Vector1_255AB964;
                 Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013 _CrestAmbientLight_5A61E85E;
                 half3 _CrestAmbientLight_5A61E85E_Color_1;
                 SG_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013(_CrestAmbientLight_5A61E85E, _CrestAmbientLight_5A61E85E_Color_1);
@@ -5202,7 +5411,7 @@ Shader "Crest/Framework"
                 float3 _Property_2FA7DB0_Out_0 = Vector3_D2C93D25;
                 Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2 _CrestVolumeLighting_5A1A391;
                 half3 _CrestVolumeLighting_5A1A391_VolumeLighting_1;
-                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_479D2E13_Out_0, _Property_F631E4E0_Out_0, _Property_D9155CD7_Out_0, _Property_D8B923AB_Out_0, _Property_F7F4791A_Out_0, _Property_2ABF6C61_Out_0, _Property_22A5FA38_Out_0, _Property_C1E8071C_Out_0, _Property_9AD6466F_Out_0, _Property_4D8B881_Out_0, _Property_5A879B44_Out_0, _Property_41C453D9_Out_0, _Normalize_3574419A_Out_1, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_5A61E85E_Color_1, _Property_13E6764D_Out_0, _Property_2FA7DB0_Out_0, _CrestVolumeLighting_5A1A391, _CrestVolumeLighting_5A1A391_VolumeLighting_1);
+                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_479D2E13_Out_0, _Property_F631E4E0_Out_0, _Property_D9155CD7_Out_0, _Property_D8B923AB_Out_0, _Property_F7F4791A_Out_0, _Property_2ABF6C61_Out_0, _Property_22A5FA38_Out_0, _Property_C1E8071C_Out_0, _Property_9AD6466F_Out_0, _Property_4D8B881_Out_0, _Property_5A879B44_Out_0, _CrestComputeNormal_6DAE4B39_SSS_2, _Normalize_3574419A_Out_1, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_5A61E85E_Color_1, _Property_13E6764D_Out_0, _Property_2FA7DB0_Out_0, _CrestVolumeLighting_5A1A391, _CrestVolumeLighting_5A1A391_VolumeLighting_1);
                 float4 _ScreenPosition_42FE0E3E_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
                 float _Split_66230827_R_1 = IN.ViewSpacePosition[0];
                 float _Split_66230827_G_2 = IN.ViewSpacePosition[1];
@@ -5213,7 +5422,10 @@ Shader "Crest/Framework"
                 float3 _SceneColor_61626E7C_Out_1;
                 Unity_SceneColor_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneColor_61626E7C_Out_1);
                 float _SceneDepth_FD35F7D9_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_FD35F7D9_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_FD35F7D9_Out_1);
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_A5E3BD6;
+                float _CrestLinearEyeDepth_A5E3BD6_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_FD35F7D9_Out_1, _CrestLinearEyeDepth_A5E3BD6, _CrestLinearEyeDepth_A5E3BD6_Out_1);
                 float3 _Property_4DD76B1_Out_0 = Vector3_D2C93D25;
                 float3 _Property_DC1C088D_Out_0 = Vector3_B2D6AD84;
                 float _Property_8BC39E79_Out_0 = Vector1_9AE39B77;
@@ -5245,11 +5457,36 @@ Shader "Crest/Framework"
                 Bindings_CrestEmission_8c56460232fde1e46ae90d905a00f908 _CrestEmission_6580C0F9;
                 _CrestEmission_6580C0F9.FaceSign = IN.FaceSign;
                 float3 _CrestEmission_6580C0F9_EmittedLight_1;
-                SG_CrestEmission_8c56460232fde1e46ae90d905a00f908(_Property_2599690E_Out_0, _Property_A57CAD6E_Out_0, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Normalize_3574419A_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _ScreenPosition_42FE0E3E_Out_0, _Negate_5F3C7D3D_Out_1, _SceneColor_61626E7C_Out_1, _SceneDepth_FD35F7D9_Out_1, _Property_4DD76B1_Out_0, _Property_DC1C088D_Out_0, TEXTURE2D_ARGS(Texture2D_EB8C8549, samplerTexture2D_EB8C8549), Texture2D_EB8C8549_TexelSize, _Property_8BC39E79_Out_0, _Property_683CAF2_Out_0, _Property_B4B35559_Out_0, _Property_E694F888_Out_0, _Property_50A87698_Out_0, TEXTURE2D_ARGS(Texture2D_DA8A756A, samplerTexture2D_DA8A756A), Texture2D_DA8A756A_TexelSize, _Property_8BC9D755_Out_0, _Property_6F95DFBF_Out_0, _CustomFunction_3910AE92_Colour_16, _CrestEmission_6580C0F9, _CrestEmission_6580C0F9_EmittedLight_1);
+                SG_CrestEmission_8c56460232fde1e46ae90d905a00f908(_Property_2599690E_Out_0, _Property_A57CAD6E_Out_0, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Normalize_3574419A_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _ScreenPosition_42FE0E3E_Out_0, _Negate_5F3C7D3D_Out_1, _SceneColor_61626E7C_Out_1, _CrestLinearEyeDepth_A5E3BD6_Out_1, _Property_4DD76B1_Out_0, _Property_DC1C088D_Out_0, TEXTURE2D_ARGS(Texture2D_EB8C8549, samplerTexture2D_EB8C8549), Texture2D_EB8C8549_TexelSize, _Property_8BC39E79_Out_0, _Property_683CAF2_Out_0, _Property_B4B35559_Out_0, _Property_E694F888_Out_0, _Property_50A87698_Out_0, TEXTURE2D_ARGS(Texture2D_DA8A756A, samplerTexture2D_DA8A756A), Texture2D_DA8A756A_TexelSize, _Property_8BC9D755_Out_0, _Property_6F95DFBF_Out_0, _CustomFunction_3910AE92_Colour_16, _CrestEmission_6580C0F9, _CrestEmission_6580C0F9_EmittedLight_1);
                 float3 _Multiply_CFF25F4B_Out_2;
                 Unity_Multiply_float((_CrestFresnel_FD3200EB_LightTransmitted_1.xxx), _CrestEmission_6580C0F9_EmittedLight_1, _Multiply_CFF25F4B_Out_2);
+                float4 _Property_2B229CB_Out_0 = Vector4_2F6E352;
+                float3 _Property_EB21E5D5_Out_0 = Vector3_57B74D6A;
+                float4 _Property_C16A4E4D_Out_0 = Vector4_B3AD63B4;
+                float _Property_496C0D8_Out_0 = Vector1_FA688590;
+                float _Property_D1C2E8AB_Out_0 = Vector1_9835666E;
+                float _Property_62C11254_Out_0 = Vector1_B331E24E;
+                float _Property_5977537D_Out_0 = Vector1_951CF2DF;
+                float4 _Property_A64A7625_Out_0 = Vector4_ADCA8891;
+                float _Property_6BDEE46A_Out_0 = Vector1_2E8E2C59;
+                float _Property_26AD77F8_Out_0 = Vector1_D74C6609;
+                float2 _Property_80C3F22F_Out_0 = Vector2_AE8873FA;
+                float3 _Negate_99287013_Out_1;
+                Unity_Negate_float3(_Normalize_3574419A_Out_1, _Negate_99287013_Out_1);
+                float3 _Reflection_2C6907C_Out_2;
+                Unity_Reflection_float3(_Negate_99287013_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _Reflection_2C6907C_Out_2);
+                Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013 _CrestAmbientLight_744A95D5;
+                half3 _CrestAmbientLight_744A95D5_Color_1;
+                SG_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013(_CrestAmbientLight_744A95D5, _CrestAmbientLight_744A95D5_Color_1);
+                float3 _Property_FC57CF9F_Out_0 = Vector3_B2D6AD84;
+                float3 _Property_BAEF74C8_Out_0 = Vector3_D2C93D25;
+                Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2 _CrestVolumeLighting_B895C731;
+                half3 _CrestVolumeLighting_B895C731_VolumeLighting_1;
+                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_2B229CB_Out_0, _Property_EB21E5D5_Out_0, _Property_C16A4E4D_Out_0, _Property_496C0D8_Out_0, _Property_D1C2E8AB_Out_0, _Property_62C11254_Out_0, _Property_5977537D_Out_0, _Property_A64A7625_Out_0, _Property_6BDEE46A_Out_0, _Property_26AD77F8_Out_0, _Property_80C3F22F_Out_0, _CrestComputeNormal_6DAE4B39_SSS_2, _Reflection_2C6907C_Out_2, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_744A95D5_Color_1, _Property_FC57CF9F_Out_0, _Property_BAEF74C8_Out_0, _CrestVolumeLighting_B895C731, _CrestVolumeLighting_B895C731_VolumeLighting_1);
+                float3 _Multiply_C794DFA8_Out_2;
+                Unity_Multiply_float((_CrestFresnel_FD3200EB_LightReflected_2.xxx), _CrestVolumeLighting_B895C731_VolumeLighting_1, _Multiply_C794DFA8_Out_2);
                 float3 _Add_906C47A2_Out_2;
-                Unity_Add_float3(_Multiply_CFF25F4B_Out_2, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Add_906C47A2_Out_2);
+                Unity_Add_float3(_Multiply_CFF25F4B_Out_2, _Multiply_C794DFA8_Out_2, _Add_906C47A2_Out_2);
                 float3 _Branch_A82A52E6_Out_3;
                 Unity_Branch_float3(_CrestIsUnderwater_5AB8F4C9_OutBoolean_1, _Add_906C47A2_Out_2, _Multiply_CFF25F4B_Out_2, _Branch_A82A52E6_Out_3);
                 float _Property_5DA83C2A_Out_0 = Vector1_47308CC2;
@@ -5283,8 +5520,8 @@ Shader "Crest/Framework"
                 Out = OutMinMax.x + (In - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);
             }
             
-            // 134eaf4ca1df8927040c1ff9046ffd1d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleClipSurfaceData.hlsl"
+            // 473f15c2637ee291e2c6b2371a49ba9a
+            #include "CrestNodeSampleClipSurfaceData.hlsl"
             
             struct Bindings_CrestClipSurface_8c73b4813486448849bd38d01267f186
             {
@@ -5351,9 +5588,15 @@ Shader "Crest/Framework"
             
             struct VertexDescription
             {
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                float3 Position;
+                float3 Normal;
+                float3 Tangent;
+#else
                 float3 VertexPosition;
                 float3 VertexNormal;
                 float3 VertexTangent;
+#endif
             };
             
             VertexDescription VertexDescriptionFunction(VertexDescriptionInputs IN)
@@ -5378,9 +5621,16 @@ Shader "Crest/Framework"
                 SG_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad(IN.AbsoluteWorldSpacePosition, _CrestDrivenData_A1078169_OceanPosScale0_3, _CrestDrivenData_A1078169_MeshScaleAlpha_1, _CrestDrivenData_A1078169_GeometryGridSize_2, _CrestGeoMorph_8F1A4FF1, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestGeoMorph_8F1A4FF1_LodAlpha_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
-                float _Split_CC063A43_R_1 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[0];
-                float _Split_CC063A43_G_2 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[1];
-                float _Split_CC063A43_B_3 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[2];
+                float _Vector1_EC81C14_Out_0 = 1.0001;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float3 _Lerp_69E3E2CE_Out_3;
+                Unity_Lerp_float3(SHADERGRAPH_OBJECT_POSITION, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, (_Vector1_EC81C14_Out_0.xxx), _Lerp_69E3E2CE_Out_3);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float _Split_CC063A43_R_1 = _Lerp_69E3E2CE_Out_3[0];
+                float _Split_CC063A43_G_2 = _Lerp_69E3E2CE_Out_3[1];
+                float _Split_CC063A43_B_3 = _Lerp_69E3E2CE_Out_3[2];
                 float _Split_CC063A43_A_4 = 0;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -5398,7 +5648,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Add_2D79A354_Out_2;
-                Unity_Add_float3(_CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
+                Unity_Add_float3(_Lerp_69E3E2CE_Out_3, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Transform_9C2ACF28_Out_1 = TransformWorldToObject(GetCameraRelativePositionWS(_Add_2D79A354_Out_2.xyz));
@@ -5409,9 +5659,15 @@ Shader "Crest/Framework"
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Transform_22BD1A85_Out_1 = TransformWorldToObjectDir(float3 (1, 0, 0).xyz);
                 #endif
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                description.Position = _Transform_9C2ACF28_Out_1;
+                description.Normal = _Transform_86205EE4_Out_1;
+                description.Tangent = _Transform_22BD1A85_Out_1;
+#else
                 description.VertexPosition = _Transform_9C2ACF28_Out_1;
                 description.VertexNormal = _Transform_86205EE4_Out_1;
                 description.VertexTangent = _Transform_22BD1A85_Out_1;
+#endif
                 return description;
             }
             
@@ -5452,7 +5708,12 @@ Shader "Crest/Framework"
             
             struct SurfaceDescription
             {
+                // DE: URP 10.0 support.
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                float3 BaseColor;
+#else
                 float3 Albedo;
+#endif
                 float3 Emission;
                 float Alpha;
                 float AlphaClipThreshold;
@@ -5536,6 +5797,9 @@ Shader "Crest/Framework"
                 half4 _Property_B5E474DF_Out_0 = _ScatterColourBase;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                half4 _Property_5D62FE57_Out_0 = _ScatterColourShadow;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float4 _Property_B98AE6FA_Out_0 = _ScatterColourShallow;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -5608,11 +5872,16 @@ Shader "Crest/Framework"
                 float3 _CrestOceanPixel_51593A7C_Emission_4;
                 float _CrestOceanPixel_51593A7C_Smoothness_5;
                 float _CrestOceanPixel_51593A7C_Specular_6;
-                SG_CrestOceanPixel_6f6706d805d8e8649adddaaa94260269(TEXTURE2D_ARGS(_TextureFoam, sampler_TextureFoam), _TextureFoam_TexelSize, _Vector2_15E252FB_Out_0, _Property_87E9391A_Out_0, _Property_BC30BCB6_Out_0, _Property_5E8CB038_Out_0, _Property_77A524C7_Out_0, _Property_CED296A4_Out_0, _Property_D1CA3C84_Out_0, (_Property_3BAB5FF_Out_0.xyz), _Property_EDC4DC3C_Out_0, _Property_E7925FBA_Out_0, _CrestUnpackData_C3998C1C_PositionXZWSUndisp_2, _CrestUnpackData_C3998C1C_LodAlpha_1, _CrestUnpackData_C3998C1C_OceanDepth_3, _CrestUnpackData_C3998C1C_Foam_4, _CrestUnpackData_C3998C1C_Shadow_5, _CrestUnpackData_C3998C1C_Flow_6, _CrestUnpackData_C3998C1C_SubSurfaceScattering_7, _Property_994CB3A3_Out_0, _Property_7079FD32_Out_0, _Property_FAEF961B_Out_0, _Property_35DA1E70_Out_0, TEXTURE2D_ARGS(_TextureNormals, sampler_TextureNormals), _TextureNormals_TexelSize, _Property_D1430252_Out_0, _Property_B882DB1E_Out_0, _Property_B5E474DF_Out_0, float3 (0, 0, 0), _Property_B98AE6FA_Out_0, _Property_CF7CEF3A_Out_0, _Property_698A3C81_Out_0, _Property_5924F1E9_Out_0, _Property_67308B5F_Out_0, _Property_A723E757_Out_0, _Property_5AD6818A_Out_0, _Property_888FA49_Out_0, _Property_F1315B19_Out_0, _CrestLightData_5AD806DD_Direction_1, _CrestLightData_5AD806DD_Intensity_2, TEXTURE2D_ARGS(_CausticsTexture, sampler_CausticsTexture), _CausticsTexture_TexelSize, _Property_A26763AB_Out_0, _Property_3230CB90_Out_0, _Property_6B2F7D3E_Out_0, _Property_D5C90779_Out_0, _Property_2743B36F_Out_0, TEXTURE2D_ARGS(_CausticsDistortionTexture, sampler_CausticsDistortionTexture), _CausticsDistortionTexture_TexelSize, _Property_61877218_Out_0, _Property_5F1E3794_Out_0, 1.33, 1, _Property_7BD0FFAF_Out_0, _CrestOceanPixel_51593A7C, _CrestOceanPixel_51593A7C_Albedo_2, _CrestOceanPixel_51593A7C_NormalTS_3, _CrestOceanPixel_51593A7C_Emission_4, _CrestOceanPixel_51593A7C_Smoothness_5, _CrestOceanPixel_51593A7C_Specular_6);
+                SG_CrestOceanPixel_6f6706d805d8e8649adddaaa94260269(TEXTURE2D_ARGS(_TextureFoam, sampler_TextureFoam), _TextureFoam_TexelSize, _Vector2_15E252FB_Out_0, _Property_87E9391A_Out_0, _Property_BC30BCB6_Out_0, _Property_5E8CB038_Out_0, _Property_77A524C7_Out_0, _Property_CED296A4_Out_0, _Property_D1CA3C84_Out_0, (_Property_3BAB5FF_Out_0.xyz), _Property_EDC4DC3C_Out_0, _Property_E7925FBA_Out_0, _CrestUnpackData_C3998C1C_PositionXZWSUndisp_2, _CrestUnpackData_C3998C1C_LodAlpha_1, _CrestUnpackData_C3998C1C_OceanDepth_3, _CrestUnpackData_C3998C1C_Foam_4, _CrestUnpackData_C3998C1C_Shadow_5, _CrestUnpackData_C3998C1C_Flow_6, _CrestUnpackData_C3998C1C_SubSurfaceScattering_7, _Property_994CB3A3_Out_0, _Property_7079FD32_Out_0, _Property_FAEF961B_Out_0, _Property_35DA1E70_Out_0, TEXTURE2D_ARGS(_TextureNormals, sampler_TextureNormals), _TextureNormals_TexelSize, _Property_D1430252_Out_0, _Property_B882DB1E_Out_0, _Property_B5E474DF_Out_0, (_Property_5D62FE57_Out_0.xyz), _Property_B98AE6FA_Out_0, _Property_CF7CEF3A_Out_0, _Property_698A3C81_Out_0, _Property_5924F1E9_Out_0, _Property_67308B5F_Out_0, _Property_A723E757_Out_0, _Property_5AD6818A_Out_0, _Property_888FA49_Out_0, _Property_F1315B19_Out_0, _CrestLightData_5AD806DD_Direction_1, _CrestLightData_5AD806DD_Intensity_2, TEXTURE2D_ARGS(_CausticsTexture, sampler_CausticsTexture), _CausticsTexture_TexelSize, _Property_A26763AB_Out_0, _Property_3230CB90_Out_0, _Property_6B2F7D3E_Out_0, _Property_D5C90779_Out_0, _Property_2743B36F_Out_0, TEXTURE2D_ARGS(_CausticsDistortionTexture, sampler_CausticsDistortionTexture), _CausticsDistortionTexture_TexelSize, _Property_61877218_Out_0, _Property_5F1E3794_Out_0, 1.33, 1, _Property_7BD0FFAF_Out_0, _CrestOceanPixel_51593A7C, _CrestOceanPixel_51593A7C_Albedo_2, _CrestOceanPixel_51593A7C_NormalTS_3, _CrestOceanPixel_51593A7C_Emission_4, _CrestOceanPixel_51593A7C_Smoothness_5, _CrestOceanPixel_51593A7C_Specular_6);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _SceneDepth_E2A24470_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_FF188689;
+                float _CrestLinearEyeDepth_FF188689_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_E2A24470_Out_1, _CrestLinearEyeDepth_FF188689, _CrestLinearEyeDepth_FF188689_Out_1);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Split_68C2565_R_1 = IN.ViewSpacePosition[0];
@@ -5626,7 +5895,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Subtract_B338E0_Out_2;
-                Unity_Subtract_float(_SceneDepth_E2A24470_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
+                Unity_Subtract_float(_CrestLinearEyeDepth_FF188689_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Remap_6CD3C222_Out_3;
@@ -5653,7 +5922,12 @@ Shader "Crest/Framework"
                 float _Saturate_A1AFAC8_Out_1;
                 Unity_Saturate_float(_Subtract_900E903A_Out_2, _Saturate_A1AFAC8_Out_1);
                 #endif
+                // DE: URP 10.0 support.
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                surface.BaseColor = _CrestOceanPixel_51593A7C_Albedo_2;
+#else
                 surface.Albedo = _CrestOceanPixel_51593A7C_Albedo_2;
+#endif
                 surface.Emission = _CrestOceanPixel_51593A7C_Emission_4;
                 surface.Alpha = _Saturate_A1AFAC8_Out_1;
                 surface.AlphaClipThreshold = 0;
@@ -5718,6 +5992,19 @@ Shader "Crest/Framework"
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 viewDirectionWS;
                 #endif
+                // DE: URP 10.0 support.
+#if SHADER_LIBRARY_VERSION_MAJOR >= 10
+                #if defined(LIGHTMAP_ON)
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float2 lightmapUV;
+                #endif
+                #endif
+                #if !defined(LIGHTMAP_ON)
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float3 sh;
+                #endif
+                #endif
+#endif
                 #if UNITY_ANY_INSTANCING_ENABLED
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 uint instanceID : CUSTOM_INSTANCE_ID;
@@ -6132,6 +6419,7 @@ Shader "Crest/Framework"
             half _NormalsScale;
             half _NormalsStrength;
             half4 _ScatterColourBase;
+            half4 _ScatterColourShadow;
             float4 _ScatterColourShallow;
             half _ScatterColourShallowDepthMax;
             half _ScatterColourShallowDepthFalloff;
@@ -6172,8 +6460,8 @@ Shader "Crest/Framework"
         
             // Graph Functions
             
-            // 9f3b7d544a85bc9cd4da1bb4e1202c5d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeDrivenInputs.hlsl"
+            // 7930bc0969e8809b2f736334548e7655
+            #include "CrestNodeDrivenInputs.hlsl"
             
             struct Bindings_CrestDrivenData_40572ccadf7d9704a83d283fb4c9f19d
             {
@@ -6200,8 +6488,8 @@ Shader "Crest/Framework"
                 SliceIndex0_7 = _CustomFunction_CD9A5F8F_SliceIndex0_13;
             }
             
-            // 8729c57e907606c7ab53180e5cb5a4c8
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeGeoMorph.hlsl"
+            // 95a5b776fe0f6a50c11a35ee53a48d05
+            #include "CrestNodeGeoMorph.hlsl"
             
             struct Bindings_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad
             {
@@ -6220,8 +6508,13 @@ Shader "Crest/Framework"
                 LodAlpha_2 = _CustomFunction_C8F1D6C4_LodAlpha_5;
             }
             
-            // 9be2b27a806f502985c6500c9db407f1
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleOceanData.hlsl"
+            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
+            {
+                Out = lerp(A, B, T);
+            }
+            
+            // 6fc010e3fdfc122b45d351a84417b92f
+            #include "CrestNodeSampleOceanData.hlsl"
             
             struct Bindings_CrestSampleOceanData_f19d6d2aa60f8294e870f100303ee5a4
             {
@@ -6256,8 +6549,8 @@ Shader "Crest/Framework"
                 Out = A + B;
             }
             
-            // ae2a01933af17945723f58ad0690b66f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeComputeSamplingData.hlsl"
+            // 2c5c9f5d87d95ac8ac3932136ac3c1d4
+            #include "CrestNodeComputeSamplingData.hlsl"
             
             void Unity_Subtract_float2(float2 A, float2 B, out float2 Out)
             {
@@ -6430,8 +6723,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_7 = _GENERATEDSHADER_6BDC98D1_Out_0;
             }
             
-            // 77d00529f78b37802a52d7063216585a
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeLightData.hlsl"
+            // d8c22c31329196c75dae07a2e6236d46
+            #include "CrestNodeLightData.hlsl"
             
             struct Bindings_CrestLightData_b74b6e8c0b489314ca7aea3e2cc9c54c
             {
@@ -6469,15 +6762,15 @@ Shader "Crest/Framework"
                 OutBoolean_1 = _Not_3B19614D_Out_1;
             }
             
-            // 9717f328c7b671dd6435083c87fba1d4
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeNormalMapping.hlsl"
+            // 594b3267866044cd8c9c29430d3fb3be
+            #include "CrestNodeNormalMapping.hlsl"
             
             struct Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a
             {
                 float FaceSign;
             };
             
-            void SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(float3 Vector3_FE793823, float3 Vector3_C8190B61, float4 Vector4_F18E4948, float4 Vector4_43DD8E03, float Vector1_8771A258, TEXTURE2D_PARAM(Texture2D_6CA3A26C, samplerTexture2D_6CA3A26C), float4 Texture2D_6CA3A26C_TexelSize, float Vector1_418D6270, float Vector1_6EC9A7C0, float Vector1_5D9D8139, float2 Vector2_3ED47A62, float2 Vector2_891575B0, float3 Vector3_A9F402BF, float Vector1_2ABAF0E6, Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a IN, out half3 Normal_1)
+            void SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(float3 Vector3_FE793823, float3 Vector3_C8190B61, float4 Vector4_F18E4948, float4 Vector4_43DD8E03, float Vector1_8771A258, TEXTURE2D_PARAM(Texture2D_6CA3A26C, samplerTexture2D_6CA3A26C), float4 Texture2D_6CA3A26C_TexelSize, float Vector1_418D6270, float Vector1_6EC9A7C0, float Vector1_5D9D8139, float2 Vector2_3ED47A62, float2 Vector2_891575B0, float3 Vector3_A9F402BF, float Vector1_2ABAF0E6, Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a IN, out half3 Normal_1, out half SSS_2)
             {
                 float3 _Property_9021A08B_Out_0 = Vector3_FE793823;
                 float3 _Property_9C8BC1F1_Out_0 = Vector3_C8190B61;
@@ -6496,12 +6789,14 @@ Shader "Crest/Framework"
                 SG_CrestIsUnderwater_52f7750f15e114937b54a0fd27f0d2f2(_CrestIsUnderwater_BA18A1A, _CrestIsUnderwater_BA18A1A_OutBoolean_1);
                 float _Property_347CBD07_Out_0 = Vector1_2ABAF0E6;
                 half3 _CustomFunction_61A7F8B0_NormalTS_1;
-                OceanNormals_half(_Property_9021A08B_Out_0, _Property_9C8BC1F1_Out_0, _Property_BA13B38B_Out_0, _Property_587E24D5_Out_0, _Property_1A49C52D_Out_0, Texture2D_6CA3A26C, _Property_514FBFB9_Out_0, _Property_27A6DF1E_Out_0, _Property_A277E64F_Out_0, _Property_805F9A1D_Out_0, _Property_100A6EB8_Out_0, _Property_11AD0CE_Out_0, _CrestIsUnderwater_BA18A1A_OutBoolean_1, _Property_347CBD07_Out_0, _CustomFunction_61A7F8B0_NormalTS_1);
+                half _CustomFunction_61A7F8B0_SSS_30;
+                OceanNormals_half(_Property_9021A08B_Out_0, _Property_9C8BC1F1_Out_0, _Property_BA13B38B_Out_0, _Property_587E24D5_Out_0, _Property_1A49C52D_Out_0, Texture2D_6CA3A26C, _Property_514FBFB9_Out_0, _Property_27A6DF1E_Out_0, _Property_A277E64F_Out_0, _Property_805F9A1D_Out_0, _Property_100A6EB8_Out_0, _Property_11AD0CE_Out_0, _CrestIsUnderwater_BA18A1A_OutBoolean_1, _Property_347CBD07_Out_0, _CustomFunction_61A7F8B0_NormalTS_1, _CustomFunction_61A7F8B0_SSS_30);
                 Normal_1 = _CustomFunction_61A7F8B0_NormalTS_1;
+                SSS_2 = _CustomFunction_61A7F8B0_SSS_30;
             }
             
-            // 8e3c4891a0a191b55617faf4fca7b22b
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeApplyFresnel.hlsl"
+            // 27ab06aa925743f8f3fc088e73954735
+            #include "CrestNodeApplyFresnel.hlsl"
             
             struct Bindings_CrestFresnel_c6f6c13c4fdb04e42b427e4c2610d3c9
             {
@@ -6525,8 +6820,8 @@ Shader "Crest/Framework"
                 LightReflected_2 = _CustomFunction_6DEBC54E_LightReflected_10;
             }
             
-            // e3687425487019f3e71cd16a891f02e2
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeAmbientLight.hlsl"
+            // 9f4d9c624305bc05b9959812090ffab0
+            #include "CrestNodeAmbientLight.hlsl"
             
             struct Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013
             {
@@ -6539,8 +6834,8 @@ Shader "Crest/Framework"
                 Color_1 = _CustomFunction_84E91696_AmbientLighting_0;
             }
             
-            // 3632557ede6001b6ecb6f0413f45fa90
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeLightWaterVolume.hlsl"
+            // ed11482a103608d50a4cc3853f5d4591
+            #include "CrestNodeLightWaterVolume.hlsl"
             
             struct Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2
             {
@@ -6580,16 +6875,31 @@ Shader "Crest/Framework"
                 Out = SHADERGRAPH_SAMPLE_SCENE_COLOR(UV.xy);
             }
             
-            void Unity_SceneDepth_Eye_float(float4 UV, out float Out)
+            void Unity_SceneDepth_Raw_float(float4 UV, out float Out)
             {
-                Out = LinearEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy), _ZBufferParams);
+                Out = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV.xy);
             }
             
-            // d20b265501ae4875cc4a70806a8e6acb
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeFoamBubbles.hlsl"
+            // 01064a450bf0e3fa16f7d26b6bb73648
+            #include "CrestNodeHelpers.hlsl"
             
-            // 3ae819bd257de84451fefca1ee78645f
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeVolumeEmission.hlsl"
+            struct Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879
+            {
+            };
+            
+            void SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(float Vector1_84DFA93, Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 IN, out float Out_1)
+            {
+                float _Property_82FD3DA1_Out_0 = Vector1_84DFA93;
+                float _CustomFunction_86048733_LinearEyeDepth_1;
+                CrestNodeLinearEyeDepth_float(_Property_82FD3DA1_Out_0, _CustomFunction_86048733_LinearEyeDepth_1);
+                Out_1 = _CustomFunction_86048733_LinearEyeDepth_1;
+            }
+            
+            // 7bbe7882bf8ca174010307cbe423ec5c
+            #include "CrestNodeFoamBubbles.hlsl"
+            
+            // 4490b480fda761da4b3cee2dc7f71b22
+            #include "CrestNodeVolumeEmission.hlsl"
             
             void Unity_Add_float(float A, float B, out float Out)
             {
@@ -6621,8 +6931,8 @@ Shader "Crest/Framework"
                 SubSurfaceScattering_9 = _CustomFunction_487C31E1_SSS_17;
             }
             
-            // d3bb4f720a39af4b0dbd1cddc779836d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeOceanGlobals.hlsl"
+            // 046ed75edc935d6a8dbbb44a144e7aa7
+            #include "CrestNodeOceanGlobals.hlsl"
             
             struct Bindings_CrestOceanGlobals_d50a85284893ec447a25a093505a2120
             {
@@ -6643,8 +6953,8 @@ Shader "Crest/Framework"
                 MeshScaleLerp_5 = _CustomFunction_9ED6B15_MeshScaleLerp_4;
             }
             
-            // 3ebdc2a39634b58194dbe1a48503ec17
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeApplyCaustics.hlsl"
+            // 247b13b7081d92e401f863e97bcb65e7
+            #include "CrestNodeApplyCaustics.hlsl"
             
             void Unity_Multiply_float(float3 A, float3 B, out float3 Out)
             {
@@ -6664,11 +6974,6 @@ Shader "Crest/Framework"
             void Unity_OneMinus_float3(float3 In, out float3 Out)
             {
                 Out = 1 - In;
-            }
-            
-            void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
-            {
-                Out = lerp(A, B, T);
             }
             
             void Unity_Branch_float3(float Predicate, float3 True, float3 False, out float3 Out)
@@ -6779,6 +7084,11 @@ Shader "Crest/Framework"
                 float3 _Branch_D043DFC1_Out_3;
                 Unity_Branch_float3(_CrestIsUnderwater_6DC72EB9_OutBoolean_1, _CAUSTICS_6D445714_Out_0, _Lerp_E9270AE8_Out_3, _Branch_D043DFC1_Out_3);
                 EmittedLight_1 = _Branch_D043DFC1_Out_3;
+            }
+            
+            void Unity_Reflection_float3(float3 In, float3 Normal, out float3 Out)
+            {
+                Out = reflect(In, Normal);
             }
             
             void Unity_Divide_float(float A, float B, out float Out)
@@ -6892,8 +7202,8 @@ Shader "Crest/Framework"
                 WeightB_4 = _FLOW_CB3A12C4_Out_0;
             }
             
-            // dfcd16226d95b1a66d66c0c937cc47e9
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeFoam.hlsl"
+            // 603c59a0a90b3c4f88a3eef8c21cd986
+            #include "CrestNodeFoam.hlsl"
             
             void Unity_Multiply_float(float A, float B, out float Out)
             {
@@ -7086,7 +7396,8 @@ Shader "Crest/Framework"
                 Bindings_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a _CrestComputeNormal_6DAE4B39;
                 _CrestComputeNormal_6DAE4B39.FaceSign = IN.FaceSign;
                 half3 _CrestComputeNormal_6DAE4B39_Normal_1;
-                SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(_CrestDrivenData_6635D6E9_OceanPosScale0_3, _CrestDrivenData_6635D6E9_OceanPosScale1_4, _CrestDrivenData_6635D6E9_OceanParams0_5, _CrestDrivenData_6635D6E9_OceanParams1_6, _CrestDrivenData_6635D6E9_SliceIndex0_7, TEXTURE2D_ARGS(Texture2D_40AB1455, samplerTexture2D_40AB1455), Texture2D_40AB1455_TexelSize, _Property_A636CE7E_Out_0, _Property_C1531E4C_Out_0, _Property_C7723E93_Out_0, _Property_94C56295_Out_0, _Property_E65AA85_Out_0, _Normalize_3574419A_Out_1, _Property_5A245779_Out_0, _CrestComputeNormal_6DAE4B39, _CrestComputeNormal_6DAE4B39_Normal_1);
+                half _CrestComputeNormal_6DAE4B39_SSS_2;
+                SG_CrestComputeNormal_61b9efc6612ab3b4f84174344af5e12a(_CrestDrivenData_6635D6E9_OceanPosScale0_3, _CrestDrivenData_6635D6E9_OceanPosScale1_4, _CrestDrivenData_6635D6E9_OceanParams0_5, _CrestDrivenData_6635D6E9_OceanParams1_6, _CrestDrivenData_6635D6E9_SliceIndex0_7, TEXTURE2D_ARGS(Texture2D_40AB1455, samplerTexture2D_40AB1455), Texture2D_40AB1455_TexelSize, _Property_A636CE7E_Out_0, _Property_C1531E4C_Out_0, _Property_C7723E93_Out_0, _Property_94C56295_Out_0, _Property_E65AA85_Out_0, _Normalize_3574419A_Out_1, _Property_5A245779_Out_0, _CrestComputeNormal_6DAE4B39, _CrestComputeNormal_6DAE4B39_Normal_1, _CrestComputeNormal_6DAE4B39_SSS_2);
                 Bindings_CrestIsUnderwater_52f7750f15e114937b54a0fd27f0d2f2 _CrestIsUnderwater_5AB8F4C9;
                 _CrestIsUnderwater_5AB8F4C9.FaceSign = IN.FaceSign;
                 float _CrestIsUnderwater_5AB8F4C9_OutBoolean_1;
@@ -7111,7 +7422,6 @@ Shader "Crest/Framework"
                 float _Property_9AD6466F_Out_0 = Vector1_2E8E2C59;
                 float _Property_4D8B881_Out_0 = Vector1_D74C6609;
                 float2 _Property_5A879B44_Out_0 = Vector2_AE8873FA;
-                float _Property_41C453D9_Out_0 = Vector1_255AB964;
                 Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013 _CrestAmbientLight_5A61E85E;
                 half3 _CrestAmbientLight_5A61E85E_Color_1;
                 SG_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013(_CrestAmbientLight_5A61E85E, _CrestAmbientLight_5A61E85E_Color_1);
@@ -7119,7 +7429,7 @@ Shader "Crest/Framework"
                 float3 _Property_2FA7DB0_Out_0 = Vector3_D2C93D25;
                 Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2 _CrestVolumeLighting_5A1A391;
                 half3 _CrestVolumeLighting_5A1A391_VolumeLighting_1;
-                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_479D2E13_Out_0, _Property_F631E4E0_Out_0, _Property_D9155CD7_Out_0, _Property_D8B923AB_Out_0, _Property_F7F4791A_Out_0, _Property_2ABF6C61_Out_0, _Property_22A5FA38_Out_0, _Property_C1E8071C_Out_0, _Property_9AD6466F_Out_0, _Property_4D8B881_Out_0, _Property_5A879B44_Out_0, _Property_41C453D9_Out_0, _Normalize_3574419A_Out_1, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_5A61E85E_Color_1, _Property_13E6764D_Out_0, _Property_2FA7DB0_Out_0, _CrestVolumeLighting_5A1A391, _CrestVolumeLighting_5A1A391_VolumeLighting_1);
+                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_479D2E13_Out_0, _Property_F631E4E0_Out_0, _Property_D9155CD7_Out_0, _Property_D8B923AB_Out_0, _Property_F7F4791A_Out_0, _Property_2ABF6C61_Out_0, _Property_22A5FA38_Out_0, _Property_C1E8071C_Out_0, _Property_9AD6466F_Out_0, _Property_4D8B881_Out_0, _Property_5A879B44_Out_0, _CrestComputeNormal_6DAE4B39_SSS_2, _Normalize_3574419A_Out_1, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_5A61E85E_Color_1, _Property_13E6764D_Out_0, _Property_2FA7DB0_Out_0, _CrestVolumeLighting_5A1A391, _CrestVolumeLighting_5A1A391_VolumeLighting_1);
                 float4 _ScreenPosition_42FE0E3E_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
                 float _Split_66230827_R_1 = IN.ViewSpacePosition[0];
                 float _Split_66230827_G_2 = IN.ViewSpacePosition[1];
@@ -7130,7 +7440,10 @@ Shader "Crest/Framework"
                 float3 _SceneColor_61626E7C_Out_1;
                 Unity_SceneColor_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneColor_61626E7C_Out_1);
                 float _SceneDepth_FD35F7D9_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_FD35F7D9_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_FD35F7D9_Out_1);
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_A5E3BD6;
+                float _CrestLinearEyeDepth_A5E3BD6_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_FD35F7D9_Out_1, _CrestLinearEyeDepth_A5E3BD6, _CrestLinearEyeDepth_A5E3BD6_Out_1);
                 float3 _Property_4DD76B1_Out_0 = Vector3_D2C93D25;
                 float3 _Property_DC1C088D_Out_0 = Vector3_B2D6AD84;
                 float _Property_8BC39E79_Out_0 = Vector1_9AE39B77;
@@ -7162,11 +7475,36 @@ Shader "Crest/Framework"
                 Bindings_CrestEmission_8c56460232fde1e46ae90d905a00f908 _CrestEmission_6580C0F9;
                 _CrestEmission_6580C0F9.FaceSign = IN.FaceSign;
                 float3 _CrestEmission_6580C0F9_EmittedLight_1;
-                SG_CrestEmission_8c56460232fde1e46ae90d905a00f908(_Property_2599690E_Out_0, _Property_A57CAD6E_Out_0, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Normalize_3574419A_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _ScreenPosition_42FE0E3E_Out_0, _Negate_5F3C7D3D_Out_1, _SceneColor_61626E7C_Out_1, _SceneDepth_FD35F7D9_Out_1, _Property_4DD76B1_Out_0, _Property_DC1C088D_Out_0, TEXTURE2D_ARGS(Texture2D_EB8C8549, samplerTexture2D_EB8C8549), Texture2D_EB8C8549_TexelSize, _Property_8BC39E79_Out_0, _Property_683CAF2_Out_0, _Property_B4B35559_Out_0, _Property_E694F888_Out_0, _Property_50A87698_Out_0, TEXTURE2D_ARGS(Texture2D_DA8A756A, samplerTexture2D_DA8A756A), Texture2D_DA8A756A_TexelSize, _Property_8BC9D755_Out_0, _Property_6F95DFBF_Out_0, _CustomFunction_3910AE92_Colour_16, _CrestEmission_6580C0F9, _CrestEmission_6580C0F9_EmittedLight_1);
+                SG_CrestEmission_8c56460232fde1e46ae90d905a00f908(_Property_2599690E_Out_0, _Property_A57CAD6E_Out_0, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Normalize_3574419A_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _ScreenPosition_42FE0E3E_Out_0, _Negate_5F3C7D3D_Out_1, _SceneColor_61626E7C_Out_1, _CrestLinearEyeDepth_A5E3BD6_Out_1, _Property_4DD76B1_Out_0, _Property_DC1C088D_Out_0, TEXTURE2D_ARGS(Texture2D_EB8C8549, samplerTexture2D_EB8C8549), Texture2D_EB8C8549_TexelSize, _Property_8BC39E79_Out_0, _Property_683CAF2_Out_0, _Property_B4B35559_Out_0, _Property_E694F888_Out_0, _Property_50A87698_Out_0, TEXTURE2D_ARGS(Texture2D_DA8A756A, samplerTexture2D_DA8A756A), Texture2D_DA8A756A_TexelSize, _Property_8BC9D755_Out_0, _Property_6F95DFBF_Out_0, _CustomFunction_3910AE92_Colour_16, _CrestEmission_6580C0F9, _CrestEmission_6580C0F9_EmittedLight_1);
                 float3 _Multiply_CFF25F4B_Out_2;
                 Unity_Multiply_float((_CrestFresnel_FD3200EB_LightTransmitted_1.xxx), _CrestEmission_6580C0F9_EmittedLight_1, _Multiply_CFF25F4B_Out_2);
+                float4 _Property_2B229CB_Out_0 = Vector4_2F6E352;
+                float3 _Property_EB21E5D5_Out_0 = Vector3_57B74D6A;
+                float4 _Property_C16A4E4D_Out_0 = Vector4_B3AD63B4;
+                float _Property_496C0D8_Out_0 = Vector1_FA688590;
+                float _Property_D1C2E8AB_Out_0 = Vector1_9835666E;
+                float _Property_62C11254_Out_0 = Vector1_B331E24E;
+                float _Property_5977537D_Out_0 = Vector1_951CF2DF;
+                float4 _Property_A64A7625_Out_0 = Vector4_ADCA8891;
+                float _Property_6BDEE46A_Out_0 = Vector1_2E8E2C59;
+                float _Property_26AD77F8_Out_0 = Vector1_D74C6609;
+                float2 _Property_80C3F22F_Out_0 = Vector2_AE8873FA;
+                float3 _Negate_99287013_Out_1;
+                Unity_Negate_float3(_Normalize_3574419A_Out_1, _Negate_99287013_Out_1);
+                float3 _Reflection_2C6907C_Out_2;
+                Unity_Reflection_float3(_Negate_99287013_Out_1, _CrestComputeNormal_6DAE4B39_Normal_1, _Reflection_2C6907C_Out_2);
+                Bindings_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013 _CrestAmbientLight_744A95D5;
+                half3 _CrestAmbientLight_744A95D5_Color_1;
+                SG_CrestAmbientLight_a6ec89b3ca0ab4e98b300ec3ba0e6013(_CrestAmbientLight_744A95D5, _CrestAmbientLight_744A95D5_Color_1);
+                float3 _Property_FC57CF9F_Out_0 = Vector3_B2D6AD84;
+                float3 _Property_BAEF74C8_Out_0 = Vector3_D2C93D25;
+                Bindings_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2 _CrestVolumeLighting_B895C731;
+                half3 _CrestVolumeLighting_B895C731_VolumeLighting_1;
+                SG_CrestVolumeLighting_e9ed6e11710a50640bb4b811d0fa84f2(_Property_2B229CB_Out_0, _Property_EB21E5D5_Out_0, _Property_C16A4E4D_Out_0, _Property_496C0D8_Out_0, _Property_D1C2E8AB_Out_0, _Property_62C11254_Out_0, _Property_5977537D_Out_0, _Property_A64A7625_Out_0, _Property_6BDEE46A_Out_0, _Property_26AD77F8_Out_0, _Property_80C3F22F_Out_0, _CrestComputeNormal_6DAE4B39_SSS_2, _Reflection_2C6907C_Out_2, IN.AbsoluteWorldSpacePosition, _CrestAmbientLight_744A95D5_Color_1, _Property_FC57CF9F_Out_0, _Property_BAEF74C8_Out_0, _CrestVolumeLighting_B895C731, _CrestVolumeLighting_B895C731_VolumeLighting_1);
+                float3 _Multiply_C794DFA8_Out_2;
+                Unity_Multiply_float((_CrestFresnel_FD3200EB_LightReflected_2.xxx), _CrestVolumeLighting_B895C731_VolumeLighting_1, _Multiply_C794DFA8_Out_2);
                 float3 _Add_906C47A2_Out_2;
-                Unity_Add_float3(_Multiply_CFF25F4B_Out_2, _CrestVolumeLighting_5A1A391_VolumeLighting_1, _Add_906C47A2_Out_2);
+                Unity_Add_float3(_Multiply_CFF25F4B_Out_2, _Multiply_C794DFA8_Out_2, _Add_906C47A2_Out_2);
                 float3 _Branch_A82A52E6_Out_3;
                 Unity_Branch_float3(_CrestIsUnderwater_5AB8F4C9_OutBoolean_1, _Add_906C47A2_Out_2, _Multiply_CFF25F4B_Out_2, _Branch_A82A52E6_Out_3);
                 float _Property_5DA83C2A_Out_0 = Vector1_47308CC2;
@@ -7200,8 +7538,8 @@ Shader "Crest/Framework"
                 Out = OutMinMax.x + (In - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);
             }
             
-            // 134eaf4ca1df8927040c1ff9046ffd1d
-            #include "Assets/Crest/Crest/Shaders/ShadergraphFramework/CrestNodeSampleClipSurfaceData.hlsl"
+            // 473f15c2637ee291e2c6b2371a49ba9a
+            #include "CrestNodeSampleClipSurfaceData.hlsl"
             
             struct Bindings_CrestClipSurface_8c73b4813486448849bd38d01267f186
             {
@@ -7295,9 +7633,16 @@ Shader "Crest/Framework"
                 SG_CrestGeoMorph_9ab91ec3462438049923ca0ff16f68ad(IN.AbsoluteWorldSpacePosition, _CrestDrivenData_A1078169_OceanPosScale0_3, _CrestDrivenData_A1078169_MeshScaleAlpha_1, _CrestDrivenData_A1078169_GeometryGridSize_2, _CrestGeoMorph_8F1A4FF1, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestGeoMorph_8F1A4FF1_LodAlpha_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
-                float _Split_CC063A43_R_1 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[0];
-                float _Split_CC063A43_G_2 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[1];
-                float _Split_CC063A43_B_3 = _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1[2];
+                float _Vector1_EC81C14_Out_0 = 1.0001;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float3 _Lerp_69E3E2CE_Out_3;
+                Unity_Lerp_float3(SHADERGRAPH_OBJECT_POSITION, _CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, (_Vector1_EC81C14_Out_0.xxx), _Lerp_69E3E2CE_Out_3);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                float _Split_CC063A43_R_1 = _Lerp_69E3E2CE_Out_3[0];
+                float _Split_CC063A43_G_2 = _Lerp_69E3E2CE_Out_3[1];
+                float _Split_CC063A43_B_3 = _Lerp_69E3E2CE_Out_3[2];
                 float _Split_CC063A43_A_4 = 0;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -7315,7 +7660,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Add_2D79A354_Out_2;
-                Unity_Add_float3(_CrestGeoMorph_8F1A4FF1_MorphedPositionWS_1, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
+                Unity_Add_float3(_Lerp_69E3E2CE_Out_3, _CrestSampleOceanData_340A6610_Displacement_1, _Add_2D79A354_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float3 _Transform_9C2ACF28_Out_1 = TransformWorldToObject(GetCameraRelativePositionWS(_Add_2D79A354_Out_2.xyz));
@@ -7452,6 +7797,9 @@ Shader "Crest/Framework"
                 half4 _Property_B5E474DF_Out_0 = _ScatterColourBase;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                half4 _Property_5D62FE57_Out_0 = _ScatterColourShadow;
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float4 _Property_B98AE6FA_Out_0 = _ScatterColourShallow;
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
@@ -7524,11 +7872,16 @@ Shader "Crest/Framework"
                 float3 _CrestOceanPixel_51593A7C_Emission_4;
                 float _CrestOceanPixel_51593A7C_Smoothness_5;
                 float _CrestOceanPixel_51593A7C_Specular_6;
-                SG_CrestOceanPixel_6f6706d805d8e8649adddaaa94260269(TEXTURE2D_ARGS(_TextureFoam, sampler_TextureFoam), _TextureFoam_TexelSize, _Vector2_15E252FB_Out_0, _Property_87E9391A_Out_0, _Property_BC30BCB6_Out_0, _Property_5E8CB038_Out_0, _Property_77A524C7_Out_0, _Property_CED296A4_Out_0, _Property_D1CA3C84_Out_0, (_Property_3BAB5FF_Out_0.xyz), _Property_EDC4DC3C_Out_0, _Property_E7925FBA_Out_0, _CrestUnpackData_C3998C1C_PositionXZWSUndisp_2, _CrestUnpackData_C3998C1C_LodAlpha_1, _CrestUnpackData_C3998C1C_OceanDepth_3, _CrestUnpackData_C3998C1C_Foam_4, _CrestUnpackData_C3998C1C_Shadow_5, _CrestUnpackData_C3998C1C_Flow_6, _CrestUnpackData_C3998C1C_SubSurfaceScattering_7, _Property_994CB3A3_Out_0, _Property_7079FD32_Out_0, _Property_FAEF961B_Out_0, _Property_35DA1E70_Out_0, TEXTURE2D_ARGS(_TextureNormals, sampler_TextureNormals), _TextureNormals_TexelSize, _Property_D1430252_Out_0, _Property_B882DB1E_Out_0, _Property_B5E474DF_Out_0, float3 (0, 0, 0), _Property_B98AE6FA_Out_0, _Property_CF7CEF3A_Out_0, _Property_698A3C81_Out_0, _Property_5924F1E9_Out_0, _Property_67308B5F_Out_0, _Property_A723E757_Out_0, _Property_5AD6818A_Out_0, _Property_888FA49_Out_0, _Property_F1315B19_Out_0, _CrestLightData_5AD806DD_Direction_1, _CrestLightData_5AD806DD_Intensity_2, TEXTURE2D_ARGS(_CausticsTexture, sampler_CausticsTexture), _CausticsTexture_TexelSize, _Property_A26763AB_Out_0, _Property_3230CB90_Out_0, _Property_6B2F7D3E_Out_0, _Property_D5C90779_Out_0, _Property_2743B36F_Out_0, TEXTURE2D_ARGS(_CausticsDistortionTexture, sampler_CausticsDistortionTexture), _CausticsDistortionTexture_TexelSize, _Property_61877218_Out_0, _Property_5F1E3794_Out_0, 1.33, 1, _Property_7BD0FFAF_Out_0, _CrestOceanPixel_51593A7C, _CrestOceanPixel_51593A7C_Albedo_2, _CrestOceanPixel_51593A7C_NormalTS_3, _CrestOceanPixel_51593A7C_Emission_4, _CrestOceanPixel_51593A7C_Smoothness_5, _CrestOceanPixel_51593A7C_Specular_6);
+                SG_CrestOceanPixel_6f6706d805d8e8649adddaaa94260269(TEXTURE2D_ARGS(_TextureFoam, sampler_TextureFoam), _TextureFoam_TexelSize, _Vector2_15E252FB_Out_0, _Property_87E9391A_Out_0, _Property_BC30BCB6_Out_0, _Property_5E8CB038_Out_0, _Property_77A524C7_Out_0, _Property_CED296A4_Out_0, _Property_D1CA3C84_Out_0, (_Property_3BAB5FF_Out_0.xyz), _Property_EDC4DC3C_Out_0, _Property_E7925FBA_Out_0, _CrestUnpackData_C3998C1C_PositionXZWSUndisp_2, _CrestUnpackData_C3998C1C_LodAlpha_1, _CrestUnpackData_C3998C1C_OceanDepth_3, _CrestUnpackData_C3998C1C_Foam_4, _CrestUnpackData_C3998C1C_Shadow_5, _CrestUnpackData_C3998C1C_Flow_6, _CrestUnpackData_C3998C1C_SubSurfaceScattering_7, _Property_994CB3A3_Out_0, _Property_7079FD32_Out_0, _Property_FAEF961B_Out_0, _Property_35DA1E70_Out_0, TEXTURE2D_ARGS(_TextureNormals, sampler_TextureNormals), _TextureNormals_TexelSize, _Property_D1430252_Out_0, _Property_B882DB1E_Out_0, _Property_B5E474DF_Out_0, (_Property_5D62FE57_Out_0.xyz), _Property_B98AE6FA_Out_0, _Property_CF7CEF3A_Out_0, _Property_698A3C81_Out_0, _Property_5924F1E9_Out_0, _Property_67308B5F_Out_0, _Property_A723E757_Out_0, _Property_5AD6818A_Out_0, _Property_888FA49_Out_0, _Property_F1315B19_Out_0, _CrestLightData_5AD806DD_Direction_1, _CrestLightData_5AD806DD_Intensity_2, TEXTURE2D_ARGS(_CausticsTexture, sampler_CausticsTexture), _CausticsTexture_TexelSize, _Property_A26763AB_Out_0, _Property_3230CB90_Out_0, _Property_6B2F7D3E_Out_0, _Property_D5C90779_Out_0, _Property_2743B36F_Out_0, TEXTURE2D_ARGS(_CausticsDistortionTexture, sampler_CausticsDistortionTexture), _CausticsDistortionTexture_TexelSize, _Property_61877218_Out_0, _Property_5F1E3794_Out_0, 1.33, 1, _Property_7BD0FFAF_Out_0, _CrestOceanPixel_51593A7C, _CrestOceanPixel_51593A7C_Albedo_2, _CrestOceanPixel_51593A7C_NormalTS_3, _CrestOceanPixel_51593A7C_Emission_4, _CrestOceanPixel_51593A7C_Smoothness_5, _CrestOceanPixel_51593A7C_Specular_6);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _SceneDepth_E2A24470_Out_1;
-                Unity_SceneDepth_Eye_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                Unity_SceneDepth_Raw_float(float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0), _SceneDepth_E2A24470_Out_1);
+                #endif
+                #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
+                Bindings_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879 _CrestLinearEyeDepth_FF188689;
+                float _CrestLinearEyeDepth_FF188689_Out_1;
+                SG_CrestLinearEyeDepth_bc81c89d490e3774495d00a4dfaf2879(_SceneDepth_E2A24470_Out_1, _CrestLinearEyeDepth_FF188689, _CrestLinearEyeDepth_FF188689_Out_1);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Split_68C2565_R_1 = IN.ViewSpacePosition[0];
@@ -7542,7 +7895,7 @@ Shader "Crest/Framework"
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Subtract_B338E0_Out_2;
-                Unity_Subtract_float(_SceneDepth_E2A24470_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
+                Unity_Subtract_float(_CrestLinearEyeDepth_FF188689_Out_1, _Negate_847D9376_Out_1, _Subtract_B338E0_Out_2);
                 #endif
                 #if defined(KEYWORD_PERMUTATION_0) || defined(KEYWORD_PERMUTATION_1) || defined(KEYWORD_PERMUTATION_2) || defined(KEYWORD_PERMUTATION_3) || defined(KEYWORD_PERMUTATION_4) || defined(KEYWORD_PERMUTATION_5) || defined(KEYWORD_PERMUTATION_6) || defined(KEYWORD_PERMUTATION_7)
                 float _Remap_6CD3C222_Out_3;

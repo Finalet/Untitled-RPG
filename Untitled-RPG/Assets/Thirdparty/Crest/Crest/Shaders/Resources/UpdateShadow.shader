@@ -22,6 +22,15 @@ Shader "Hidden/Crest/Simulation/Update Shadow"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 			#include "../OceanConstants.hlsl"
 			#include "../OceanGlobals.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
+			#include "../OceanInputsDriven.hlsl"
+			#include "../OceanHelpersNew.hlsl"
+			// noise functions used for jitter
+			#include "../GPUNoise/GPUNoise.hlsl"
+
+			StructuredBuffer<CascadeParams> _CascadeDataSrc;
 
 			CBUFFER_START(CrestPerMaterial)
 			// Settings._jitterDiameterSoft, Settings._jitterDiameterHard, Settings._currentFrameWeightSoft, Settings._currentFrameWeightHard
@@ -34,26 +43,45 @@ Shader "Hidden/Crest/Simulation/Update Shadow"
 			float4x4 _MainCameraProjectionMatrix;
 			CBUFFER_END
 
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
-			#include "../OceanInputsDriven.hlsl"
-			#include "../OceanLODData.hlsl"
-			#include "../OceanHelpersNew.hlsl"
-			// noise functions used for jitter
-			#include "../GPUNoise/GPUNoise.hlsl"
-
 			struct Attributes
 			{
-				real3 positionOS : POSITION;
+				float3 positionOS : POSITION;
 			};
 
 			struct Varyings
 			{
-				real4 positionCS : SV_POSITION;
-				real4 _MainCameraCoords : TEXCOORD0;
-				real3 _WorldPos : TEXCOORD1;
+				float4 positionCS : SV_POSITION;
+				float4 _MainCameraCoords : TEXCOORD0;
+				float3 _WorldPos : TEXCOORD1;
 			};
+
+			half ComputeShadow
+			(
+				in const float3 i_positionWS,
+				in const float i_jitterDiameter
+			)
+			{
+				half shadows = 1.0;
+				float3 positionWS = i_positionWS;
+
+				if (i_jitterDiameter > 0.0)
+				{
+					// Add jitter.
+					positionWS.xz += i_jitterDiameter * (hash33(uint3(abs(positionWS.xz * 10.0), _Time.y * 120.0)) - 0.5).xy;
+				}
+
+				// Fetch shadow coordinates for cascade.
+				float4 shadowCoords = TransformWorldToShadowCoord(positionWS);
+
+				// Sample shadow map from main light.
+				shadows = SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, shadowCoords.xyz);
+				// Apply shadow strength from main light.
+				shadows = LerpWhiteTo(shadows, GetMainLightShadowStrength());
+				// There will be no shadow data available beyond shadow far.
+				shadows = BEYOND_SHADOW_FAR(shadowCoords) ? 1.0h : shadows;
+
+				return shadows;
+			}
 
 			Varyings Vert(Attributes input)
 			{
@@ -72,8 +100,9 @@ Shader "Hidden/Crest/Simulation/Update Shadow"
 
 			real2 Frag(Varyings input) : SV_Target
 			{
+				const CascadeParams cascadeDataSrc = _CascadeDataSrc[_LD_SliceIndex_Source];
 				half2 shadow = 0.0;
-				const half r_max = 0.5 - _LD_Params_Source[_LD_SliceIndex_Source].w;
+				const half r_max = 0.5 - cascadeDataSrc._oneOverTextureRes;
 
 				float3 positionWS = input._WorldPos.xyz;
 
@@ -84,7 +113,7 @@ Shader "Hidden/Crest/Simulation/Update Shadow"
 				}
 
 				// Shadow from last frame - manually implement black border
-				float3 uv_source = WorldToUV_Source(positionWS.xz, _LD_SliceIndex_Source);
+				const float3 uv_source = WorldToUV(positionWS.xz, cascadeDataSrc, _LD_SliceIndex_Source);
 				half2 r = abs(uv_source.xy - 0.5);
 				if (max(r.x, r.y) <= r_max)
 				{
@@ -92,7 +121,7 @@ Shader "Hidden/Crest/Simulation/Update Shadow"
 				}
 				else if (_LD_SliceIndex_Source + 1.0 < depth)
 				{
-					float3 uv_source_nextlod = WorldToUV_Source(positionWS.xz, _LD_SliceIndex_Source + 1.0);
+					const float3 uv_source_nextlod = WorldToUV(positionWS.xz, _CascadeDataSrc[_LD_SliceIndex_Source + 1], _LD_SliceIndex_Source + 1);
 					half2 r2 = abs(uv_source_nextlod.xy - 0.5);
 					if (max(r2.x, r2.y) <= r_max)
 					{
@@ -105,28 +134,21 @@ Shader "Hidden/Crest/Simulation/Update Shadow"
 				float3 projected = input._MainCameraCoords.xyz / input._MainCameraCoords.w;
 				if (projected.z < 1.0 && projected.z > 0.0 && abs(projected.x) < 1.0 && abs(projected.y) < 1.0)
 				{
-					float3 positionWS_0 = positionWS, positionWS_1 = positionWS;
-					if (_JitterDiameters_CurrentFrameWeights[0] > 0.0)
-					{
-						positionWS_0.xz += _JitterDiameters_CurrentFrameWeights[0] * (hash33(uint3(abs(positionWS.xz * 10.0), _Time.y*120.0)) - 0.5).xy;
-						positionWS_1.xz += _JitterDiameters_CurrentFrameWeights[1] * (hash33(uint3(abs(positionWS.xz * 10.0), _Time.y*120.0)) - 0.5).xy;
-					}
-
-					//Fetch shadow coordinates for cascade.
-					float4 coords_0 = TransformWorldToShadowCoord(positionWS_0);
-					float4 coords_1 = TransformWorldToShadowCoord(positionWS_1);
-
 					half2 shadowThisFrame;
 
-					shadowThisFrame[0] = SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, coords_0.xyz);
-					shadowThisFrame[1] = SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, coords_1.xyz);
+					// Add soft shadowing data.
+					shadowThisFrame[CREST_SHADOW_INDEX_SOFT] = ComputeShadow
+					(
+						positionWS,
+						_JitterDiameters_CurrentFrameWeights[CREST_SHADOW_INDEX_SOFT]
+					);
 
-					half shadowStrength = GetMainLightShadowStrength();
-					shadowThisFrame[0] = LerpWhiteTo(shadowThisFrame[0], shadowStrength);
-					shadowThisFrame[1] = LerpWhiteTo(shadowThisFrame[1], shadowStrength);
-
-					shadowThisFrame[0] = BEYOND_SHADOW_FAR(coords_0) ? 1.0h : shadowThisFrame[0];
-					shadowThisFrame[1] = BEYOND_SHADOW_FAR(coords_1) ? 1.0h : shadowThisFrame[1];
+					// Add hard shadowing data.
+					shadowThisFrame[CREST_SHADOW_INDEX_HARD] = ComputeShadow
+					(
+						positionWS,
+						_JitterDiameters_CurrentFrameWeights[CREST_SHADOW_INDEX_HARD]
+					);
 
 					shadowThisFrame = (half2)1.0 - saturate(shadowThisFrame);
 

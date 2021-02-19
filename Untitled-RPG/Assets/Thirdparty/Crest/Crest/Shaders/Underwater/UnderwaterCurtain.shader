@@ -34,12 +34,14 @@ Shader "Crest/Underwater Curtain"
 
 			#pragma multi_compile_instancing
 
-			#pragma shader_feature _SUBSURFACESCATTERING_ON
-			#pragma shader_feature _SUBSURFACESHALLOWCOLOUR_ON
-			#pragma shader_feature _TRANSPARENCY_ON
-			#pragma shader_feature _CAUSTICS_ON
-			#pragma shader_feature _SHADOWS_ON
-			#pragma shader_feature _COMPILESHADERWITHDEBUGINFO_ON
+			// Use multi_compile because these keywords are copied over from the ocean material. With shader_feature,
+			// the keywords would be stripped from builds. Unused shader variants are stripped using a build processor.
+			#pragma multi_compile_local __ _SUBSURFACESCATTERING_ON
+			#pragma multi_compile_local __ _SUBSURFACESHALLOWCOLOUR_ON
+			#pragma multi_compile_local __ _TRANSPARENCY_ON
+			#pragma multi_compile_local __ _CAUSTICS_ON
+			#pragma multi_compile_local __ _SHADOWS_ON
+			#pragma multi_compile_local __ _COMPILESHADERWITHDEBUGINFO_ON
 
 			#if _COMPILESHADERWITHDEBUGINFO_ON
 			#pragma enable_d3d11_debug_symbols
@@ -48,17 +50,17 @@ Shader "Crest/Underwater Curtain"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
+			// @Hack: Work around to unity_CameraToWorld._13_23_33 not being set correctly in URP 7.4+
+			float3 _CameraForward;
+
 			#include "../OceanGlobals.hlsl"
 			#include "../OceanInputsDriven.hlsl"
-			#include "../OceanInput.hlsl"
-
-			#include "../OceanLODData.hlsl"
+			#include "../OceanShaderData.hlsl"
 			#include "../OceanHelpersNew.hlsl"
+			#include "../OceanShaderHelpers.hlsl"
 			#include "UnderwaterShared.hlsl"
 
 			#include "../OceanEmission.hlsl"
-
-			float3 _CameraForward;
 
 			#define MAX_OFFSET 5.0
 
@@ -102,7 +104,8 @@ Shader "Crest/Underwater Curtain"
 				// view coordinate frame for camera
 				const float3 right   = unity_CameraToWorld._11_21_31;
 				const float3 up      = unity_CameraToWorld._12_22_32;
-				const float3 forward = unity_CameraToWorld._13_23_33;
+				// @Hack: Work around to unity_CameraToWorld._13_23_33 not being set correctly in URP 7.4+
+				const float3 forward = _CameraForward;
 
 				const float3 nearPlaneCenter = _WorldSpaceCameraPos + forward * _ProjectionParams.y * 1.001;
 				// Spread verts across the near plane.
@@ -121,7 +124,7 @@ Shader "Crest/Underwater Curtain"
 					if (abs(forward.y) < CREST_MAX_UPDOWN_AMOUNT)
 					{
 						// move vert in the up direction, but only to an extent, otherwise numerical issues can cause weirdness
-						o.positionWS += min(IntersectRayWithWaterSurface(o.positionWS, up), MAX_OFFSET) * up;
+						o.positionWS += min(IntersectRayWithWaterSurface(o.positionWS, up, _CrestCascadeData[_LD_SliceIndex]), MAX_OFFSET) * up;
 
 						// Move the geometry towards the horizon. As noted above, the skirt will be stomped by the ocean
 						// surface render. If we project a bit towards the horizon to make a bit of overlap then we can reduce
@@ -185,22 +188,23 @@ Shader "Crest/Underwater Curtain"
 				const float sceneZ01 = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, UnityStereoTransformScreenSpaceTex(uvDepth)).x;
 				const float sceneZ = LinearEyeDepth(sceneZ01, _ZBufferParams);
 
+				const CascadeParams cascadeData0 = _CrestCascadeData[_LD_SliceIndex];
+				const CascadeParams cascadeData1 = _CrestCascadeData[_LD_SliceIndex + 1];
+
 				const Light lightMain = GetMainLight();
 				const real3 lightDir = lightMain.direction;
 				const real3 lightCol = lightMain.color;
 				const half3 n_pixel = 0.0;
 				const half3 bubbleCol = 0.0;
 
-				float3 dummy = 0.0;
-				half sss = 0.0;
-				const float3 uv_slice = WorldToUV(_WorldSpaceCameraPos.xz);
-				SampleDisplacements(_LD_TexArray_AnimatedWaves, uv_slice, 1.0, dummy, sss);
-
-				// depth and shadow are computed in ScatterColour when underwater==true, using the LOD1 texture.
+				// Depth and shadow are computed in ScatterColour when underwater==true, using the LOD1 texture. SSS is ommitted for now for perf reasons.
 				const float depth = 0.0;
 				const half shadow = 1.0;
+				const half sss = 0.0;
 
-				const half3 scatterCol = ScatterColour(depth, _WorldSpaceCameraPos, lightDir, view, shadow, true, true, lightCol, sss);
+				const float meshScaleLerp = _CrestPerCascadeInstanceData[_LD_SliceIndex]._meshScaleLerp;
+				const float baseCascadeScale = _CrestCascadeData[0]._scale;
+				const half3 scatterCol = ScatterColour(depth, _WorldSpaceCameraPos, lightDir, view, shadow, true, true, lightCol, sss, meshScaleLerp, baseCascadeScale, cascadeData0);
 
 				// Could have possibly used ComputeNonStereoScreenPos() instead when calculating grab pos and then not
 				// have needed to do this, but that function doesn't seem to exist in URP?
@@ -213,7 +217,7 @@ Shader "Crest/Underwater Curtain"
 				{
 					// flatten view in the camera direction to calculate the scenePos
 					float3 scenePos = (((rawView) / dot(rawView, _CameraForward)) * sceneZ) + _WorldSpaceCameraPos;
-					ApplyCaustics(scenePos, lightCol, lightDir, sceneZ, _Normals, true, sceneColour);
+					ApplyCaustics(scenePos, lightCol, lightDir, sceneZ, _Normals, true, sceneColour, cascadeData0, cascadeData1);
 				}
 #endif // _CAUSTICS_ON
 

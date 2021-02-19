@@ -52,7 +52,29 @@ namespace Crest
             var cmd = OceanRenderer.Instance._lodDataShadow.BufCopyShadowMap;
             if (cmd == null) return;
 
+            var camera = renderingData.cameraData.camera;
+
+            // Target is not multi-eye so stop mult-eye rendering for this command buffer. Breaks registered shadow
+            // inputs without this.
+            if (camera.stereoEnabled)
+            {
+                context.StopMultiEye(camera);
+            }
+
             context.ExecuteCommandBuffer(cmd);
+
+            if (camera.stereoEnabled)
+            {
+                context.StartMultiEye(camera);
+            }
+            else
+            {
+                // Restore matrices otherwise remaining render will have incorrect matrices. Each pass is responsible
+                // for restoring matrices if required.
+                cmd.Clear();
+                cmd.SetViewProjectionMatrices(camera.worldToCameraMatrix, camera.projectionMatrix);
+                context.ExecuteCommandBuffer(cmd);
+            }
         }
     }
 }

@@ -2,10 +2,11 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanConstants.hlsl"
 #include "../OceanGlobals.hlsl"
-#include "../OceanHelpersNew.hlsl"
 #include "../OceanInputsDriven.hlsl"
+#include "../OceanHelpersNew.hlsl"
 
 void CrestComputeSamplingData_half
 (
@@ -19,14 +20,14 @@ void CrestComputeSamplingData_half
 	out float slice1
 )
 {
-	PosToSliceIndices(worldXZ, 0.0, _LD_Pos_Scale[0].z, _LD_Pos_Scale[0].z, slice0, slice1, lodAlpha);
-	
+	PosToSliceIndices(worldXZ, 0.0, _CrestCascadeData[0]._scale, slice0, slice1, lodAlpha);
+
 	uint si0 = (uint)slice0;
 	uint si1 = si0 + 1;
 
-	o_oceanPosScale0 = _LD_Pos_Scale[si0];
-	o_oceanPosScale1 = _LD_Pos_Scale[si1];
+	o_oceanPosScale0 = float3(_CrestCascadeData[si0]._posSnapped, _CrestCascadeData[si0]._scale);
+	o_oceanPosScale1 = float3(_CrestCascadeData[si1]._posSnapped, _CrestCascadeData[si1]._scale);
 
-	o_oceanParams0 = _LD_Params[si0];
-	o_oceanParams1 = _LD_Params[si1];
+	o_oceanParams0 = float4(_CrestCascadeData[si0]._texelWidth, _CrestCascadeData[si0]._textureRes, _CrestCascadeData[si0]._weight, _CrestCascadeData[si0]._oneOverTextureRes);
+	o_oceanParams1 = float4(_CrestCascadeData[si1]._texelWidth, _CrestCascadeData[si1]._textureRes, _CrestCascadeData[si1]._weight, _CrestCascadeData[si1]._oneOverTextureRes);
 }

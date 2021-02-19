@@ -44,7 +44,6 @@ public static class CalculateDamage
     }
 
     static bool isCrit(float critChance) {
-        Debug.Log(critChance);
         if (Random.value < critChance) {
             return true;
         } else {

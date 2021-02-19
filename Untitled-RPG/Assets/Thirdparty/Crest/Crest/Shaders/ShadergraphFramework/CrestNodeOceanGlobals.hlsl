@@ -2,6 +2,7 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+#include "OceanGraphConstants.hlsl"
 #include "../OceanGlobals.hlsl"
 
 void CrestNodeOceanGlobals_float

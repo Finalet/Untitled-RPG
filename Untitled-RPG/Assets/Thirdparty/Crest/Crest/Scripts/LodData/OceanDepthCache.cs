@@ -2,14 +2,8 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
-// Three different versions of this:
-// - Built-in pipeline - PopulateCache() called from Start()
-// - URP/LWRP - RenderSingleCamera() API is used. Requires a RenderContext, so happens in BeginCameraRendering
-// - HDRP - No RenderSingleCamera API it seems, and I dont think calling PopulateCache() on Start() worked, so PopulateCache() called from Update()
-
 using System;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 #if UNITY_EDITOR
@@ -23,6 +17,7 @@ namespace Crest
     /// This should be used for static geometry, dynamic objects should be tagged with the Render Ocean Depth component.
     /// </summary>
     [ExecuteAlways]
+    [HelpURL("https://github.com/wave-harmonic/crest/blob/master/USERGUIDE.md#shorelines-and-shallow-water")]
     public partial class OceanDepthCache : MonoBehaviour
     {
         public enum OceanDepthCacheType
@@ -33,7 +28,7 @@ namespace Crest
 
         public enum OceanDepthCacheRefreshMode
         {
-            OnFirstRender,
+            OnStart,
             OnDemand,
         }
 
@@ -42,22 +37,14 @@ namespace Crest
         public OceanDepthCacheType Type => _type;
 
         [Tooltip("Ignored if baked. On Start = cache will populate in Start(), On Demand = call PopulateCache() manually via scripting."), SerializeField]
-        OceanDepthCacheRefreshMode _refreshMode = OceanDepthCacheRefreshMode.OnFirstRender;
+        OceanDepthCacheRefreshMode _refreshMode = OceanDepthCacheRefreshMode.OnStart;
         public OceanDepthCacheRefreshMode RefreshMode => _refreshMode;
 
-        [Tooltip("In edit mode update every frame so that scene changes take effect immediately. Increases power usage in edit mode."), SerializeField]
-#pragma warning disable 414
-        bool _refreshEveryFrameInEditMode = true;
-#pragma warning restore 414
+        [Tooltip("The layers to render into the depth cache.")]
+        public string[] _layerNames = new string[0];
 
-        [Tooltip("Hides the depth cache camera, for cleanliness. Disable to make it visible in the Hierarchy."), SerializeField]
-        bool _hideDepthCacheCam = true;
-
-        [Tooltip("The layers to render into the depth cache."), SerializeField]
-        string[] _layerNames = new string[0];
-
-        [Tooltip("The resolution of the cached depth - lower will be more efficient."), SerializeField]
-        int _resolution = 512;
+        [Tooltip("The resolution of the cached depth - lower will be more efficient.")]
+        public int _resolution = 512;
 
         // A big hill will still want to write its height into the depth texture
         [Tooltip("The 'near plane' for the depth cache camera (top down)."), SerializeField]
@@ -67,6 +54,9 @@ namespace Crest
 #pragma warning disable 414
         bool _forceAlwaysUpdateDebug = false;
 #pragma warning restore 414
+
+        [Tooltip("Hides the depth cache camera, for cleanliness. Disable to make it visible in the Hierarchy."), SerializeField]
+        bool _hideDepthCacheCam = true;
 
         [Tooltip("Baked depth cache. Baking button available in play mode."), SerializeField]
 #pragma warning disable 649
@@ -84,6 +74,7 @@ namespace Crest
 
         GameObject _drawCacheQuad;
         Camera _camDepthCache;
+        Material _copyDepthMaterial;
 
         void Start()
         {
@@ -104,19 +95,21 @@ namespace Crest
             {
                 InitCacheQuad();
             }
-        }
-
-        private void OnEnable()
-        {
-            if (_type == OceanDepthCacheType.Realtime && _refreshMode == OceanDepthCacheRefreshMode.OnFirstRender)
+            else if (_type == OceanDepthCacheType.Realtime && _refreshMode == OceanDepthCacheRefreshMode.OnStart)
             {
-                RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
+                PopulateCache();
             }
         }
-        private void OnDisable()
+
+#if UNITY_EDITOR
+        void Update()
         {
-            RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
+            if (_forceAlwaysUpdateDebug)
+            {
+                PopulateCache();
+            }
         }
+#endif
 
         RenderTexture MakeRT(bool depthStencilTarget)
         {
@@ -168,7 +161,8 @@ namespace Crest
                     if (layerIdx == -1)
                     {
                         Debug.LogError("OceanDepthCache: Invalid layer specified: \"" + layer +
-                        "\". Does this layer need to be added to the project (Edit/Project Settings/Tags and Layers)? Click this message to highlight the cache in question.", this);
+                            "\". Please add this layer to the project by putting the name in an empty layer slot in Edit/Project Settings/Tags and Layers. Click this message to highlight the cache in question.", this);
+
                         errorShown = true;
                     }
                     else
@@ -205,6 +199,7 @@ namespace Crest
                 // Stops behaviour from changing in VR. I tried disabling XR before/after camera render but it makes the editor
                 // go bonkers with split windows.
                 _camDepthCache.cameraType = CameraType.Reflection;
+                // I'd prefer to destroy the camera object, but I found sometimes (on first start of editor) it will fail to render.
                 _camDepthCache.gameObject.SetActive(false);
 
                 var additionalCameraData = _camDepthCache.gameObject.AddComponent<UniversalAdditionalCameraData>();
@@ -261,61 +256,49 @@ namespace Crest
             qr.enabled = false;
         }
 
-        // We populate the cache here because we need a ScriptableRenderContext in order to populate the cache. Pain in the neck!
-        public void BeginCameraRendering(ScriptableRenderContext context, Camera camera)
+        public void PopulateCache()
         {
-            // BeginCameraRendering is called outside of this object's lifetime so we need to guard here.
-            if (this == null)
-            {
-                RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
-                return;
-            }
-
-            if (_type == OceanDepthCacheType.Baked)
-            {
-                RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
-                return;
-            }
-
             // Make sure we have required objects
             if (!InitObjects())
             {
-                enabled = false;
-                RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
                 return;
             }
 
-            // Render scene, saving depths in depth buffer
-            UnityEngine.Rendering.Universal.UniversalRenderPipeline.RenderSingleCamera(context, _camDepthCache);
+            // Render scene, saving depths in depth buffer.
+            _camDepthCache.Render();
 
-            Material copyDepthMaterial = new Material(Shader.Find("Crest/Copy Depth Buffer Into Cache"));
+            if (_copyDepthMaterial == null)
+            {
+                _copyDepthMaterial = new Material(Shader.Find("Crest/Copy Depth Buffer Into Cache"));
+            }
 
-            copyDepthMaterial.SetVector("_OceanCenterPosWorld", OceanRenderer.Instance.Root.position);
+            // Shader needs sea level to determine water depth. Ocean instance might not be available in prefabs.
+            var centerPoint = Vector3.zero;
+            centerPoint.y = OceanRenderer.Instance != null
+                ? OceanRenderer.Instance.Root.position.y : transform.position.y;
 
-            copyDepthMaterial.SetTexture("_CamDepthBuffer", _camDepthCache.targetTexture);
+            _copyDepthMaterial.SetVector("_OceanCenterPosWorld", centerPoint);
+
+            _copyDepthMaterial.SetTexture("_CamDepthBuffer", _camDepthCache.targetTexture);
 
             // Zbuffer params
             //float4 _ZBufferParams;            // x: 1-far/near,     y: far/near, z: x/far,     w: y/far
             float near = _camDepthCache.nearClipPlane, far = _camDepthCache.farClipPlane;
-            copyDepthMaterial.SetVector("_CustomZBufferParams", new Vector4(1f - far / near, far / near, (1f - far / near) / far, (far / near) / far));
+            _copyDepthMaterial.SetVector("_CustomZBufferParams", new Vector4(1f - far / near, far / near, (1f - far / near) / far, (far / near) / far));
 
             // Altitudes for near and far planes
             float ymax = _camDepthCache.transform.position.y - near;
             float ymin = ymax - far;
-            copyDepthMaterial.SetVector("_HeightNearHeightFar", new Vector2(ymax, ymin));
+            _copyDepthMaterial.SetVector("_HeightNearHeightFar", new Vector2(ymax, ymin));
 
             // Copy from depth buffer into the cache
-            Graphics.Blit(null, _cacheTexture, copyDepthMaterial);
+            Graphics.Blit(null, _cacheTexture, _copyDepthMaterial);
 
-            var leaveEnabled = _forceAlwaysUpdateDebug
-#if UNITY_EDITOR
-                || (_refreshEveryFrameInEditMode && !EditorApplication.isPlaying)
-#endif
-                ;
+            var leaveEnabled = _forceAlwaysUpdateDebug;
+
             if (!leaveEnabled)
             {
                 _camDepthCache.targetTexture = null;
-                RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
 
 #if UNITY_EDITOR
                 if (EditorApplication.isPlaying)
@@ -325,13 +308,6 @@ namespace Crest
                     enabled = false;
                 }
             }
-        }
-
-        public void PopulateCache()
-        {
-            // Register for render callback which will trigger population
-            RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
-            RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
         }
 
 #if UNITY_EDITOR
@@ -401,12 +377,12 @@ namespace Crest
             var isBakeable = cacheType == OceanDepthCache.OceanDepthCacheType.Realtime &&
                 (!isOnDemand || dc.CacheTexture != null);
 
-            if (playing && isOnDemand && GUILayout.Button("Populate cache"))
+            if ((!playing || isOnDemand) && dc.Type != OceanDepthCache.OceanDepthCacheType.Baked && GUILayout.Button("Populate cache"))
             {
                 dc.PopulateCache();
             }
 
-            if (playing && isBakeable && GUILayout.Button("Save cache to file"))
+            if (isBakeable && GUILayout.Button("Save cache to file"))
             {
                 var rt = dc.CacheTexture;
                 RenderTexture.active = rt;
@@ -498,7 +474,7 @@ namespace Crest
                     {
                         showMessage
                         (
-                            $"Invalid layer specified for objects/geometry providing the ocean depth: <i>{layerName}</i>. Does this layer need to be added to the project <i>Edit/Project Settings/Tags and Layers</i>?",
+                            $"Invalid layer specified for objects/geometry providing the ocean depth: <i>{layerName}</i>. Please add this layer to the project by putting the name in an empty layer slot in <i>Edit/Project Settings/Tags and Layers</i>?",
                             ValidatedHelper.MessageType.Error, this
                         );
 

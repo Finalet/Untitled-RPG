@@ -3,9 +3,9 @@
 // Copyright 2020 Wave Harmonic Ltd
 
 #if _PROCEDURALSKY_ON
-half3 SkyProceduralDP(half3 refl, half3 lightDir)
+half3 SkyProceduralDP(in const half3 i_refl, in const half3 i_lightDir)
 {
-	half dp = dot(refl, lightDir);
+	half dp = dot(i_refl, i_lightDir);
 
 	if (dp > _SkyDirectionality)
 	{
@@ -44,7 +44,7 @@ float CalculateFresnelReflectionCoefficient(float cosTheta)
 void ApplyReflectionSky(in const half3 i_view, in const half3 i_n_pixel, in const half3 i_lightDir, in const half i_shadow, in const half4 i_screenPos, in const float i_pixelZ, in const half i_weight, inout half3 io_col)
 {
 	half3 skyColour;
-	
+
 	// Reflection
 	half3 refl = reflect(-i_view, i_n_pixel);
 	// Don't reflect below horizon
@@ -80,16 +80,17 @@ void ApplyReflectionSky(in const half3 i_view, in const half3 i_n_pixel, in cons
 #endif
 
 	// Specular from sun light
-	
+
 	// Surface smoothness
 	float smoothness = _Smoothness;
 #if _VARYSMOOTHNESSOVERDISTANCE_ON
 	smoothness = lerp(smoothness, _SmoothnessFar, pow(saturate(i_pixelZ / _SmoothnessFarDistance), _SmoothnessPower));
 #endif
-	
+
+	half alpha = 1.0;
 	BRDFData brdfData;
 	// TODO pull in code for specular highlight
-	InitializeBRDFData(0.0, 0.0, 1.0, smoothness, 1.0, brdfData);
+	InitializeBRDFData(0.0, 0.0, 1.0, smoothness, alpha, brdfData);
 	const Light mainLight = GetMainLight();
 	// Multiply Specular here because it the BRDF doesn't seem to use it..
 	skyColour += i_shadow * _LightIntensityMultiplier * LightingPhysicallyBased(brdfData, mainLight, i_n_pixel, i_view);
