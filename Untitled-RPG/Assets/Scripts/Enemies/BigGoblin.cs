@@ -23,6 +23,9 @@ public class BigGoblin : Enemy
 
     protected override void Update()
     {   
+        if (PlayerControlls.instance == null)
+            return;
+            
         playerVelocity = PlayerControlls.instance.rb.velocity;
 
         if (distanceToPlayer >= 10)

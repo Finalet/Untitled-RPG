@@ -243,10 +243,12 @@ public abstract class Enemy : MonoBehaviour
         float timeStarted = Time.realtimeSinceStartup;
         float time = isCrit ? 0.4f : 0.12f;
         Time.timeScale = 0.3f;
+        Time.fixedDeltaTime = 0.006f;
         while(Time.realtimeSinceStartup - timeStarted < time) {
             yield return null;
         }
         Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.02f;
     }
     
     protected IEnumerator KnockedDown () {
