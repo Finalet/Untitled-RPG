@@ -23,6 +23,9 @@ public class FirewallWall : MonoBehaviour
     }
 
     void Update() {
+        if (PeaceCanvas.instance.isGamePaused)
+            return;
+
         if (GetComponent<BoxCollider>().size.x <= 10.5f) {
             GetComponent<BoxCollider>().center += Vector3.right * Time.deltaTime*9f;
             GetComponent<BoxCollider>().size += Vector3.right * Time.deltaTime*18f;

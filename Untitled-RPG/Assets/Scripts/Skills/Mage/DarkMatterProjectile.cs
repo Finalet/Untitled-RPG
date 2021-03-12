@@ -31,6 +31,9 @@ public class DarkMatterProjectile : MonoBehaviour
     }
 
     void Update() {
+        if (PeaceCanvas.instance.isGamePaused)
+            return;
+
         if (doNotDestroy)
             return;
 

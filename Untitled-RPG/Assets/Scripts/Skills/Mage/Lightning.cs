@@ -29,6 +29,9 @@ public class Lightning : Skill
     }
     
     protected override void Update() {
+        if (PeaceCanvas.instance.isGamePaused)
+            return;
+
         if (coolDownTimer >= 0) {
             coolDownTimer -= Time.deltaTime;
             isCoolingDown = true;

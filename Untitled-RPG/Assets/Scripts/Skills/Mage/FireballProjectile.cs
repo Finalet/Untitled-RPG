@@ -35,6 +35,9 @@ public class FireballProjectile : MonoBehaviour
     }
 
     void Update() {
+        if (PeaceCanvas.instance.isGamePaused)
+            return;
+
         if (doNotDestroy)
             return;
 

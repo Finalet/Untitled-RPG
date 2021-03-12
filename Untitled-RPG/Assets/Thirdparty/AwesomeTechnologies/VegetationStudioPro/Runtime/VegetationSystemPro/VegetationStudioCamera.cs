@@ -223,7 +223,6 @@ namespace AwesomeTechnologies.VegetationSystem
 
             if (SelectedCamera == null)
             {
-                Debug.Log("no camera");
                 return false;
             }
 

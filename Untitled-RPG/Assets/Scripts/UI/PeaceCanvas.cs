@@ -13,6 +13,7 @@ public class PeaceCanvas : MonoBehaviour
     public static PeaceCanvas instance;  
 
     [Space]
+    public bool isGamePaused;
     public bool anyPanelOpen;
 
     [Space]
@@ -25,6 +26,7 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject SkillsPanel;
     public GameObject Inventory;
     public GameObject EquipmentSlots;
+    public GameObject PauseMenu;
     public TextMeshProUGUI statsLeftText;
     public TextMeshProUGUI statsRightText;
 
@@ -71,11 +73,7 @@ public class PeaceCanvas : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            MainContainer.SetActive(false);
-            SkillsPanel.SetActive(false);
-            Inventory.SetActive(false);
-            EquipmentSlots.SetActive(false);
-            CM_MenuCam.Priority = 0;
+            EscapeButton();
         }
 
         if (Input.GetKeyDown(KeyCode.F1)) {
@@ -84,16 +82,55 @@ public class PeaceCanvas : MonoBehaviour
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }
 
-        if (!anyPanelOpen) {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            PlayerControlls.instance.disableControl = false;
-        } else {
+        if (!isGamePaused) {
+            if (!anyPanelOpen) {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                PlayerControlls.instance.disableControl = false;
+            } else {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                PlayerControlls.instance.disableControl = true;
+                UpdateStats();
+            }
+        }
+    }
+
+    void EscapeButton () {
+        if (anyPanelOpen) { //hide all panels
+            MainContainer.SetActive(false);
+            SkillsPanel.SetActive(false);
+            Inventory.SetActive(false);
+            EquipmentSlots.SetActive(false);
+            CM_MenuCam.Priority = 0;
+        } else { //toggle pause
+            TogglePause();
+        }
+    }
+
+    public void TogglePause () {
+        isGamePaused = !isGamePaused;
+
+        if (isGamePaused) {
+            Time.timeScale = 0;
+            PauseMenu.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            PlayerControlls.instance.disableControl = true;
-            UpdateStats();
+        } else {
+            Time.timeScale = 1;
+            PauseMenu.SetActive(false);
         }
+    }
+
+    public void ExitToMenu () {
+        Time.timeScale = 1;
+        ScenesManagement.instance.LoadMenu();
+    }
+    public void ExitToDesktop() {
+        Application.Quit();
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 
     public void DebugChat(string message) {

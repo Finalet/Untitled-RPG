@@ -7,7 +7,7 @@ public class disableWhileLoading : MonoBehaviour
     void Awake() {
         if (ScenesManagement.instance != null) {
             if (ScenesManagement.instance.isLoading) {
-                ScenesManagement.instance.goToEnableOnLoad.Add(gameObject);
+                ScenesManagement.instance.GameobjectsToEnableOnLoad.Add(gameObject);
                 gameObject.SetActive(false);
             }
         }

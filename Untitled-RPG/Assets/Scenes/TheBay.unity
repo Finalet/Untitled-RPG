@@ -7287,6 +7287,8 @@ GameObject:
   - component: {fileID: 401892649}
   - component: {fileID: 401892650}
   - component: {fileID: 401892651}
+  - component: {fileID: 401892652}
+  - component: {fileID: 401892653}
   m_Layer: 0
   m_Name: Ocean
   m_TagString: Untagged
@@ -7382,6 +7384,30 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &401892652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401892647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2343e04e60e384d4daa8cccde6874332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &401892653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401892647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92e6ec3d75348304baeadadb068143a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &404962625 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 166672, guid: 285be6fdecb88b04fad7f0a2de638676,
@@ -19152,8 +19178,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986036421}
-  m_LocalRotation: {x: 0.027796738, y: 0.9719896, z: -0.17476471, w: 0.1546643}
-  m_LocalPosition: {x: -59.25387, y: 38.52437, z: 118.59628}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1783757439}
@@ -19830,6 +19856,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1017720968}
   - component: {fileID: 1017720969}
+  - component: {fileID: 1017720970}
   m_Layer: 0
   m_Name: OceanDepthCache
   m_TagString: Untagged
@@ -19874,6 +19901,18 @@ MonoBehaviour:
   _hideDepthCacheCam: 1
   _savedCache: {fileID: 2800000, guid: d6f8b57de1118fe409fb8a621be4da48, type: 3}
   _runValidationOnStart: 1
+--- !u!114 &1017720970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017720967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2343e04e60e384d4daa8cccde6874332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1023064933 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 153638, guid: fed377962f4538d40aaec6e81efc28f1,
@@ -31545,6 +31584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1579103154}
+  - component: {fileID: 1579103155}
   m_Layer: 0
   m_Name: Lights
   m_TagString: Untagged
@@ -31568,6 +31608,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1579103155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579103153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2343e04e60e384d4daa8cccde6874332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1583091391
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35890,7 +35942,7 @@ MonoBehaviour:
   PredictiveCellLoaderCellsPerFrame: 1
   LoadPotentialVegetationCells: 1
   CurrentTabIndex: 5
-  VegetationPackageIndex: 1
+  VegetationPackageIndex: 0
   SeaLevel: 107
   ExcludeSeaLevelCells: 0
   VegetationCellSize: 100
@@ -35979,13 +36031,13 @@ MonoBehaviour:
   ShowVegetationMaskCells: 0
   ShowHeatMap: 0
   ShowTerrainTextures: 1
-  ShowVegetationPackageGeneralSettingsMenu: 0
+  ShowVegetationPackageGeneralSettingsMenu: 1
   ShowVegetationPackageNoiseMenu: 0
   ShowTerrainTextureRulesMenu: 0
   ShowTextureMaskRulesMenu: 0
   ShowVegetationMaskRulesMenu: 0
-  ShowShaderSettingsMenu: 1
-  ShowPositionMenu: 1
+  ShowShaderSettingsMenu: 0
+  ShowPositionMenu: 0
   ShowDistanceFalloffMenu: 0
   ShowBiomeRulesMenu: 0
   ShowConcaveLocationRulesMenu: 0
@@ -35998,7 +36050,7 @@ MonoBehaviour:
   VegetationStudioTerrainObjectList:
   - {fileID: 706863189}
   VegetationPackageProList:
-  - {fileID: 11400000, guid: 9d87a2795fc91cf43b3899940d07605f, type: 2}
+  - {fileID: 11400000, guid: 5dc6a5a90dab96b41b2242527f4efb29, type: 2}
   - {fileID: 11400000, guid: 9ee01bb6e9a9fcb43b61067c4a7c5216, type: 2}
   WindControllerSettingsList:
   - ControlerPropertyList:
@@ -36480,7 +36532,7 @@ MonoBehaviour:
   listenToWindZone: 1
   windZone: {fileID: 136272697}
   actualFollowTarget: {fileID: 0}
-  lastPos: {x: -253.34215, y: 2.411233, z: 237.5867}
+  lastPos: {x: -240.7817, y: 25.002932, z: 155.6009}
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 32, y: 32, z: 32}

@@ -75,6 +75,8 @@ public class Arrow : MonoBehaviour
     }
 
     protected virtual void Collision (Transform collisionObj) {
+        if (!shot)
+            return;
         transform.position -= rb.velocity * Time.fixedDeltaTime;
         transform.SetParent(collisionObj);
         

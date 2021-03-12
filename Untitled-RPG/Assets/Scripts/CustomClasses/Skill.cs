@@ -154,6 +154,9 @@ public abstract class Skill : MonoBehaviour
     protected abstract void CustomUse(); // Custom code that is overriden in each skill seperately.
 
     protected virtual void Update() {
+        if (PeaceCanvas.instance.isGamePaused)
+            return;
+
         if (coolDownTimer >= 0) {
             coolDownTimer -= Time.deltaTime;
             isCoolingDown = true;

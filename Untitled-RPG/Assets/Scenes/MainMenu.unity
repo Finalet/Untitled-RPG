@@ -148,8 +148,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74928812}
-  m_LocalRotation: {x: -0.12517387, y: 0.8696063, z: -0.28277835, w: -0.38490614}
-  m_LocalPosition: {x: -65.262695, y: 9.600817, z: 98.8903}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 985744959}
@@ -2447,13 +2447,13 @@ MonoBehaviour:
   ShowTextureMaskRulesMenu: 0
   ShowVegetationMaskRulesMenu: 0
   ShowShaderSettingsMenu: 1
-  ShowPositionMenu: 1
+  ShowPositionMenu: 0
   ShowDistanceFalloffMenu: 0
   ShowBiomeRulesMenu: 0
   ShowConcaveLocationRulesMenu: 0
   ShowColliderRulesMenu: 1
-  ShowBillboardsMenu: 1
-  ShowVegetationItemSettingsMenu: 1
+  ShowBillboardsMenu: 0
+  ShowVegetationItemSettingsMenu: 0
   ShowTerrainSourceSettingsMenu: 0
   ShowAddVegetationItemMenu: 1
   ShowLODMenu: 0
@@ -3497,6 +3497,7 @@ GameObject:
   - component: {fileID: 1132132314}
   - component: {fileID: 1132132317}
   - component: {fileID: 1132132318}
+  - component: {fileID: 1132132319}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3620,6 +3621,18 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: b36dc04d28ee2fc48ae9984b067dc1f0, type: 2}
+--- !u!114 &1132132319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132132313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2343e04e60e384d4daa8cccde6874332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1164557263
 GameObject:
   m_ObjectHideFlags: 0
@@ -5026,7 +5039,7 @@ PrefabInstance:
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: Outdoors
+      value: Village
       objectReference: {fileID: 0}
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
@@ -9974,6 +9987,7 @@ GameObject:
   - component: {fileID: 1949283989}
   - component: {fileID: 1949283988}
   - component: {fileID: 1949283987}
+  - component: {fileID: 1949283991}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -10065,6 +10079,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1949283991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1949283986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2343e04e60e384d4daa8cccde6874332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1970816565
 GameObject:
   m_ObjectHideFlags: 0

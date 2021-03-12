@@ -33,4 +33,8 @@ public class LoadingScreen : MonoBehaviour
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);;
     }
+
+    void OnEnable() {
+        sword.transform.rotation = Quaternion.Euler(180, 90, 0);
+    }
 }

@@ -31,6 +31,9 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     protected virtual void Update () {
+        if (PeaceCanvas.instance.isGamePaused)
+            return;
+
         if (itemInSlot != null)
             DisplayItem();
     }

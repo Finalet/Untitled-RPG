@@ -7,14 +7,31 @@ public class MainMenuController : MonoBehaviour
 {
     // Start is called before the first frame update
     void Awake() {
-        AsyncOperation addLoadingScene = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
+        if (SceneManager.GetActiveScene().name != "SceneManagement") {
+            AsyncOperation addLoadingScene = SceneManager.LoadSceneAsync("SceneManagement", LoadSceneMode.Additive);
+        }
     }
 
     public void LoadLevel (string levelName) {
-        ScenesManagement.instance.LoadLevel(levelName);
+        Vector3 playerPos;
+        switch (levelName) {
+            case "TheBay":
+                playerPos = new Vector3(-240,2,240);
+                break;
+            case "Village":
+                playerPos = new Vector3(-60,-1.2f,100);
+                break;
+            default:
+                playerPos = new Vector3(0,1,0);
+                break;
+        }
+        ScenesManagement.instance.LoadLevel(levelName, playerPos);
     }
 
     public void ExitGame () {
         Application.Quit();
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 }
