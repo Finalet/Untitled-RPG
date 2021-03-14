@@ -26,33 +26,32 @@ public class CameraControll : MonoBehaviour
     public CinemachineFreeLook CM_cam;
     public CinemachineCameraOffset CM_offset;
 
-    const float leftShoulder = -1f;
-    const float rightShoulder = 1f;
-    const float center = 0;
-    float desiredOffset;
+    Vector3 leftShoulder;
+    Vector3 rightShoulder;
+    Vector3 center;
+    public Vector3 desiredOffset;
 
-    float mouseXsensitivity;
-    float mouseYsensitivity;
+    float baseMouseXsensitivity;
+    float baseMouseYsensitivity;
 
     CamSettings currentCamSettings = CamSettings.Smooth;
 
     void Start()
     {
+        leftShoulder = new Vector3(-1, 0, 0);
+        rightShoulder = new Vector3(0.5f, 0.3f, 0);
+        center = new Vector3(0, 0, 0);
+
         cam = GetComponent<Camera>();
 
-        desiredOffset = CM_offset.m_Offset.x;
-
-        mouseXsensitivity = CM_cam.m_XAxis.m_MaxSpeed;
-        mouseYsensitivity = CM_cam.m_YAxis.m_MaxSpeed;
+        desiredOffset = CM_offset.m_Offset;
     }
 
     void Update()
     {
-        //Shoulder camera switching
-        if (Input.GetKeyUp(KeyCode.Mouse2))
-            SwitchShouderCam();
-
         camDistance = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position + Vector3.up*1.6f);
+
+        UpdateMouseSettings();
     }
     /*  DISABLED CAUSE ANIMATION RIGGING SINKS THE CHARACTER AND RUINS ROLLING ANIMATION
     void FixedUpdate() {
@@ -68,16 +67,21 @@ public class CameraControll : MonoBehaviour
         headAimTarget.transform.localPosition = new Vector3(headAimTarget.transform.localPosition.x, headAimTarget.transform.localPosition.y, Mathf.Clamp(headAimTarget.transform.localPosition.z, 1, 10));
     } */
 
+    void UpdateMouseSettings() {
+        baseMouseXsensitivity = SettingsManager.instance.mouseSensitivity * 0.03f;
+        baseMouseYsensitivity = SettingsManager.instance.mouseSensitivity * 0.0002f;
+        CM_cam.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
+    }
+
     float rotationX;
-    void LateUpdate()
+    void FixedUpdate()
     { 
         FOV();
 
-        if (CM_offset.m_Offset.x != desiredOffset) {
-            CM_offset.m_Offset.x = Mathf.MoveTowards(CM_offset.m_Offset.x, desiredOffset, 4 * Time.deltaTime);
+        if (CM_offset.m_Offset != desiredOffset) {
+            CM_offset.m_Offset = Vector3.MoveTowards(CM_offset.m_Offset, desiredOffset, 3 * Time.deltaTime);
         }
     }
-
     void FOV () {
         if (!isAiming && !isShortAiming)
             SprintingFOV();
@@ -93,10 +97,11 @@ public class CameraControll : MonoBehaviour
     void SprintingFOV () {
         desiredOffset = center;
 
+        CM_cam.m_XAxis.m_MaxSpeed = baseMouseXsensitivity;   //normal sensitivity
+        CM_cam.m_YAxis.m_MaxSpeed = baseMouseYsensitivity; //normal sensitivity
+        
         if (CM_cam.m_Lens.FieldOfView < 60 && wasAiming) { //After aiming
             CM_cam.m_Lens.FieldOfView = Mathf.Lerp(CM_cam.m_Lens.FieldOfView, 62, 7 * Time.deltaTime);
-            CM_cam.m_XAxis.m_MaxSpeed = 1.5f;   //return sensitivity
-            CM_cam.m_YAxis.m_MaxSpeed = 0.01f; //return sensitivity
             return;
         }
 
@@ -117,33 +122,17 @@ public class CameraControll : MonoBehaviour
             SmoothCameraSettings();
     }
 
-    void SwitchShouderCam() {
-        switch (CM_offset.m_Offset.x) {
-            case center: 
-                desiredOffset = rightShoulder;
-                break;
-            case rightShoulder:
-                desiredOffset = leftShoulder;
-                break;
-            case leftShoulder:
-                desiredOffset = center;
-                break;
-            default: desiredOffset = center;
-                break;
-        }
-    }
-
     bool wasAiming;
     public void AimCamera () {
         float desiredFOV = 0;
         if (isAiming) {
             desiredFOV = 30;
-            CM_cam.m_XAxis.m_MaxSpeed = 0.5f;   //lower sensitivity
-            CM_cam.m_YAxis.m_MaxSpeed = 0.0033f; //lower sensitivity
+            CM_cam.m_XAxis.m_MaxSpeed = baseMouseXsensitivity/3f;   //lower sensitivity
+            CM_cam.m_YAxis.m_MaxSpeed = baseMouseYsensitivity/3f; //lower sensitivity
             desiredOffset = rightShoulder;
         } else {
             desiredFOV = 50;
-            desiredOffset = rightShoulder/2;
+            desiredOffset = rightShoulder*0.7f;
         }
 
 

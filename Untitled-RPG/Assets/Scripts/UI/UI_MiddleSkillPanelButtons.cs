@@ -11,6 +11,9 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     public Skill areaPickerSkill;
 
     protected override void Update() {
+        if (PeaceCanvas.instance.isGamePaused)
+            return;
+
         if (PlayerControlls.instance.isPickingArea){
             PickingAreaIcons();
             return;

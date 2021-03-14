@@ -23,7 +23,7 @@ public class ddText : MonoBehaviour
         float x = Random.Range(-1f, 1f);
         x = ((x >= 0) ? 1:-1);
 
-        Vector3 dir = (PlayerControlls.instance.transform.right * x  + Vector3.up) * Random.Range(speed*0.5f, speed*1.3f) * (1+(float)damageInfo.damage/3000f);
+        Vector3 dir = (PlayerControlls.instance.transform.right * x  + Vector3.up) * Random.Range(speed*0.5f, speed*1.3f) * (1+(float)damageInfo.damage/3000f) * (damageInfo.isCrit ? 1.4f : 1);
         GetComponent<Rigidbody>().AddForce(dir, ForceMode.Impulse);
 
         TextMeshPro tmp = transform.GetChild(0).GetComponent<TextMeshPro>();
