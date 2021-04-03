@@ -2,39 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
 
-    [Header("Add Items to Inventory Here")]
-    public int itemAmountToAdd = 1;
-    public Item itemToAdd;
+    public int currentGold;
     [Space]
-    public InputField inputText;
+    public InputField goldInputText;
+    public InputField itemInputText;
     [Space]
+    public TextMeshProUGUI currentGoldLabel;
     public GameObject slots;
     UI_InventorySlot[] allSlots;
+
+    //DEBUG 
+    int itemAmountToAdd = 1;
+    Item itemToAdd;
+    
+    protected string savefilePath;
 
     void Awake() {
         if (instance == null)
             instance = this;
+        
+        savefilePath = "saves/currency.txt";
+        PeaceCanvas.saveGame += Save;
+        
+        Load();
     }
 
     void Start() {
         allSlots = slots.GetComponentsInChildren<UI_InventorySlot>();
     }
 
-    void FixedUpdate() {
+    void Update() {
         if (itemToAdd is Equipment)
             itemAmountToAdd = 1;
 
-        if (inputText.text != "" && ( Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) )
+        if (itemInputText.text != "" && ( Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) )
             AddItemToInventoryDEBUG();
+
+        if (goldInputText.text != "" && ( Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) )
+            AddGoldDEBUG();
+
+        currentGoldLabel.text = currentGold.ToString();
+    }
+
+    void Save () {
+        ES3.Save<int>("currentGold", currentGold, savefilePath);
+    }
+    void Load () {
+        if (ES3.FileExists(savefilePath))
+            currentGold = ES3.Load<int>("currentGold", savefilePath);
     }
 
     public void AddItemToInventoryDEBUG () {
-        string input = inputText.text;
+        string input = itemInputText.text;
         if (input.IndexOf('.') != -1 ) {
             itemToAdd = AssetHolder.instance.getItem(int.Parse(input.Substring(0, input.IndexOf('.'))));
             itemAmountToAdd = int.Parse(input.Substring(input.IndexOf('.') + 1));
@@ -47,7 +72,11 @@ public class InventoryManager : MonoBehaviour
             return;
         
         AddItemToInventory (itemToAdd, itemAmountToAdd, null);
-        inputText.text = "";
+        itemInputText.text = "";
+    }
+    public void AddGoldDEBUG () {
+        currentGold += int.Parse(goldInputText.text);
+        goldInputText.text = "";
     }
 
     public void AddItemToInventory (Item item, int amount, UI_InventorySlot slotToExclude = null) {
