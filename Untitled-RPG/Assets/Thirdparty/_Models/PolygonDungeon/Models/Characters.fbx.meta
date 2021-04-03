@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: b69174d668ba02d44b14a084b217670a
 ModelImporter:
-  serializedVersion: 19300
+  serializedVersion: 20200
   internalIDToNameTable:
   - first:
       1: 100000
@@ -882,11 +882,13 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 0
     importLights: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
@@ -896,6 +898,9 @@ ModelImporter:
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
@@ -1223,6 +1228,14 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
+    - boneName: Spine_03
+      humanName: UpperChest
+      limit:
+        min: {x: 0, y: 0, z: -45}
+        max: {x: 0, y: 0, z: 45}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
     skeleton:
     - name: Characters(Clone)
       parentName: 
@@ -1442,7 +1455,7 @@ ModelImporter:
     - name: Thumb_01
       parentName: Hand_L
       position: {x: -3.5140479, y: -1.1706916, z: 4.5055394}
-      rotation: {x: 0.009149579, y: 0.29994464, z: 0.044016715, w: 0.9528966}
+      rotation: {x: 0.00914958, y: 0.29994467, z: 0.04401672, w: 0.95289665}
       scale: {x: 1, y: 1, z: 1}
     - name: Thumb_02
       parentName: Thumb_01
@@ -1477,7 +1490,7 @@ ModelImporter:
     - name: Finger_01 1
       parentName: Hand_R
       position: {x: 9.9825, y: 0.116, z: 3.28334}
-      rotation: {x: 0.0006004297, y: -0.084574796, z: 0.03887398, w: 0.99565834}
+      rotation: {x: 0.0006004297, y: -0.0845748, z: 0.03887398, w: 0.9956584}
       scale: {x: 1, y: 1, z: 1}
     - name: Finger_02 1
       parentName: Finger_01 1
@@ -1517,12 +1530,12 @@ ModelImporter:
     - name: Thumb_01 1
       parentName: Hand_R
       position: {x: 3.514, y: 1.171, z: -4.50554}
-      rotation: {x: 0.009170168, y: 0.2999536, z: 0.044069327, w: 0.9528912}
+      rotation: {x: 0.00917017, y: 0.2999536, z: 0.044069335, w: 0.9528912}
       scale: {x: 1, y: 1, z: 1}
     - name: Thumb_02 1
       parentName: Thumb_01 1
       position: {x: 6.370146, y: -0.0007811825, z: 0.000043638116}
-      rotation: {x: -0.040608063, y: -0.021908183, z: 0.026276708, w: 0.9985893}
+      rotation: {x: -0.04060807, y: -0.021908183, z: 0.026276711, w: 0.9985893}
       scale: {x: 1, y: 1, z: 1}
     - name: Thumb_03 1
       parentName: Thumb_02 1
@@ -1631,6 +1644,7 @@ ModelImporter:
   animationType: 3
   humanoidOversampling: 1
   avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

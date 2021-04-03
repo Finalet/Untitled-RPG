@@ -18,7 +18,7 @@ public class Consumable : Item
     public override void Use (UI_InventorySlot initialSlot){}
 
     public override IEnumerator UseEnum() {
-        if (consumableType == ConsumableType.HP)
+        if (consumableType == ConsumableType.Health)
             Characteristics.instance.GetHealed(actualEffect());
         else if (consumableType == ConsumableType.Stamina)
             Characteristics.instance.GetStamina(actualEffect());

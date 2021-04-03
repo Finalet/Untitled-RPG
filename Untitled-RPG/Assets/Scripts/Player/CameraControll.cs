@@ -53,19 +53,6 @@ public class CameraControll : MonoBehaviour
 
         UpdateMouseSettings();
     }
-    /*  DISABLED CAUSE ANIMATION RIGGING SINKS THE CHARACTER AND RUINS ROLLING ANIMATION
-    void FixedUpdate() {
-        if (PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight < 0.7f) {
-            headAimIK.weight += Time.deltaTime;
-        } else if (!PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight > 0) {
-            headAimIK.weight -= Time.deltaTime;
-        }
-
-        Vector3 aimPos = transform.position + transform.forward * 13;
-        aimPos.y = Mathf.Clamp(aimPos.y, PlayerControlls.instance.transform.position.y, PlayerControlls.instance.transform.position.y + 5);
-        headAimTarget.transform.position = aimPos;
-        headAimTarget.transform.localPosition = new Vector3(headAimTarget.transform.localPosition.x, headAimTarget.transform.localPosition.y, Mathf.Clamp(headAimTarget.transform.localPosition.z, 1, 10));
-    } */
 
     void UpdateMouseSettings() {
         baseMouseXsensitivity = SettingsManager.instance.mouseSensitivity * 0.03f;
@@ -81,6 +68,20 @@ public class CameraControll : MonoBehaviour
         if (CM_offset.m_Offset != desiredOffset) {
             CM_offset.m_Offset = Vector3.MoveTowards(CM_offset.m_Offset, desiredOffset, 3 * Time.deltaTime);
         }
+
+        // DISABLED CAUSE ANIMATION RIGGING SINKS THE CHARACTER AND RUINS ROLLING ANIMATION
+        /*
+        if (PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight < 0.7f) {
+            headAimIK.weight += Time.deltaTime;
+        } else if (!PlayerControlls.instance.isIdle && headAimTarget.GetComponentInParent<MultiAimConstraint>().weight > 0) {
+            headAimIK.weight -= Time.deltaTime;
+        }
+
+        Vector3 aimPos = transform.position + transform.forward * 13;
+        aimPos.y = Mathf.Clamp(aimPos.y, PlayerControlls.instance.transform.position.y, PlayerControlls.instance.transform.position.y + 5);
+        headAimTarget.transform.position = aimPos;
+        headAimTarget.transform.localPosition = new Vector3(headAimTarget.transform.localPosition.x, headAimTarget.transform.localPosition.y, Mathf.Clamp(headAimTarget.transform.localPosition.z, 1, 10));
+        */
     }
     void FOV () {
         if (!isAiming && !isShortAiming)

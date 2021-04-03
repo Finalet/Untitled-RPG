@@ -15749,6 +15749,7 @@ GameObject:
   - component: {fileID: 1428827158976513317}
   - component: {fileID: 1428827158976513319}
   - component: {fileID: 1428827158976513320}
+  - component: {fileID: 1428827158976513321}
   m_Layer: 5
   m_Name: PeaceCanvas
   m_TagString: Untagged
@@ -15806,6 +15807,21 @@ MonoBehaviour:
   mouseSensitivitySlider: {fileID: 215772844}
   mouseSensitivityText: {fileID: 1573488832}
   invertYToggle: {fileID: 436539175}
+--- !u!114 &1428827158976513321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428827158976513318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b530d9a53860f4a984dc56617e48e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toolTipPrefab: {fileID: 1133366069674111744, guid: 4f51fd09b61ee8b4a8569091b9c92ad8,
+    type: 3}
+  toolTipDelay: 0.4
 --- !u!4 &1464882768766486108
 Transform:
   m_ObjectHideFlags: 0
@@ -21777,6 +21793,7 @@ MonoBehaviour:
   headAimIK: {fileID: 1101507712}
   CM_cam: {fileID: 791726731}
   CM_offset: {fileID: 791726733}
+  desiredOffset: {x: 0, y: 0, z: 0}
 --- !u!81 &2317584040581330331
 AudioListener:
   m_ObjectHideFlags: 0
