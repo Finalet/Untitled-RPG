@@ -17,7 +17,8 @@ public class TooltipsManager : MonoBehaviour
     Item focusItem;
     Vector3 screenPos;
     Vector3 lastScreenPos;
-    Vector2 iconSize;
+    Vector2 anchoredShift;
+    Vector2 pivot;
 
     void Update() {
         if (!PeaceCanvas.instance.anyPanelOpen)
@@ -34,13 +35,30 @@ public class TooltipsManager : MonoBehaviour
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, raycastResults);
         for (int i = 0; i < raycastResults.Count; i++) {
+            //UI_Inventory slots
             if (raycastResults[i].gameObject.GetComponent<UI_InventorySlot>() != null) {
                 if (raycastResults[i].gameObject.GetComponent<UI_InventorySlot>().itemInSlot != null) {
                     lastScreenPos = screenPos;
 
                     focusItem = raycastResults[i].gameObject.GetComponent<UI_InventorySlot>().itemInSlot;
                     screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
-                    iconSize = raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta;
+                    anchoredShift = new Vector2(-raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2 - 10, +raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
+                    pivot = Vector2.one;
+                    if (lastScreenPos != screenPos)
+                        startTime = Time.realtimeSinceStartup;
+                    return;
+                }
+            }
+
+            //StoreSlots
+            if (raycastResults[i].gameObject.GetComponent<StoreItemUI>() != null) {
+                if (raycastResults[i].gameObject.GetComponent<StoreItemUI>().item != null) {
+                    lastScreenPos = screenPos;
+
+                    focusItem = raycastResults[i].gameObject.GetComponent<StoreItemUI>().item;
+                    anchoredShift = new Vector2(raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2, raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
+                    screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
+                    pivot = new Vector2(0, 1);
                     if (lastScreenPos != screenPos)
                         startTime = Time.realtimeSinceStartup;
                     return;
@@ -49,7 +67,8 @@ public class TooltipsManager : MonoBehaviour
         }
         focusItem = null;
         screenPos = Vector2.zero;
-        iconSize = Vector2.zero;
+        anchoredShift = Vector2.zero;
+        pivot = Vector2.zero;
     }
 
     void GenerateToolTip () {
@@ -59,7 +78,8 @@ public class TooltipsManager : MonoBehaviour
                     currentToolTip = Instantiate(toolTipPrefab, PeaceCanvas.instance.transform).gameObject.GetComponent<Tooltip>();
                 }
                 currentToolTip.gameObject.GetComponent<RectTransform>().position = screenPos;
-                currentToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition -= new Vector2(iconSize.x/2 + 10, -iconSize.y/2);
+                currentToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition += anchoredShift;
+                currentToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
                 currentToolTip.focusItem = focusItem;
                 currentToolTip.Init();
             }

@@ -15,6 +15,7 @@ public class PeaceCanvas : MonoBehaviour
     [Space]
     public bool isGamePaused;
     public bool anyPanelOpen;
+    public bool anyStorePanelOpen;
 
     [Space]
     public CinemachineVirtualCamera CM_MenuCam;
@@ -30,10 +31,16 @@ public class PeaceCanvas : MonoBehaviour
     public TextMeshProUGUI statsLeftText;
     public TextMeshProUGUI statsRightText;
 
+    [Header("Button suggestion")]
+    public GameObject buttonSuggestionUI;
+    public TradingNPC currentStoreNPC;
+
     [Space]
     public GameObject DebugChatPanel;
     public TextMeshProUGUI debugChatText;
     public GameObject dragObject;
+    public int maxChatLines;
+    int chatLines;
     GameObject dragGO;
 
     [Header("Dragging items and skills")]
@@ -42,16 +49,13 @@ public class PeaceCanvas : MonoBehaviour
     public int amountOfDraggedItem;
     public UI_InventorySlot initialSlot;
 
-    [Space]
-    public int maxChatLines;
-    int chatLines;
 
     void Awake() {
         if (instance == null)
             instance = this;
     } 
     void Update() {
-        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy)
+        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentStoreNPC != null)
             anyPanelOpen = true;
         else   
             anyPanelOpen = false;
@@ -87,10 +91,12 @@ public class PeaceCanvas : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 PlayerControlls.instance.disableControl = false;
+                PlayerControlls.instance.cameraControl.stopInput = false;
             } else {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 PlayerControlls.instance.disableControl = true;
+                PlayerControlls.instance.cameraControl.stopInput = true;
                 UpdateStats();
             }
         }
@@ -103,6 +109,8 @@ public class PeaceCanvas : MonoBehaviour
             Inventory.SetActive(false);
             EquipmentSlots.SetActive(false);
             CM_MenuCam.Priority = 0;
+            if (currentStoreNPC != null)
+                currentStoreNPC.CloseStoreWindow();
         } else { //toggle pause
             TogglePause();
         }
@@ -231,4 +239,15 @@ public class PeaceCanvas : MonoBehaviour
         saveGame();
     }
 
+    public void ShowKeySuggestion (string key) {
+        buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = key;
+        Vector2 size = new Vector2(0, 40);
+        size.x = buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().textBounds.size.x <= 40 ? 40 : buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().textBounds.size.x + 16; 
+        buttonSuggestionUI.GetComponent<RectTransform>().sizeDelta = size;
+        buttonSuggestionUI.SetActive(true);
+    }
+    public void HideKeySuggestion (){
+        if (buttonSuggestionUI.activeInHierarchy)
+            buttonSuggestionUI.SetActive(false);
+    }
 }

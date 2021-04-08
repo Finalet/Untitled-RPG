@@ -10,7 +10,8 @@ enum CamSettings {Smooth, Hard};
 public class CameraControll : MonoBehaviour
 {
     [System.NonSerialized] public float camDistance;
-    
+    public bool stopInput;
+
     public bool isAiming;
     public bool isShortAiming;
     public GameObject crosshair;
@@ -52,6 +53,18 @@ public class CameraControll : MonoBehaviour
         camDistance = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position + Vector3.up*1.6f);
 
         UpdateMouseSettings();
+
+        
+        if (stopInput) {
+            CM_cam.m_XAxis.m_InputAxisName = "";
+            CM_cam.m_YAxis.m_InputAxisName = "";
+
+            CM_cam.m_XAxis.m_InputAxisValue = 0;
+            CM_cam.m_YAxis.m_InputAxisValue = 0;
+        } else {
+            CM_cam.m_XAxis.m_InputAxisName = "Mouse X";
+            CM_cam.m_YAxis.m_InputAxisName = "Mouse Y";
+        }
     }
 
     void UpdateMouseSettings() {

@@ -47,8 +47,6 @@ public class PlayerControlls : MonoBehaviour
     [System.NonSerialized] public float desiredLookDirection; //Accessed by M_Rider fix rotation when on animal
     [System.NonSerialized] public float lookDirection; 
 
-    [Header("Rolling")]
-    public float rollDistance; 
     float rollDirection;
     float desiredRollDirection;
 
@@ -322,6 +320,7 @@ public class PlayerControlls : MonoBehaviour
         }
 
         GetComponent<Characteristics>().UseOrRestoreStamina(staminaReqToRoll);
+        baseCharacterController.speed = baseCharacterController.baseSpeed*5;
         isRolling = true;
         if (InputDirection > 0 && !isSprinting && !isIdle) {
             desiredRollDirection = InputDirection;
@@ -337,6 +336,7 @@ public class PlayerControlls : MonoBehaviour
     public void StopRoll() { //Called from rolling animation
         isRolling = false;
         desiredRollDirection = 0;
+        baseCharacterController.speed = baseCharacterController.baseSpeed;
     }
 
     void Sprinting () {
