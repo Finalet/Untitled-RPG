@@ -30,6 +30,6 @@ public class UI_StoreCartSlot : UI_InventorySlot, IDropHandler, IDragHandler, IB
 
     public override void UseItem()
     {
-        itemInSlot = null;
+        ClearSlot();
     }
 }

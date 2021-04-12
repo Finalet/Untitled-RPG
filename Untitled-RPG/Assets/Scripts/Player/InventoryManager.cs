@@ -48,6 +48,7 @@ public class InventoryManager : MonoBehaviour
             AddGoldDEBUG();
 
         currentGoldLabel.text = currentGold.ToString();
+        currentGoldLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentGoldLabel.GetComponent<TextMeshProUGUI>().textBounds.size.x, 20);
     }
 
     void Save () {

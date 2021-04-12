@@ -6,6 +6,7 @@ public abstract class Item : ScriptableObject
     public int ID;
     public string itemName;
     public string itemDesctription;
+    public int itemBasePrice;
     public Sprite itemIcon;
     public GameObject itemPrefab;
 

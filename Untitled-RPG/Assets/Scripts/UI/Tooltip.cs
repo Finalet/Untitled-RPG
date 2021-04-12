@@ -19,6 +19,7 @@ public class Tooltip : MonoBehaviour
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemStats;
+    public TextMeshProUGUI itemPrice;
 
     void Awake() {
         itemType.color = secondaryTextColor;
@@ -44,16 +45,21 @@ public class Tooltip : MonoBehaviour
         if (itemDescription.text != focusItem.itemDesctription)
             itemDescription.text = focusItem.itemDesctription;
 
+        if (itemPrice.text != focusItem.itemBasePrice.ToString())
+            itemPrice.text = focusItem.itemBasePrice.ToString();
+
         if (itemStats.text != generateItemStats(focusItem))
             itemStats.text = generateItemStats(focusItem);
 
         float tooltipHeight = 120 +
             (itemDescription.textBounds.size.y <= 0 ? 0 : itemDescription.textBounds.size.y) +
-            (itemStats.textBounds.size.y <= 0 ? 0 : 20 + itemStats.textBounds.size.y);
+            (itemStats.textBounds.size.y <= 0 ? 0 : 38 + itemStats.textBounds.size.y);
         GetComponent<RectTransform>().sizeDelta = new Vector2(360, tooltipHeight);
 
         float statsPos = itemDescription.GetComponent<RectTransform>().anchoredPosition.y - itemDescription.textBounds.size.y - 20;
         itemStats.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, statsPos);
+
+        itemPrice.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPrice.GetComponent<TextMeshProUGUI>().textBounds.size.x, 20);
     }
 
     string generateItemStats (Item item) {

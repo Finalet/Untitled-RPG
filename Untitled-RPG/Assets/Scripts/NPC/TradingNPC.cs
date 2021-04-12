@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TradingNPC : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class TradingNPC : MonoBehaviour
     public bool isStoreWindowOpen;
     GameObject instanciatedStoreWindow;
     GameObject storeItemTemplate;
+    TextMeshProUGUI cartTotalLabel;
     UI_StoreCartSlot[] cartSlots;
     [Space]
     public float playerDetectRadius;
@@ -38,6 +40,11 @@ public class TradingNPC : MonoBehaviour
 
         if (playerDetected && Input.GetKeyDown(KeyCode.F)) {
             OpenStoreWindow();
+        }
+
+        if (isStoreWindowOpen) {
+            cartTotalLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(cartTotalLabel.GetComponent<TextMeshProUGUI>().textBounds.size.x, 20);
+            cartTotalLabel.text = getCartTotalPrice().ToString();
         }
     }
 
@@ -72,6 +79,17 @@ public class TradingNPC : MonoBehaviour
         }
         Destroy(storeItemTemplate);
         cartSlots = instanciatedStoreWindow.transform.GetComponentsInChildren<UI_StoreCartSlot>();
+        cartTotalLabel = instanciatedStoreWindow.transform.Find("Cart/Cart total/Cart total label").GetComponent<TextMeshProUGUI>();
+        cartTotalLabel.text = getCartTotalPrice().ToString();
+    }
+
+    int getCartTotalPrice () {
+        int _cartTotalPrice = 0;
+        foreach (UI_StoreCartSlot slot in cartSlots) {
+            if (slot.itemInSlot != null)
+                _cartTotalPrice += slot.itemInSlot.itemBasePrice;
+        }
+        return _cartTotalPrice;
     }
 
     public void AddToCart (Item item) {
@@ -83,4 +101,6 @@ public class TradingNPC : MonoBehaviour
             }
         }
     }
+
+
 }
