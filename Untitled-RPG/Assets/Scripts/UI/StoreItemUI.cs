@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -21,7 +22,8 @@ public class StoreItemUI : MonoBehaviour
 
         itemIcon.sprite = item.itemIcon;
         itemNameLabel.text = item.itemName;
-        itemPriceLabel.text = "123123";
+        itemPriceLabel.text = item.itemBasePrice.ToString();
+        itemPriceLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPriceLabel.GetComponent<TextMeshProUGUI>().preferredWidth, 20);
         itemBuyButton.onClick.AddListener(delegate{parentStoreNPC.AddToCart(item);});
     }
 }

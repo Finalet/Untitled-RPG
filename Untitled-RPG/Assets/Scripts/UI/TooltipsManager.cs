@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Rendering.Universal;
 
 public class TooltipsManager : MonoBehaviour
 {
@@ -82,6 +83,13 @@ public class TooltipsManager : MonoBehaviour
                 currentToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
                 currentToolTip.focusItem = focusItem;
                 currentToolTip.Init();
+
+                if (!currentToolTip.GetComponent<RectTransform>().IsFullyVisibleFrom(PlayerControlls.instance.playerCamera.GetUniversalAdditionalCameraData().cameraStack[0])) {
+                    pivot.x = Mathf.Abs(pivot.x-1);
+
+                    currentToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
+                    currentToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
+                }
             }
         } else if (currentToolTip != null) {
             Destroy(currentToolTip.gameObject);

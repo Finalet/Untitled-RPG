@@ -52,14 +52,14 @@ public class Tooltip : MonoBehaviour
             itemStats.text = generateItemStats(focusItem);
 
         float tooltipHeight = 120 +
-            (itemDescription.textBounds.size.y <= 0 ? 0 : itemDescription.textBounds.size.y) +
-            (itemStats.textBounds.size.y <= 0 ? 0 : 38 + itemStats.textBounds.size.y);
+            (itemDescription.preferredHeight <= 0 ? 0 : itemDescription.preferredHeight) +
+            (itemStats.preferredHeight <= 0 ? 0 : 38 + itemStats.preferredHeight);
         GetComponent<RectTransform>().sizeDelta = new Vector2(360, tooltipHeight);
 
-        float statsPos = itemDescription.GetComponent<RectTransform>().anchoredPosition.y - itemDescription.textBounds.size.y - 20;
+        float statsPos = itemDescription.GetComponent<RectTransform>().anchoredPosition.y - itemDescription.preferredHeight - 20;
         itemStats.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, statsPos);
 
-        itemPrice.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPrice.GetComponent<TextMeshProUGUI>().textBounds.size.x, 20);
+        itemPrice.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPrice.GetComponent<TextMeshProUGUI>().preferredWidth, 20);
     }
 
     string generateItemStats (Item item) {

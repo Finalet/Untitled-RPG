@@ -49,10 +49,16 @@ public class PeaceCanvas : MonoBehaviour
     public int amountOfDraggedItem;
     public UI_InventorySlot initialSlot;
 
+    [Header("Sounds")]
+    public AudioClip inventoryOpenSound;
+
+    AudioSource audioSource;
 
     void Awake() {
         if (instance == null)
             instance = this;
+
+        audioSource = GetComponent<AudioSource>();
     } 
     void Update() {
         if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentStoreNPC != null)
@@ -61,19 +67,11 @@ public class PeaceCanvas : MonoBehaviour
             anyPanelOpen = false;
 
         if (Input.GetButtonDown("OpenSkillsPanel") && !SkillsPanel.activeInHierarchy) {
-            MainContainer.SetActive(true);
-            SkillsPanel.SetActive(true);
-            EquipmentSlots.SetActive(true);
-            Inventory.SetActive(false);
-            OpenMenuCamera();            
+            OpenSkillsPanel();
         }
 
         if (Input.GetButtonDown("OpenInventory") && !Inventory.activeInHierarchy) {
-            MainContainer.SetActive(true);
-            Inventory.SetActive(true);
-            EquipmentSlots.SetActive(true);
-            SkillsPanel.SetActive(false);
-            OpenMenuCamera();            
+            OpenInventory();    
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
@@ -100,6 +98,26 @@ public class PeaceCanvas : MonoBehaviour
                 UpdateStats();
             }
         }
+    }
+
+    public void OpenSkillsPanel () {
+        MainContainer.SetActive(true);
+        SkillsPanel.SetActive(true);
+        EquipmentSlots.SetActive(true);
+        Inventory.SetActive(false);
+        OpenMenuCamera(); 
+        audioSource.clip = inventoryOpenSound;
+        audioSource.Play();
+    }
+
+    public void OpenInventory () {
+        MainContainer.SetActive(true);
+        Inventory.SetActive(true);
+        EquipmentSlots.SetActive(true);
+        SkillsPanel.SetActive(false);
+        OpenMenuCamera();
+        audioSource.clip = inventoryOpenSound;
+        audioSource.Play();
     }
 
     void EscapeButton () {

@@ -23,13 +23,18 @@ public class InventoryManager : MonoBehaviour
     
     protected string savefilePath;
 
+    public InventoryManager () {
+        if (instance == null)
+            instance = this;
+    }
+
     void Awake() {
         if (instance == null)
             instance = this;
         
         savefilePath = "saves/currency.txt";
         PeaceCanvas.saveGame += Save;
-        
+
         Load();
     }
 
@@ -90,5 +95,14 @@ public class InventoryManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public int getNumberOfEmptySlots () {
+        int i = 0;
+        foreach (UI_InventorySlot slot in allSlots) {
+            if (slot.itemInSlot == null)
+                i++;
+        }
+        return i;
     }
 }
