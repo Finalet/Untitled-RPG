@@ -62,10 +62,18 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     public virtual void AddItem (Item item, int amount, UI_InventorySlot initialSlot) { //Initial slot for switching items places when dropping one onto another
-        if (itemInSlot == item && itemInSlot is Consumable) { //Adding the same item
-            itemAmount += amount;
-            DisplayItem();
-            return;
+        if (itemInSlot == item && itemInSlot.isStackable) { //Adding the same item
+            if (itemAmount + amount <= itemInSlot.maxStackAmount) {
+                itemAmount += amount;
+                DisplayItem();
+                return;
+            } else {
+                int amountToCompleteStack = itemInSlot.maxStackAmount - itemAmount;
+                itemAmount += amountToCompleteStack;
+                DisplayItem();
+                initialSlot.AddItem(item, amount - amountToCompleteStack, null);
+                return;
+            }
         } else if (itemInSlot != null) { //Slot contains another item
             initialSlot.AddItem(itemInSlot, itemAmount, null);
         }

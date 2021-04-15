@@ -90,6 +90,11 @@ public class InventoryManager : MonoBehaviour
             if (slotToExclude != null && slotToExclude == allSlots[i]) {
                 continue; 
             }
+            if (allSlots[i].itemInSlot == item && item.isStackable && allSlots[i].itemAmount + amount <= item.maxStackAmount) {
+                allSlots[i].AddItem(item, amount, null);
+                break;
+            }
+
             if (allSlots[i].itemInSlot == null) {
                 allSlots[i].AddItem(item, amount, null);
                 break;

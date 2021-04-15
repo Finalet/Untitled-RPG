@@ -7,8 +7,11 @@ public abstract class Item : ScriptableObject
     public string itemName;
     public string itemDesctription;
     public int itemBasePrice;
+    public bool isStackable;
+    public int maxStackAmount = 100;
     public Sprite itemIcon;
     public GameObject itemPrefab;
+
 
     public abstract void Use ();
     public abstract void Use (UI_InventorySlot initialSlot);

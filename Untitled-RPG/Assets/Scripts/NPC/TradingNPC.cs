@@ -106,11 +106,11 @@ public class TradingNPC : MonoBehaviour
 
     public void AddToCart (Item item) {
         int amount = 1;
-        if(item is Consumable)
+        if(item.isStackable)
             amount = Input.GetKey(KeyCode.LeftControl) ? 100 : Input.GetKey(KeyCode.LeftShift) ? 10 : amount;
         
         foreach (UI_StoreCartSlot s in cartSlots) {
-            if (s.itemInSlot == item && item is Consumable && s.itemAmount + amount <= 100) {
+            if (s.itemInSlot == item && item.isStackable && s.itemAmount + amount <= item.maxStackAmount) {
                 s.itemAmount += amount;
                 audioSource.clip = addToCartSound;
                 audioSource.Play();
