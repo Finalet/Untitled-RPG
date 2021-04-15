@@ -12,16 +12,15 @@ public class TradingNPC : MonoBehaviour
     [Space]
     public GameObject storeWindowPrefab;
     public bool isStoreWindowOpen;
+    public bool isBuyWindowOpen;
+    public bool isSellWindowOpen;
     [Space]
     public float playerDetectRadius;
     [Header("Sounds")]
     public AudioClip addToCartSound;
     public AudioClip purchaseSound;
     
-    GameObject instanciatedStoreWindow;
-    GameObject storeItemTemplate;
-    TextMeshProUGUI cartTotalLabel;
-    UI_StoreCartSlot[] cartSlots;
+    StoreWindowUI instanciatedStoreWindow;
     AudioSource audioSource;
     bool playerDetected;
     bool once;
@@ -50,66 +49,84 @@ public class TradingNPC : MonoBehaviour
 
         if (playerDetected && Input.GetKeyDown(KeyCode.F)) {
             OpenStoreWindow();
-            PeaceCanvas.instance.OpenInventory();
+            PeaceCanvas.instance.OpenInventory(true);
         }
 
-        if (isStoreWindowOpen) {
-            cartTotalLabel.text = getCartTotalPrice().ToString();
-            cartTotalLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(cartTotalLabel.GetComponent<TextMeshProUGUI>().GetPreferredValues().x, 20);
-        }
+        isBuyWindowOpen = instanciatedStoreWindow == null ? false : instanciatedStoreWindow.buyTab.activeInHierarchy ? true : false;
+        isSellWindowOpen = instanciatedStoreWindow == null ? false : instanciatedStoreWindow.sellSlots[0].gameObject.activeInHierarchy ? true : false;
+
+        if (isBuyWindowOpen || isSellWindowOpen)
+            isStoreWindowOpen = true;
+        else
+            isStoreWindowOpen = false;
     }
 
     void OpenStoreWindow () {
         if (instanciatedStoreWindow != null)
             return;
 
-        isStoreWindowOpen = true;
-        instanciatedStoreWindow = Instantiate(storeWindowPrefab, PeaceCanvas.instance.transform);
-        PopulateStoreUI();
+        instanciatedStoreWindow = Instantiate(storeWindowPrefab, PeaceCanvas.instance.transform).GetComponent<StoreWindowUI>();
+        instanciatedStoreWindow.ownerNPC = this;
+        instanciatedStoreWindow.Init();
         PeaceCanvas.instance.currentStoreNPC = this;
         PeaceCanvas.instance.HideKeySuggestion();
     }
     public void CloseStoreWindow (){
-        if (instanciatedStoreWindow != null)
-            Destroy(instanciatedStoreWindow);
+        if (instanciatedStoreWindow != null){
+            foreach (UI_StoreSellSlot s in instanciatedStoreWindow.sellSlots) {
+                if (s.itemInSlot != null)
+                    InventoryManager.instance.AddItemToInventory(s.itemInSlot, s.itemAmount);
+            }
+            Destroy(instanciatedStoreWindow.gameObject);
+        }
 
         if (PeaceCanvas.instance.currentStoreNPC == this)
             PeaceCanvas.instance.currentStoreNPC = null;
-
-        isStoreWindowOpen = false;
-        cartSlots = null;
     }
 
-    void PopulateStoreUI (){
-        storeItemTemplate = instanciatedStoreWindow.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
-        for (int i = 0; i < storeItems.Length; i++) {
-            StoreItemUI itemUI = Instantiate(storeItemTemplate, instanciatedStoreWindow.transform.GetChild(0).GetChild(0)).GetComponent<StoreItemUI>();
-            itemUI.item = storeItems[i];
-            itemUI.parentStoreNPC = this;
-            itemUI.Init();
-        }
-        Destroy(storeItemTemplate);
-        cartSlots = instanciatedStoreWindow.transform.GetComponentsInChildren<UI_StoreCartSlot>();
-        cartTotalLabel = instanciatedStoreWindow.transform.Find("Cart/Cart total/Cart total label").GetComponent<TextMeshProUGUI>();
-        cartTotalLabel.text = getCartTotalPrice().ToString();
-        instanciatedStoreWindow.transform.Find("Cart/Purchase button").GetComponent<Button>().onClick.AddListener(delegate{Purchase();});
-    }
-
-    int getCartTotalPrice () {
+    public int getCartTotalPrice () {
         int _cartTotalPrice = 0;
-        foreach (UI_StoreCartSlot slot in cartSlots) {
+        foreach (UI_StoreCartSlot slot in instanciatedStoreWindow.cartSlots) {
             if (slot.itemInSlot != null)
                 _cartTotalPrice += slot.itemInSlot.itemBasePrice * slot.itemAmount;
         }
         return _cartTotalPrice;
     }
 
+    public int getTotalSellPrice () {
+        int _TotalSellPrice = 0;
+        foreach (UI_StoreSellSlot slot in instanciatedStoreWindow.sellSlots) {
+            if (slot.itemInSlot != null)
+                _TotalSellPrice += slot.itemInSlot.itemBasePrice * slot.itemAmount;
+        }
+        return _TotalSellPrice;
+    }
+
+
     public void AddToCart (Item item) {
         int amount = 1;
         if(item.isStackable)
             amount = Input.GetKey(KeyCode.LeftControl) ? 100 : Input.GetKey(KeyCode.LeftShift) ? 10 : amount;
         
-        foreach (UI_StoreCartSlot s in cartSlots) {
+        foreach (UI_StoreCartSlot s in instanciatedStoreWindow.cartSlots) {
+            if (s.itemInSlot == item && item.isStackable && s.itemAmount + amount <= item.maxStackAmount) {
+                s.itemAmount += amount;
+                audioSource.clip = addToCartSound;
+                audioSource.Play();
+                return;
+            }
+            if (s.itemInSlot == null) {
+                s.itemInSlot = item;
+                s.itemAmount = amount;
+                audioSource.clip = addToCartSound;
+                audioSource.Play();
+                return;
+            }
+        }
+    }
+
+    public void AddToSell (Item item, int amount = 1) {
+        foreach (UI_StoreSellSlot s in instanciatedStoreWindow.sellSlots) {
             if (s.itemInSlot == item && item.isStackable && s.itemAmount + amount <= item.maxStackAmount) {
                 s.itemAmount += amount;
                 audioSource.clip = addToCartSound;
@@ -128,14 +145,23 @@ public class TradingNPC : MonoBehaviour
 
     int getNumberOfItemsInCart () {
         int i = 0;
-        foreach (UI_StoreCartSlot s in cartSlots) {
+        foreach (UI_StoreCartSlot s in instanciatedStoreWindow.cartSlots) {
             if (s.itemInSlot != null)
                 i++;
         }
         return i;
     }
 
-    void Purchase () {
+    public int getNumberOfEmptySellSlots () {
+        int i = 0;
+        foreach (UI_StoreSellSlot slot in instanciatedStoreWindow.sellSlots) {
+            if (slot.itemInSlot == null)
+                i++;
+        }
+        return i;
+    }
+
+    public void Purchase () {
         if (InventoryManager.instance.currentGold <= getCartTotalPrice()) {
             CanvasScript.instance.DisplayWarning("Not enough gold");
             return;
@@ -148,11 +174,21 @@ public class TradingNPC : MonoBehaviour
 
         InventoryManager.instance.currentGold -= getCartTotalPrice();
 
-        foreach (UI_StoreCartSlot s in cartSlots) {
+        foreach (UI_StoreCartSlot s in instanciatedStoreWindow.cartSlots) {
             if (s.itemInSlot != null) {
                 InventoryManager.instance.AddItemToInventory(s.itemInSlot, s.itemAmount);
                 s.ClearSlot();
             }
+        }
+        audioSource.clip = purchaseSound;
+        audioSource.Play();
+    }
+
+    public void Sell () {
+        InventoryManager.instance.currentGold += getTotalSellPrice();
+
+        foreach (UI_StoreSellSlot s in instanciatedStoreWindow.sellSlots) {
+            s.ClearSlot();
         }
         audioSource.clip = purchaseSound;
         audioSource.Play();

@@ -71,6 +71,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
         itemInSlot = item;
         itemAmount = amount;
         DisplayItem();
+        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);
     }
 
     void MainHandAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -151,5 +152,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
             }
         }
         base.ClearSlot();
+        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);
     }
 }

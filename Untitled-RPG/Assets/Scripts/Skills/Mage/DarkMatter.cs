@@ -33,7 +33,6 @@ public class DarkMatter : Skill
         Transform shootPosition = left ? hands[0] : hands[1];
         ignorePlayer =~ LayerMask.GetMask("Player");
 
-        //play sound
         GameObject prj = Instantiate(projectile, shootPosition.position, Quaternion.identity);
         
         RaycastHit hit;

@@ -11,6 +11,10 @@ public class SimpleBowShot : AimingSkill
     public GameObject arrowPrefab;
     public Transform rightHand;
 
+    [Header("Sounds")]
+    public AudioClip drawSound;
+    public AudioClip[] shootSounds;
+
     Transform aimTarget;
     Arrow newArrow;
     Vector3 shootPoint;
@@ -32,6 +36,8 @@ public class SimpleBowShot : AimingSkill
         
         playerControlls.isAttacking = false;
         Combat.instanace.AimingSkill = this;
+
+        PlaySound(drawSound, 0, 1, 0, 0.5f);
     }
 
     protected override void KeepAiming()
@@ -88,6 +94,8 @@ public class SimpleBowShot : AimingSkill
         playerControlls.isAttacking = false;
 
         newArrow = null;
+
+        PlaySound(shootSounds[Random.Range(0, shootSounds.Length)], 0, 1.2f, 0, 0.25f);
     }
 
     void DrawDebugs () {

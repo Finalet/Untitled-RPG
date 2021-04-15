@@ -72,7 +72,7 @@ public class PlayerControlls : MonoBehaviour
 
     bool rolled;
 
-    public bool[] emptyAttackAnimatorStates = new bool[4];
+    public bool[] emptyAttackAnimatorStates = new bool[6];
 
     void Awake() {
         if (instance == null) 
@@ -430,7 +430,16 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void CheckIsAttacking () {
-        if ( ( emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] ) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]))
+        if ( (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) )
+            isAttacking = false;
+
+        if (emptyAttackAnimatorStates[4] && emptyAttackAnimatorStates[5])
+            isAttacking = false;
+
+        if ( emptyAttackAnimatorStates[5] && (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]) )
+            isAttacking = false;
+
+        if ( emptyAttackAnimatorStates[4] && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) )
             isAttacking = false;
     }
 

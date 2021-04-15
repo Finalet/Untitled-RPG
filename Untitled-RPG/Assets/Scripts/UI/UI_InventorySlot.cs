@@ -46,6 +46,21 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     public virtual void UseItem () {
+        if (PeaceCanvas.instance.currentStoreNPC != null && PeaceCanvas.instance.currentStoreNPC.isSellWindowOpen) { //Store window is open, need to sell item
+            if (PeaceCanvas.instance.currentStoreNPC.getNumberOfEmptySellSlots() == 0)
+                return;
+
+            int amount = 1;
+            if(itemAmount > 1)
+                amount = Input.GetKey(KeyCode.LeftControl) ? (itemAmount >= 100 ? 100 : itemAmount) : Input.GetKey(KeyCode.LeftShift) ? (itemAmount >= 10 ? 10 : itemAmount) : amount;
+
+            PeaceCanvas.instance.currentStoreNPC.AddToSell(itemInSlot, amount);
+            itemAmount -= amount;
+            if (itemAmount == 0)
+                ClearSlot();
+            return;
+        }
+
         if (itemInSlot is Consumable) {
             Consumable c = (Consumable)itemInSlot;
             if (c.isCoolingDown || !c.canBeUsed())
@@ -98,8 +113,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
     protected virtual void DisplayItem () {
         slotIcon.sprite = itemInSlot.itemIcon;
-        if (itemInSlot is Equipment) itemAmountText.text = "";
-        else itemAmountText.text = itemAmount.ToString();
+        itemAmountText.text = itemAmount == 1 ? "" : itemAmount.ToString();
         slotIcon.color = Color.white;
 
         if (!(itemInSlot is Consumable))
@@ -160,6 +174,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
         PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, itemInSlot, itemAmount, this);
         ClearSlot();
+        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.grabItemSound);
     }
 
     public virtual void OnDrag (PointerEventData pointerData) {
@@ -180,6 +195,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         if (PeaceCanvas.instance.itemBeingDragged != null) { //Dropping Item
             PeaceCanvas.instance.dragSuccess = true;
             AddItem(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, PeaceCanvas.instance.initialSlot);
+            PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
         }
     }
 

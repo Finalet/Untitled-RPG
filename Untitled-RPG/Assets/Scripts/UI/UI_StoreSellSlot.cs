@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_StoreCartSlot : UI_InventorySlot, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
+public class UI_StoreSellSlot : UI_InventorySlot, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
     protected override void Start () {
         //do nothing
@@ -30,6 +30,7 @@ public class UI_StoreCartSlot : UI_InventorySlot, IDropHandler, IDragHandler, IB
 
     public override void UseItem()
     {
+        InventoryManager.instance.AddItemToInventory(itemInSlot, itemAmount);
         ClearSlot();
         PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
     }

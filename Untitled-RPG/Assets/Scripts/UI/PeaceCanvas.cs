@@ -51,6 +51,10 @@ public class PeaceCanvas : MonoBehaviour
 
     [Header("Sounds")]
     public AudioClip inventoryOpenSound;
+    public AudioClip inventoryCloseSound;
+    public AudioClip grabItemSound;
+    public AudioClip dropItemSound;
+    public AudioClip equipItemSound;
 
     AudioSource audioSource;
 
@@ -110,10 +114,10 @@ public class PeaceCanvas : MonoBehaviour
         audioSource.Play();
     }
 
-    public void OpenInventory () {
+    public void OpenInventory (bool exceptEquipmentSlots = false) {
         MainContainer.SetActive(true);
         Inventory.SetActive(true);
-        EquipmentSlots.SetActive(true);
+        if (!exceptEquipmentSlots) EquipmentSlots.SetActive(true);
         SkillsPanel.SetActive(false);
         OpenMenuCamera();
         audioSource.clip = inventoryOpenSound;
@@ -129,6 +133,8 @@ public class PeaceCanvas : MonoBehaviour
             CM_MenuCam.Priority = 0;
             if (currentStoreNPC != null)
                 currentStoreNPC.CloseStoreWindow();
+            audioSource.clip = inventoryCloseSound;
+            audioSource.Play();
         } else { //toggle pause
             TogglePause();
         }
@@ -267,5 +273,10 @@ public class PeaceCanvas : MonoBehaviour
     public void HideKeySuggestion (){
         if (buttonSuggestionUI.activeInHierarchy)
             buttonSuggestionUI.SetActive(false);
+    }
+
+    public void PlaySound(AudioClip clip) {
+        audioSource.clip = clip;
+        audioSource.Play();
     }
 }
