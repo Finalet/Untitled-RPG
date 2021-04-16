@@ -67,7 +67,6 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
                 return;
             
             itemInSlot.Use();
-            StartCoroutine( itemInSlot.UseEnum() );
             itemAmount --;
             if (itemAmount == 0)
                 ClearSlot();
@@ -121,12 +120,10 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
         Consumable c = (Consumable)itemInSlot;
         if(c.isCoolingDown) {
-            cooldownImage.color = new Color(0, 0, 0, 0.9f);
-            cooldownImage.fillAmount = c.cooldownTimer/c.cooldownTime;
+            cooldownImage.color = new Color(0, 0, 0, 0.8f);
             cooldownTimerText.text = Mathf.RoundToInt(c.cooldownTimer).ToString();
         } else {
             cooldownImage.color = new Color(0, 0, 0, 0);
-            cooldownImage.fillAmount = 1;
             cooldownTimerText.text = "";
         }
         if (c.canBeUsed()) {

@@ -14,24 +14,15 @@ public class Consumable : Item
     public int cooldownTime;
     public float cooldownTimer;
 
-    public override void Use () {}
-    public override void Use (UI_InventorySlot initialSlot){}
-
-    public override IEnumerator UseEnum() {
+    public override void Use () {
         if (consumableType == ConsumableType.Health)
             Characteristics.instance.GetHealed(actualEffect());
         else if (consumableType == ConsumableType.Stamina)
             Characteristics.instance.GetStamina(actualEffect());
 
-        cooldownTimer = cooldownTime;
-        while(cooldownTimer > 0) {
-            cooldownTimer -= Time.deltaTime;
-            isCoolingDown = true;
-            yield return null;
-        }
-        cooldownTimer = 0;
-        isCoolingDown = false;
+        AssetHolder.instance.StartConsumableCooldown(this);
     }
+    public override void Use (UI_InventorySlot initialSlot){}
 
     void OnDisable() {
         isCoolingDown = false;

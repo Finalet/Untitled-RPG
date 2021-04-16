@@ -15,10 +15,28 @@ public class AssetHolder : MonoBehaviour
 
     public List<Item> consumables = new List<Item>();
     public List<Item> weapons = new List<Item>();
+    public List<Consumable> consumablesCoolingDown = new List<Consumable>();
 
     void Awake() {
         if (instance == null)
             instance = this;
+    }
+
+    void FixedUpdate() {
+        if (consumablesCoolingDown.Count >= 1)
+            RunConsumablesCooldown();
+    }
+    void RunConsumablesCooldown() {
+        for (int i = consumablesCoolingDown.Count-1; i >= 0; i--) {
+            print(i);
+            consumablesCoolingDown[i].cooldownTimer -= Time.fixedDeltaTime;
+            consumablesCoolingDown[i].isCoolingDown = consumablesCoolingDown[i].cooldownTimer > 0 ? true : false;
+            if (!consumablesCoolingDown[i].isCoolingDown) consumablesCoolingDown.RemoveAt(i);
+        }
+    }
+    public void StartConsumableCooldown(Consumable item) {
+        item.cooldownTimer = item.cooldownTime;
+        consumablesCoolingDown.Add(item);
     }
 
     public Item getItem(int ID) {
