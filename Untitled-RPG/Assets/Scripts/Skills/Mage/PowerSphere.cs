@@ -13,15 +13,22 @@ public class PowerSphere : Skill
     public AudioClip shootSound;
     
     public ParticleSystem HandsEffect;
-    public Transform[] hands;
     public List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
 
+    Transform[] hands;
     GameObject instanciatedSphere;
 
     [Header("Buffs")]
     public float castSpeedIncrease = 0.2f;
     public float magicDamageIncrease = 0.2f;
     public float defenseIncrease = 0.2f;
+
+    protected override void Start() {
+        base.Start();
+        hands = new Transform[2];
+        hands[0] = PlayerControlls.instance.leftHandWeaponSlot;
+        hands[1] = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override float actualDistance () {
         return distance + characteristics.magicSkillDistanceIncrease;

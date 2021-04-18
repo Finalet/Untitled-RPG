@@ -9,9 +9,16 @@ public class Firewall : Skill
     public GameObject firewall;
     Vector3 spawnPos;
 
-    public Transform[] hands;
+    Transform[] hands;
     public ParticleSystem handsEffect;
     List<ParticleSystem> spawnedPS = new List<ParticleSystem>();
+
+    protected override void Start() {
+        base.Start();
+        hands = new Transform[2];
+        hands[0] = PlayerControlls.instance.leftHandWeaponSlot;
+        hands[1] = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override void CustomUse() {
         if (playerControlls.isFlying)

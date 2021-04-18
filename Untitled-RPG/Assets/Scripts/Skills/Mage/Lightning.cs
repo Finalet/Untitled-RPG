@@ -10,7 +10,7 @@ public class Lightning : Skill
     public GameObject lightningProjectile;
     public Sprite[] skillIcons;
 
-    public Transform[] hands;
+    Transform[] hands;
 
     Vector3 shootPoint;
     int shots;
@@ -19,6 +19,13 @@ public class Lightning : Skill
 
     public AudioClip[] sounds;
     public GameObject handsVFX;
+
+    protected override void Start() {
+        base.Start();
+        hands = new Transform[2];
+        hands[0] = PlayerControlls.instance.leftHandWeaponSlot;
+        hands[1] = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override void LocalUse () {
         playerControlls.InterruptCasting();

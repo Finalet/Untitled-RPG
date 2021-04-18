@@ -9,7 +9,7 @@ public class SimpleBowShot : AimingSkill
     public float strength = 50;
     public MultiAimConstraint spineIKtransform;
     public GameObject arrowPrefab;
-    public Transform rightHand;
+    Transform rightHand;
 
     [Header("Sounds")]
     public AudioClip drawSound;
@@ -22,6 +22,12 @@ public class SimpleBowShot : AimingSkill
     bool grabBowstring;
 
     protected override void CustomUse(){}
+
+    protected override void Start()
+    {
+        base.Start();
+        rightHand = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override void StartAiming()
     {

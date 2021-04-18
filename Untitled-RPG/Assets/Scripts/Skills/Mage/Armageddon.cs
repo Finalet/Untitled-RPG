@@ -16,13 +16,20 @@ public class Armageddon : Skill
 
     public ParticleSystem handsVFX;
     public ParticleSystem cloudVFX;
-    public Transform[] hands;
+    Transform[] hands;
 
     float lastShotTime;
     Vector3 mainPos;
 
     List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
     ParticleSystem instanciatedCloud;
+
+    protected override void Start() {
+        base.Start();
+        hands = new Transform[2];
+        hands[0] = PlayerControlls.instance.leftHandWeaponSlot;
+        hands[1] = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override float actualDistance () {
         return distance + characteristics.magicSkillDistanceIncrease;

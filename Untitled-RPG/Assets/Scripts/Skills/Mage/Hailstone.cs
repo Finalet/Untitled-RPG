@@ -10,12 +10,19 @@ public class Hailstone : Skill
     public GameObject projectile;
     
     public ParticleSystem HandsEffect;
-    public Transform[] hands;
+    Transform[] hands;
 
     public List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
 
     public AudioClip castingSound;
     public AudioClip fireSound;
+
+    protected override void Start() {
+        base.Start();
+        hands = new Transform[2];
+        hands[0] = PlayerControlls.instance.leftHandWeaponSlot;
+        hands[1] = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override float actualDistance () {
         return distance + characteristics.magicSkillDistanceIncrease;

@@ -8,9 +8,8 @@ public class Levitation : Skill
     [Tooltip("Increase distance of mage skill by meters")] public float skillDistanceIncrease = 10;
     public float magicPowerPercentageIncrease = 20;
     [Tooltip("Duration in seconds")] public float flightDuration = 120;
-    public float flySpeed = 2;
 
-    public Transform[] feetsAndHands;
+    Transform[] feetsAndHands;
     public ParticleSystem bodypartsVFX;
     public ParticleSystem fullbodyVFX;
 
@@ -25,10 +24,15 @@ public class Levitation : Skill
         base.Start(); 
         var sh = fullbodyVFX.shape;
         sh.skinnedMeshRenderer = playerControlls.skinnedMesh;
+
+        feetsAndHands = new Transform[4];
+        feetsAndHands[0] = PlayerControlls.instance.leftFootRoot;
+        feetsAndHands[1] = PlayerControlls.instance.rightFootRoot;
+        feetsAndHands[2] = PlayerControlls.instance.leftHandWeaponSlot;
+        feetsAndHands[3] = PlayerControlls.instance.rightHandWeaponSlot;
     }
 
     protected override void CustomUse() {
-        PlayerControlls.instance.flySpeed = flySpeed;
         PlayerControlls.instance.TakeOff();
         GetComponent<AudioSource>().PlayDelayed(0.4f);
         characteristics.AddBuff(this);

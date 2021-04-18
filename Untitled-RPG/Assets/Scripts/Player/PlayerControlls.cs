@@ -62,13 +62,16 @@ public class PlayerControlls : MonoBehaviour
 
     Vector3 lastCamRotation;
 
-    [Header("Animations")]
-    public Animator animator;
-    public Transform leftFoot;
-    public Transform rightFoot;
+    [Header("Bodypart roots")]
+    public Transform leftFootRoot;
+    public Transform rightFootRoot;
+    public Transform leftHandRoot;
+    public Transform rightHandRoot;
+    public Transform leftHandWeaponSlot;
+    public Transform rightHandWeaponSlot;
     public ParticleSystem sprintTrails;
-
     public SkinnedMeshRenderer skinnedMesh;
+    [System.NonSerialized] public Animator animator;
 
     bool rolled;
 
@@ -281,7 +284,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void CheckWhichFootIsUp() {
-        if (leftFoot.transform.position.y < rightFoot.transform.position.y) {
+        if (leftFootRoot.position.y < rightFootRoot.position.y) {
             animator.SetBool("IsRightLegUp", true);
         } else {
             animator.SetBool("IsRightLegUp", false);
@@ -367,8 +370,6 @@ public class PlayerControlls : MonoBehaviour
 #endregion
 
 #region Flying movement
-
-    [System.NonSerialized] public float flySpeed;
 
     void FlyingMovement() {
         UpdateRotation();

@@ -10,17 +10,24 @@ public class Fireball : Skill
     public float distance;
 
     public GameObject fireball;
-    public Transform shootPosition;
+    Transform shootPosition;
 
     Vector3 shootPoint;
 
     public ParticleSystem HandsEffect;
-    public Transform[] hands;
+    Transform hand;
 
     [Header("Sounds")]
     public AudioClip castingSound;
 
     List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
+
+        
+    protected override void Start() {
+        base.Start();
+        hand = PlayerControlls.instance.rightHandRoot;
+        shootPosition = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override void CastingAnim() {
 
@@ -31,11 +38,9 @@ public class Fireball : Skill
 
         PlaySound(castingSound, 0.15f, 0.75f);
 
-        for (int i = 0; i < hands.Length; i ++) {
-            ParticleSystem ps = Instantiate(HandsEffect, hands[i]);
-            instanciatedEffects.Add(ps);
-            ps.gameObject.SetActive(true);
-        }
+        ParticleSystem ps = Instantiate(HandsEffect, hand);
+        instanciatedEffects.Add(ps);
+        ps.gameObject.SetActive(true);
 
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = true;
     }

@@ -10,11 +10,18 @@ public class DarkMatter : Skill
     public float distance;
 
     public GameObject projectile;
-    public Transform[] hands;
+    Transform[] hands;
     
     Vector3 shootPoint;
     bool left;
     float aimingTimer;
+
+    protected override void Start() {
+        base.Start();
+        hands = new Transform[2];
+        hands[0] = PlayerControlls.instance.leftHandWeaponSlot;
+        hands[1] = PlayerControlls.instance.rightHandWeaponSlot;
+    }
 
     protected override void CustomUse()
     {
