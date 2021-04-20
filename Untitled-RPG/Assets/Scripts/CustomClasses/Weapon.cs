@@ -2,26 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Weapon", menuName = "Item/Weapon")]
+[CreateAssetMenu(fileName = "New Weapon", menuName = "Item/Weapon")]
 public class Weapon : Equipment
 {
     public WeaponType weaponType;
-    [Header("Stats")]
-    public int MeleeAttack;
-    public int RangedAttack;
-    public int MagicPower;
-    public int HealingPower;
-    public int Defense;
 
-    public override void Use(UI_InventorySlot initialSlot)
-    {
-        if (!(initialSlot is UI_EquipmentSlot))
-            Equip(initialSlot);
-        else
-            Unequip(initialSlot);
-    }
-
-    void Equip (UI_InventorySlot initialSlot) {
+    protected override void Equip (UI_InventorySlot initialSlot) {
         if (weaponType == WeaponType.OneHandedSword || weaponType == WeaponType.OneHandedStaff) {
             OneHandedEquip(initialSlot);
         } else if (weaponType == WeaponType.TwoHandedSword || weaponType == WeaponType.TwoHandedStaff) {
@@ -31,11 +17,6 @@ public class Weapon : Equipment
         } else {
             //IMPLEMENT OTHER EQUIPMENT TYPES
         }
-    }
-
-    void Unequip (UI_InventorySlot initialSlot) {
-        InventoryManager.instance.AddItemToInventory(this, 1);
-        initialSlot.ClearSlot();
     }
 
     void OneHandedEquip (UI_InventorySlot initialSlot) {
