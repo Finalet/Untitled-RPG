@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Equipment : Item
 {
-    [Header("Stats")]
+    [Header("Maint Stats")]
     public int MeleeAttack;
     public int RangedAttack;
     public int MagicPower;
     public int HealingPower;
     public int Defense;
+    [Header("Secondary Stats")]
+    public int strength;
+    public int agility;
+    public int intellect;
 
     public override void Use (){}
     public override void Use (UI_InventorySlot initialSlot){

@@ -241,13 +241,13 @@ public class PeaceCanvas : MonoBehaviour
         while (x > 0 ) {
             x -= Time.fixedDeltaTime;
             Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * right;
-            pos.y = PlayerControlls.instance.transform.position.y + 1.5f;
+            pos.y = PlayerControlls.instance.transform.position.y + 1f;
 
             menuLookAt.position = pos;
             menuLookAt.eulerAngles = new Vector3(0,  PlayerControlls.instance.playerCamera.transform.eulerAngles.y,0);
 
             pos += menuLookAt.transform.forward * -3.5f;
-            pos.y = PlayerControlls.instance.transform.position.y + 2f;
+            pos.y = PlayerControlls.instance.transform.position.y + 1.5f;
 
             CM_MenuCam.transform.position = pos; 
             yield return null;

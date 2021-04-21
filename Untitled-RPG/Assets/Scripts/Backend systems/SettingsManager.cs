@@ -12,11 +12,13 @@ public class SettingsManager : MonoBehaviour
     [Header("Settings")]
     public float mouseSensitivity;
     public bool invertY;
+    public bool displayHelmet = true;
 
     [Space]
     public Slider mouseSensitivitySlider;
     public Text mouseSensitivityText;
     public Toggle invertYToggle;
+    public Toggle displayHelmetToggle;
 
     void Awake() {
         if (instance == null)
@@ -32,11 +34,13 @@ public class SettingsManager : MonoBehaviour
     public void SaveSettings () {
         ES3.Save<float>("mouseSensitivity", mouseSensitivity, savefilePath);
         ES3.Save<bool>("invertY", invertY, savefilePath);
+        ES3.Save<bool>("displayHelmet", displayHelmet, savefilePath);
     }
 
     public void LoadSettings () {
-        mouseSensitivity = ES3.Load<float>("mouseSensitivity", savefilePath);
-        invertY = ES3.Load<bool>("invertY", savefilePath);
+        if (ES3.KeyExists("mouseSensitivity", savefilePath)) mouseSensitivity = ES3.Load<float>("mouseSensitivity", savefilePath);
+        if (ES3.KeyExists("invertY", savefilePath))invertY = ES3.Load<bool>("invertY", savefilePath);
+        if (ES3.KeyExists("displayHelmet", savefilePath))displayHelmet = ES3.Load<bool>("displayHelmet", savefilePath);
     }
 
     public void SetMouseSensitivity() {
@@ -46,10 +50,15 @@ public class SettingsManager : MonoBehaviour
     public void SetInvertY () {
         invertY = invertYToggle.isOn;
     }
+    public void SetDisplayHelmet () {
+        displayHelmet = displayHelmetToggle.isOn;
+        if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayHelmet();
+    }
 
     void UpdateSettingsUI () {
         mouseSensitivitySlider.value = mouseSensitivity;
         mouseSensitivityText.text = mouseSensitivity.ToString();
         invertYToggle.isOn = invertY;
+        displayHelmetToggle.isOn = displayHelmet;
     }
 }

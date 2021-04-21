@@ -15,6 +15,7 @@ public class AssetHolder : MonoBehaviour
 
     public List<Item> consumables = new List<Item>();
     public List<Item> weapons = new List<Item>();
+    public List<Item> armor = new List<Item>();
     public List<Consumable> consumablesCoolingDown = new List<Consumable>();
 
     void Awake() {
@@ -47,12 +48,19 @@ public class AssetHolder : MonoBehaviour
             }
             Debug.LogError($"Item with ID = {ID} not found");
             return null;
-        } else if (ID >= 1000) { //Returns weapons 
+        } else if (ID >= 1000 && ID < 2000) { //Returns weapons 
             for (int i = 0; i < weapons.Count; i ++) {
                 if (weapons[i].ID == ID)
                     return weapons[i];
             }
-            Debug.LogError($"Item with ID = {ID} not found");
+            Debug.LogError($"Weapon with ID = {ID} not found");
+            return null;
+        } else if (ID >= 2000 && ID < 3000) { //Returns armor 
+            for (int i = 0; i < armor.Count; i ++) {
+                if (armor[i].ID == ID)
+                    return armor[i];
+            }
+            Debug.LogError($"Armor with ID = {ID} not found");
             return null;
         } else {
             Debug.LogError($"ID = {ID} is out of range");

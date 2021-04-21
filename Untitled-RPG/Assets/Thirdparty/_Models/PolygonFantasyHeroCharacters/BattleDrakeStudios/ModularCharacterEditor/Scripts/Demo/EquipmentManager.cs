@@ -21,7 +21,6 @@ namespace BattleDrakeStudios.ModularCharacters {
         }
 
         private void EquipItem(Item itemToEquip) {
-
             foreach (var part in itemToEquip.modularArmor.armorParts) {
                 if (part.partID > -1) {
                     characterManager.ActivatePart(part.bodyType, part.partID);

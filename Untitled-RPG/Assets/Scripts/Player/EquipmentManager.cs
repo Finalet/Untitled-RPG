@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BattleDrakeStudios.ModularCharacters;
+using FIMSpace.FTail;
 
 public class EquipmentManager : MonoBehaviour
 {
     public static EquipmentManager instance; 
 
-    [Header("Transforms")]
     Transform TwoHandedWeaponSlot;
     Transform MainHandSlot;
     Transform SecondaryHandSlot;
@@ -18,10 +19,10 @@ public class EquipmentManager : MonoBehaviour
     [Header("Slots")]
     public UI_EquipmentSlot helmet;
     public UI_EquipmentSlot chest;
-    public UI_EquipmentSlot belt;
     public UI_EquipmentSlot gloves;
     public UI_EquipmentSlot pants;
     public UI_EquipmentSlot boots;
+    public UI_EquipmentSlot back;
     public UI_EquipmentSlot necklace;
     public UI_EquipmentSlot ring;
     public UI_EquipmentSlot secondRing;
@@ -29,7 +30,11 @@ public class EquipmentManager : MonoBehaviour
     public UI_EquipmentSlot secondaryHand;
     public UI_EquipmentSlot bow;
 
+    [Header("Misc")]
+    public TailAnimator2 capeBoneTail;
+
     Characteristics characteristics;
+    ModularCharacterManager modularCharacterManager;
 
     void Awake() {
         if (instance == null)
@@ -38,6 +43,7 @@ public class EquipmentManager : MonoBehaviour
 
     void Start() {
         characteristics = Characteristics.instance;
+        modularCharacterManager = GetComponent<ModularCharacterManager>();
         TwoHandedWeaponSlot = WeaponsController.instance.twohandedWeaponSlot;
         BowSlot = WeaponsController.instance.bowSlot;
         MainHandSlot = WeaponsController.instance.leftHipSlot;
@@ -50,10 +56,10 @@ public class EquipmentManager : MonoBehaviour
     void LoadEquip(){
         helmet.Load();
         chest.Load();
-        belt.Load();
         gloves.Load();
         pants.Load();
         boots.Load();
+        back.Load();
         necklace.Load();
         ring.Load();
         secondRing.Load();
@@ -65,24 +71,33 @@ public class EquipmentManager : MonoBehaviour
     void FixedUpdate() {
         ResetStats();
 
-        Weapon w = (Weapon)mainHand.itemInSlot;
-        if (w != null) AddStats(w);
-           
-        w = (Weapon)secondaryHand.itemInSlot;
-        if (w != null) AddStats(w);
-        
-        w = (Weapon)bow.itemInSlot;
-        if (w != null) AddStats(w);
+        if (mainHand.itemInSlot != null) AddStats((Equipment)mainHand.itemInSlot);
+        if (secondaryHand.itemInSlot != null) AddStats((Equipment)secondaryHand.itemInSlot);
+        if (bow.itemInSlot != null) AddStats((Equipment)bow.itemInSlot);
+        if (helmet.itemInSlot != null) AddStats((Equipment)helmet.itemInSlot);
+        if (chest.itemInSlot != null) AddStats((Equipment)chest.itemInSlot);
+        if (gloves.itemInSlot != null) AddStats((Equipment)gloves.itemInSlot);
+        if (pants.itemInSlot != null) AddStats((Equipment)pants.itemInSlot);
+        if (boots.itemInSlot != null) AddStats((Equipment)boots.itemInSlot);
+        if (back.itemInSlot != null) AddStats((Equipment)back.itemInSlot);
+        if (necklace.itemInSlot != null) AddStats((Equipment)necklace.itemInSlot);
+        if (ring.itemInSlot != null) AddStats((Equipment)ring.itemInSlot);
+        if (secondRing.itemInSlot != null) AddStats((Equipment)secondRing.itemInSlot);
 
         //ADD ALL OTHER ITEMS
+
+        capeBoneTail.enabled = back.itemInSlot == null ? false : true;
     }
 
-    void AddStats (Weapon w) {
-        characteristics.meleeAttackFromEquip += w.MeleeAttack;
-        characteristics.rangedAttackFromEquip += w.RangedAttack;
-        characteristics.magicPowerFromEquip += w.MagicPower;
-        characteristics.healingPowerFromEquip += w.HealingPower;
-        characteristics.defenseFromEquip += w.Defense;
+    void AddStats (Equipment item) {
+        characteristics.meleeAttackFromEquip += item.MeleeAttack;
+        characteristics.rangedAttackFromEquip += item.RangedAttack;
+        characteristics.magicPowerFromEquip += item.MagicPower;
+        characteristics.healingPowerFromEquip += item.HealingPower;
+        characteristics.defenseFromEquip += item.Defense;
+        characteristics.strengthFromEquip += item.strength;
+        characteristics.agilityFromEquip += item.agility;
+        characteristics.intellectFromEquip += item.intellect;
     }
 
     void ResetStats () {
@@ -91,6 +106,9 @@ public class EquipmentManager : MonoBehaviour
         characteristics.magicPowerFromEquip = 0;
         characteristics.healingPowerFromEquip = 0;
         characteristics.defenseFromEquip = 0;
+        characteristics.strengthFromEquip = 0;
+        characteristics.agilityFromEquip = 0;
+        characteristics.intellectFromEquip = 0;
     }
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
@@ -170,6 +188,48 @@ public class EquipmentManager : MonoBehaviour
         }
         foreach (Transform child in slot) {
             Destroy(child.gameObject);
+        }
+    }
+
+    public void EquipArmorVisual(Armor item) {
+        if (item.armorType == ArmorType.Helmet && !SettingsManager.instance.displayHelmet)
+            return;
+
+        foreach (var part in item.modularArmor.armorParts) {
+            if (part.partID > -1) {
+                modularCharacterManager.ActivatePart(part.bodyType, part.partID);
+                ColorPropertyLinker[] armorColors = item.modularArmor.armorColors;
+                for (int i = 0; i < armorColors.Length; i++) {
+                    modularCharacterManager.SetPartColor(part.bodyType, part.partID, armorColors[i].property, armorColors[i].color);
+                }
+            } else {
+                modularCharacterManager.DeactivatePart(part.bodyType);
+            }
+        }
+        foreach (var part in item.modularArmor.partsToDeactivateWhileWearing) {
+            modularCharacterManager.DeactivatePart(part);
+        }
+    }
+    public void UnequipArmorVisual (Armor item) {
+        foreach (var part in item.modularArmor.armorParts) {
+            if (part.bodyType.IsBaseBodyPart())
+                modularCharacterManager.ActivatePart(part.bodyType, 0); //If its human body part, then activate naked skin
+            else 
+                modularCharacterManager.DeactivatePart(part.bodyType);
+        }
+        foreach (var part in item.modularArmor.partsToDeactivateWhileWearing) { 
+            modularCharacterManager.ReturnToBaseBodypart(part);
+        }
+    }
+
+    public void CheckDisplayHelmet () {
+        if (helmet.itemInSlot == null) //If we dont have a helmet, then there is nothing to do
+            return;
+
+        if (SettingsManager.instance.displayHelmet) {
+            EquipArmorVisual((Armor)helmet.itemInSlot);
+        } else {
+            UnequipArmorVisual((Armor)helmet.itemInSlot);
         }
     }
 }

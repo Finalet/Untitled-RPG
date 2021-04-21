@@ -47,11 +47,13 @@ public class UI_EquipmentSlot : UI_InventorySlot
             SecondaryHandAdd(item, amount, initialSlot);    
         } else if (equipmentSlotType == EquipmentSlotType.Bow) {
             BowAdd(item, amount, initialSlot);    
+        } else if (equipmentSlotType == EquipmentSlotType.Helmet || equipmentSlotType == EquipmentSlotType.Chest || equipmentSlotType == EquipmentSlotType.Gloves || equipmentSlotType == EquipmentSlotType.Pants || equipmentSlotType == EquipmentSlotType.Boots || equipmentSlotType == EquipmentSlotType.Back) {
+            ArmorAdd(item, amount, initialSlot);    
         } else {
             //if its not equipment, return it to initial slot. LATER IMPLEMENT EVERY BODY PART.
             initialSlot.AddItem(item, amount, null); 
             return;
-        }        
+        }
     }
 
     protected override void DisplayItem() {
@@ -135,10 +137,41 @@ public class UI_EquipmentSlot : UI_InventorySlot
         EquipmentManager.instance.EquipWeaponPrefab(w);
     }
 
+    void ArmorAdd (Item item, int amount, UI_InventorySlot initialSlot) {
+        if (!(item is Armor)) { //If its not armor, return to initial slot
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        Armor ar = (Armor)item;
+        if (equipmentSlotType == EquipmentSlotType.Helmet && ar.armorType != ArmorType.Helmet) {
+            initialSlot.AddItem(item, amount, null);
+            return;
+        } else if (equipmentSlotType == EquipmentSlotType.Chest && ar.armorType != ArmorType.Chest) {
+            initialSlot.AddItem(item, amount, null);
+            return;
+        } else if (equipmentSlotType == EquipmentSlotType.Gloves && ar.armorType != ArmorType.Gloves) {
+            initialSlot.AddItem(item, amount, null);
+            return;
+        } else if (equipmentSlotType == EquipmentSlotType.Pants && ar.armorType != ArmorType.Pants) {
+            initialSlot.AddItem(item, amount, null);
+            return;
+        } else if (equipmentSlotType == EquipmentSlotType.Boots && ar.armorType != ArmorType.Boots) {
+            initialSlot.AddItem(item, amount, null);
+            return;
+        } else if (equipmentSlotType == EquipmentSlotType.Back && ar.armorType != ArmorType.Back) {
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        EquipmentManager.instance.EquipArmorVisual(ar);
+        SharedAdd(item, amount, initialSlot);
+    }
+
     public override void ClearSlot()
     {
-        Weapon w = (Weapon)itemInSlot;
-        if (w != null) {
+        if (itemInSlot is Weapon) {
+            Weapon w = (Weapon)itemInSlot;
             if (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) {
                 EquipmentManager.instance.UnequipWeaponPrefab(true);
             } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) {
@@ -150,6 +183,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
             } else if (w.weaponType == WeaponType.Bow) {
                 EquipmentManager.instance.UnequipWeaponPrefab(false, false, true);
             }
+        } else if (itemInSlot is Armor) {
+            EquipmentManager.instance.UnequipArmorVisual((Armor)itemInSlot);
         }
         base.ClearSlot();
         PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);

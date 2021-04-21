@@ -9,6 +9,12 @@ namespace BattleDrakeStudios.ModularCharacters {
     [ExecuteInEditMode]
     public class ModularCharacterManager : MonoBehaviour {
 
+        int baseHeadID = 2;
+        int baseHairID = 1;
+        int baseEyebrowID = 7;
+        int baseEarID = -1;
+        int baseFacialHairID = 17;
+
         [Header("Male Base")]
         [SerializeField] private List<BodyPartLinker> maleBaseBody = new List<BodyPartLinker>();
 
@@ -103,6 +109,31 @@ namespace BattleDrakeStudios.ModularCharacters {
                 GetPartFromID(bodyPart, activeParts[bodyPart]).SetActive(false);
                 activeParts.Remove(bodyPart);
             }
+        }
+        public void ReturnToBaseBodypart (ModularBodyPart bodyPart) {
+            int partID;
+            switch (bodyPart) {
+                case ModularBodyPart.Head:
+                    partID = baseHeadID;
+                    break;
+                case ModularBodyPart.Hair:
+                    partID = baseHairID;
+                    break;
+                case ModularBodyPart.Eyebrow:
+                    partID = baseEyebrowID;
+                    break;
+                case ModularBodyPart.Ear:
+                    partID = baseEarID;
+                    break;
+                case ModularBodyPart.FacialHair:
+                    partID = baseFacialHairID;
+                    break;
+                default:
+                    partID = -1;
+                    Debug.LogError("bodyPart unsupported. You fucked something up, Grant");
+                    return;
+            }
+            ActivatePart(bodyPart, partID);
         }
 
         public void SetPartColor(ModularBodyPart bodyPart, int partID, string colorProperty, Color newColor) {

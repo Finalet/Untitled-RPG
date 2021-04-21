@@ -71,8 +71,8 @@ public class Tooltip : MonoBehaviour
             } else if (c.consumableType == ConsumableType.Stamina) {
                 stats = $"Restores around {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), "+" + c.effectAmount.ToString())} stamina.";
             }
-        } else if (item is Weapon) {
-            Weapon w = (Weapon)item;
+        } else if (item is Equipment) {
+            Equipment w = (Equipment)item;
             if (w.MeleeAttack != 0) {
                 stats += $"Melee attack: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.MeleeAttack.ToString())}\n";
             }
@@ -88,6 +88,18 @@ public class Tooltip : MonoBehaviour
             if (w.Defense != 0) {
                 stats += $"Defense: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.Defense.ToString())}\n";
             }
+            if (w.strength != 0 || w.agility != 0 || w.intellect != 0) {
+                stats += "\n";
+            }
+            if (w.strength != 0) {
+                stats += $"Strength: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.strength.ToString())}\n";
+            }
+            if (w.agility != 0) {
+                stats += $"Agility: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.agility.ToString())}\n";
+            }
+            if (w.intellect != 0) {
+                stats += $"Intellect: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.intellect.ToString())}\n";
+            }
         } else {
             stats = "NOT IMPLEMENTED";
         }
@@ -100,6 +112,9 @@ public class Tooltip : MonoBehaviour
         } else if (item is Weapon) {
             Weapon w = (Weapon)item;
             return w.weaponType.ToString();
+        } else if (item is Armor) {
+            Armor w = (Armor)item;
+            return w.armorType.ToString();
         }
         return $"NOT IMPLEMENTED";
     }

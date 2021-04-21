@@ -15,9 +15,9 @@ public class Characteristics : MonoBehaviour
     public int HP;
     public int Stamina;
     [Header("Stats")]
-    public int strength;
-    public int agility;
-    public int intellect;
+    public int strength; public int strengthFromEquip;
+    public int agility; public int agilityFromEquip;
+    public int intellect; public int intellectFromEquip;
     [Header("Attacks")]
     public int meleeAttack; public int meleeAttackFromEquip; public float meleeMultiplier;
     public int rangedAttack; public int rangedAttackFromEquip; public float rangedMultiplier;
@@ -75,6 +75,11 @@ public class Characteristics : MonoBehaviour
     }
 
     void StatsCalculations () {
+
+        strength = Mathf.RoundToInt(strengthFromEquip);
+        agility = Mathf.RoundToInt(agilityFromEquip);
+        intellect = Mathf.RoundToInt(intellectFromEquip);
+
         maxHP = 10000 + strength / statsRatio;
         maxStamina = 0 + (agility + intellect) / statsRatio;
 

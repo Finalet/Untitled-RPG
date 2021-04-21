@@ -8,5 +8,8 @@ namespace BattleDrakeStudios.ModularCharacters {
         public ColorPropertyLinker[] armorColors = { new ColorPropertyLinker(COLOR_PRIMARY), new ColorPropertyLinker(COLOR_SECONDARY), new ColorPropertyLinker(COLOR_LEATHER_PRIMARY),
     new ColorPropertyLinker(COLOR_LEATHER_SECONDARY), new ColorPropertyLinker(COLOR_METAL_PRIMARY), new ColorPropertyLinker(COLOR_METAL_SECONDARY), new ColorPropertyLinker(COLOR_METAL_DARK)};
         public BodyPartLinker[] armorParts;
+        
+        [Space]
+        public ModularBodyPart[] partsToDeactivateWhileWearing;
     }
 }
