@@ -30,6 +30,9 @@ public class Tooltip : MonoBehaviour
     void Update()
     {
         Init();
+
+        if (!PeaceCanvas.instance.anyPanelOpen)
+            Destroy(gameObject);
     }
 
     public void Init () {
@@ -87,6 +90,15 @@ public class Tooltip : MonoBehaviour
             }
             if (w.Defense != 0) {
                 stats += $"Defense: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.Defense.ToString())}\n";
+            }
+            if (w.Health != 0 || w.Stamina != 0) {
+                stats += "\n";
+            }
+            if (w.Health != 0) {
+                stats += $"Health: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.Health.ToString())}\n";
+            }
+            if (w.Stamina != 0) {
+                stats += $"Stamina: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.Stamina.ToString())}\n";
             }
             if (w.strength != 0 || w.agility != 0 || w.intellect != 0) {
                 stats += "\n";

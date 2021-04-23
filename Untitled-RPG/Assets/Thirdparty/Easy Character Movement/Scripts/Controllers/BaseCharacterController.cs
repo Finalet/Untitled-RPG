@@ -177,17 +177,14 @@ namespace ECM.Controllers
         /// Maximum movement speed (in m/s).
         /// </summary>
 
-        public float baseSpeed;
+        public float speedMultiplier;
         public float speed
         {
             get {
-                
-                return PlayerControlls.instance.isSprinting || PlayerControlls.instance.isRolling  ? baseSpeed * 2 : baseSpeed; 
-            
+                return PlayerControlls.instance.isSprinting || PlayerControlls.instance.isRolling  ? _speed * 5 * speedMultiplier : _speed * speedMultiplier; 
             }
             set {
                 _speed = Mathf.Max(0.0f, value);
-                baseSpeed = _speed;
             }
         }
 

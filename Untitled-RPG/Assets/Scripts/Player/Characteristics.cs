@@ -10,10 +10,10 @@ public class Characteristics : MonoBehaviour
 
     public bool canGetHit;
     [Header("Main")]
-    public int maxHP;
-    public int maxStamina;
-    public int HP;
-    public int Stamina;
+    public int maxHealth; public int healthFromEquip;
+    public int maxStamina; public int staminaFromEquip;
+    public int health; 
+    public int stamina; 
     [Header("Stats")]
     public int strength; public int strengthFromEquip;
     public int agility; public int agilityFromEquip;
@@ -56,16 +56,17 @@ public class Characteristics : MonoBehaviour
 
     void Start() {
         canGetHit = true;
-
-        HP = maxHP;
-        Stamina = maxStamina;
-
+        
+        health = maxHealth;
+        stamina = maxStamina;
+        
         meleeMultiplier = 1;
         rangedMultiplier = 1;
         magicPowerMultiplier = 1;
         healingPowerMultiplier = 1;
         defenseMultiplier= 1;
 
+        StatsCalculations();
     }
 
     void Update() {
@@ -74,17 +75,17 @@ public class Characteristics : MonoBehaviour
         regenerateStamina();
     }
 
-    void StatsCalculations () {
+    public void StatsCalculations () {
 
         strength = Mathf.RoundToInt(strengthFromEquip);
         agility = Mathf.RoundToInt(agilityFromEquip);
         intellect = Mathf.RoundToInt(intellectFromEquip);
 
-        maxHP = 10000 + strength / statsRatio;
-        maxStamina = 0 + (agility + intellect) / statsRatio;
+        maxHealth = 10000 + (strength / statsRatio) + healthFromEquip;
+        maxStamina = 0 + ((agility + intellect) / statsRatio) + staminaFromEquip;
 
-        HP = Mathf.Clamp(HP, 0, maxHP);
-        Stamina = Mathf.Clamp(Stamina, 0, maxStamina);
+        health = Mathf.Clamp(health, 0, maxHealth);
+        stamina = Mathf.Clamp(stamina, 0, maxStamina);
 
         meleeAttack = Mathf.RoundToInt( ( (strength / statsRatio) + meleeAttackFromEquip) * meleeMultiplier);
         rangedAttack = Mathf.RoundToInt( ( (agility / statsRatio) + rangedAttackFromEquip) * rangedMultiplier);
@@ -109,12 +110,12 @@ public class Characteristics : MonoBehaviour
 
     float hpTimer = 1;
     void regenerateHealth() {
-        if (HP == maxHP)
+        if (health == maxHealth)
             return;
 
-        if (canRegenerateHealth && HP < maxHP) {
+        if (canRegenerateHealth && health < maxHealth) {
             if (hpTimer <= 0) {
-                HP += HealthPointsPerSecond/10;
+                health += PlayerControlls.instance.attackedByEnemies ? HealthPointsPerSecond/10 : HealthPointsPerSecond/2;
                 hpTimer = 0.1f;
             } else {
                 hpTimer -= Time.deltaTime;
@@ -126,7 +127,13 @@ public class Characteristics : MonoBehaviour
     float timer = 0;
     float afterUseTimer = 0;
     void regenerateStamina() {
-        if (Stamina == maxStamina) {
+        if (maxStamina == 0) {
+            canUseStamina = false;
+            stamina = 0;
+            return;
+        }
+
+        if (stamina == maxStamina) {
             if (!hidingStamina){
                 hidingStamina = true;
                 timer = Time.time;
@@ -137,9 +144,9 @@ public class Characteristics : MonoBehaviour
             canUseStamina = true;
             return;
         }
-        if (Stamina <= 0) { //blocks use of stamina untill fully restored;
+        if (stamina <= 0) { //blocks use of stamina untill fully restored;
             canUseStamina = false;
-        } else if (Stamina >= 0.3f*maxStamina) {
+        } else if (stamina >= 0.3f*maxStamina) {
             canUseStamina = true;
         }
 
@@ -152,7 +159,7 @@ public class Characteristics : MonoBehaviour
 
         if (canRegenerateStamina) {
             if (Time.time - staminaTimer >= 1f/StaminaPerSecond) {
-                Stamina ++;
+                stamina ++;
                 staminaTimer = Time.time;
             }
         }
@@ -177,7 +184,7 @@ public class Characteristics : MonoBehaviour
     public void UseOrRestoreStamina (int amount) {
         canRegenerateStamina = false;
         afterUseTimer = Time.time;
-        Stamina -= amount;
+        stamina -= amount;
     }
 
     public void AddBuff(Skill skill) {
@@ -247,7 +254,7 @@ public class Characteristics : MonoBehaviour
         }
 
         int actualDamage = Mathf.RoundToInt(damage); 
-        HP -= damage;
+        health -= damage;
         DisplayDamageNumber(damage);
         GetComponent<PlayerAudioController>().PlayGetHitSound();
 
@@ -258,11 +265,11 @@ public class Characteristics : MonoBehaviour
 #endregion
 
     public void GetHealed(int healAmount) {
-        HP += healAmount;
+        health += healAmount;
         DisplayHealNumber(healAmount);
     }
     public void GetStamina(int staminaAmount) {
-        Stamina += staminaAmount;
+        stamina += staminaAmount;
         DisplayStaminaNumber(staminaAmount);
     }
 }

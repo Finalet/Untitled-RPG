@@ -46,9 +46,9 @@ public class CanvasScript : MonoBehaviour
     float staminaColorLerp;
     float staminaFillAmount;
     void DisplayHPandStamina () {
-        healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.HP/characteristics.maxHP, Time.deltaTime * 10);
-        healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.HP.ToString();
-        staminaFillAmount = Mathf.Lerp(staminaFillAmount, (float)characteristics.Stamina/characteristics.maxStamina, Time.deltaTime * 10);
+        healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.health/characteristics.maxHealth, Time.deltaTime * 10);
+        healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.health.ToString();
+        staminaFillAmount = characteristics.maxStamina == 0 ? 0 : Mathf.Lerp(staminaFillAmount, (float)characteristics.stamina/characteristics.maxStamina, Time.deltaTime * 10);
 
         StaminaBarPosition();
 

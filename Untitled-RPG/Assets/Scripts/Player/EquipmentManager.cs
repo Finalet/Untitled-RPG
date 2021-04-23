@@ -66,11 +66,20 @@ public class EquipmentManager : MonoBehaviour
         mainHand.Load();
         secondaryHand.Load();
         bow.Load();
+
+        AddAllStats();
+        Characteristics.instance.StatsCalculations();
+        Characteristics.instance.health = Characteristics.instance.maxHealth;
+        Characteristics.instance.stamina = Characteristics.instance.maxStamina;
     }
 
     void FixedUpdate() {
         ResetStats();
-
+        AddAllStats();
+    
+        capeBoneTail.enabled = back.itemInSlot == null ? false : true;
+    }
+    void AddAllStats () {
         if (mainHand.itemInSlot != null) AddStats((Equipment)mainHand.itemInSlot);
         if (secondaryHand.itemInSlot != null) AddStats((Equipment)secondaryHand.itemInSlot);
         if (bow.itemInSlot != null) AddStats((Equipment)bow.itemInSlot);
@@ -83,10 +92,7 @@ public class EquipmentManager : MonoBehaviour
         if (necklace.itemInSlot != null) AddStats((Equipment)necklace.itemInSlot);
         if (ring.itemInSlot != null) AddStats((Equipment)ring.itemInSlot);
         if (secondRing.itemInSlot != null) AddStats((Equipment)secondRing.itemInSlot);
-
         //ADD ALL OTHER ITEMS
-
-        capeBoneTail.enabled = back.itemInSlot == null ? false : true;
     }
 
     void AddStats (Equipment item) {
@@ -98,6 +104,8 @@ public class EquipmentManager : MonoBehaviour
         characteristics.strengthFromEquip += item.strength;
         characteristics.agilityFromEquip += item.agility;
         characteristics.intellectFromEquip += item.intellect;
+        characteristics.healthFromEquip += item.Health;
+        characteristics.staminaFromEquip += item.Stamina;
     }
 
     void ResetStats () {
@@ -109,6 +117,8 @@ public class EquipmentManager : MonoBehaviour
         characteristics.strengthFromEquip = 0;
         characteristics.agilityFromEquip = 0;
         characteristics.intellectFromEquip = 0;
+        characteristics.healthFromEquip = 0;
+        characteristics.staminaFromEquip = 0;
     }
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {

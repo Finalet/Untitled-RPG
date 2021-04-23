@@ -49,6 +49,8 @@ public class TrainingDummy : StaticEnemy
 
         direction = transform.position - PlayerControlls.instance.transform.position;
         rotationObj.transform.rotation = Quaternion.Euler(x, rotationObj.transform.eulerAngles.y, z);
+
+        RunRecurringEffects();
     }
 
     public override void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
@@ -69,7 +71,8 @@ public class TrainingDummy : StaticEnemy
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
         DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.isCrit), damageTextPos);
 
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
+        string criticalDEBUGtext = damageInfo.isCrit ? "CRITICAL " : "";
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{criticalDEBUGtext}{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }
 
     public override void Hit(){

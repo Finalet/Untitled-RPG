@@ -1,21 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
+using Cinemachine;
+using System.Linq;
 using TMPro;
 
 public class TradingNPC : MonoBehaviour
 {
-    [Header("Store Items")]
+    [Header("Store")]
+    public string npcName;
     public Item[] storeItems;
 
     [Space]
+    public TextMeshPro npcNameLabel;
     public GameObject storeWindowPrefab;
+    public CinemachineVirtualCamera storeCamera;
     public bool isStoreWindowOpen;
     public bool isBuyWindowOpen;
     public bool isSellWindowOpen;
-    [Space]
-    public float playerDetectRadius;
     [Header("Sounds")]
     public AudioClip addToCartSound;
     public AudioClip purchaseSound;
@@ -27,20 +29,13 @@ public class TradingNPC : MonoBehaviour
 
     void Awake() {
         audioSource = GetComponent<AudioSource>();
+        storeItems = storeItems.OrderBy(x => x.itemBasePrice).ToArray();
+        npcNameLabel.text = npcName;
     }
 
     void Update() {
-        Collider[] collidersInRadius = Physics.OverlapSphere(transform.position, playerDetectRadius);
-        foreach (Collider col in collidersInRadius) {
-            if (col.GetComponent<PlayerControlls>() != null) {
-                playerDetected = true;
-                break;
-            }
-            playerDetected = false;
-        }
-
         if (playerDetected && !isStoreWindowOpen) {
-            PeaceCanvas.instance.ShowKeySuggestion("F");
+            PeaceCanvas.instance.ShowKeySuggestion("F", "Trade");
             once = false;
         } else if (!once) {
             PeaceCanvas.instance.HideKeySuggestion();
@@ -49,16 +44,21 @@ public class TradingNPC : MonoBehaviour
 
         if (playerDetected && Input.GetKeyDown(KeyCode.F)) {
             OpenStoreWindow();
-            PeaceCanvas.instance.OpenInventory(true);
+            PeaceCanvas.instance.OpenInventory(true, true);
         }
 
         isBuyWindowOpen = instanciatedStoreWindow == null ? false : instanciatedStoreWindow.buyTab.activeInHierarchy ? true : false;
         isSellWindowOpen = instanciatedStoreWindow == null ? false : instanciatedStoreWindow.sellSlots[0].gameObject.activeInHierarchy ? true : false;
 
-        if (isBuyWindowOpen || isSellWindowOpen)
+        if (isBuyWindowOpen || isSellWindowOpen) {
             isStoreWindowOpen = true;
-        else
+            storeCamera.enabled = true;
+        } else {
             isStoreWindowOpen = false;
+            storeCamera.enabled = false;
+        }
+
+        npcNameLabel.transform.LookAt(PlayerControlls.instance.playerCamera.transform);
     }
 
     void OpenStoreWindow () {
@@ -192,5 +192,14 @@ public class TradingNPC : MonoBehaviour
         }
         audioSource.clip = purchaseSound;
         audioSource.Play();
+    }
+
+    void OnTriggerStay(Collider other) {
+        if (other.GetComponent<PlayerControlls>() != null)
+            playerDetected = true;
+    }
+    void OnTriggerExit(Collider other) {
+        if (other.GetComponent<PlayerControlls>() != null)
+            playerDetected = false;
     }
 }

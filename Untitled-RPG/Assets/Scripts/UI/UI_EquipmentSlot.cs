@@ -49,6 +49,10 @@ public class UI_EquipmentSlot : UI_InventorySlot
             BowAdd(item, amount, initialSlot);    
         } else if (equipmentSlotType == EquipmentSlotType.Helmet || equipmentSlotType == EquipmentSlotType.Chest || equipmentSlotType == EquipmentSlotType.Gloves || equipmentSlotType == EquipmentSlotType.Pants || equipmentSlotType == EquipmentSlotType.Boots || equipmentSlotType == EquipmentSlotType.Back) {
             ArmorAdd(item, amount, initialSlot);    
+        } else if (equipmentSlotType == EquipmentSlotType.Necklace) {
+            NecklaceAdd(item, amount, initialSlot);    
+        } else if (equipmentSlotType == EquipmentSlotType.Ring) {
+            RingAdd(item, amount, initialSlot);    
         } else {
             //if its not equipment, return it to initial slot. LATER IMPLEMENT EVERY BODY PART.
             initialSlot.AddItem(item, amount, null); 
@@ -142,8 +146,13 @@ public class UI_EquipmentSlot : UI_InventorySlot
             initialSlot.AddItem(item, amount, null);
             return;
         }
-
+    
         Armor ar = (Armor)item;
+        if (ar.armorType == ArmorType.Necklace || ar.armorType == ArmorType.Ring) { //if its necklace or ring, don't accept it.
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
         if (equipmentSlotType == EquipmentSlotType.Helmet && ar.armorType != ArmorType.Helmet) {
             initialSlot.AddItem(item, amount, null);
             return;
@@ -168,6 +177,36 @@ public class UI_EquipmentSlot : UI_InventorySlot
         SharedAdd(item, amount, initialSlot);
     }
 
+    void NecklaceAdd (Item item, int amount, UI_InventorySlot initialSlot) {
+        if (!(item is Armor)) { // If its not armor, return to initial slot
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        Armor ar = (Armor)item;
+        if (ar.armorType != ArmorType.Necklace) { //if its not necklace, return to initial slot.
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        SharedAdd(item, amount, initialSlot);
+    }
+
+    void RingAdd (Item item, int amount, UI_InventorySlot initialSlot) {
+        if (!(item is Armor)) { // If its not armor, return to initial slot
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        Armor ar = (Armor)item;
+        if (ar.armorType != ArmorType.Ring) { //if its not ring, return to initial slot.
+            initialSlot.AddItem(item, amount, null);
+            return;
+        }
+
+        SharedAdd(item, amount, initialSlot);
+    }
+
     public override void ClearSlot()
     {
         if (itemInSlot is Weapon) {
@@ -184,7 +223,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
                 EquipmentManager.instance.UnequipWeaponPrefab(false, false, true);
             }
         } else if (itemInSlot is Armor) {
-            EquipmentManager.instance.UnequipArmorVisual((Armor)itemInSlot);
+            if (equipmentSlotType != EquipmentSlotType.Necklace && equipmentSlotType != EquipmentSlotType.Ring)
+                EquipmentManager.instance.UnequipArmorVisual((Armor)itemInSlot);
         }
         base.ClearSlot();
         PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);

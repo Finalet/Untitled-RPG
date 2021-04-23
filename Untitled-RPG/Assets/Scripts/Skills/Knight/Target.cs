@@ -81,7 +81,14 @@ public class Target : Skill
         }
 
         if (SkillTarget != null) {
-            Vector3 pos = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.position + Vector3.up * 0.2f : SkillTarget.transform.position + Vector3.up * 2;
+            Vector3 pos;
+            if (SkillTarget.GetComponentInChildren<SkinnedMeshRenderer>() != null) {
+                pos = SkillTarget.transform.position + Vector3.up * (SkillTarget.GetComponentInChildren<SkinnedMeshRenderer>().bounds.size.y * 0.9f);
+            } else if (SkillTarget.GetComponentInChildren<MeshFilter>() != null) {
+                pos = SkillTarget.transform.position + Vector3.up * (SkillTarget.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y);
+            }  else {
+                pos = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.position + Vector3.up * 0.2f : SkillTarget.transform.position + Vector3.up * 2;
+            }
             instanciatedAP.transform.position = pos;
             instanciatedAP.transform.localScale = Vector3.one * areaPickerSize / 10f;
         } else {
@@ -107,7 +114,14 @@ public class Target : Skill
         GameObject newTargetPrefab = Instantiate(targetPrefab, Vector3.zero, Quaternion.identity, SkillTarget.transform);
         SkillTarget.TargetSkillDamagePercentage = damageIncrease;
 
-        float height = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.localPosition.y + 0.2f : 2;
+        float height;
+        if (SkillTarget.GetComponentInChildren<SkinnedMeshRenderer>() != null) {
+            height = SkillTarget.GetComponentInChildren<SkinnedMeshRenderer>().bounds.size.y * 0.9f;
+        } else if (SkillTarget.GetComponentInChildren<MeshFilter>() != null) {
+            height = SkillTarget.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y * 0.9f;
+        }  else {
+            height = SkillTarget.healthBar != null ? SkillTarget.healthBar.transform.localPosition.y + 0.2f : 2;
+        }
 
         newTargetPrefab.SetActive(true);
         newTargetPrefab.transform.localPosition = Vector3.up * height;

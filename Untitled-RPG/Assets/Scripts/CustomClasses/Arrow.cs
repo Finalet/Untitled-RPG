@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    string skillName;
-    DamageInfo damageInfo;
+    protected string skillName;
+    protected DamageInfo damageInfo;
     
     public float lifeTime = 20;
     public float gravityScale = 0.4f;
     public float gravityDelay = 0.2f;
     public TrailRenderer trail;
 
-    float timeShot;
-    bool shot = false;
-    bool applyGravity;
+    protected float timeShot;
+    protected bool shot = false;
+    protected bool applyGravity;
 
-    Rigidbody rb;
+    protected Rigidbody rb;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    protected List<Enemy> enemiesHit = new List<Enemy>();
     protected virtual void Start() {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -58,6 +58,8 @@ public class Arrow : MonoBehaviour
         timeShot = Time.realtimeSinceStartup;
         shot = true;
         trail.emitting = true;
+
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.07f, 1f, 0.05f, transform.position);
     }
 
     protected virtual void OnTriggerEnter(Collider other) {

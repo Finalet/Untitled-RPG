@@ -29,7 +29,6 @@ public class AssetHolder : MonoBehaviour
     }
     void RunConsumablesCooldown() {
         for (int i = consumablesCoolingDown.Count-1; i >= 0; i--) {
-            print(i);
             consumablesCoolingDown[i].cooldownTimer -= Time.fixedDeltaTime;
             consumablesCoolingDown[i].isCoolingDown = consumablesCoolingDown[i].cooldownTimer > 0 ? true : false;
             if (!consumablesCoolingDown[i].isCoolingDown) consumablesCoolingDown.RemoveAt(i);

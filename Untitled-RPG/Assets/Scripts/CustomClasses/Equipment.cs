@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Equipment : Item
 {
-    [Header("Maint Stats")]
+    [Header("Attack Stats")]
     public int MeleeAttack;
     public int RangedAttack;
     public int MagicPower;
     public int HealingPower;
     public int Defense;
+    public int Health;
+    public int Stamina;
     [Header("Secondary Stats")]
     public int strength;
     public int agility;

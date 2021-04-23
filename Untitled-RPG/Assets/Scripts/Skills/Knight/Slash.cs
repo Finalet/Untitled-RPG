@@ -22,7 +22,7 @@ public class Slash : Skill
     }
 
     public override void Use() {
-        if (playerControlls.GetComponent<Characteristics>().Stamina < staminaRequired) {
+        if (playerControlls.GetComponent<Characteristics>().stamina < staminaRequired) {
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }

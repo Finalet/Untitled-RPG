@@ -50,6 +50,9 @@ public abstract class Enemy : MonoBehaviour
     public AudioClip[] stepsSounds;
     public AudioClip[] attackSounds;
 
+    [Space]
+    public List<RecurringEffect> currentRecurringEffects = new List<RecurringEffect>(); 
+
     protected Animator animator;
     protected NavMeshAgent navAgent;
     protected Transform target;
@@ -103,6 +106,7 @@ public abstract class Enemy : MonoBehaviour
         }
 
         AI();
+        RunRecurringEffects();
     }
 
     protected virtual void AI () {
@@ -224,7 +228,8 @@ public abstract class Enemy : MonoBehaviour
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
         DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.isCrit), damageTextPos);
 
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
+        string criticalDEBUGtext = damageInfo.isCrit ? "CRITICAL " : "";
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{criticalDEBUGtext}{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
     }
 
     protected void DisplayDamageNumber(DamageInfo damageInfo, Vector3 position = new Vector3()) {
@@ -386,5 +391,33 @@ public abstract class Enemy : MonoBehaviour
         float pitch = animationEvent.floatParameter == 0 ? 1 : animationEvent.floatParameter;
         audioSource.pitch = pitch + Random.Range(-0.1f, 0.1f);
         audioSource.PlayOneShot(attackSounds[animationEvent.intParameter]);
+    }
+
+    protected virtual void RunRecurringEffects () {
+        for (int i = currentRecurringEffects.Count-1; i >= 0; i--) {
+            currentRecurringEffects[i].frequencyTimer -= Time.deltaTime;
+            currentRecurringEffects[i].durationTimer -= Time.deltaTime;
+            if (currentRecurringEffects[i].frequencyTimer <= 0) {
+                GetHit(CalculateDamage.damageInfo(currentRecurringEffects[i].skillTree, currentRecurringEffects[i].baseEffectPercentage, 0), currentRecurringEffects[i].name);
+                currentRecurringEffects[i].frequencyTimer = 1/currentRecurringEffects[i].frequencyPerSecond;
+            }
+            if (currentRecurringEffects[i].durationTimer <= 0) {
+                Destroy(currentRecurringEffects[i].vfx.gameObject, 3f);
+                currentRecurringEffects[i].vfx.Stop();
+                currentRecurringEffects.RemoveAt(i);
+            }
+        }
+    }
+    
+    public virtual void AddRecurringEffect (RecurringEffect effect) {
+        RecurringEffect newEffect = new RecurringEffect(effect.name, effect.skillTree, effect.baseEffectPercentage, effect.frequencyPerSecond, effect.duration,
+                    effect.vfx, effect.frequencyTimer, effect.durationTimer);
+        newEffect.durationTimer = newEffect.duration;
+        newEffect.frequencyTimer = 0;
+        if (newEffect.vfx != null) {
+            newEffect.vfx = Instantiate(newEffect.vfx, transform.position + Vector3.up, Quaternion.identity, transform).GetComponent<ParticleSystem>();
+            newEffect.vfx.Play();
+        }
+        currentRecurringEffects.Add(newEffect);
     }
 }

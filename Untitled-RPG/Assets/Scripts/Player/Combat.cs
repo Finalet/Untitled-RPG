@@ -70,6 +70,18 @@ public class Combat : MonoBehaviour
                 break;
             case 16: skill.GetComponent<SimpleBowShot>().GrabBowstring();
                 break;
+            case 17: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<StrongArrow>().GrabBowstring();
+                else if (skillID.floatParameter == 1)
+                    skill.GetComponent<StrongArrow>().Shoot();
+                break;
+            case 18: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<PoisonArrow>().GrabBowstring();
+                else if (skillID.floatParameter == 1)
+                    skill.GetComponent<PoisonArrow>().Shoot();
+                break;
         }
     }
 

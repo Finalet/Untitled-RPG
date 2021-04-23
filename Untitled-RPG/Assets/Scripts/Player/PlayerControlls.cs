@@ -75,7 +75,7 @@ public class PlayerControlls : MonoBehaviour
 
     bool rolled;
 
-    public bool[] emptyAttackAnimatorStates = new bool[6];
+    public bool[] emptyAttackAnimatorStates = new bool[7];
 
     void Awake() {
         if (instance == null) 
@@ -189,7 +189,7 @@ public class PlayerControlls : MonoBehaviour
                 isSprinting = false;
         }
 
-        if( (Characteristics.instance.Stamina <= 0 || !Characteristics.instance.canUseStamina) && !isRolling) {
+        if( (Characteristics.instance.stamina <= 0 || !Characteristics.instance.canUseStamina) && !isRolling) {
             isSprinting = false;
         }
  
@@ -225,8 +225,8 @@ public class PlayerControlls : MonoBehaviour
     void UpdateRotation () {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, lookDirection + sprintingDirection + rollDirection, transform.eulerAngles.z);
         
-        if (!PeaceCanvas.instance.anyPanelOpen && !isIdle) { //If idle, player should not rotate
-            desiredLookDirection = CM_Camera.m_XAxis.Value;
+        if ( (!PeaceCanvas.instance.anyPanelOpen && !isIdle) || cameraControl.isAiming) { 
+            desiredLookDirection = CM_Camera.m_XAxis.Value; //rotate player with camera, unless idle, aiming, or in inventory
         }
     }
 
@@ -323,7 +323,6 @@ public class PlayerControlls : MonoBehaviour
         }
 
         GetComponent<Characteristics>().UseOrRestoreStamina(staminaReqToRoll);
-        baseCharacterController.speed = baseCharacterController.baseSpeed*5;
         isRolling = true;
         if (InputDirection > 0 && !isSprinting && !isIdle) {
             desiredRollDirection = InputDirection;
@@ -339,7 +338,6 @@ public class PlayerControlls : MonoBehaviour
     public void StopRoll() { //Called from rolling animation
         isRolling = false;
         desiredRollDirection = 0;
-        baseCharacterController.speed = baseCharacterController.baseSpeed;
     }
 
     void Sprinting () {
@@ -431,13 +429,13 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void CheckIsAttacking () {
-        if ( (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) )
+        if ( (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] || emptyAttackAnimatorStates[6]) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) )
             isAttacking = false;
 
         if (emptyAttackAnimatorStates[4] && emptyAttackAnimatorStates[5])
             isAttacking = false;
 
-        if ( emptyAttackAnimatorStates[5] && (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]) )
+        if ( emptyAttackAnimatorStates[5] && (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]  || emptyAttackAnimatorStates[6]) )
             isAttacking = false;
 
         if ( emptyAttackAnimatorStates[4] && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) )

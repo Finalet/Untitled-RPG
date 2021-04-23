@@ -228,7 +228,7 @@ public class PlayerControlls_old : MonoBehaviour
                 isSprinting = false;
         }
 
-        if( (Characteristics.instance.Stamina <= 0 || !Characteristics.instance.canUseStamina) && !isRolling) {
+        if( (Characteristics.instance.stamina <= 0 || !Characteristics.instance.canUseStamina) && !isRolling) {
             isSprinting = false;
         }
 

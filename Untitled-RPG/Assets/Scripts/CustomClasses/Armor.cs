@@ -36,6 +36,24 @@ public class Armor : Equipment
                 EquipmentManager.instance.back.AddItem(this, 1, initialSlot);
                 break;
             }
+            case ArmorType.Necklace: {
+                EquipmentManager.instance.necklace.AddItem(this, 1, initialSlot);
+                break;
+            }
+            case ArmorType.Ring: {
+                RingEquip(initialSlot);
+                break;
+            }
+        }
+    }
+
+    void RingEquip (UI_InventorySlot initialSlot) {
+        if (EquipmentManager.instance.ring.itemInSlot == null) { //if first slot is empty
+            EquipmentManager.instance.ring.AddItem(this, 1, initialSlot);
+        } else if (EquipmentManager.instance.secondRing.itemInSlot == null) { //if first slot is take, but second slot is open
+            EquipmentManager.instance.secondRing.AddItem(this, 1, initialSlot);
+        } else { //if both slots taken, just put it into the main slot
+            EquipmentManager.instance.ring.AddItem(this, 1, initialSlot);
         }
     }
 }

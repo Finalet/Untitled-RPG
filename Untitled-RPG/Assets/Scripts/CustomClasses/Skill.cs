@@ -19,7 +19,8 @@ public abstract class Skill : MonoBehaviour
     public float coolDown;
     public float coolDownTimer;
     public bool isCoolingDown;
-    [Tooltip("If the weapon needs to be out for the skill, for example all melee skills require swords to be out")]public bool weaponOutRequired;
+    public bool weaponOutRequired;
+    public bool bowOutRequired;
 
     [Header("Timings")]
     [Tooltip("Time needed to prepare and attack")] public float castingTime; 
@@ -47,7 +48,7 @@ public abstract class Skill : MonoBehaviour
     }
 
     public virtual void Use() {
-        if (playerControlls.GetComponent<Characteristics>().Stamina < staminaRequired) {
+        if (playerControlls.GetComponent<Characteristics>().stamina < staminaRequired) {
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
@@ -83,6 +84,9 @@ public abstract class Skill : MonoBehaviour
         playerControlls.isCastingSkill = true;
         finishedCast = false;
         CanvasScript.instance.DisplayCastingBar(nomralizedCastingAnim);
+
+        UnsheatheWeapons();
+
         while (!finishedCast) {
             if (playerControlls.castInterrupted) { 
                 InterruptCasting();
@@ -95,13 +99,19 @@ public abstract class Skill : MonoBehaviour
         LocalUse();
     }
 
+    void UnsheatheWeapons() {
+        if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
+                WeaponsController.instance.InstantUnsheathe();
+        if (bowOutRequired && !WeaponsController.instance.isBowOut)
+                WeaponsController.instance.InstantUnsheatheBow();
+    }
+
     protected virtual void LocalUse () {
         playerControlls.InterruptCasting();
         coolDownTimer = coolDown;
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
-        if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
-                WeaponsController.instance.InstantUnsheathe();
+        UnsheatheWeapons();
         playerControlls.isAttacking = true;
     }
 

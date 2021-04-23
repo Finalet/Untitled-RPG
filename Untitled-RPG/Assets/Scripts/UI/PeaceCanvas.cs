@@ -15,7 +15,6 @@ public class PeaceCanvas : MonoBehaviour
     [Space]
     public bool isGamePaused;
     public bool anyPanelOpen;
-    public bool anyStorePanelOpen;
 
     [Space]
     public CinemachineVirtualCamera CM_MenuCam;
@@ -114,12 +113,12 @@ public class PeaceCanvas : MonoBehaviour
         audioSource.Play();
     }
 
-    public void OpenInventory (bool exceptEquipmentSlots = false) {
+    public void OpenInventory (bool exceptEquipmentSlots = false, bool noCameraZoom = false) {
         MainContainer.SetActive(true);
         Inventory.SetActive(true);
         if (!exceptEquipmentSlots) EquipmentSlots.SetActive(true);
         SkillsPanel.SetActive(false);
-        OpenMenuCamera();
+        if (!noCameraZoom) OpenMenuCamera();
         audioSource.clip = inventoryOpenSound;
         audioSource.Play();
     }
@@ -255,7 +254,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void UpdateStats() {
-        statsLeftText.text = $"Max health {Characteristics.instance.maxHP}\nMax stamina {Characteristics.instance.maxStamina}\nStrength {Characteristics.instance.strength}\nAgility {Characteristics.instance.agility}\nIntellect {Characteristics.instance.intellect}";
+        statsLeftText.text = $"Max health {Characteristics.instance.maxHealth}\nMax stamina {Characteristics.instance.maxStamina}\nStrength {Characteristics.instance.strength}\nAgility {Characteristics.instance.agility}\nIntellect {Characteristics.instance.intellect}";
         statsRightText.text = $"Melee attack {Characteristics.instance.meleeAttack}\nRanged attack {Characteristics.instance.rangedAttack}\nMagic power {Characteristics.instance.magicPower}\nHealing power {Characteristics.instance.healingPower}\nDefense {Characteristics.instance.defense}\nCasting time {Characteristics.instance.castingSpeed.x*100f}%\n";
     }
 
@@ -263,8 +262,9 @@ public class PeaceCanvas : MonoBehaviour
         saveGame();
     }
 
-    public void ShowKeySuggestion (string key) {
+    public void ShowKeySuggestion (string key, string action) {
         buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = key;
+        buttonSuggestionUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = action;
         Vector2 size = new Vector2(0, 40);
         size.x = buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().textBounds.size.x <= 40 ? 40 : buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().textBounds.size.x + 16; 
         buttonSuggestionUI.GetComponent<RectTransform>().sizeDelta = size;

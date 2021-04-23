@@ -7,7 +7,6 @@ public class Whirlwind : Skill
     List<Enemy> enemiesInTrigger = new List<Enemy>();
 
     [Header("CustomVars")]
-    public float moveSpeed;
     public float duration;
 
     protected override void CustomUse() {
@@ -32,12 +31,14 @@ public class Whirlwind : Skill
             wasFlying = true;
         }
 
+
         Characteristics.instance.canGetHit = false;
         
         float timer = duration;
         float hitTimer = 0;
         while (timer > 0) {
             timer -= Time.fixedDeltaTime;
+            playerControlls.baseCharacterController.speedMultiplier = 1;
             if (hitTimer <= 0) {
                 hitTimer = 0.2f * characteristics.attackSpeed.z;
                 Hit();
