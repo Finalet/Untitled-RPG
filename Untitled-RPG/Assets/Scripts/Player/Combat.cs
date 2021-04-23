@@ -29,14 +29,7 @@ public class Combat : MonoBehaviour
     }
 
     void Update() {
-        SetAnimationSpeed();
-
         PlayerControlls.instance.attackedByEnemies = enemiesInBattle.Count == 0 ? false : true;
-    }
-
-    void SetAnimationSpeed () {
-        animator.SetFloat("AttackSpeed", GetComponent<Characteristics>().attackSpeed.x);
-        animator.SetFloat("CastingSpeed", GetComponent<Characteristics>().castingSpeed.x);
     }
 
 

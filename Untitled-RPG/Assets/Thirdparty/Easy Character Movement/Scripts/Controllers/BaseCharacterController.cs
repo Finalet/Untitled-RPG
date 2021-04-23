@@ -181,7 +181,7 @@ namespace ECM.Controllers
         public float speed
         {
             get {
-                return PlayerControlls.instance.isSprinting || PlayerControlls.instance.isRolling  ? _speed * 5 * speedMultiplier : _speed * speedMultiplier; 
+                return PlayerControlls.instance.isSprinting || PlayerControlls.instance.isRolling  ? _speed * 5 * speedMultiplier * PlayerControlls.instance.baseWalkSpeed : _speed * speedMultiplier * PlayerControlls.instance.baseWalkSpeed; 
             }
             set {
                 _speed = Mathf.Max(0.0f, value);

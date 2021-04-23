@@ -10,7 +10,7 @@ public class PlayerControlls : MonoBehaviour
     public static PlayerControlls instance;
 
     [Header("Movement")]
-    float baseWalkSpeed = 1;
+    public float baseWalkSpeed = 1;
     float walkSpeed;
     public bool toggleRunning = false;
     public int staminaReqToRoll = 50;
@@ -414,6 +414,8 @@ public class PlayerControlls : MonoBehaviour
         animator.SetFloat("isSprinting", isSprintingFloat);
         animator.SetFloat("isRunning", isRunningFloat);
         animator.SetFloat("WalkSpeed", walkSpeed);
+        animator.SetFloat("AttackSpeed", Characteristics.instance.attackSpeed.x);
+        animator.SetFloat("CastingSpeed", Characteristics.instance.castingSpeed.x);
         
         animator.SetBool("Idle", isIdle);
         animator.SetBool("isCrouch", isCrouch);

@@ -50,7 +50,7 @@ public class SimpleBowShot : AimingSkill
     {
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = true;
         //aimTarget.transform.position = playerControlls.playerCamera.transform.position + playerControlls.playerCamera.transform.forward * distance/2;
-        if(newArrow == null && coolDownTimer <= coolDown/2f) { //Releading
+        if(newArrow == null && coolDownTimer <= coolDown/2f) { //Reloading
             StartAiming();
         }
         
@@ -92,7 +92,7 @@ public class SimpleBowShot : AimingSkill
         }
 
         animator.Play("AttacksUpperBody.Hunter.Simple Bow Shot_release");
-        coolDownTimer = coolDown;
+        coolDownTimer = coolDown * Characteristics.instance.attackSpeed.z;
         newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName);
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         grabBowstring = false;

@@ -27,10 +27,10 @@ public class Characteristics : MonoBehaviour
     
     [Header("Misc")]
 
-    [Tooltip("X - casting speed percentage, Y - casting speed adjustement, Z - casting speed inverted")]
+    [Tooltip("X - casting speed percentage (i.e. 1.1f), Y - casting speed adjustement (i.e. 0.1f), Z - casting speed inverted (i.e. 0.9f)")]
     public Vector3 castingSpeed;
     float castingSpeedPercentage; float castingSpeedPercentageAdjustement; float castingSpeedPercentageIverted;
-    [Tooltip("X - attack speed percentage, Y - attack speed adjustement, Z - attack speed inverted")]
+    [Tooltip("X - attack speed percentage (i.e. 1.0f), Y - attack speed adjustement (i.e. 0.1f), Z - attack speed inverted (i.e. 0.909f)")]
     public Vector3 attackSpeed;
     float attackSpeedPercentage; float attackSpeedPercentageAdjustement; float attackSpeedPercentageInverted;
 
@@ -93,14 +93,14 @@ public class Characteristics : MonoBehaviour
         healingPower = Mathf.RoundToInt( ( (intellect / statsRatio) + healingPowerFromEquip) * healingPowerMultiplier);
         defense = Mathf.RoundToInt( ( (strength / statsRatio + agility / statsRatio) + defenseFromEquip) * defenseMultiplier);
 
-        attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement;
+        attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement + agility*0.00025f;
         attackSpeedPercentageInverted = 1/attackSpeedPercentage;
 
         attackSpeed.x = attackSpeedPercentage;
         attackSpeed.y = attackSpeedPercentageAdjustement;
         attackSpeed.z = attackSpeedPercentageInverted;
 
-        castingSpeedPercentage = 1 + castingSpeedPercentageAdjustement;
+        castingSpeedPercentage = 1 + castingSpeedPercentageAdjustement + intellect*0.00025f;
         castingSpeedPercentageIverted = 1/castingSpeedPercentage;
 
         castingSpeed.x = castingSpeedPercentage; 
@@ -211,6 +211,11 @@ public class Characteristics : MonoBehaviour
                 magicPowerMultiplier += skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
                 icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Levitation>().flightDuration;
                 break;
+            case 20: //Archers Practice
+                PlayerControlls.instance.baseWalkSpeed += skill.GetComponent<ArchersPractice>().buffIncrease/100;
+                attackSpeedPercentageAdjustement += skill.GetComponent<ArchersPractice>().buffIncrease/100;
+                icon.GetComponent<BuffIcon>().timer = skill.GetComponent<ArchersPractice>().duration;
+                break;
             default: Debug.LogError("Wrong skill ID for adding buff");
                 break;
         }    
@@ -231,6 +236,10 @@ public class Characteristics : MonoBehaviour
             case 14:
                 magicSkillDistanceIncrease -= skill.GetComponent<Levitation>().skillDistanceIncrease;
                 magicPowerMultiplier -= skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
+                break;
+            case 20: 
+                PlayerControlls.instance.baseWalkSpeed -= skill.GetComponent<ArchersPractice>().buffIncrease/100;
+                attackSpeedPercentageAdjustement -= skill.GetComponent<ArchersPractice>().buffIncrease/100;
                 break;
             default: Debug.LogError("Wrong skill ID for buff removal");
                 break;
