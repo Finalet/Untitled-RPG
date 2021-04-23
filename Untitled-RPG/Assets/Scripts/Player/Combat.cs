@@ -82,6 +82,12 @@ public class Combat : MonoBehaviour
                 else if (skillID.floatParameter == 1)
                     skill.GetComponent<PoisonArrow>().Shoot();
                 break;
+            case 19: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<ExplosiveArrow>().GrabBowstring();
+                else if (skillID.floatParameter == 1)
+                    skill.GetComponent<ExplosiveArrow>().Shoot();
+                break;
         }
     }
 

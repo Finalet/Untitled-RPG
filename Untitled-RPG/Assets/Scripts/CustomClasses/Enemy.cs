@@ -18,6 +18,7 @@ public abstract class Enemy : MonoBehaviour
     public bool immuneToInterrupt;
     public bool immuneToKnockDown;
     public bool immuneToKickBack;
+    public Vector3 localEnemyBounds;
 
     [Header("AI State")]
     public EnemyState currentState;
@@ -415,9 +416,17 @@ public abstract class Enemy : MonoBehaviour
         newEffect.durationTimer = newEffect.duration;
         newEffect.frequencyTimer = 0;
         if (newEffect.vfx != null) {
-            newEffect.vfx = Instantiate(newEffect.vfx, transform.position + Vector3.up, Quaternion.identity, transform).GetComponent<ParticleSystem>();
+            newEffect.vfx = Instantiate(newEffect.vfx, transform.position + Vector3.up * globalEnemyBounds().y, Quaternion.identity, transform).GetComponent<ParticleSystem>();
+            var shape = newEffect.vfx.shape;
+            shape.radius = (globalEnemyBounds().x + globalEnemyBounds().z)*0.5f;
+            var shape2 = newEffect.vfx.transform.GetChild(0).GetComponent<ParticleSystem>().shape;
+            shape2.radius = shape.radius*0.8f;
             newEffect.vfx.Play();
         }
         currentRecurringEffects.Add(newEffect);
+    }
+
+    public Vector3 globalEnemyBounds (){
+        return Vector3.Scale(localEnemyBounds, transform.localScale);
     }
 }

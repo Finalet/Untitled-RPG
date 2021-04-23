@@ -4883,7 +4883,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2541314750186832916}
-  - component: {fileID: 6782305530331790882}
   m_Layer: 9
   m_Name: rotationObject
   m_TagString: Untagged
@@ -4907,14 +4906,6 @@ Transform:
   m_Father: {fileID: 5631274229459446444}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6782305530331790882
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522156844834764295}
-  m_Mesh: {fileID: 4711208715938537054, guid: 3a6cf13f0013c1e4297cf8b39c186755, type: 3}
 --- !u!1 &5631274229459446440
 GameObject:
   m_ObjectHideFlags: 0
@@ -4970,6 +4961,7 @@ MonoBehaviour:
   immuneToInterrupt: 0
   immuneToKnockDown: 0
   immuneToKickBack: 0
+  localEnemyBounds: {x: 0.5, y: 1.05, z: 0.4}
   currentState: 0
   isCoolingDown: 0
   attackCoolDown: 0
@@ -4990,6 +4982,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 19c49fe1f08784e46b54e08b5f9379d2, type: 3}
   stepsSounds: []
   attackSounds: []
+  currentRecurringEffects: []
 --- !u!82 &8023516861763838166
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5098,8 +5091,8 @@ GameObject:
   - component: {fileID: 6558365667172264745}
   - component: {fileID: 6585870035230094615}
   - component: {fileID: 6575482747937542425}
-  - component: {fileID: 6626059808329067375}
   - component: {fileID: 1217724306802150137}
+  - component: {fileID: 6552613435070569033}
   m_Layer: 0
   m_Name: mesh !ROTATE THIS!
   m_TagString: Untagged
@@ -5170,20 +5163,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6626059808329067375
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6563578086021992429}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 43296973226514986, guid: 070d0509009aa1c44a63cfe5adcadfc1, type: 2}
 --- !u!54 &1217724306802150137
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5200,3 +5179,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!64 &6552613435070569033
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6563578086021992429}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 8cd63dfe426baaf42937ca22a6c4dba5, type: 3}

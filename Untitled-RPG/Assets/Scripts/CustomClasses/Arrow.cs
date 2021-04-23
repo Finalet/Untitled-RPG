@@ -63,13 +63,12 @@ public class Arrow : MonoBehaviour
     }
 
     protected virtual void OnTriggerEnter(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
-        if (other.isTrigger || other.CompareTag("Player"))
+        if (!shot || other.isTrigger || other.CompareTag("Player"))
             return;
         
-
         Collision(other.transform);
 
+        Enemy en = other.transform.GetComponentInParent<Enemy>();
         if (en == null) 
             return;
         
@@ -87,6 +86,7 @@ public class Arrow : MonoBehaviour
         
         GetComponent<CapsuleCollider>().enabled = false;
         trail.emitting = false;
+        GetComponent<AudioSource>().Play();
     }
 
     protected virtual void Hit (Enemy en) {

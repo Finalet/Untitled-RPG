@@ -20,7 +20,7 @@ public class ArrowStrong : Arrow
 
     protected override void Hit (Enemy en) {
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damageInfo, skillName, false, true, HitType.Normal, transform.position);
+            en.GetHit(damageInfo, skillName, true, true, HitType.Normal, transform.position);
             enemiesHit.Add(en);
         }
     }  

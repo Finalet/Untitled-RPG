@@ -150,7 +150,7 @@ MonoBehaviour:
   skillType: 0
   staminaRequired: 0
   baseDamagePercentage: 100
-  coolDown: 1
+  coolDown: 15
   coolDownTimer: 0
   isCoolingDown: 0
   weaponOutRequired: 0
@@ -235,12 +235,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198199498142640322, guid: 61400dcd69108c64b970eb523f3d1783,
         type: 3}
+      propertyPath: SubModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198199498142640322, guid: 61400dcd69108c64b970eb523f3d1783,
+        type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 198199498142640322, guid: 61400dcd69108c64b970eb523f3d1783,
         type: 3}
       propertyPath: ShapeModule.radiusThickness
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198199498142640322, guid: 61400dcd69108c64b970eb523f3d1783,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 198199498142640322, guid: 61400dcd69108c64b970eb523f3d1783,
+        type: 3}
+      propertyPath: SubModule.subEmitters.Array.data[0].emitter
+      value: 
+      objectReference: {fileID: 5187818525582325552}
+    - target: {fileID: 198199498142640322, guid: 61400dcd69108c64b970eb523f3d1783,
+        type: 3}
+      propertyPath: SubModule.subEmitters.Array.data[0].properties
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198225634346732756, guid: 61400dcd69108c64b970eb523f3d1783,
@@ -257,6 +277,11 @@ PrefabInstance:
         type: 3}
       propertyPath: ShapeModule.radiusThickness
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198225634346732756, guid: 61400dcd69108c64b970eb523f3d1783,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 199218903534375010, guid: 61400dcd69108c64b970eb523f3d1783,
         type: 3}
@@ -279,6 +304,12 @@ Transform:
 --- !u!198 &5187809464558326566 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 198199498142640322, guid: 61400dcd69108c64b970eb523f3d1783,
+    type: 3}
+  m_PrefabInstance: {fileID: 4989680920888572900}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5187818525582325552 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198225634346732756, guid: 61400dcd69108c64b970eb523f3d1783,
     type: 3}
   m_PrefabInstance: {fileID: 4989680920888572900}
   m_PrefabAsset: {fileID: 0}

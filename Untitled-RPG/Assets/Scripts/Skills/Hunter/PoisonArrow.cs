@@ -48,7 +48,7 @@ public class PoisonArrow : Skill
 
         Vector3 direction = shootPoint - shootPosition.position; 
 
-        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0.4f), skillName); //could be null if just canceled skill
+        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName); //could be null if just canceled skill
         if (newArrow != null) newArrow.poisonEffect = poisonEffect;
         playerControlls.isAttacking = false;
         grabBowstring = false;

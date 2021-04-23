@@ -12,8 +12,17 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     GameObject go;
 
     void Start() {
-        GetComponent<Image>().sprite = AssetHolder.instance.getSkill(skillID).icon;
-        name1.text = AssetHolder.instance.getSkill(skillID).skillName;
+        name1.text = "";
+        Skill skill = AssetHolder.instance.getSkill(skillID);
+        GetComponent<Image>().sprite = skill.icon;
+        string[] words = skill.name.Split(' ');
+        if (words.Length == 0) {
+            name1.text = skill.name;
+            return;
+        }
+        for (int i = 0; i < words.Length; i++) {
+            name1.text += words[i] + "\n";
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
