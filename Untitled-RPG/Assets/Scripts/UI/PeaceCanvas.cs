@@ -27,6 +27,7 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject Inventory;
     public GameObject EquipmentSlots;
     public GameObject PauseMenu;
+    public GameObject storageWindow;
     public TextMeshProUGUI statsLeftText;
     public TextMeshProUGUI statsRightText;
 

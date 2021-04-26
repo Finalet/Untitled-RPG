@@ -23,7 +23,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
     protected virtual void Awake() {
         savefilePath = "saves/inventorySlots.txt";
-        if (slotID == -1) slotID = System.Convert.ToInt16(name.Substring(name.IndexOf('(') + 1, 2));
+        if (slotID == -1) slotID = System.Convert.ToInt16(name.Substring(name.IndexOf('(') + 1, 2)); //only works for slots after 10, first 10 needs to be assigned manually
     }
 
     protected virtual void Start() {
@@ -46,23 +46,40 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     public virtual void UseItem () {
-        if (PeaceCanvas.instance.currentInterractingNPC != null && PeaceCanvas.instance.currentInterractingNPC is TradingNPC) {  //Store window is open, need to sell item
-            TradingNPC npc = (TradingNPC)PeaceCanvas.instance.currentInterractingNPC;
-            if (!npc.isSellWindowOpen)
-                return;
-            
-            if (npc.getNumberOfEmptySellSlots() == 0)
-                return;
+        if (PeaceCanvas.instance.currentInterractingNPC != null) {  //need to interact with NPC
+            if (PeaceCanvas.instance.currentInterractingNPC is TradingNPC) { //If its a trading NPC
+                TradingNPC npc = (TradingNPC)PeaceCanvas.instance.currentInterractingNPC;
+                if (!npc.isSellWindowOpen)
+                    return;
+                
+                if (npc.getNumberOfEmptySellSlots() == 0)
+                    return;
 
-            int amount = 1;
-            if(itemAmount > 1)
-                amount = Input.GetKey(KeyCode.LeftControl) ? (itemAmount >= 100 ? 100 : itemAmount) : Input.GetKey(KeyCode.LeftShift) ? (itemAmount >= 10 ? 10 : itemAmount) : amount;
+                int amount = 1;
+                if(itemAmount > 1)
+                    amount = Input.GetKey(KeyCode.LeftControl) ? (itemAmount >= 100 ? 100 : itemAmount) : Input.GetKey(KeyCode.LeftShift) ? (itemAmount >= 10 ? 10 : itemAmount) : amount;
 
-            npc.AddToSell(itemInSlot, amount);
-            itemAmount -= amount;
-            if (itemAmount == 0)
-                ClearSlot();
-            return;
+                npc.AddToSell(itemInSlot, amount);
+                itemAmount -= amount;
+                if (itemAmount == 0)
+                    ClearSlot();
+                return;
+            } else if (PeaceCanvas.instance.currentInterractingNPC is StorageNPC) { //If its a storage NPC
+                StorageNPC npc = (StorageNPC)PeaceCanvas.instance.currentInterractingNPC;
+
+                if (npc.getNumberOfEmptySlots() == 0)
+                    return;
+
+                int amount = 1;
+                if(itemAmount > 1)
+                    amount = Input.GetKey(KeyCode.LeftControl) ? (itemAmount >= 100 ? 100 : itemAmount) : Input.GetKey(KeyCode.LeftShift) ? (itemAmount >= 10 ? 10 : itemAmount) : amount;
+
+                npc.AddItemToStorage(itemInSlot, amount);
+                itemAmount -= amount;
+                if (itemAmount == 0)
+                    ClearSlot();
+                return;
+            }
         }
 
         if (itemInSlot is Consumable) {
