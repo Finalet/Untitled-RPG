@@ -32,7 +32,7 @@ public class PeaceCanvas : MonoBehaviour
 
     [Header("Button suggestion")]
     public GameObject buttonSuggestionUI;
-    public TradingNPC currentStoreNPC;
+    public NPC currentInterractingNPC;
 
     [Space]
     public GameObject DebugChatPanel;
@@ -64,7 +64,7 @@ public class PeaceCanvas : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     } 
     void Update() {
-        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentStoreNPC != null)
+        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null)
             anyPanelOpen = true;
         else   
             anyPanelOpen = false;
@@ -130,8 +130,8 @@ public class PeaceCanvas : MonoBehaviour
             Inventory.SetActive(false);
             EquipmentSlots.SetActive(false);
             CM_MenuCam.Priority = 0;
-            if (currentStoreNPC != null)
-                currentStoreNPC.CloseStoreWindow();
+            if (currentInterractingNPC != null)
+                currentInterractingNPC.StopInterract();
             audioSource.clip = inventoryCloseSound;
             audioSource.Play();
         } else { //toggle pause

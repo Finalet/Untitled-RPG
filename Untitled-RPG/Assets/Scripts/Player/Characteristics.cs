@@ -35,6 +35,7 @@ public class Characteristics : MonoBehaviour
     float attackSpeedPercentage; float attackSpeedPercentageAdjustement; float attackSpeedPercentageInverted;
 
     public float magicSkillDistanceIncrease;
+    public float hunterSkillDistanceIncrease;
 
     int statsRatio = 2;
     [Header("Stats regeneration")]

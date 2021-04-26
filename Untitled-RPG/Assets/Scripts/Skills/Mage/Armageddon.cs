@@ -9,6 +9,7 @@ public class Armageddon : Skill
     public float duration = 5;
     public float meteorsPerSecond = 4;
     public float area = 10;
+    [Range(0, 1)] public float chanceToHitEnemy = 0.1f;
 
     [Space]
     public GameObject projectile;
@@ -22,6 +23,7 @@ public class Armageddon : Skill
     Vector3 mainPos;
 
     List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
+    Collider[] enemiesBelow;
     ParticleSystem instanciatedCloud;
 
     protected override void Start() {
@@ -82,8 +84,21 @@ public class Armageddon : Skill
     }
     
     void ShootOneMeteor() {
-        Vector3 randPos = new Vector3(Random.Range(-area/2, area/2), 0, Random.Range(-area/2, area/2));
-        GameObject go = Instantiate(projectile, mainPos + randPos, projectile.transform.rotation);
+        enemiesBelow = Physics.OverlapSphere(mainPos + Vector3.down * 10, area/2, LayerMask.GetMask("Enemy"));
+        bool shotEnemy = enemiesBelow.Length == 0 ? false : Random.value < chanceToHitEnemy ? true : false;
+
+        Vector3 pos;
+        if (shotEnemy) {
+            int enemyIndex = Random.Range(0, enemiesBelow.Length);
+            pos.x = enemiesBelow[enemyIndex].transform.position.x + Random.Range(-enemiesBelow[enemyIndex].GetComponentInParent<Enemy>().globalEnemyBounds().x/2, enemiesBelow[enemyIndex].GetComponentInParent<Enemy>().globalEnemyBounds().x/2);
+            pos.z = enemiesBelow[enemyIndex].transform.position.z + Random.Range(-enemiesBelow[enemyIndex].GetComponentInParent<Enemy>().globalEnemyBounds().z/2, enemiesBelow[enemyIndex].GetComponentInParent<Enemy>().globalEnemyBounds().z/2);
+        } else {
+            pos.x = mainPos.x + Random.Range(-area/2, area/2);
+            pos.z = mainPos.z + Random.Range(-area/2, area/2);
+        }
+        pos.y = mainPos.y;
+
+        GameObject go = Instantiate(projectile, pos, projectile.transform.rotation);
         go.GetComponent<ArmageddonProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
         go.GetComponent<ArmageddonProjectile>().speed = projectileSpeed;
         go.SetActive(true);

@@ -81,6 +81,28 @@ public class Combat : MonoBehaviour
                 else if (skillID.floatParameter == 1)
                     skill.GetComponent<ExplosiveArrow>().Shoot();
                 break;
+            case 21: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<HuntersCage>().GrabBowstring();
+                else if (skillID.floatParameter == 1)
+                    skill.GetComponent<HuntersCage>().Shoot();
+                break;
+            case 22: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<ArrowSet>().GrabBowstring();
+                else if (skillID.floatParameter == 1)
+                    skill.GetComponent<ArrowSet>().Shoot();
+                else if (skillID.floatParameter == 2)
+                    skill.GetComponent<ArrowSet>().Shoot(true);
+                break;
+            case 23: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<RainOfArrows>().GrabBowstring();
+                else if (skillID.floatParameter == 1)
+                    skill.GetComponent<RainOfArrows>().Shoot();
+                else if (skillID.floatParameter == 2)
+                    skill.GetComponent<RainOfArrows>().Shoot(true);
+                break;
         }
     }
 

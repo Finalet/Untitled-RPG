@@ -60,7 +60,7 @@ public class DarkMatterProjectile : MonoBehaviour
             return;
         
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damageInfo, "Dark Matter", false, false, HitType.Normal, transform.position);
+            en.GetHit(damageInfo, "Dark Matter", false, false, HitType.Interrupt, transform.position);
             enemiesHit.Add(en);
         }
     }

@@ -225,7 +225,7 @@ public class PlayerControlls : MonoBehaviour
     void UpdateRotation () {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, lookDirection + sprintingDirection + rollDirection, transform.eulerAngles.z);
         
-        if ( (!PeaceCanvas.instance.anyPanelOpen && !isIdle) || cameraControl.isAiming) { 
+        if ( (!PeaceCanvas.instance.anyPanelOpen && !isIdle) || cameraControl.isAiming || cameraControl.isShortAiming) { 
             desiredLookDirection = CM_Camera.m_XAxis.Value; //rotate player with camera, unless idle, aiming, or in inventory
         }
     }
@@ -431,17 +431,25 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void CheckIsAttacking () {
-        if ( (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] || emptyAttackAnimatorStates[6]) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) )
+        if ( (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] || emptyAttackAnimatorStates[6]) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) ) {
             isAttacking = false;
+            isCastingSkill = false;
+        }
 
-        if (emptyAttackAnimatorStates[4] && emptyAttackAnimatorStates[5])
+        if (emptyAttackAnimatorStates[4] && emptyAttackAnimatorStates[5]) {
             isAttacking = false;
+            isCastingSkill = false;
+        }
 
-        if ( emptyAttackAnimatorStates[5] && (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]  || emptyAttackAnimatorStates[6]) )
+        if ( emptyAttackAnimatorStates[5] && (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]  || emptyAttackAnimatorStates[6]) ) {
             isAttacking = false;
+            isCastingSkill = false;
+        }
 
-        if ( emptyAttackAnimatorStates[4] && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) )
+        if ( emptyAttackAnimatorStates[4] && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) ) {
             isAttacking = false;
+            isCastingSkill = false;
+        }
     }
 
     void InBattleCheck () {

@@ -11,6 +11,7 @@ public class Arrow : MonoBehaviour
     public float gravityScale = 0.4f;
     public float gravityDelay = 0.2f;
     public TrailRenderer trail;
+    [System.NonSerialized] public bool instantShot = false;
 
     protected float timeShot;
     protected bool shot = false;
@@ -21,18 +22,18 @@ public class Arrow : MonoBehaviour
     protected List<Enemy> enemiesHit = new List<Enemy>();
     protected virtual void Start() {
         rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
+        if (!instantShot) rb.isKinematic = true;
         rb.useGravity = false;
-        trail.emitting = false;
+        if (!instantShot) trail.emitting = false;
     }
 
     protected virtual void Update() {
         if (shot && rb.velocity.magnitude > 0)
             transform.rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
         
-        if (shot && Time.realtimeSinceStartup - timeShot >= lifeTime) {
+        if (shot && Time.time - timeShot >= lifeTime) {
             Destroy(gameObject);
-        } else if (shot && Time.realtimeSinceStartup - timeShot >= gravityDelay) {
+        } else if (shot && Time.time - timeShot >= gravityDelay) {
             applyGravity = true;
         }
     }
@@ -55,7 +56,7 @@ public class Arrow : MonoBehaviour
         rb.AddForce(_strength * direction.normalized, ForceMode.Impulse);
         transform.SetParent(null);
 
-        timeShot = Time.realtimeSinceStartup;
+        timeShot = Time.time;
         shot = true;
         trail.emitting = true;
 
@@ -81,7 +82,6 @@ public class Arrow : MonoBehaviour
         transform.position -= rb.velocity * Time.fixedDeltaTime;
         transform.SetParent(collisionObj);
         
-        rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
         rb.isKinematic = true;
         
         GetComponent<CapsuleCollider>().enabled = false;
@@ -91,7 +91,7 @@ public class Arrow : MonoBehaviour
 
     protected virtual void Hit (Enemy en) {
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damageInfo, skillName, false, false, HitType.Normal, transform.position);
+            en.GetHit(damageInfo, skillName, false, false, HitType.Interrupt, transform.position);
             enemiesHit.Add(en);
         }
     }    

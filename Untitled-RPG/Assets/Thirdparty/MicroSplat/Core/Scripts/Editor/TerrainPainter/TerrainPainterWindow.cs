@@ -45,7 +45,7 @@ namespace JBooth.MicroSplat
 
       void InitTerrains()
       {
-         Object[] objs = Selection.GetFiltered(typeof(Terrain), SelectionMode.Editable | SelectionMode.OnlyUserModifiable | SelectionMode.Deep);
+         Object[] objs = Selection.GetFiltered(typeof(Terrain), SelectionMode.Editable | SelectionMode.Editable | SelectionMode.Deep);
          List<TerrainPaintJob> ts = new List<TerrainPaintJob> ();
          rawTerrains.Clear();
          for (int i = 0; i < objs.Length; ++i)

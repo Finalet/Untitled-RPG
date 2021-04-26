@@ -46,15 +46,19 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     public virtual void UseItem () {
-        if (PeaceCanvas.instance.currentStoreNPC != null && PeaceCanvas.instance.currentStoreNPC.isSellWindowOpen) { //Store window is open, need to sell item
-            if (PeaceCanvas.instance.currentStoreNPC.getNumberOfEmptySellSlots() == 0)
+        if (PeaceCanvas.instance.currentInterractingNPC != null && PeaceCanvas.instance.currentInterractingNPC is TradingNPC) {  //Store window is open, need to sell item
+            TradingNPC npc = (TradingNPC)PeaceCanvas.instance.currentInterractingNPC;
+            if (!npc.isSellWindowOpen)
+                return;
+            
+            if (npc.getNumberOfEmptySellSlots() == 0)
                 return;
 
             int amount = 1;
             if(itemAmount > 1)
                 amount = Input.GetKey(KeyCode.LeftControl) ? (itemAmount >= 100 ? 100 : itemAmount) : Input.GetKey(KeyCode.LeftShift) ? (itemAmount >= 10 ? 10 : itemAmount) : amount;
 
-            PeaceCanvas.instance.currentStoreNPC.AddToSell(itemInSlot, amount);
+            npc.AddToSell(itemInSlot, amount);
             itemAmount -= amount;
             if (itemAmount == 0)
                 ClearSlot();

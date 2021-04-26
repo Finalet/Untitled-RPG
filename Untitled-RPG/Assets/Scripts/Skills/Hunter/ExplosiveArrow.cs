@@ -36,7 +36,6 @@ public class ExplosiveArrow : Skill
     public void Shoot () {
         finishedCast = true;
         ignorePlayer =~ LayerMask.GetMask("Player");
-        //play sound
         
         RaycastHit hit;
         if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, strength, ignorePlayer)) {
@@ -44,8 +43,6 @@ public class ExplosiveArrow : Skill
         } else {
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength/2 + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
-
-        Vector3 direction = shootPoint - shootPosition.position; 
 
         if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 1), skillName); //could be null if just canceled skill
         playerControlls.isAttacking = false;

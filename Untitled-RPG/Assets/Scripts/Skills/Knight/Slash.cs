@@ -49,12 +49,12 @@ public class Slash : Skill
 
         if (hits == 1) {
             animator.CrossFade("Attacks.Knight.Slash_1", 0.2f);
-            hitType = HitType.Normal;
+            hitType = HitType.Interrupt;
             PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.z);
             GetComponent<BoxCollider>().size = baseColliderSize;
         } else if (hits == 2) {
             animator.CrossFade("Attacks.Knight.Slash_2", 0.2f);
-            hitType = HitType.Normal;
+            hitType = HitType.Interrupt;
             PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.z);
             GetComponent<BoxCollider>().size = baseColliderSize;
         } else if (hits == 3) {

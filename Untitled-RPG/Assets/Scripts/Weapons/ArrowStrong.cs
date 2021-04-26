@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
-public class ArrowExplosive : Arrow
+public class ArrowStrong : Arrow
 {
-    public SphereCollider explosionCollider;
     public ParticleSystem strongTrails;
     public ParticleSystem explostionVFX;
-    bool exploded;
 
     protected override void Start() {
         base.Start();
@@ -23,7 +20,7 @@ public class ArrowExplosive : Arrow
 
     protected override void Hit (Enemy en) {
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damageInfo, skillName, false, true, HitType.Normal);
+            en.GetHit(damageInfo, skillName, true, true, HitType.Kickback, transform.position);
             enemiesHit.Add(en);
         }
     }  
@@ -32,22 +29,7 @@ public class ArrowExplosive : Arrow
         base.Collision(collisionObj);
         strongTrails.Stop();
         explostionVFX.Play();
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.1f, 40f, 0.1f, transform.position);
-        explosionCollider.enabled = true;
-        DOTween.To(()=> explosionCollider.radius, x=> explosionCollider.radius = x, 3.2f, 0.2f).SetEase(Ease.OutSine);
-        exploded = true;
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f, 0.1f, transform.position);
     }
 
-    protected override void OnTriggerEnter(Collider other) {
-        if (!shot || other.isTrigger || other.CompareTag("Player"))
-            return;
-        
-        if (!exploded) Collision(other.transform);
-
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
-        if (en == null) 
-            return;
-        
-        Hit(en);
-    }
 }
