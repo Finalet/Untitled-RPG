@@ -11,6 +11,7 @@ public class LootItem : MonoBehaviour
     [Header("Bools")]
     public bool isGold;
 
+    [System.NonSerialized] public bool playerDetected;
     [System.NonSerialized] public float priority;
     LootItem nearbyItemWithHigherPriority;
 
@@ -19,7 +20,7 @@ public class LootItem : MonoBehaviour
     }
 
     void SetGlowColor() {
-        ParticleSystem ps = GetComponentInChildren<ParticleSystem>(true);
+        ParticleSystem ps = GetComponentInChildren<ParticleSystem>();
         
         var main = ps.main;
         main.startColor = isGold ? UI_General.getRarityColor(ItemRarity.Common) : UI_General.getRarityColor(item.itemRarity);
@@ -31,20 +32,21 @@ public class LootItem : MonoBehaviour
         SetGlowColor();
         transform.localScale = Vector3.zero;
         transform.DOScale(1, 0.2f);
-        Vector3 force = Vector3.up * 5 + Vector3.right * (Random.value-1) * 3 + Vector3.forward * (Random.value-1) * 3;
+        Vector3 force = Vector3.up * 5 + Vector3.right * (Random.value-0.5f) * 3 + Vector3.forward * (Random.value-0.5f) * 3;
         GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
         Destroy(gameObject, 300);
     }
 
     void OnTriggerStay(Collider other) {
         if (other.GetComponent<LootItem>() != null) {
-            if (other.GetComponent<LootItem>().priority > priority) { //if another loot is nearby and its priority is higher, then dont pick this item up
+            if (other.GetComponent<LootItem>().priority > priority && other.GetComponent<LootItem>().playerDetected) { //if another loot is nearby and its priority is higher, then dont pick this item up
                 nearbyItemWithHigherPriority = other.GetComponent<LootItem>();
                 return;
             }
         }
 
         if (other.CompareTag("Player")) {
+            playerDetected = true;
             PeaceCanvas.instance.ShowKeySuggestion("F", "Pick-up");
             
             if (nearbyItemWithHigherPriority != null)
@@ -72,7 +74,9 @@ public class LootItem : MonoBehaviour
     }
 
     void OnTriggerExit(Collider other) {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player")) {
+            playerDetected = false;
             PeaceCanvas.instance.HideKeySuggestion();
+        }
     }
 }
