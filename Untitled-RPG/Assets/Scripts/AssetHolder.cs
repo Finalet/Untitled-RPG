@@ -66,7 +66,6 @@ public class AssetHolder : MonoBehaviour
             return null;
         }
     }
-
     public Skill getSkill (int ID) {
         for (int i = 0; i < Skills.Length; i ++) {
             if (Skills[i].ID == ID)
@@ -74,5 +73,20 @@ public class AssetHolder : MonoBehaviour
         }
         Debug.LogError($"Skill with ID = {ID} not found");
         return null;
+    }
+
+    public void DropItem (Item item, int amount, Vector3 worldPosition) {
+        GameObject prefab = item.itemPrefab != null ? item.itemPrefab : Resources.Load<GameObject>("GenericLootPrefab");
+        LootItem li = Instantiate(prefab, worldPosition, Quaternion.identity).GetComponent<LootItem>();
+        li.itemAmount = amount < 5 ? amount : Mathf.RoundToInt(Random.Range(0.8f*amount, 1.2f*amount));
+        if (li.item == null)
+            li.item = item;
+        li.Drop();
+    }
+    public void DropGold (int amount, Vector3 worldPosition) {
+        LootItem li = Instantiate(Resources.Load<GameObject>("GoldLootPrefab"), worldPosition, Quaternion.identity).GetComponent<LootItem>();
+        li.isGold = true;
+        li.itemAmount = Mathf.RoundToInt(Random.Range(0.8f*amount, 1.2f*amount));
+        li.Drop();
     }
 }

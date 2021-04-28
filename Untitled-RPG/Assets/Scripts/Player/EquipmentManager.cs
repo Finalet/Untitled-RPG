@@ -153,7 +153,7 @@ public class EquipmentManager : MonoBehaviour
             Debug.LogError("Weapon type not yet supported");
             return;
         }
-        GameObject w = Instantiate(weapon.itemPrefab, parent);
+        GameObject w = Instantiate(weapon.weaponPrefab, parent);
         w.transform.localPosition = Vector3.zero;
         w.transform.localEulerAngles = Vector3.zero;
         w.transform.localScale = Vector3.one;

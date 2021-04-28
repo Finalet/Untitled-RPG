@@ -6,6 +6,7 @@ using UnityEngine;
 public class Weapon : Equipment
 {
     public WeaponType weaponType;
+    public GameObject weaponPrefab;
 
     protected override void Equip (UI_InventorySlot initialSlot) {
         if (weaponType == WeaponType.OneHandedSword || weaponType == WeaponType.OneHandedStaff) {

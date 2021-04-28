@@ -198,16 +198,11 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void DropLoot () {
         for (int i = 0; i < itemsLoot.Length; i++) {
             if (Random.value < itemsLoot[i].dropProbability) {
-                LootItem li = Instantiate(itemsLoot[i].lootItem.itemPrefab, transform.position, Quaternion.identity).GetComponent<LootItem>();
-                li.itemAmount = itemsLoot[i].lootItemAmount < 5 ? itemsLoot[i].lootItemAmount : Mathf.RoundToInt(Random.Range(0.8f*itemsLoot[i].lootItemAmount, 1.2f*itemsLoot[i].lootItemAmount));
-                li.Drop();
+                AssetHolder.instance.DropItem(itemsLoot[i].lootItem, itemsLoot[i].lootItemAmount, transform.position);
             }
         }
         if (goldLootAmount > 0) {
-            LootItem li = Instantiate(Resources.Load<GameObject>("GoldLootPrefab"), transform.position, Quaternion.identity).GetComponent<LootItem>();
-            li.isGold = true;
-            li.itemAmount = Mathf.RoundToInt(Random.Range(0.8f*goldLootAmount, 1.2f*goldLootAmount));
-            li.Drop();
+            AssetHolder.instance.DropGold(goldLootAmount, transform.position);
         }
     }
 

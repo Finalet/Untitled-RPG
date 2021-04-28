@@ -8,10 +8,27 @@ public class LootItem : MonoBehaviour
     public Item item;
     public int itemAmount;
 
-    [Header("Gold loot")]
+    [Header("Bools")]
     public bool isGold;
 
+    [System.NonSerialized] public float priority;
+    LootItem nearbyItemWithHigherPriority;
+
+    void Awake() {
+        priority = Random.value;
+    }
+
+    void SetGlowColor() {
+        ParticleSystem ps = GetComponentInChildren<ParticleSystem>(true);
+        
+        var main = ps.main;
+        main.startColor = isGold ? UI_General.getRarityColor(ItemRarity.Common) : UI_General.getRarityColor(item.itemRarity);
+
+        ps.Play();
+    }
+
     public void Drop() {
+        SetGlowColor();
         transform.localScale = Vector3.zero;
         transform.DOScale(1, 0.2f);
         Vector3 force = Vector3.up * 5 + Vector3.right * (Random.value-1) * 3 + Vector3.forward * (Random.value-1) * 3;
@@ -20,8 +37,18 @@ public class LootItem : MonoBehaviour
     }
 
     void OnTriggerStay(Collider other) {
+        if (other.GetComponent<LootItem>() != null) {
+            if (other.GetComponent<LootItem>().priority > priority) { //if another loot is nearby and its priority is higher, then dont pick this item up
+                nearbyItemWithHigherPriority = other.GetComponent<LootItem>();
+                return;
+            }
+        }
+
         if (other.CompareTag("Player")) {
             PeaceCanvas.instance.ShowKeySuggestion("F", "Pick-up");
+            
+            if (nearbyItemWithHigherPriority != null)
+                return;
 
             if (Input.GetKeyDown(KeyCode.F)) {
                 switch (isGold) {
@@ -36,7 +63,7 @@ public class LootItem : MonoBehaviour
                         InventoryManager.instance.AddGold(itemAmount);
                         break;
                 }
-                PeaceCanvas.instance.ShowLootNotification(item, itemAmount);
+                LootNotificationManager.instance.ShowLootNotification(this);
                 PeaceCanvas.instance.HideKeySuggestion();
                 Destroy(gameObject);
             }
