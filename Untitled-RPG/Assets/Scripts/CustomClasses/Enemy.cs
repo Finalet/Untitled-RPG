@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public enum EnemyState {Idle, Approaching, Attacking, Returning};
+ 
+[System.Serializable] public struct Loot {
+    public Item lootItem;
+    public int lootItemAmount;
+    [Range(0,1)] public float dropProbability;
+}
 
 public abstract class Enemy : MonoBehaviour
 {
@@ -19,6 +25,9 @@ public abstract class Enemy : MonoBehaviour
     public bool immuneToKnockDown;
     public bool immuneToKickBack;
     public Vector3 localEnemyBounds;
+    [Header("Loot")]
+    public Loot[] itemsLoot;
+    public int goldLootAmount;
 
     [Header("AI State")]
     public EnemyState currentState;
@@ -180,9 +189,26 @@ public abstract class Enemy : MonoBehaviour
             animator.CrossFade("GetHit.Die", 0.25f);
             GetComponentInChildren<Collider>().enabled = false;
             StartCoroutine(die());
+            DropLoot();
         }
 
         //Add health regeneration
+    }
+
+    protected virtual void DropLoot () {
+        for (int i = 0; i < itemsLoot.Length; i++) {
+            if (Random.value < itemsLoot[i].dropProbability) {
+                LootItem li = Instantiate(itemsLoot[i].lootItem.itemPrefab, transform.position, Quaternion.identity).GetComponent<LootItem>();
+                li.itemAmount = itemsLoot[i].lootItemAmount < 5 ? itemsLoot[i].lootItemAmount : Mathf.RoundToInt(Random.Range(0.8f*itemsLoot[i].lootItemAmount, 1.2f*itemsLoot[i].lootItemAmount));
+                li.Drop();
+            }
+        }
+        if (goldLootAmount > 0) {
+            LootItem li = Instantiate(Resources.Load<GameObject>("GoldLootPrefab"), transform.position, Quaternion.identity).GetComponent<LootItem>();
+            li.isGold = true;
+            li.itemAmount = Mathf.RoundToInt(Random.Range(0.8f*goldLootAmount, 1.2f*goldLootAmount));
+            li.Drop();
+        }
     }
 
     IEnumerator die (){

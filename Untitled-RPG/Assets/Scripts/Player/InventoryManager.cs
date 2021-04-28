@@ -28,7 +28,7 @@ public class InventoryManager : MonoBehaviour
             instance = this;
     }
 
-    void Awake() {
+    public void Init() {
         if (instance == null)
             instance = this;
         
@@ -36,9 +36,7 @@ public class InventoryManager : MonoBehaviour
         PeaceCanvas.saveGame += Save;
 
         Load();
-    }
 
-    void Start() {
         allSlots = slots.GetComponentsInChildren<UI_InventorySlot>();
     }
 
@@ -100,6 +98,13 @@ public class InventoryManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void AddGold(int amount) {
+        currentGold += amount;
+    }
+    public void RemoveGold (int amount) {
+        currentGold -= amount;
     }
 
     public int getNumberOfEmptySlots () {

@@ -39,6 +39,8 @@ public class EquipmentManager : MonoBehaviour
     void Awake() {
         if (instance == null)
             instance = this;
+
+        InventoryManager.instance.Init();
     }
 
     void Start() {

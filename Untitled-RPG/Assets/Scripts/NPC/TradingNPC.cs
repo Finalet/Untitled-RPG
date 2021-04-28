@@ -150,7 +150,7 @@ public class TradingNPC : NPC
             return;
         }
 
-        InventoryManager.instance.currentGold -= getCartTotalPrice();
+        InventoryManager.instance.RemoveGold(getCartTotalPrice());
 
         foreach (UI_StoreCartSlot s in instanciatedStoreWindow.cartSlots) {
             if (s.itemInSlot != null) {
@@ -163,7 +163,7 @@ public class TradingNPC : NPC
     }
 
     public void Sell () {
-        InventoryManager.instance.currentGold += getTotalSellPrice();
+        InventoryManager.instance.AddGold(getTotalSellPrice());
 
         foreach (UI_StoreSellSlot s in instanciatedStoreWindow.sellSlots) {
             s.ClearSlot();

@@ -6,6 +6,7 @@ public abstract class Item : ScriptableObject
     public int ID;
     public string itemName;
     public string itemDesctription;
+    public ItemRarity itemRarity;
     public int itemBasePrice;
     public bool isStackable;
     public int maxStackAmount = 100;

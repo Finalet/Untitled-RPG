@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Cinemachine;
+using DG.Tweening;
 
 public class PeaceCanvas : MonoBehaviour
 {
@@ -279,5 +280,9 @@ public class PeaceCanvas : MonoBehaviour
     public void PlaySound(AudioClip clip) {
         audioSource.clip = clip;
         audioSource.Play();
+    }
+
+    public void ShowLootNotification (Item lootItem, int amount) {
+        //NO IDEA TOMORROW BRO, YESTERDAY BRO HAS NO CLUE WHAT TO DO WITH THIS. GOOD LUCK.
     }
 }
