@@ -463,4 +463,9 @@ public class PlayerControlls : MonoBehaviour
             inBattle = false;
         }
     }
+
+    public void PlayGeneralAnimation (int animationID) {
+        animator.SetInteger("GeneralID", animationID);
+        animator.SetTrigger("GeneralTrigger");
+    }
 }

@@ -65,6 +65,7 @@ public class LootItem : MonoBehaviour
                         InventoryManager.instance.AddGold(itemAmount);
                         break;
                 }
+                PlayerControlls.instance.PlayGeneralAnimation(1);
                 LootNotificationManager.instance.ShowLootNotification(this);
                 PeaceCanvas.instance.HideKeySuggestion();
                 Destroy(gameObject);

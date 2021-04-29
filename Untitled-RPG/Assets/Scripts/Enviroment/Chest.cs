@@ -10,6 +10,7 @@ public class Chest : MonoBehaviour
     public Loot[] lootInside;
     public int goldAmountInside;
     [Space]
+    public bool isLocked;
     public bool isOpened;
 
     [Space]
@@ -64,8 +65,8 @@ public class Chest : MonoBehaviour
         if (other.CompareTag("Player")) {
             PeaceCanvas.instance.ShowKeySuggestion("F", "Open");
             
-            if (Input.GetKeyDown(KeyCode.F)) {
-                PlayOpenAnimation();
+            if (Input.GetKeyDown(KeyCode.F) && !isLocked) {
+                OpenChest();
                 PeaceCanvas.instance.HideKeySuggestion();
             }
             
@@ -80,9 +81,10 @@ public class Chest : MonoBehaviour
             PeaceCanvas.instance.HideKeySuggestion();
     }
 
-    void PlayOpenAnimation() {
-        lid.transform.DORotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic);
-        Invoke("DropItems", 0.5f);
+    void OpenChest() {
+        PlayerControlls.instance.PlayGeneralAnimation(0);
+        lid.transform.DORotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic).SetDelay(1);
+        Invoke("DropItems", 1.5f);
         isOpened = true;
     }
 
@@ -91,6 +93,7 @@ public class Chest : MonoBehaviour
             if (Random.value < lootInside[i].dropProbability)
                 AssetHolder.instance.DropItem(lootInside[i].lootItem, lootInside[i].lootItemAmount, transform.position + Vector3.up*0.3f);
         }
-        AssetHolder.instance.DropGold(goldAmountInside, transform.position + Vector3.up * 0.3f);
+        if (goldAmountInside > 0)
+            AssetHolder.instance.DropGold(goldAmountInside, transform.position + Vector3.up * 0.3f);
     }
 }
