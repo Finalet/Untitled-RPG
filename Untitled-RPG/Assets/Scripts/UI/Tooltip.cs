@@ -17,6 +17,7 @@ public class Tooltip : MonoBehaviour
     public Image itemIcon;
     public TextMeshProUGUI itemType;
     public TextMeshProUGUI itemName;
+    public TextMeshProUGUI itemRarity;
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemStats;
     public TextMeshProUGUI itemPrice;
@@ -39,11 +40,16 @@ public class Tooltip : MonoBehaviour
         if (itemIcon.sprite != focusItem.itemIcon)
             itemIcon.sprite = focusItem.itemIcon;
 
-        if (itemType.text != getItemType(focusItem))
-            itemType.text = getItemType(focusItem);
+        if (itemType.text != UI_General.getItemType(focusItem))
+            itemType.text = UI_General.getItemType(focusItem);
 
         if (itemName.text != focusItem.itemName)
             itemName.text = focusItem.itemName;
+        
+        if (itemRarity.text != focusItem.itemRarity.ToString()) {
+            itemRarity.text = focusItem.itemRarity.ToString();
+            itemRarity.color = UI_General.getRarityColor(focusItem.itemRarity);
+        }
 
         if (itemDescription.text != focusItem.itemDesctription)
             itemDescription.text = focusItem.itemDesctription;
@@ -116,18 +122,5 @@ public class Tooltip : MonoBehaviour
             stats = "NOT IMPLEMENTED";
         }
         return stats;
-    }
-    string getItemType (Item item) {
-        if (item is Consumable) {
-            Consumable c = (Consumable)item;
-            return "Consumable";
-        } else if (item is Weapon) {
-            Weapon w = (Weapon)item;
-            return w.weaponType.ToString();
-        } else if (item is Armor) {
-            Armor w = (Armor)item;
-            return w.armorType.ToString();
-        }
-        return $"NOT IMPLEMENTED";
     }
 }

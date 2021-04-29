@@ -64,4 +64,17 @@ public static class UI_General
                 return new Color();
         }
     }
+
+    public static string getItemType (Item item) {
+        if (item is Consumable) {
+            return "Consumable";
+        } else if (item is Weapon) {
+            Weapon w = (Weapon)item;
+            return w.weaponType.ToString();
+        } else if (item is Armor) {
+            Armor w = (Armor)item;
+            return w.armorType.ToString();
+        }
+        return $"NOT IMPLEMENTED";
+    }
 }

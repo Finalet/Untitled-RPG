@@ -42,7 +42,7 @@ public class StoreWindowUI : MonoBehaviour
         sellTotalLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(sellTotalLabel.GetPreferredValues().x, 20);
     }
 
-    public void PlayUISound () {
+    public void PlayUISound () { //Played by "buy" "sell" tab buttons
         PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
     }
 }

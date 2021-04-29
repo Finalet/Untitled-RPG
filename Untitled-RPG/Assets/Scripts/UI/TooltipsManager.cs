@@ -65,6 +65,21 @@ public class TooltipsManager : MonoBehaviour
                     return;
                 }
             }
+            
+            //CraftingSlots
+            if (raycastResults[i].gameObject.GetComponent<CraftingItemUI>() != null) {
+                if (raycastResults[i].gameObject.GetComponent<CraftingItemUI>().item != null) {
+                    lastScreenPos = screenPos;
+
+                    focusItem = raycastResults[i].gameObject.GetComponent<CraftingItemUI>().item;
+                    anchoredShift = new Vector2(-raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2, raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
+                    screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
+                    pivot = new Vector2(1, 1);
+                    if (lastScreenPos != screenPos)
+                        startTime = Time.realtimeSinceStartup;
+                    return;
+                }
+            }
         }
         focusItem = null;
         screenPos = Vector2.zero;
