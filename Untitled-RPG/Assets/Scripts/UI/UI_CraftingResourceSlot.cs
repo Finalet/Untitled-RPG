@@ -10,7 +10,8 @@ public class UI_CraftingResourceSlot : UI_InventorySlot, IDropHandler, IDragHand
     protected override void DisplayItem () {
         slotIcon.sprite = itemInSlot.itemIcon;
         itemAmountText.text = $"{availableAmount}/{itemAmount}";
-        slotIcon.color = Color.white;
+        slotIcon.color = availableAmount >= itemAmount ? Color.white : Color.grey;
+        itemAmountText.color = availableAmount >= itemAmount ? Color.white : Color.Lerp(Color.red, Color.white, 0.3f);
     }
 
     public void UpdateResourceDisplay () {

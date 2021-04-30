@@ -425,7 +425,7 @@ public class PlayerControlls : MonoBehaviour
     public void InterruptCasting () {
         if (!isCastingSkill)
             return;
-        animator.CrossFade("Attacks.Mage.Empty", 0.15f);
+        animator.CrossFade("Attacks.Empty", 0.15f);
         castInterrupted = true;
         isCastingSkill = false;
     }
@@ -433,22 +433,22 @@ public class PlayerControlls : MonoBehaviour
     void CheckIsAttacking () {
         if ( (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] || emptyAttackAnimatorStates[6]) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) ) {
             isAttacking = false;
-            isCastingSkill = false;
+            // isCastingSkill = false;
         }
 
         if (emptyAttackAnimatorStates[4] && emptyAttackAnimatorStates[5]) {
             isAttacking = false;
-            isCastingSkill = false;
+            // isCastingSkill = false;
         }
 
         if ( emptyAttackAnimatorStates[5] && (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]  || emptyAttackAnimatorStates[6]) ) {
             isAttacking = false;
-            isCastingSkill = false;
+            // isCastingSkill = false;
         }
 
         if ( emptyAttackAnimatorStates[4] && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) ) {
             isAttacking = false;
-            isCastingSkill = false;
+            // isCastingSkill = false;
         }
     }
 

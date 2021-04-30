@@ -48,10 +48,31 @@ public class CraftingNPC : NPC
         instanciatedCraftingWindow.DisplaySelectedItem();
     }
 
-    public void CraftItem () {
-        print($"Crafted {craftQuanitity} of {selectedItem.itemName}");
+    public bool canCraftItem () {
+        for (int i = 0; i < selectedItem.craftingRecipe.Length; i++) {
+            if (InventoryManager.instance.getItemAmountInInventory(selectedItem.craftingRecipe[i].resource) < selectedItem.craftingRecipe[i].requiredAmount*craftQuanitity)
+                return false;       
+        }
+        return true;
     }
+
+    public void CraftItem () {
+        if (canCraftItem()) {
+            if (InventoryManager.instance.getNumberOfEmptySlots() == 0) {
+                CanvasScript.instance.DisplayWarning("Inventory is full");
+                return;
+            }
+                
+
+            for (int i = 0; i < selectedItem.craftingRecipe.Length; i++) {
+                InventoryManager.instance.RemoveItemFromInventory(selectedItem.craftingRecipe[i].resource, selectedItem.craftingRecipe[i].requiredAmount*craftQuanitity);      
+            }
+            InventoryManager.instance.AddItemToInventory(selectedItem, craftQuanitity);
+            instanciatedCraftingWindow.DisplaySelectedItem(); 
+        }
+    }
+    
     public void CancelCraft () {
-        print($"Crafted crafting {craftQuanitity} of {selectedItem.itemName}");
+        print($"Canceled crafting {craftQuanitity} of {selectedItem.itemName}");
     }
 }

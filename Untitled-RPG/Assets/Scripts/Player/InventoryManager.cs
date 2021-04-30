@@ -115,4 +115,27 @@ public class InventoryManager : MonoBehaviour
         }
         return i;
     }
+
+    public int getItemAmountInInventory (Item item){
+        int amount = 0;
+        for (int i = 0; i < allSlots.Length; i++) {
+            if (allSlots[i].itemInSlot == item)
+                amount += allSlots[i].itemAmount;
+        }
+        return amount;
+    }
+
+    public void RemoveItemFromInventory (Item item, int amount) {
+        int amountLeftToRemove = amount;
+        for (int i = 0; i < allSlots.Length; i++) {
+            if (allSlots[i].itemInSlot == item) {
+                int amountInThisSlot = allSlots[i].itemAmount;
+                allSlots[i].itemAmount -= amountLeftToRemove;
+                amountLeftToRemove -= amountInThisSlot;
+                allSlots[i].ValidateSlot();
+            }
+            if (amountLeftToRemove <= 0)
+                break;
+        }
+    }
 }

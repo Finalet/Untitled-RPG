@@ -257,7 +257,7 @@ public class PeaceCanvas : MonoBehaviour
 
     void UpdateStats() {
         statsLeftText.text = $"Max health {Characteristics.instance.maxHealth}\nMax stamina {Characteristics.instance.maxStamina}\nStrength {Characteristics.instance.strength}\nAgility {Characteristics.instance.agility}\nIntellect {Characteristics.instance.intellect}";
-        statsRightText.text = $"Melee attack {Characteristics.instance.meleeAttack}\nRanged attack {Characteristics.instance.rangedAttack}\nMagic power {Characteristics.instance.magicPower}\nHealing power {Characteristics.instance.healingPower}\nDefense {Characteristics.instance.defense}\nCasting time {Characteristics.instance.castingSpeed.x*100f}%\n";
+        statsRightText.text = $"Melee attack {Characteristics.instance.meleeAttack}\nRanged attack {Characteristics.instance.rangedAttack}\nMagic power {Characteristics.instance.magicPower}\nHealing power {Characteristics.instance.healingPower}\nDefense {Characteristics.instance.defense}\nCasting time {Mathf.Round(Characteristics.instance.castingSpeed.z*100f)}%\n";
     }
 
     public void SaveButton() {

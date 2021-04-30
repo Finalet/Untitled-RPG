@@ -15,6 +15,7 @@ public class Tooltip : MonoBehaviour
 
     [Space]
     public Image itemIcon;
+    public TextMeshProUGUI itemID;
     public TextMeshProUGUI itemType;
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemRarity;
@@ -37,6 +38,9 @@ public class Tooltip : MonoBehaviour
     }
 
     public void Init () {
+        if (itemID.text != focusItem.ID.ToString())
+            itemID.text = focusItem.ID.ToString();
+
         if (itemIcon.sprite != focusItem.itemIcon)
             itemIcon.sprite = focusItem.itemIcon;
 

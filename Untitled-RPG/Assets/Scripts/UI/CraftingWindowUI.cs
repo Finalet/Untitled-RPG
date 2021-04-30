@@ -72,8 +72,11 @@ public class CraftingWindowUI : MonoBehaviour
         for (int i = 0; i < ownerNPC.selectedItem.craftingRecipe.Length; i++) {
             resourcesSlots[i].itemInSlot = ownerNPC.selectedItem.craftingRecipe[i].resource;
             resourcesSlots[i].itemAmount = ownerNPC.selectedItem.craftingRecipe[i].requiredAmount * ownerNPC.craftQuanitity;
+            resourcesSlots[i].availableAmount = InventoryManager.instance.getItemAmountInInventory(ownerNPC.selectedItem.craftingRecipe[i].resource);
             resourcesSlots[i].UpdateResourceDisplay();
         }
+
+        craftButton.interactable = ownerNPC.canCraftItem();
     }
 
     void UpdateQuantityFronInput () {
