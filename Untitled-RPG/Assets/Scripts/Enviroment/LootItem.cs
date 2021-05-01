@@ -47,12 +47,12 @@ public class LootItem : MonoBehaviour
 
         if (other.CompareTag("Player")) {
             playerDetected = true;
-            PeaceCanvas.instance.ShowKeySuggestion("F", "Pick-up");
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Pick-up");
             
             if (nearbyItemWithHigherPriority != null)
                 return;
 
-            if (Input.GetKeyDown(KeyCode.F)) {
+            if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
                 switch (isGold) {
                     case false:
                         if (InventoryManager.instance.getNumberOfEmptySlots() == 0) {

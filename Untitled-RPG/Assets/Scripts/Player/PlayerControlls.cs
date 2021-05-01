@@ -60,8 +60,6 @@ public class PlayerControlls : MonoBehaviour
     [Space]
     public bool forceRigidbodyMovement; //when TRUE rootAnimations will be ignored;
 
-    Vector3 lastCamRotation;
-
     [Header("Bodypart roots")]
     public Transform leftFootRoot;
     public Transform rightFootRoot;
@@ -114,7 +112,7 @@ public class PlayerControlls : MonoBehaviour
         CheckIsAttacking();
         InBattleCheck();
 
-        if (Input.GetKeyDown(KeyCode.CapsLock))
+        if (Input.GetKeyDown(KeybindsManager.instance.toggleRunning))
             toggleRunning = !toggleRunning;
 
         if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) {
@@ -154,20 +152,20 @@ public class PlayerControlls : MonoBehaviour
         //if (Input.GetButtonDown("Jump"))  //JUMPING IS NOW FONE THROUGH "BASE CHARACTER CONTROLLER"
             //Jump();
 
-        if (Input.GetButtonDown("Crouch"))
+        if (Input.GetKeyDown(KeybindsManager.instance.crouch))
             Crouch();
 
-        if (Input.GetButtonDown("Roll"))
+        if (Input.GetKeyDown(KeybindsManager.instance.roll))
             Roll();
 
         if (!isIdle) {
-            if (Input.GetButton("Run"))
+            if (Input.GetKey(KeybindsManager.instance.run))
             {
                 if (!toggleRunning)
                     isRunning = true;
                 else if (!isCrouch && !isAttacking && !isRolling)
                     isSprinting = true; //Start sprinting
-            } else if (Input.GetButtonUp("Run"))
+            } else if (Input.GetKeyUp(KeybindsManager.instance.run))
             {
                 if (toggleRunning && !isRolling) {
                     isSprinting = false;
@@ -191,12 +189,6 @@ public class PlayerControlls : MonoBehaviour
 
         if( (Characteristics.instance.stamina <= 0 || !Characteristics.instance.canUseStamina) && !isRolling) {
             isSprinting = false;
-        }
- 
-        if (Input.GetButtonDown("FreeCamera")) {
-            lastCamRotation = playerCamera.transform.eulerAngles;
-        } else if (Input.GetButtonUp("FreeCamera")) {
-            playerCamera.transform.eulerAngles = lastCamRotation;
         }
 
         if (isSprinting) {
@@ -354,7 +346,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void MountAnimal () {
-        if (Input.GetKeyDown(KeyCode.F)) {
+        if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
             if (!isMounted && !isFlying) {
                 GetComponent<MRider>().MountAnimal();
                 SprintOff();
@@ -464,8 +456,18 @@ public class PlayerControlls : MonoBehaviour
         }
     }
 
-    public void PlayGeneralAnimation (int animationID) {
+    public void PlayGeneralAnimation (int animationID, bool blockExit = false, float blockDuration = 0) {
         animator.SetInteger("GeneralID", animationID);
         animator.SetTrigger("GeneralTrigger");
+
+        animator.SetBool("blockGeneralExit", blockExit);
+        if (blockDuration > 0) Invoke("UnlockGeneralAnimationExit", blockDuration);
+    }
+    public void ExitGeneralAnimation () {
+        animator.CrossFade("General.empty", 0.15f);
+        UnlockGeneralAnimationExit();
+    }
+    void UnlockGeneralAnimationExit () {
+        animator.SetBool("blockGeneralExit", false);
     }
 }

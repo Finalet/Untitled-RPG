@@ -71,11 +71,11 @@ public class PeaceCanvas : MonoBehaviour
         else   
             anyPanelOpen = false;
 
-        if (Input.GetButtonDown("OpenSkillsPanel") && !SkillsPanel.activeInHierarchy) {
+        if (Input.GetKeyDown(KeybindsManager.instance.skills) && !SkillsPanel.activeInHierarchy && currentInterractingNPC == null) {
             OpenSkillsPanel();
         }
 
-        if (Input.GetButtonDown("OpenInventory") && !Inventory.activeInHierarchy) {
+        if (Input.GetKeyDown(KeybindsManager.instance.inventory) && !Inventory.activeInHierarchy && currentInterractingNPC == null) {
             OpenInventory();    
         }
 
@@ -83,9 +83,9 @@ public class PeaceCanvas : MonoBehaviour
             EscapeButton();
         }
 
-        if (Input.GetKeyDown(KeyCode.F1)) {
+        if (Input.GetKeyDown(KeybindsManager.instance.damageChat)) {
             DebugChatPanel.SetActive(!DebugChatPanel.activeInHierarchy);
-        } else if (Input.GetKeyDown(KeyCode.F3)) {
+        } else if (Input.GetKeyDown(KeybindsManager.instance.hideUI)) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }
 

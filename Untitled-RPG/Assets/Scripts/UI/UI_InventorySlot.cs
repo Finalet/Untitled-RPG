@@ -66,9 +66,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
                 if (npc.getNumberOfEmptySellSlots() == 0)
                     return;
 
-                int amount = 1;
-                if(itemAmount > 1)
-                    amount = Input.GetKey(KeyCode.LeftControl) ? (itemAmount >= 100 ? 100 : itemAmount) : Input.GetKey(KeyCode.LeftShift) ? (itemAmount >= 10 ? 10 : itemAmount) : amount;
+                int amount = UI_General.getClickAmount(itemAmount);
 
                 npc.AddToSell(itemInSlot, amount);
                 itemAmount -= amount;
@@ -81,10 +79,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
                 if (npc.getNumberOfEmptySlots() == 0)
                     return;
 
-                int amount = 1;
-                if(itemAmount > 1)
-                    amount = Input.GetKey(KeyCode.LeftControl) ? (itemAmount >= 100 ? 100 : itemAmount) : Input.GetKey(KeyCode.LeftShift) ? (itemAmount >= 10 ? 10 : itemAmount) : amount;
-
+                int amount = UI_General.getClickAmount(itemAmount);
+                
                 npc.AddItemToStorage(itemInSlot, amount);
                 itemAmount -= amount;
                 if (itemAmount == 0)

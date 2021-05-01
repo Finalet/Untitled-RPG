@@ -9,9 +9,9 @@ public class Consumable : Item
     public ConsumableType consumableType;
     public int effectAmount;
 
-    [System.NonSerialized] public bool isCoolingDown;
-    [System.NonSerialized] public int cooldownTime;
-    [System.NonSerialized] public float cooldownTimer;
+    public bool isCoolingDown;
+    public int cooldownTime;
+    public float cooldownTimer;
 
     public override void Use () {
         if (consumableType == ConsumableType.Health)

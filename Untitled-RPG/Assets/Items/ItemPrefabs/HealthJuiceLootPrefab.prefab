@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 3522730297920465639}
   - component: {fileID: 1385964470141759406}
   m_Layer: 0
-  m_Name: StaminaPotionLootPrefab
+  m_Name: HealthJuiceLootPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,8 +44,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6736638884673318733}
   - {fileID: 4584786947905678933}
+  - {fileID: 6364271241909824405}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4737b7ef9eaed0d45ae48f4307e6c8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 50f7b75f1557f324186da6bba05f2cc6, type: 2}
+  item: {fileID: 11400000, guid: 7842c36d8c056d54db4e7570847850c4, type: 2}
   itemAmount: 0
   isGold: 0
 --- !u!1001 &4584786947905750111
@@ -110,7 +110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 453130, guid: 03eb254be55316240929244bd19caa02, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 453130, guid: 03eb254be55316240929244bd19caa02, type: 3}
       propertyPath: m_LocalPosition.x
@@ -152,10 +152,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2391754, guid: 03eb254be55316240929244bd19caa02, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 54061fa668860e54a8e96694301d76a9, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03eb254be55316240929244bd19caa02, type: 3}
 --- !u!1 &4584786947905905087 stripped
@@ -170,7 +166,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4584786947905750111}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &8091170085396993843
+--- !u!1001 &8459638018080723947
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -185,7 +181,7 @@ PrefabInstance:
     - target: {fileID: 3257445092005492862, guid: 12df08919b8568648b4e0b1323b219a6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3257445092005492862, guid: 12df08919b8568648b4e0b1323b219a6,
         type: 3}
@@ -239,9 +235,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12df08919b8568648b4e0b1323b219a6, type: 3}
---- !u!4 &6736638884673318733 stripped
+--- !u!4 &6364271241909824405 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3257445092005492862, guid: 12df08919b8568648b4e0b1323b219a6,
     type: 3}
-  m_PrefabInstance: {fileID: 8091170085396993843}
+  m_PrefabInstance: {fileID: 8459638018080723947}
   m_PrefabAsset: {fileID: 0}

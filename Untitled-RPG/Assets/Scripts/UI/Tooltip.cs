@@ -80,10 +80,12 @@ public class Tooltip : MonoBehaviour
         if (item is Consumable) {
             Consumable c = (Consumable)item;
             if (c.consumableType == ConsumableType.Health) {
-                stats = $"Restores around {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), "+" + c.effectAmount.ToString())} health."; 
+                stats = $"Restores around {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), "+" + c.effectAmount.ToString())} health\n"; 
             } else if (c.consumableType == ConsumableType.Stamina) {
-                stats = $"Restores around {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), "+" + c.effectAmount.ToString())} stamina.";
+                stats = $"Restores around {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), "+" + c.effectAmount.ToString())} stamina\n";
             }
+            if(c.cooldownTime > 0)
+                stats += $"\nCool down: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), c.cooldownTime.ToString())} seconds";
         } else if (item is Equipment) {
             Equipment w = (Equipment)item;
             if (w.MeleeAttack != 0) {

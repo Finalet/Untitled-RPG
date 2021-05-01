@@ -7,7 +7,6 @@ using Cinemachine;
 public class NPC : MonoBehaviour
 {
     public string npcName;
-    public KeyCode interractKey;
     public string interractExplanationText;
     [Space]
     public CinemachineVirtualCamera npcCamera;
@@ -25,14 +24,14 @@ public class NPC : MonoBehaviour
 
     protected virtual void Update () {
         if (playerDetected && !isInterracting) {
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[interractKey], interractExplanationText);
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], interractExplanationText);
             once = false;
         } else if (!once) {
             PeaceCanvas.instance.HideKeySuggestion();
             once = true;
         }
 
-        if (playerDetected && Input.GetKeyDown(interractKey)) {
+        if (playerDetected && Input.GetKeyDown(KeybindsManager.instance.interact)) {
             Interract();
         }
 

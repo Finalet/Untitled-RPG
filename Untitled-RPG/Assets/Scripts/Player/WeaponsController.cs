@@ -52,7 +52,7 @@ public class WeaponsController : MonoBehaviour
         ReleaseEmptyHandAnim();
 
         //Manual Sheath
-        if (Input.GetKeyDown(KeyCode.H) && isWeaponOut) {
+        if (Input.GetKeyDown(KeybindsManager.instance.sheathe) && isWeaponOut) {
             StartCoroutine(Sheathe());
         }
     }

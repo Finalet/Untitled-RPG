@@ -126,8 +126,8 @@ public class CanvasScript : MonoBehaviour
         warning = null;
     }
 
-    public void DisplayCastingBar (float castingTime) {
-        StartCoroutine(DisplayCastinBarIenum(castingTime));
+    public void DisplayCastingBar (float castingNormalizedAnimationTime) {
+        StartCoroutine(DisplayCastinBarIenum(castingNormalizedAnimationTime));
     }
     IEnumerator DisplayCastinBarIenum (float castEndNormalizedTime) {
         castingBar.SetActive(true);
@@ -145,6 +145,16 @@ public class CanvasScript : MonoBehaviour
         }
         yield return new WaitForSeconds(0.25f);
         castingBar.SetActive(false);
+    }
+
+    public void DisplayProgressBar (bool prewarm, float progress = 0, in bool done = false) {
+        if (prewarm){
+            castingBar.SetActive(true);
+            castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = 0;
+        }
+        castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = progress;
+        if (done)
+            castingBar.SetActive(false);
     }
 
     public void PickAreaForSkill (Skill skill) {

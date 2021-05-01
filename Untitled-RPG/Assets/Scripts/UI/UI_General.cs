@@ -77,4 +77,11 @@ public static class UI_General
         }
         return $"NOT IMPLEMENTED";
     }
+
+    public static int getClickAmount (int maxAmount = 100) {
+        int amount = 1;
+        if(maxAmount > 1)
+            amount = Input.GetKey(KeyCode.LeftControl) ? (maxAmount >= 100 ? 100 : maxAmount) : Input.GetKey(KeyCode.LeftShift) ? (maxAmount >= 10 ? 10 : maxAmount) : amount;
+        return amount;
+    }
 }
