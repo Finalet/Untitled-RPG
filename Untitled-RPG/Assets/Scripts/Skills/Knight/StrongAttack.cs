@@ -12,7 +12,11 @@ public class StrongAttack : Skill
     }
 
     protected override void CustomUse() {
-        animator.CrossFade("Attacks.Knight.StrongAttack", 0.25f);
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+            animator.CrossFade("Attacks.Knight.StrongAttack Two handed", 0.25f);
+        else 
+            animator.CrossFade("Attacks.Knight.StrongAttack", 0.25f);
+
         audioSource.PlayDelayed(0.35f * characteristics.attackSpeed.z);
     }  
 

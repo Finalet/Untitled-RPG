@@ -255,10 +255,11 @@ public class PlayerControlls : MonoBehaviour
         isRunningFloat = Mathf.Clamp01(isRunningFloat);
 
         if (isSprinting) {
-            isSprintingFloat = 1;
+            isSprintingFloat += Time.deltaTime * 10; //1;
         } else {
-            isSprintingFloat = 0;
+            isSprintingFloat -= Time.deltaTime * 10; //0;
         }
+        isSprintingFloat = Mathf.Clamp01(isSprintingFloat);
     }
 
     void InputMagnitudeFunc () {

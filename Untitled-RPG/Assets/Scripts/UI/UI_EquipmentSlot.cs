@@ -211,7 +211,9 @@ public class UI_EquipmentSlot : UI_InventorySlot
     {
         if (itemInSlot is Weapon) {
             Weapon w = (Weapon)itemInSlot;
-            if (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) {
+            if (w.weaponType == WeaponType.TwoHandedSword) {
+                EquipmentManager.instance.UnequipWeaponPrefab(false, false, false, true);
+            } else if (w.weaponType == WeaponType.TwoHandedStaff) {
                 EquipmentManager.instance.UnequipWeaponPrefab(true);
             } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) {
                 if (equipmentSlotType == EquipmentSlotType.MainHand) {

@@ -13,12 +13,14 @@ public class SettingsManager : MonoBehaviour
     public float mouseSensitivity;
     public bool invertY;
     public bool displayHelmet = true;
+    public bool displayCape = true;
 
     [Space]
     public Slider mouseSensitivitySlider;
     public Text mouseSensitivityText;
     public Toggle invertYToggle;
     public Toggle displayHelmetToggle;
+    public Toggle displayCapeToggle;
 
     void Awake() {
         if (instance == null)
@@ -35,12 +37,14 @@ public class SettingsManager : MonoBehaviour
         ES3.Save<float>("mouseSensitivity", mouseSensitivity, savefilePath);
         ES3.Save<bool>("invertY", invertY, savefilePath);
         ES3.Save<bool>("displayHelmet", displayHelmet, savefilePath);
+        ES3.Save<bool>("displayCape", displayCape, savefilePath);
     }
 
     public void LoadSettings () {
-        if (ES3.KeyExists("mouseSensitivity", savefilePath)) mouseSensitivity = ES3.Load<float>("mouseSensitivity", savefilePath);
-        if (ES3.KeyExists("invertY", savefilePath))invertY = ES3.Load<bool>("invertY", savefilePath);
-        if (ES3.KeyExists("displayHelmet", savefilePath))displayHelmet = ES3.Load<bool>("displayHelmet", savefilePath);
+        mouseSensitivity = ES3.Load<float>("mouseSensitivity", savefilePath, 50);
+        invertY = ES3.Load<bool>("invertY", savefilePath, false);
+        displayHelmet = ES3.Load<bool>("displayHelmet", savefilePath, true);
+        displayCape = ES3.Load<bool>("displayCape", savefilePath, true);
     }
 
     public void SetMouseSensitivity() {
@@ -54,11 +58,16 @@ public class SettingsManager : MonoBehaviour
         displayHelmet = displayHelmetToggle.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayHelmet();
     }
+    public void SetDisplayCape () {
+        displayCape = displayCapeToggle.isOn;
+        if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayCape();
+    }
 
     void UpdateSettingsUI () {
         mouseSensitivitySlider.value = mouseSensitivity;
         mouseSensitivityText.text = mouseSensitivity.ToString();
         invertYToggle.isOn = invertY;
         displayHelmetToggle.isOn = displayHelmet;
+        displayCapeToggle.isOn = displayCape;
     }
 }

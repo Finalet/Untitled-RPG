@@ -8,7 +8,8 @@ public class EquipmentManager : MonoBehaviour
 {
     public static EquipmentManager instance; 
 
-    Transform TwoHandedWeaponSlot;
+    Transform TwohandedStaffSlot;
+    Transform TwohandedSwordSlot;
     Transform MainHandSlot;
     Transform SecondaryHandSlot;
     Transform BowSlot;
@@ -46,7 +47,8 @@ public class EquipmentManager : MonoBehaviour
     void Start() {
         characteristics = Characteristics.instance;
         modularCharacterManager = GetComponent<ModularCharacterManager>();
-        TwoHandedWeaponSlot = WeaponsController.instance.twohandedWeaponSlot;
+        TwohandedStaffSlot = WeaponsController.instance.twohandedStaffSlot;
+        TwohandedSwordSlot = WeaponsController.instance.twohandedSwordSlot;
         BowSlot = WeaponsController.instance.bowSlot;
         MainHandSlot = WeaponsController.instance.leftHipSlot;
         SecondaryHandSlot = WeaponsController.instance.rightHipSlot;
@@ -125,9 +127,15 @@ public class EquipmentManager : MonoBehaviour
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
         Transform parent;
-        if (weapon.weaponType == WeaponType.TwoHandedSword || weapon.weaponType == WeaponType.TwoHandedStaff) { //Two handed weapon
+        if (weapon.weaponType == WeaponType.TwoHandedSword) { //Two handed sword
             if (!WeaponsController.instance.isWeaponOut) {
-                parent = TwoHandedWeaponSlot;
+                parent = TwohandedSwordSlot;
+            } else {
+                parent = RightHandTrans;
+            }
+        } else if (weapon.weaponType == WeaponType.TwoHandedStaff) { //Two handed staff
+            if (!WeaponsController.instance.isWeaponOut) {
+                parent = TwohandedStaffSlot;
             } else {
                 parent = RightHandTrans;
             }
@@ -161,18 +169,24 @@ public class EquipmentManager : MonoBehaviour
             WeaponsController.instance.BowObj = w;
             return;
         }
-        if (parent == TwoHandedWeaponSlot || parent == MainHandSlot || parent == RightHandTrans) {
+        if (parent == TwohandedSwordSlot || parent == TwohandedStaffSlot || parent == MainHandSlot || parent == RightHandTrans) {
             WeaponsController.instance.RightHandEquipObj = w;
         } else if (parent == SecondaryHandSlot || parent == LeftHandTrans) {
             WeaponsController.instance.LeftHandEquipObj = w;
         }
     }
 
-    public void UnequipWeaponPrefab (bool twoHanded, bool secondary = false, bool bow = false) {
+    public void UnequipWeaponPrefab (bool twoHandedStaff, bool secondary = false, bool bow = false, bool twoHandedSword = false) {
         Transform slot;
-        if (twoHanded) {
+        if (twoHandedStaff) {
             if (!WeaponsController.instance.isWeaponOut) {
-                slot = TwoHandedWeaponSlot;
+                slot = TwohandedStaffSlot;
+            } else {
+                slot = RightHandTrans;
+            }
+        } else if (twoHandedSword) {
+            if (!WeaponsController.instance.isWeaponOut) {
+                slot = TwohandedSwordSlot;
             } else {
                 slot = RightHandTrans;
             }
@@ -205,6 +219,8 @@ public class EquipmentManager : MonoBehaviour
 
     public void EquipArmorVisual(Armor item) {
         if (item.armorType == ArmorType.Helmet && !SettingsManager.instance.displayHelmet)
+            return;
+        if (item.armorType == ArmorType.Back && !SettingsManager.instance.displayCape)
             return;
 
         foreach (var part in item.modularArmor.armorParts) {
@@ -242,6 +258,16 @@ public class EquipmentManager : MonoBehaviour
             EquipArmorVisual((Armor)helmet.itemInSlot);
         } else {
             UnequipArmorVisual((Armor)helmet.itemInSlot);
+        }
+    }
+    public void CheckDisplayCape () {
+        if (back.itemInSlot == null) //If we dont have a cape, then there is nothing to do
+            return;
+
+        if (SettingsManager.instance.displayHelmet) {
+            EquipArmorVisual((Armor)back.itemInSlot);
+        } else {
+            UnequipArmorVisual((Armor)back.itemInSlot);
         }
     }
 }

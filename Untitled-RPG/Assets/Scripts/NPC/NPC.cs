@@ -23,6 +23,9 @@ public class NPC : MonoBehaviour
     }
 
     protected virtual void Update () {
+        if (PeaceCanvas.instance == null || PlayerControlls.instance == null) //when level is loading
+            return;
+
         if (playerDetected && !isInterracting) {
             PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], interractExplanationText);
             once = false;

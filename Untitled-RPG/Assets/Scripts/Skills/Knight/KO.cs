@@ -15,7 +15,10 @@ public class KO : Skill
     }
 
     protected override void CustomUse() {
-        animator.CrossFade("Attacks.Knight.KO", 0.25f);
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+            animator.CrossFade("Attacks.Knight.KO Two handed", 0.25f);
+        else 
+            animator.CrossFade("Attacks.Knight.KO", 0.25f);
 
         Invoke("PlaySound", 0.15f * characteristics.attackSpeed.z);
         Invoke("PlaySound", 0.6f * characteristics.attackSpeed.z);

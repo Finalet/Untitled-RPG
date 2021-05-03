@@ -33,10 +33,13 @@ public class Slash : Skill
     }
 
     protected override void CustomUse() {
-        if (hits == 1 || hits == 2)
-            timing = 0.5f * characteristics.attackSpeed.z;
-        else 
-            timing = 0.74f * characteristics.attackSpeed.z;
+        if (hits == 1) {
+            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  0.5f * characteristics.attackSpeed.z : 0.5f * characteristics.attackSpeed.z;
+        } else if (hits == 2) {
+            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  0.6f * characteristics.attackSpeed.z : 0.5f * characteristics.attackSpeed.z;
+        } else {
+            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  1.2f * characteristics.attackSpeed.z : 0.74f * characteristics.attackSpeed.z;
+        }
 
         if (Time.time - lastHitTime > timing)
             Attack();
@@ -48,17 +51,29 @@ public class Slash : Skill
         lastHitTime = Time.time;
 
         if (hits == 1) {
-            animator.CrossFade("Attacks.Knight.Slash_1", 0.2f);
+            if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+                animator.CrossFade("Attacks.Knight.Slash_1 Two handed", 0.2f);
+            else 
+                animator.CrossFade("Attacks.Knight.Slash_1", 0.2f);
+
             hitType = HitType.Interrupt;
             PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.z);
             GetComponent<BoxCollider>().size = baseColliderSize;
         } else if (hits == 2) {
-            animator.CrossFade("Attacks.Knight.Slash_2", 0.2f);
+            if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+                animator.CrossFade("Attacks.Knight.Slash_2 Two handed", 0.2f);
+            else 
+                animator.CrossFade("Attacks.Knight.Slash_2", 0.2f);
+
             hitType = HitType.Interrupt;
             PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.z);
             GetComponent<BoxCollider>().size = baseColliderSize;
         } else if (hits == 3) {
-            animator.CrossFade("Attacks.Knight.Slash_3", 0.2f);
+            if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+                animator.CrossFade("Attacks.Knight.Slash_3 Two handed", 0.2f);
+            else 
+                animator.CrossFade("Attacks.Knight.Slash_3", 0.2f);
+
             hitType = HitType.Kickback;
             PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.z);
             Invoke("PlayLastSound", 0.45f * characteristics.attackSpeed.z); //Invoke because otherwise the sound does not play

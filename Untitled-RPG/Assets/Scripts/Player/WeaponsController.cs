@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public enum BothHandsStatus {RightHandSwordOnly, RightHandStaffOnly, RightStaffLeftSword, RightStaffLeftShield, LeftHandSwordOnly, DualSwords, SwordShield, ShieldOnly, TwoHandedSword, TwoHandedStaff, AllEmpty};
 public enum SingleHandStatus {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Shield, Empty};
@@ -30,7 +31,8 @@ public class WeaponsController : MonoBehaviour
     [Header("Slots")]
     public Transform leftHipSlot;
     public Transform rightHipSlot;
-    public Transform twohandedWeaponSlot;
+    public Transform twohandedStaffSlot;
+    public Transform twohandedSwordSlot;
     public Transform bowSlot;
 
     public AudioClip[] sheathSounds;
@@ -190,8 +192,10 @@ public class WeaponsController : MonoBehaviour
         if (bothHandsStatus == BothHandsStatus.DualSwords) {
             SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
             SetParentAndTransorm(ref LeftHandEquipObj, rightHipSlot);
-        } else if (bothHandsStatus == BothHandsStatus.TwoHandedStaff || bothHandsStatus == BothHandsStatus.TwoHandedSword) {
-            SetParentAndTransorm(ref RightHandEquipObj, twohandedWeaponSlot);
+        } else if (bothHandsStatus == BothHandsStatus.TwoHandedStaff) {
+            SetParentAndTransorm(ref RightHandEquipObj, twohandedStaffSlot);
+        } else if (bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+            SetParentAndTransorm(ref RightHandEquipObj, twohandedSwordSlot);
         } else {
             Debug.LogError("Sheathing for this type of weapon is not implemented yet");
         }
