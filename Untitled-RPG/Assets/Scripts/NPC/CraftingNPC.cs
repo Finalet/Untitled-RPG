@@ -19,14 +19,12 @@ public class CraftingNPC : NPC
 
     CraftingWindowUI instanciatedCraftingWindow;
 
-    public override void Interract () {
-        base.Interract();
+    protected override void CustomInterract()
+    {
         OpenCraftingWindow();
     }
-
-    public override void StopInterract()
+    protected override void CustomStopInterract()
     {
-        base.StopInterract();
         CloseCraftingWindow();
     }
 

@@ -36,8 +36,8 @@ public class BigGoblin : Enemy
         
         base.Update();
 
-        if (isDead || PlayerControlls.instance == null || isKnockedDown) { //Player instance is null when level is only loading.
-            navAgent.isStopped = true;
+        if (isKnockedDown || isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
+            if (navAgent.enabled) navAgent.isStopped = true;
             return;
         }
 

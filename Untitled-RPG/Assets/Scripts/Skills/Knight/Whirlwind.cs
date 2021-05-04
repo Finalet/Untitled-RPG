@@ -19,10 +19,28 @@ public class Whirlwind : Skill
     }
     bool wasFlying;
     IEnumerator Using () {
-        animator.CrossFade("Attacks.Knight.Whirlwind", 0.25f);
-        while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).IsName("Whirlwind_loop")) {
-            yield return null;
-        }
+        Combat.instanace.blockSkills = true;
+
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+            animator.CrossFade("Attacks.Knight.Whirlwind Two handed", 0.25f);
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) 
+            animator.CrossFade("Attacks.Knight.Whirlwind Dual swords", 0.25f);
+        else
+            animator.CrossFade("Attacks.Knight.Whirlwind Dual swords", 0.25f);
+
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+            while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")). IsName("Whirlwind_loop Two handed")) {
+                yield return null;
+            }
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
+            while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")). IsName("Whirlwind_loop Dual swords")) {
+                yield return null;
+            }
+        } else {
+            while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")). IsName("Whirlwind_loop Dual swords")) {
+                yield return null;
+            }
+        }        
 
         if (!playerControlls.isFlying) {
             playerControlls.forceRigidbodyMovement = true;
@@ -54,12 +72,17 @@ public class Whirlwind : Skill
             }
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
-        if (!wasFlying) {
-            //I was setting speed/movement here before shifring to rigidbody
-        }
-        animator.CrossFade("Attacks.Knight.Whirlwind_end", 0.25f);
+        
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+            animator.CrossFade("Attacks.Knight.Whirlwind_end Two handed", 0.25f);
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) 
+            animator.CrossFade("Attacks.Knight.Whirlwind_end Dual swords", 0.25f);
+        else
+            animator.CrossFade("Attacks.Knight.Whirlwind_end Dual swords", 0.25f);
+
         playerControlls.forceRigidbodyMovement = false;
         Characteristics.instance.canGetHit = true;
+        Combat.instanace.blockSkills = false;
     }   
 
     void OnTriggerEnter(Collider other) {

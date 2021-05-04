@@ -102,6 +102,8 @@ public abstract class Enemy : MonoBehaviour
         
         Health();
         ShowHealthBar();
+        if (isDead) return; //need second check since he dies after running "Health()"
+            
         AttackCoolDown();
 
         distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
@@ -120,6 +122,8 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected virtual void AI () {
+        if (isDead) return;
+
         if (distanceToPlayer <= playerDetectRadius) {
             Agr();
         }
@@ -187,9 +191,10 @@ public abstract class Enemy : MonoBehaviour
         if (currentHealth <= 0) {
             isDead = true;
             animator.CrossFade("GetHit.Die", 0.25f);
-            GetComponentInChildren<Collider>().enabled = false;
             StartCoroutine(die());
             DropLoot();
+            if (navAgent != null) navAgent.enabled = false;
+            foreach (Collider col in GetComponentsInChildren<Collider>()) col.enabled = false;
         }
 
         //Add health regeneration

@@ -176,7 +176,7 @@ public abstract class Skill : MonoBehaviour
     }
 
     public virtual bool skillActive () {
-        if (playerControlls.isMounted || playerControlls.isPickingArea || PeaceCanvas.instance.anyPanelOpen)
+        if (playerControlls.isMounted || playerControlls.isPickingArea || PeaceCanvas.instance.anyPanelOpen || Combat.instanace.blockSkills)
             return false;
         else 
             return true;

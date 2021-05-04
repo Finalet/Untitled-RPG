@@ -32,15 +32,13 @@ public class TradingNPC : NPC
         isSellWindowOpen = instanciatedStoreWindow == null ? false : instanciatedStoreWindow.sellSlots[0].gameObject.activeInHierarchy ? true : false;
     }
 
-    public override void Interract () {
-        base.Interract();
+    protected override void CustomInterract()
+    {
         OpenStoreWindow();
         PeaceCanvas.instance.OpenInventory(true, true);
     }
-
-    public override void StopInterract()
+    protected override void CustomStopInterract()
     {
-        base.StopInterract();
         CloseStoreWindow();
     }
 

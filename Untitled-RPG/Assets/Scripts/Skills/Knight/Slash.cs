@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Slash : Skill
 {
+    AudioClip[] sounds;
     [Header("Custom vars")]
-    public AudioClip[] sounds;
+    public AudioClip[] dualSwordSounds;
+    public AudioClip[] TwoHandedSwordSounds;
 
     List<Enemy> enemiesInCombatTrigger = new List<Enemy>();
 
@@ -13,12 +15,17 @@ public class Slash : Skill
     float lastHitTime;
     float timing;
 
-    Vector3 baseColliderSize;
+    BoxCollider hitCollider;
     HitType hitType;
+
+    Vector3[] colliderSize;
+    [Header("Collider sizes")]
+    public Vector3[] colliderSizeDualSwords;
+    public Vector3[] colliderSizeTwohandedSword;
 
     protected override void Start() {
         base.Start();
-        baseColliderSize = GetComponent<BoxCollider>().size;
+        hitCollider = GetComponent<BoxCollider>();
     }
 
     public override void Use() {
@@ -46,44 +53,66 @@ public class Slash : Skill
     }
 
     void Attack() {
+        ChooseColliderSize();
+        ChooseSounds();
+
         hits++;
-
         lastHitTime = Time.time;
+        hitCollider.size = colliderSize[hits-1];
 
+        SetHitType();
+        PlayAnimation();
+        PlaySounds();
+    }
+
+    void PlayLastDualSwordsSound () {
+        PlaySound(sounds[3]);
+    }
+
+    void PlayAnimation () {
         if (hits == 1) {
             if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
                 animator.CrossFade("Attacks.Knight.Slash_1 Two handed", 0.2f);
+            else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+                animator.CrossFade("Attacks.Knight.Slash_1 Dual swords", 0.2f);
             else 
-                animator.CrossFade("Attacks.Knight.Slash_1", 0.2f);
-
-            hitType = HitType.Interrupt;
-            PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.z);
-            GetComponent<BoxCollider>().size = baseColliderSize;
+                animator.CrossFade("Attacks.Knight.Slash_1 Dual swords", 0.2f);
         } else if (hits == 2) {
             if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
                 animator.CrossFade("Attacks.Knight.Slash_2 Two handed", 0.2f);
-            else 
-                animator.CrossFade("Attacks.Knight.Slash_2", 0.2f);
-
-            hitType = HitType.Interrupt;
-            PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.z);
-            GetComponent<BoxCollider>().size = baseColliderSize;
+            else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+                animator.CrossFade("Attacks.Knight.Slash_2 Dual swords", 0.2f);
+            else
+                animator.CrossFade("Attacks.Knight.Slash_2 Dual swords", 0.2f);
+            
         } else if (hits == 3) {
             if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
                 animator.CrossFade("Attacks.Knight.Slash_3 Two handed", 0.2f);
-            else 
-                animator.CrossFade("Attacks.Knight.Slash_3", 0.2f);
-
-            hitType = HitType.Kickback;
-            PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.z);
-            Invoke("PlayLastSound", 0.45f * characteristics.attackSpeed.z); //Invoke because otherwise the sound does not play
-
-            GetComponent<BoxCollider>().size += Vector3.right;
-        }      
+            else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+                animator.CrossFade("Attacks.Knight.Slash_3 Dual swords", 0.2f);
+            else
+                animator.CrossFade("Attacks.Knight.Slash_3 Dual swords", 0.2f);
+        }
     }
-
-    void PlayLastSound () {
-        PlaySound(sounds[3]);
+    void PlaySounds () {
+        if (hits == 1) {
+            PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.z);
+        } else if (hits == 2) {
+            PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.z);
+        } else if (hits == 3) {
+            PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.z);
+            if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+                Invoke("PlayLastDualSwordsSound", 0.45f * characteristics.attackSpeed.z); //Invoke because otherwise the sound does not play
+        }
+    }
+    void SetHitType () {
+        if (hits == 1) {
+            hitType = HitType.Interrupt;
+        } else if (hits == 2) {
+            hitType = HitType.Interrupt;
+        } else if (hits == 3) {
+            hitType = HitType.Kickback;
+        }  
     }
 
     protected override void Update() {
@@ -121,6 +150,25 @@ public class Slash : Skill
             if (enemiesInCombatTrigger[i] == null) {
                 enemiesInCombatTrigger.RemoveAt(i);
             }
+        }
+    }
+
+    void ChooseColliderSize() {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+            colliderSize = colliderSizeTwohandedSword;
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) { 
+            colliderSize = colliderSizeDualSwords;
+        } else {
+            colliderSize = colliderSizeDualSwords;
+        }
+    }
+    void ChooseSounds() {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+            sounds = TwoHandedSwordSounds;
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) { 
+            sounds = dualSwordSounds;
+        } else {
+            sounds = dualSwordSounds;
         }
     }
 }

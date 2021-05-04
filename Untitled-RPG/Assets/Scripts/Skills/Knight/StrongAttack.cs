@@ -6,19 +6,41 @@ public class StrongAttack : Skill
 {
     List<Enemy> enemiesInTrigger = new List<Enemy>();
 
+    Vector3 colliderSize;
+
+    [Header("Custom vars")]
+    public AudioClip[] sounds;
+    public Vector3 colliderSizeDualSwords;
+    public Vector3 colliderSizeTwohandedSword;
+
     protected override void Update() {
         base.Update();
         ClearTrigger();
     }
 
     protected override void CustomUse() {
+        ChooseColliderSize();
+        PlayAnimation();
+        PlaySounds();
+    }  
+
+    void PlayAnimation() {
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
             animator.CrossFade("Attacks.Knight.StrongAttack Two handed", 0.25f);
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+            animator.CrossFade("Attacks.Knight.StrongAttack Dual swords", 0.25f);
         else 
-            animator.CrossFade("Attacks.Knight.StrongAttack", 0.25f);
-
-        audioSource.PlayDelayed(0.35f * characteristics.attackSpeed.z);
-    }  
+            animator.CrossFade("Attacks.Knight.StrongAttack Dual swords", 0.25f);
+    }
+    void PlaySounds () {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+            PlaySound(sounds[1], 0, 1, 1f * characteristics.attackSpeed.z);
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
+            PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.z);
+        } else {
+            PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.z);
+        }
+    }
 
     void OnTriggerEnter(Collider other) {
         Enemy en = other.transform.GetComponentInParent<Enemy>();
@@ -47,5 +69,16 @@ public class StrongAttack : Skill
                 enemiesInTrigger.RemoveAt(i);
             }
         }
+    }
+
+    void ChooseColliderSize() {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+            colliderSize = colliderSizeTwohandedSword;
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) { 
+            colliderSize = colliderSizeDualSwords;
+        } else {
+            colliderSize = colliderSizeDualSwords;
+        }
+        GetComponent<BoxCollider>().size = colliderSize;
     }
 }

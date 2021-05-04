@@ -7,6 +7,10 @@ public class Combat : MonoBehaviour
     public static Combat instanace;
 
     public List<Enemy> enemiesInBattle = new List<Enemy>();
+    
+    [Space]
+    public bool blockSkills;
+
     AimingSkill aimingSkill;
     public AimingSkill AimingSkill {
         get {

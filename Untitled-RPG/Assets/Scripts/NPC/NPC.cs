@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using Cinemachine;
 
-public class NPC : MonoBehaviour
+public abstract class NPC : MonoBehaviour
 {
     public string npcName;
     public string interractExplanationText;
@@ -38,6 +38,10 @@ public class NPC : MonoBehaviour
             Interract();
         }
 
+        RotateNameLable();
+    }
+
+    protected virtual void RotateNameLable () {
         npcNameLabel.transform.LookAt(PlayerControlls.instance.playerCamera.transform);
     }
 
@@ -46,14 +50,18 @@ public class NPC : MonoBehaviour
         PeaceCanvas.instance.HideKeySuggestion();
         isInterracting = true;
         npcCamera.enabled = true;
+        CustomInterract();
     }
+    protected abstract void CustomInterract ();
     public virtual void StopInterract() {
         if (PeaceCanvas.instance.currentInterractingNPC == this)
             PeaceCanvas.instance.currentInterractingNPC = null;
         
         isInterracting = false;
         npcCamera.enabled = false;
+        CustomStopInterract();
     }
+    protected abstract void CustomStopInterract();
 
     protected virtual void OnTriggerStay(Collider other) {
         if (other.GetComponent<PlayerControlls>() != null)

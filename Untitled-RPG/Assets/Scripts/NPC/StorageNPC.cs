@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class StorageNPC : NPC
 {
-    public override void Interract () {
-        base.Interract();
+    protected override void CustomInterract()
+    {
         OpenStorageWindow();
         PeaceCanvas.instance.OpenInventory(true, true);
     }
-
-    public override void StopInterract()
+    protected override void CustomStopInterract()
     {
-        base.StopInterract();
         CloseStorageWindow();
     }
 

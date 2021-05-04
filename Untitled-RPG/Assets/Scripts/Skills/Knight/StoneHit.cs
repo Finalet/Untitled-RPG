@@ -37,8 +37,10 @@ public class StoneHit : Skill
     IEnumerator Using () {
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
             animator.CrossFade("Attacks.Knight.StoneHit Two handed", 0.25f);
-        else
-            animator.CrossFade("Attacks.Knight.StoneHit", 0.25f);
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+            animator.CrossFade("Attacks.Knight.StoneHit Dual swords", 0.25f);
+        else 
+            animator.CrossFade("Attacks.Knight.StoneHit Dual swords", 0.25f);
 
         while(!yes) {
             yield return null;
