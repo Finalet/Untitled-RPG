@@ -189,15 +189,20 @@ public abstract class Enemy : MonoBehaviour
             return;
 
         if (currentHealth <= 0) {
-            isDead = true;
-            animator.CrossFade("GetHit.Die", 0.25f);
-            StartCoroutine(die());
-            DropLoot();
-            if (navAgent != null) navAgent.enabled = false;
-            foreach (Collider col in GetComponentsInChildren<Collider>()) col.enabled = false;
+            Die();
         }
 
         //Add health regeneration
+    }
+
+    protected virtual void Die () {
+        isDead = true;
+        animator.CrossFade("GetHit.Die", 0.25f);
+        animator.SetBool("isDead", true);
+        StartCoroutine(die());
+        DropLoot();
+        if (navAgent != null) navAgent.enabled = false;
+        foreach (Collider col in GetComponentsInChildren<Collider>()) col.enabled = false;
     }
 
     protected virtual void DropLoot () {

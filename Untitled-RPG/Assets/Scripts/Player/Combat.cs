@@ -7,7 +7,11 @@ public class Combat : MonoBehaviour
     public static Combat instanace;
 
     public List<Enemy> enemiesInBattle = new List<Enemy>();
-    
+
+    [Space]
+    public SkillTree[] currentSkillTrees = new SkillTree[2];
+    public UI_SkillPanelSlot[] allSkillSlots;
+
     [Space]
     public bool blockSkills;
 
@@ -22,20 +26,30 @@ public class Combat : MonoBehaviour
         }
     }
 
-    Animator animator;
-
     void Awake() {
         instanace = this;
-    }
-
-    void Start() {  
-        animator = GetComponent<Animator>();
     }
 
     void Update() {
         PlayerControlls.instance.attackedByEnemies = enemiesInBattle.Count == 0 ? false : true;
     }
-
+    
+    public void SetCurrentSkillTrees(SkillTree skillTree , int skillTreeNumber) {
+        currentSkillTrees[skillTreeNumber] = skillTree;
+        ValidateCurrentSkills();
+    }
+    void ValidateCurrentSkills () {
+        for (int i = 0; i < allSkillSlots.Length; i++){ //for each skill slot
+            if (allSkillSlots[i].skillInSlot != null) {
+                bool valid = false;
+                for (int i1 = 0; i1 < currentSkillTrees.Length; i1++){ //for each skill tree
+                    if (allSkillSlots[i].skillInSlot.skillTree == currentSkillTrees[i1]) 
+                        valid = true;
+                }
+                if (!valid) allSkillSlots[i].ClearSlot();
+            }
+        }
+    }
 
 
 #region Voids for skills

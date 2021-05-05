@@ -377,13 +377,13 @@ public class PlayerControlls : MonoBehaviour
 
     public void TakeOff () {
         isCrouch = false;
-
-        animator.CrossFade("Main.Flying.Takeoff", 0.1f);
+        desiredSprintingDirection = 0;
+        animator.CrossFade("Locomotion.Flying.Takeoff", 0.1f);
         baseCharacterController.SwitchRootAnimation(false);
         isFlying = true;
     }
     public void LandFromFlying () {
-        animator.CrossFade("Main.Flying.Land", 0.1f);
+        animator.CrossFade("Locomotion.Flying.Land", 0.1f);
     }
     public void FlyUp () { //Called from take off animation
         baseCharacterController.allowVerticalMovement = true;

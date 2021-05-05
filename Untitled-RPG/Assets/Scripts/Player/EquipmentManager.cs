@@ -264,7 +264,7 @@ public class EquipmentManager : MonoBehaviour
         if (back.itemInSlot == null) //If we dont have a cape, then there is nothing to do
             return;
 
-        if (SettingsManager.instance.displayHelmet) {
+        if (SettingsManager.instance.displayCape) {
             EquipArmorVisual((Armor)back.itemInSlot);
         } else {
             UnequipArmorVisual((Armor)back.itemInSlot);

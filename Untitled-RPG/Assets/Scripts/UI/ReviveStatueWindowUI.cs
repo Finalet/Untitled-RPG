@@ -14,6 +14,9 @@ public class ReviveStatueWindowUI : MonoBehaviour
     public TextMeshProUGUI firstSkilltreeLabel;
     public TextMeshProUGUI secondSkilltreeLabel;
 
+    SkillTree firstSkillTree;
+    SkillTree secondSkillTree;
+
     public void Init() {
         for (int i = 0; i < skillTressButtons1.Length; i++) {
             int index = i;
@@ -24,64 +27,76 @@ public class ReviveStatueWindowUI : MonoBehaviour
             int index = i;
             skillTressButtons2[i].onClick.AddListener(delegate{SelectSecondSkillTree(index);});
         }
+
+        firstSkillTree = Combat.instanace.currentSkillTrees[0];
+        secondSkillTree = Combat.instanace.currentSkillTrees[1];
+        UpdateLabels();
+    }
+    void UpdateLabels () {
+        firstSkilltreeLabel.text = firstSkillTree.ToString();
+        secondSkilltreeLabel.text = secondSkillTree.ToString();
     }
 
     public void SelectFirstSkillTree (int index) {
         switch (index) {
             case 0:
-                firstSkilltreeLabel.text = "Knight";
+                firstSkillTree = SkillTree.Knight;
                 break;
             case 1:
-                firstSkilltreeLabel.text = "Hunter";
+                firstSkillTree = SkillTree.Hunter;
                 break;
             case 2:
-                firstSkilltreeLabel.text = "Magic";
+                firstSkillTree = SkillTree.Mage;
                 break;
             case 3:
-                firstSkilltreeLabel.text = "Summoner";
+                firstSkillTree = SkillTree.Summoner;
                 break;
             case 4:
-                firstSkilltreeLabel.text = "Stealth";
+                firstSkillTree = SkillTree.Stealth;
                 break;
             case 5:
-                firstSkilltreeLabel.text = "Angel";
+                firstSkillTree = SkillTree.Agnel;
                 break;
             case 6:
-                firstSkilltreeLabel.text = "Defense";
+                firstSkillTree = SkillTree.Defense;
                 break;
         }
         skillTressButtons1[0].transform.parent.gameObject.SetActive(false);
         firstSkilltreeLabel.transform.parent.gameObject.SetActive(true);
+        UpdateLabels();
     }
     public void SelectSecondSkillTree (int index) {
         switch (index) {
             case 0:
-                secondSkilltreeLabel.text = "Knight";
+                secondSkillTree = SkillTree.Knight;
                 break;
             case 1:
-                secondSkilltreeLabel.text = "Hunter";
+                secondSkillTree = SkillTree.Hunter;
                 break;
             case 2:
-                secondSkilltreeLabel.text = "Magic";
+                secondSkillTree = SkillTree.Mage;
                 break;
             case 3:
-                secondSkilltreeLabel.text = "Summoner";
+                secondSkillTree = SkillTree.Summoner;
                 break;
             case 4:
-                secondSkilltreeLabel.text = "Stealth";
+                secondSkillTree = SkillTree.Stealth;
                 break;
             case 5:
-                secondSkilltreeLabel.text = "Angel";
+                secondSkillTree = SkillTree.Agnel;
                 break;
             case 6:
-                secondSkilltreeLabel.text = "Defense";
+                secondSkillTree = SkillTree.Defense;
                 break;
         }
         skillTressButtons2[0].transform.parent.gameObject.SetActive(false);
         secondSkilltreeLabel.transform.parent.gameObject.SetActive(true);
+        UpdateLabels();
     }
 
     public void ConfirmButton () {
+        Combat.instanace.SetCurrentSkillTrees(firstSkillTree, 0);
+        Combat.instanace.SetCurrentSkillTrees(secondSkillTree, 1);
         ownerNPC.StopInterract();
     }
 }

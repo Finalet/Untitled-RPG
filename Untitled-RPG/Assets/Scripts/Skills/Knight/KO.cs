@@ -8,6 +8,7 @@ public class KO : Skill
 
     [Header("Custom vars")]
     public AudioClip[] sounds;
+    public ParticleSystem twohandedSwordVFX;
 
     Vector3 colliderSize;
     public Vector3 colliderSizeDualSwords;
@@ -92,6 +93,8 @@ public class KO : Skill
                 enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true, HitType.Normal);
             }
         }
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+            twohandedSwordVFX.Play();
     }
 
     void ClearTrigger () {

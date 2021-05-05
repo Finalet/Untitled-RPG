@@ -9,7 +9,6 @@ public class AssetHolder : MonoBehaviour
     public static AssetHolder instance;
     
     public GameObject ddText;
-    public Canvas canvas;
 
     public Skill[] Skills;
 
