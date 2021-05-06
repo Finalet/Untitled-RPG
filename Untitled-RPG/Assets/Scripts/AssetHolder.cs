@@ -9,6 +9,8 @@ public class AssetHolder : MonoBehaviour
     public static AssetHolder instance;
     
     public GameObject ddText;
+    public GameObject genericLootItemPrefab;
+    public GameObject goldLootItemPrefab;
 
     public Skill[] Skills;
 
@@ -75,7 +77,7 @@ public class AssetHolder : MonoBehaviour
     }
 
     public void DropItem (Item item, int amount, Vector3 worldPosition) {
-        GameObject prefab = item.itemPrefab != null ? item.itemPrefab : Resources.Load<GameObject>("GenericLootPrefab");
+        GameObject prefab = item.itemPrefab != null ? item.itemPrefab : genericLootItemPrefab;
         LootItem li = Instantiate(prefab, worldPosition, Quaternion.identity).GetComponent<LootItem>();
         li.itemAmount = amount < 5 ? amount : Mathf.RoundToInt(Random.Range(0.8f*amount, 1.2f*amount));
         if (li.item == null)
@@ -83,7 +85,7 @@ public class AssetHolder : MonoBehaviour
         li.Drop();
     }
     public void DropGold (int amount, Vector3 worldPosition) {
-        LootItem li = Instantiate(Resources.Load<GameObject>("GoldLootPrefab"), worldPosition, Quaternion.identity).GetComponent<LootItem>();
+        LootItem li = Instantiate(goldLootItemPrefab, worldPosition, Quaternion.identity).GetComponent<LootItem>();
         li.isGold = true;
         li.itemAmount = Mathf.RoundToInt(Random.Range(0.8f*amount, 1.2f*amount));
         li.Drop();

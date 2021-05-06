@@ -50,4 +50,14 @@ public static class CalculateDamage
             return false;
         }
     }
+
+    public static DamageInfo enemyDamageInfo (int baseDamage) {
+        return enemyDamageInfo(baseDamage, baseCritChance); 
+    }
+    public static DamageInfo enemyDamageInfo (int baseDamage, float critChance) {
+        //appy players defense here
+        int damageBeforeCrit = Mathf.RoundToInt(Random.Range(baseDamage * (1-damageVariation), baseDamage * (1+damageVariation)));
+        bool isCritHit = isCrit(critChance);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * baseCritMultiplier) : damageBeforeCrit, isCritHit);
+    }
 }

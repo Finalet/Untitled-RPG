@@ -19,6 +19,7 @@ public class Consumable : Item
         else if (consumableType == ConsumableType.Stamina)
             Characteristics.instance.GetStamina(actualEffect());
 
+        PlayerControlls.instance.PlayGeneralAnimation(0, false, 0, true);
         AssetHolder.instance.StartConsumableCooldown(this);
     }
     public override void Use (UI_InventorySlot initialSlot){}

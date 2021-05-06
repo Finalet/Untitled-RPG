@@ -36,6 +36,7 @@ public class ArrowExplosive : Arrow
         explosionCollider.enabled = true;
         DOTween.To(()=> explosionCollider.radius, x=> explosionCollider.radius = x, 3.2f, 0.2f).SetEase(Ease.OutSine);
         exploded = true;
+        Destroy(explosionCollider, 0.3f);
     }
 
     protected override void OnTriggerEnter(Collider other) {

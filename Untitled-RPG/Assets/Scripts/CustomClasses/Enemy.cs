@@ -11,6 +11,7 @@ public enum EnemyState {Idle, Approaching, Attacking, Returning};
     [Range(0,1)] public float dropProbability;
 }
 
+[RequireComponent(typeof (FieldOfView))]
 public abstract class Enemy : MonoBehaviour
 {
     public string enemyName;
@@ -18,7 +19,6 @@ public abstract class Enemy : MonoBehaviour
     public int maxHealth;
     public int currentHealth;
     public int baseDamage;
-    public float playerDetectRadius;
     public float attackRange;
     public HitType hitType;
     public bool immuneToInterrupt;
@@ -42,7 +42,7 @@ public abstract class Enemy : MonoBehaviour
     [Header("Adjustements from debuffs")]
     public float TargetSkillDamagePercentage;
 
-    public float distanceToPlayer;
+    protected float distanceToPlayer;
 
     [Header("States")]
     public bool isAttacking;
@@ -69,6 +69,7 @@ public abstract class Enemy : MonoBehaviour
     protected AudioSource audioSource;
     protected Vector3 initialPos;
     protected SkinnedMeshRenderer skinnedMesh;
+    protected FieldOfView fieldOfView;
 
     protected float agrDelay; 
     protected float agrDelayTimer;
@@ -77,6 +78,8 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void Start() {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        fieldOfView = GetComponent<FieldOfView>();
+        fieldOfView.InitForEnemy();
         currentHealth = maxHealth;
 
         SetInitialPosition();
@@ -106,7 +109,7 @@ public abstract class Enemy : MonoBehaviour
             
         AttackCoolDown();
 
-        distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
+        distanceToPlayer = fieldOfView.distanceToTarget;
     
         CheckAgr();
     
@@ -124,7 +127,7 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void AI () {
         if (isDead) return;
 
-        if (distanceToPlayer <= playerDetectRadius) {
+        if (fieldOfView.isTargetVisible) {
             Agr();
         }
         
@@ -166,10 +169,10 @@ public abstract class Enemy : MonoBehaviour
         if (!PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Add(this);
 
-        if (isCoolingDown || isDead || isKnockedDown)
+        if (isCoolingDown || isDead || isKnockedDown || !fieldOfView.isTargetVisible)
             return;
         
-        navAgent.isStopped = true;
+        if (navAgent.enabled) navAgent.isStopped = true;
         coolDownTimer = attackCoolDown;
         AttackTarget();
     }
@@ -201,8 +204,10 @@ public abstract class Enemy : MonoBehaviour
         animator.SetBool("isDead", true);
         StartCoroutine(die());
         DropLoot();
-        if (navAgent != null) navAgent.enabled = false;
-        foreach (Collider col in GetComponentsInChildren<Collider>()) col.enabled = false;
+        if (navAgent != null && navAgent.enabled) navAgent.enabled = false;
+        foreach (Collider col in GetComponentsInChildren<Collider>()){
+            if (col.gameObject.layer == LayerMask.NameToLayer("Enemy")) col.enabled = false;
+        }
     }
 
     protected virtual void DropLoot () {
@@ -242,14 +247,16 @@ public abstract class Enemy : MonoBehaviour
         if (immuneToInterrupt && hitType == HitType.Interrupt)
             hitType = HitType.Normal;
 
-        if (hitType == HitType.Normal)
+        if (hitType == HitType.Normal) {
             animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
-        else if (hitType == HitType.Interrupt)
+        } else if (hitType == HitType.Interrupt) {
             animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
-        else if (hitType == HitType.Kickback)
+            animator.CrossFade("Attacks.Empty", 0.1f);
+        } else if (hitType == HitType.Kickback) {
             StartCoroutine(KickBack());
-        else if (hitType == HitType.Knockdown)
+        } else if (hitType == HitType.Knockdown) {
             StartCoroutine(KnockedDown());
+        }
 
         currentHealth -= actualDamage;
         PlayHitParticles();
@@ -335,30 +342,28 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    void OnDrawGizmosSelected() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, playerDetectRadius);
-    }
-
     protected virtual void CheckAgr () {
         if (agrTimer > 0) {
             agr = true;
             agrTimer -= Time.deltaTime;
         } else {
             agr = false;
+            if (TryGetComponent(out EnemyAlarmNetwork eam)) {
+                eam.isTriggered = false;
+            }
         }
     }
 
-    protected virtual void Agr() {
+    public virtual void Agr() {
         if (!agr) {
             target = PlayerControlls.instance.transform;
             agr = true;
             agrDelayTimer = agrDelay;
             delayingAgr = true;
             FaceTarget(true);
+            if (TryGetComponent(out EnemyAlarmNetwork eam)) {
+                eam.TriggerAlarm();
+            }
         }
         agrTimer = agrTime;
     }

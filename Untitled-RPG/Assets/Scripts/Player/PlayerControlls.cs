@@ -67,6 +67,7 @@ public class PlayerControlls : MonoBehaviour
     public Transform rightHandRoot;
     public Transform leftHandWeaponSlot;
     public Transform rightHandWeaponSlot;
+    public Transform chestTransform;
     public ParticleSystem sprintTrails;
     public SkinnedMeshRenderer skinnedMesh;
     [System.NonSerialized] public Animator animator;
@@ -457,15 +458,16 @@ public class PlayerControlls : MonoBehaviour
         }
     }
 
-    public void PlayGeneralAnimation (int animationID, bool blockExit = false, float blockDuration = 0) {
+    public void PlayGeneralAnimation (int animationID, bool blockExit = false, float blockDuration = 0, bool upperBody = false) {
         animator.SetInteger("GeneralID", animationID);
-        animator.SetTrigger("GeneralTrigger");
+        animator.SetTrigger(upperBody ? "GeneralUpperBodyTrigger" : "GeneralTrigger");
 
         animator.SetBool("blockGeneralExit", blockExit);
         if (blockDuration > 0) Invoke("UnlockGeneralAnimationExit", blockDuration);
     }
     public void ExitGeneralAnimation () {
         animator.CrossFade("General.empty", 0.15f);
+        animator.CrossFade("GeneralUpperBody.empty", 0.15f);
         UnlockGeneralAnimationExit();
     }
     void UnlockGeneralAnimationExit () {

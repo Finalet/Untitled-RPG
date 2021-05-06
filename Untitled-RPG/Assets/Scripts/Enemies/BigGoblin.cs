@@ -10,7 +10,6 @@ public class BigGoblin : Enemy
     public ParticleSystem diggingVFX;
     public Transform boulderSpawnPos;
     bool forceFaceTarget;
-    Vector3 playerVelocity;
 
     protected override void Start()
     {
@@ -25,8 +24,6 @@ public class BigGoblin : Enemy
     {   
         if (PlayerControlls.instance == null)
             return;
-            
-        playerVelocity = PlayerControlls.instance.rb.velocity;
 
         if (distanceToPlayer >= 10)
             attackRange = 10;
@@ -153,7 +150,7 @@ public class BigGoblin : Enemy
             }
             yield return null;
         }
-        Vector3 dir = PlayerControlls.instance.transform.position + Vector3.up * 2.5f + playerVelocity/0.8f - transform.position;
+        Vector3 dir = PlayerControlls.instance.transform.position + Vector3.up * 2.5f + PlayerControlls.instance.rb.velocity/0.8f - transform.position;
         go.transform.parent = null;
         go.GetComponent<Rigidbody>().isKinematic = false;
         dir = Vector3.ClampMagnitude(dir, 15);

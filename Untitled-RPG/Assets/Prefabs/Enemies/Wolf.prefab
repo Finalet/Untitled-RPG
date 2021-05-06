@@ -1684,6 +1684,8 @@ GameObject:
   - component: {fileID: 6299983670806855518}
   - component: {fileID: 8356277642385023550}
   - component: {fileID: 5602143475637597445}
+  - component: {fileID: 1521899718583852355}
+  - component: {fileID: 6588398761740575481}
   m_Layer: 9
   m_Name: Wolf
   m_TagString: Untagged
@@ -1779,7 +1781,6 @@ MonoBehaviour:
   maxHealth: 2000
   currentHealth: 0
   baseDamage: 500
-  playerDetectRadius: 20
   attackRange: 2.5
   hitType: 0
   immuneToInterrupt: 0
@@ -1793,7 +1794,6 @@ MonoBehaviour:
   attackCoolDown: 3
   agrTime: 2
   TargetSkillDamagePercentage: 0
-  distanceToPlayer: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
@@ -1808,6 +1808,45 @@ MonoBehaviour:
   attackSounds: []
   currentRecurringEffects: []
   jawCollider: {fileID: 6213250721187128700}
+--- !u!114 &1521899718583852355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6213787271338914290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd6c8d5137352274b9b4b4e85ebec9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 20
+  viewAngle: 150
+  eyeLevel: 0.4
+  target: {fileID: 0}
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  raycastIgnoreMask:
+    serializedVersion: 2
+    m_Bits: 0
+  distanceToTarget: 0
+  isTargetVisible: 0
+--- !u!114 &6588398761740575481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6213787271338914290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba145de22ade1e045ab7068bf32903c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alarmRadius: 20
+  alarmDelay: 0.3
+  isTriggered: 0
 --- !u!1 &6213793544297149074
 GameObject:
   m_ObjectHideFlags: 0

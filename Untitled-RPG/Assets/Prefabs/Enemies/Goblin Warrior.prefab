@@ -1604,6 +1604,8 @@ GameObject:
   - component: {fileID: 3546369989262933053}
   - component: {fileID: 154495484993145589}
   - component: {fileID: -3264816953089149180}
+  - component: {fileID: 3780401563500771921}
+  - component: {fileID: 2784806628837492920}
   m_Layer: 9
   m_Name: Goblin Warrior
   m_TagString: Untagged
@@ -1685,7 +1687,6 @@ MonoBehaviour:
   maxHealth: 3000
   currentHealth: 0
   baseDamage: 500
-  playerDetectRadius: 20
   attackRange: 2
   hitType: 0
   immuneToInterrupt: 0
@@ -1699,7 +1700,6 @@ MonoBehaviour:
   attackCoolDown: 5
   agrTime: 5
   TargetSkillDamagePercentage: 0
-  distanceToPlayer: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
@@ -1830,6 +1830,45 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3780401563500771921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3546369989262933049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd6c8d5137352274b9b4b4e85ebec9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 20
+  viewAngle: 120
+  eyeLevel: 1.6
+  target: {fileID: 0}
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  raycastIgnoreMask:
+    serializedVersion: 2
+    m_Bits: 0
+  distanceToTarget: 0
+  isTargetVisible: 0
+--- !u!114 &2784806628837492920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3546369989262933049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba145de22ade1e045ab7068bf32903c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alarmRadius: 10
+  alarmDelay: 0.3
+  isTriggered: 0
 --- !u!1 &3546369989262933077
 GameObject:
   m_ObjectHideFlags: 0

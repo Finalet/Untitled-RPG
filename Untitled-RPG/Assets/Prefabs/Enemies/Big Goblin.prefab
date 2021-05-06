@@ -16447,6 +16447,8 @@ GameObject:
   - component: {fileID: 6063976787320910978}
   - component: {fileID: 6063976787320910988}
   - component: {fileID: 6063976787320910989}
+  - component: {fileID: 8699156310922605561}
+  - component: {fileID: 344018233180894021}
   m_Layer: 9
   m_Name: Big Goblin
   m_TagString: Untagged
@@ -16530,7 +16532,6 @@ MonoBehaviour:
   maxHealth: 30000
   currentHealth: 0
   baseDamage: 2000
-  playerDetectRadius: 20
   attackRange: 10
   hitType: 0
   immuneToInterrupt: 0
@@ -16556,7 +16557,6 @@ MonoBehaviour:
   attackCoolDown: 5
   agrTime: 10
   TargetSkillDamagePercentage: 0
-  distanceToPlayer: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
@@ -16682,6 +16682,45 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8699156310922605561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6063976787320910979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd6c8d5137352274b9b4b4e85ebec9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 20
+  viewAngle: 100
+  eyeLevel: 1.6
+  target: {fileID: 0}
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  raycastIgnoreMask:
+    serializedVersion: 2
+    m_Bits: 0
+  distanceToTarget: 0
+  isTargetVisible: 0
+--- !u!114 &344018233180894021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6063976787320910979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba145de22ade1e045ab7068bf32903c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alarmRadius: 10
+  alarmDelay: 0.3
+  isTriggered: 0
 --- !u!1 &6063998766028630707
 GameObject:
   m_ObjectHideFlags: 0
