@@ -7,8 +7,11 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemy;
     public int numberOfEnemies;
     public float spawnFrequency = 2;
+    public float spawnRadius = 5;
+
     float timer;
     
+    [Space]
     public List<GameObject> listOfAllEnemies;
     public ParticleSystem particles;
 
@@ -28,7 +31,7 @@ public class EnemySpawner : MonoBehaviour
     } 
 
     void Spawn () {
-        Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-5f, 5f), transform.position.y, transform.position.z + Random.Range(-5f, 5f) );
+        Vector3 spawnPos = new Vector3(transform.position.x + Random.Range(-spawnRadius, spawnRadius), transform.position.y, transform.position.z + Random.Range(-spawnRadius, spawnRadius) );
         Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360),0);
         GameObject en = Instantiate(enemy, spawnPos, rotation);
         en.transform.SetParent(transform);

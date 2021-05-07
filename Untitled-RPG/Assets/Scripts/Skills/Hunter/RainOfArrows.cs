@@ -11,7 +11,7 @@ public class RainOfArrows : Skill
     public GameObject intialArrow;
     public float skillDistance;
     public float rainFrequency;
-    public float rainRuration;
+    public float rainDuration;
     public float rainRadius;
     [Range(0, 1)] public float rainChanceToHitEnemy;
     

@@ -11,7 +11,7 @@ public class RainOfArrowsRain : MonoBehaviour
     Collider[] enemiesBelow;
     
     void Start() {
-        Destroy(gameObject, skill.skillDistance);
+        Destroy(gameObject, skill.rainDuration);
     }
     void Update() {
         if (Time.time - frequencyTimer >= 1/skill.rainFrequency) {
