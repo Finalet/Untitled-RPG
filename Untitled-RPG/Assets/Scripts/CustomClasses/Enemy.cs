@@ -361,9 +361,7 @@ public abstract class Enemy : MonoBehaviour
             agrDelayTimer = agrDelay;
             delayingAgr = true;
             FaceTarget(true);
-            if (TryGetComponent(out EnemyAlarmNetwork eam)) {
-                eam.TriggerAlarm();
-            }
+                if (TryGetComponent(out EnemyAlarmNetwork eam)) eam.TriggerAlarm();
         }
         agrTimer = agrTime;
     }

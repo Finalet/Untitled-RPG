@@ -29,7 +29,7 @@ public class Chest : MonoBehaviour
         UpdateMesh();
     }
     
-    void UpdateMesh() {
+    public void UpdateMesh() {
         switch (chestQuality) {
             case ChestQuality.Regular:
                 regularMesh.SetActive(true);
@@ -83,7 +83,7 @@ public class Chest : MonoBehaviour
 
     void OpenChest() {
         PlayerControlls.instance.PlayGeneralAnimation(0);
-        lid.transform.DORotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic).SetDelay(1);
+        lid.transform.DOLocalRotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic).SetDelay(1);
         Invoke("DropItems", 1.5f);
         isOpened = true;
     }

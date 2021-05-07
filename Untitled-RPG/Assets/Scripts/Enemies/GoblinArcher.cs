@@ -82,12 +82,12 @@ public class GoblinArcher : Enemy
 
     protected override void ReturnToPosition () {
         base.ReturnToPosition();
-        navAgent.destination = initialPos;
+        if(navAgent.enabled) navAgent.destination = initialPos;
     }
 
     protected override void Idle () {
         base.Idle();
-        navAgent.isStopped = true;
+        if (navAgent.enabled) navAgent.isStopped = true;
     }
 
     IEnumerator GrabBowstringIE () {

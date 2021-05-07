@@ -12,12 +12,8 @@ public class EnemySpawner : MonoBehaviour
     float timer;
     
     [Space]
-    public List<GameObject> listOfAllEnemies;
+    public List<GameObject> listOfAllEnemies = new List<GameObject>();
     public ParticleSystem particles;
-
-    void Start() {
-        listOfAllEnemies = new List<GameObject>();
-    }
 
     void Update() {
         CleanList();

@@ -25,6 +25,13 @@ public class FieldOfView : MonoBehaviour
 	public void InitForEnemy() {
 		targetMask = LayerMask.GetMask("Player");
         raycastIgnoreMask = ~LayerMask.GetMask("Enemy", "Player"); //ignoring player since we are checking IF DID NOT HIT so we dont want raycast to hit
+		StartCoroutine(WaitForPlayer());
+	}
+
+	IEnumerator WaitForPlayer() {
+		while(PlayerControlls.instance == null) {
+			yield return null;
+		}
         target = PlayerControlls.instance.chestTransform;
 	}
 
