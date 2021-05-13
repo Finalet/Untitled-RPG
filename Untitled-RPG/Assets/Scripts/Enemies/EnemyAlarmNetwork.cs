@@ -29,7 +29,7 @@ public class EnemyAlarmNetwork : MonoBehaviour
                 EnemyAlarmNetwork eam = col.gameObject.GetComponentInParent<EnemyAlarmNetwork>();
                 if (eam != null) {
                     yield return new WaitForSeconds(Random.Range(0.7f * alarmDelay, 1.3f * alarmDelay));
-                    if (!eam.isTriggered) col.gameObject.GetComponentInParent<EnemyAlarmNetwork>().AlarmEnemy(gameObject.name);
+                    if (!eam.isTriggered && !GetComponent<Enemy>().isDead) col.gameObject.GetComponentInParent<EnemyAlarmNetwork>().AlarmEnemy(gameObject.name);
                 }
             }
         }

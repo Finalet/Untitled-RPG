@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4730569995820700}
+  - component: {fileID: 95768303275519206}
   m_Layer: 0
   m_Name: SM_Prop_Bow_Rigged_02
   m_TagString: Untagged
@@ -34,8 +35,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4186689277632538}
-  - component: {fileID: 33114486981729924}
-  - component: {fileID: 23867047636204804}
+  - component: {fileID: 137175688770671732}
   m_Layer: 0
   m_Name: SM_Prop_Bow_Rigged_02
   m_TagString: Untagged
@@ -128,8 +128,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23867047636204804
-MeshRenderer:
+--- !u!95 &95768303275519206
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1100521399403510}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: b8b3ba0fd5fd9134f9e81942732e4908, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!137 &137175688770671732
+SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -137,6 +154,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -152,6 +170,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -160,10 +179,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33114486981729924
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1241463560038438}
+  serializedVersion: 2
+  m_Quality: 0
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
   m_Mesh: {fileID: 4300000, guid: b8b3ba0fd5fd9134f9e81942732e4908, type: 3}
+  m_Bones:
+  - {fileID: 4302766139042846}
+  - {fileID: 4527981370958968}
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 4302766139042846}
+  m_AABB:
+    m_Center: {x: 0, y: 0, z: -0.06684374}
+    m_Extent: {x: 0.0401416, y: 0.72784865, z: 0.10418842}
+  m_DirtyAABB: 0

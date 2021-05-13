@@ -60,6 +60,8 @@ public class GoblinCampGenerator : MonoBehaviour
 
     public void BakeCamp () {
         GoblinCamp camp = Instantiate(gameObject).AddComponent<GoblinCamp>();
+        camp.gameObject.name = "Goblin Camp Baked";
+
         GameObject[] allEnemies = getAllEnemies();
         foreach (GameObject enemy in allEnemies){
             if (enemy.GetComponent<Enemy>() is GoblinWarrior)
