@@ -14,7 +14,8 @@ public class CameraControll : MonoBehaviour
 
     public bool isAiming;
     public bool isShortAiming;
-    public GameObject crosshair;
+    [Space]
+    public LayerMask roofDetectionMask;
     [Header("Animation IK")]
     public Transform headAimTarget;
     public MultiAimConstraint headAimIK;
@@ -24,13 +25,18 @@ public class CameraControll : MonoBehaviour
 
     Camera cam;
     [Space]
+    public GameObject crosshair;
     public CinemachineFreeLook CM_cam;
     public CinemachineCameraOffset CM_offset;
 
     Vector3 leftShoulder;
     Vector3 rightShoulder;
     Vector3 center;
-    public Vector3 desiredOffset;
+    Vector3 desiredOffset;
+
+    Vector2 topOrbit;
+    Vector2 middleOrbit;
+    Vector2 bottomOrbit;
 
     float baseMouseXsensitivity;
     float baseMouseYsensitivity;
@@ -46,6 +52,10 @@ public class CameraControll : MonoBehaviour
         cam = GetComponent<Camera>();
 
         desiredOffset = CM_offset.m_Offset;
+
+        topOrbit = new Vector2(CM_cam.m_Orbits[0].m_Height, CM_cam.m_Orbits[0].m_Radius);
+        middleOrbit = new Vector2(CM_cam.m_Orbits[1].m_Height, CM_cam.m_Orbits[1].m_Radius);
+        bottomOrbit = new Vector2(CM_cam.m_Orbits[2].m_Height, CM_cam.m_Orbits[2].m_Radius);
     }
 
     void Update()
@@ -65,6 +75,8 @@ public class CameraControll : MonoBehaviour
             CM_cam.m_XAxis.m_InputAxisName = "Mouse X";
             CM_cam.m_YAxis.m_InputAxisName = "Mouse Y";
         }
+        
+        CheckCameraUnderRoof();
     }
 
     void UpdateMouseSettings() {
@@ -191,5 +203,36 @@ public class CameraControll : MonoBehaviour
         impulseSource.m_ImpulseDefinition.m_AmplitudeGain = amplitude;
         impulseSource.m_ImpulseDefinition.m_TimeEnvelope.m_SustainTime = duration;
         impulseSource.GenerateImpulseAt(position, Vector3.one);
+    }
+
+    void CheckCameraUnderRoof () {
+        if (isUnderRoof()) {
+            ReduceFloatTo(ref CM_cam.m_Orbits[0].m_Height, 0.5f * topOrbit.x, 0.5f*topOrbit.x); //Top orbit height
+            ReduceFloatTo(ref CM_cam.m_Orbits[1].m_Height, 0.8f * middleOrbit.x, 0.2f*middleOrbit.x); //Middle orbit height
+            ReduceFloatTo(ref CM_cam.m_Orbits[1].m_Radius, 0.5f * middleOrbit.y, 0.5f*middleOrbit.y);  //Middle orbit raduis
+        } else {
+            IncreaseFloatTo(ref CM_cam.m_Orbits[0].m_Height, topOrbit.x, 0.5f*topOrbit.x); //Top orbit height
+            IncreaseFloatTo(ref CM_cam.m_Orbits[1].m_Height, middleOrbit.x, 0.2f*middleOrbit.x); //Middle orbit height
+            IncreaseFloatTo(ref CM_cam.m_Orbits[1].m_Radius, middleOrbit.y, 0.5f*middleOrbit.y); //Middle orbit raduis
+        }
+    }
+
+    void ReduceFloatTo (ref float variableToReduce, float reduceTo, float constantDistance, float duration = 0.2f) {
+        if (variableToReduce > reduceTo) {
+            variableToReduce -= Time.deltaTime * constantDistance / duration;
+        } else {
+            variableToReduce = reduceTo;
+        }
+    }
+    void IncreaseFloatTo (ref float variableToIncrease, float increaseTo, float constantDistance, float duration = 0.2f) {
+        if (variableToIncrease < increaseTo) {
+            variableToIncrease += Time.deltaTime * constantDistance / duration;
+        } else {
+            variableToIncrease = increaseTo;
+        }
+    } 
+
+    public bool isUnderRoof () {
+        return Physics.Raycast(PlayerControlls.instance.transform.position + Vector3.up*1.6f, Vector3.up, 5, roofDetectionMask);
     }
 }

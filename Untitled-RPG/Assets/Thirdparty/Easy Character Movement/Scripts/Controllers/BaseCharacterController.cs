@@ -976,18 +976,20 @@ namespace ECM.Controllers
             Animate();
 
 
-            //Finale's detect to stop play from jumping often
+            //Finale's detect to stop player from jumping often
             DetectLanding();
         }
 
         float timeLanded;
         bool blockJumpAfterGrounded;
+        float durationAfterJump;
         void DetectLanding () {
             if (!movement.wasGrounded && movement.isGrounded) {
                 timeLanded = Time.realtimeSinceStartup;
             }
-
-            if (Time.realtimeSinceStartup - timeLanded < 0.2f || PlayerControlls.instance.forceRigidbodyMovement) {
+            
+            durationAfterJump = PlayerControlls.instance.isSprinting ? 0.015f : 0.2f;
+            if (Time.realtimeSinceStartup - timeLanded < durationAfterJump || PlayerControlls.instance.forceRigidbodyMovement) {
                 SwitchRootAnimation(false);
             } else {
                 if (!PlayerControlls.instance.isFlying)
