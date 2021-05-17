@@ -14,16 +14,16 @@ public class CameraGrabber : MonoBehaviour
     }
 
     IEnumerator waitForPlayerLoad () {
-        VegetationSystemPro VSP = GetComponent<VegetationSystemPro>();
-        StylizedGrassRenderer SGR = GetComponent<StylizedGrassRenderer>();
-        OceanRenderer OR = GetComponent<OceanRenderer>();
         while (PlayerControlls.instance == null) {
             //print("waiting");
             yield return null;
         }
         
-        if (VSP != null) VSP.AddCamera(PlayerControlls.instance.playerCamera);
-        if (SGR != null) SGR.followTarget = PlayerControlls.instance.transform; 
-        if (OR != null) OR.Viewpoint = PlayerControlls.instance.transform;
+        if (TryGetComponent(out VegetationSystemPro VSP)) VSP.AddCamera(PlayerControlls.instance.playerCamera);
+        if (TryGetComponent(out StylizedGrassRenderer SGR)) SGR.followTarget = PlayerControlls.instance.transform; 
+        if (TryGetComponent(out OceanRenderer OR)) {
+            OR.Viewpoint = PlayerControlls.instance.transform;
+            OR.ViewCamera = PlayerControlls.instance.playerCamera;
+        }
     }
 }
