@@ -5,8 +5,6 @@ using UnityEngine;
 public class BasicNPC : MonoBehaviour
 {
     public bool isTalking;
-    int talkID;
-    float talkIDRefreshTimer;
     public bool switched;
 
     Animator animator;
@@ -27,9 +25,8 @@ public class BasicNPC : MonoBehaviour
     }
 
     void CrossFadeNewTalkAnim () {
-        talkID = Random.Range(1, 9);
         switched = true;
-        switch (talkID) {
+        switch (Random.Range(1, 9)) {
             case 1:
                 animator.CrossFade("Talk.Talk1", 0.1f);
                 break;
