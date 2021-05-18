@@ -30,6 +30,8 @@ public class PlayerControlls : MonoBehaviour
     public bool isFlying;
     public bool isPickingArea;
     public bool isAimingSkill;
+    [Space]
+    public bool isSitting;
     [Header("Battle")]
     public bool inBattle;
     public float inBattleExitTime = 7; //How long after exisiting the battle will the player remain "in battle"
@@ -116,7 +118,7 @@ public class PlayerControlls : MonoBehaviour
         if (Input.GetKeyDown(KeybindsManager.instance.toggleRunning))
             toggleRunning = !toggleRunning;
 
-        if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) {
+        if ( (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) || isSitting) {
             isIdle = true;
         } else {
             isIdle = false;
@@ -164,7 +166,7 @@ public class PlayerControlls : MonoBehaviour
             {
                 if (!toggleRunning)
                     isRunning = true;
-                else if (!isCrouch && !isAttacking && !isRolling)
+                else if (!isCrouch && !isAttacking && !isRolling && !isSitting)
                     isSprinting = true; //Start sprinting
             } else if (Input.GetKeyUp(KeybindsManager.instance.run))
             {
@@ -210,7 +212,7 @@ public class PlayerControlls : MonoBehaviour
             desiredSprintingDirection = 0;
         }
 
-        if (isAttacking) {
+        if (isAttacking || isSitting) {
             SprintOff();
         }
     }
@@ -220,6 +222,11 @@ public class PlayerControlls : MonoBehaviour
         
         if ( (!PeaceCanvas.instance.anyPanelOpen && !isIdle) || cameraControl.isAiming || cameraControl.isShortAiming) { 
             desiredLookDirection = CM_Camera.m_XAxis.Value; //rotate player with camera, unless idle, aiming, or in inventory
+        }
+
+        if (isSitting) {
+            desiredSprintingDirection = 0;
+            desiredRollDirection = 0;
         }
     }
 
@@ -308,7 +315,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void Roll() {
-        if (isAttacking || isRolling || isFlying) {
+        if (isAttacking || isRolling || isFlying || isSitting) {
             return;
         }
         if (!Characteristics.instance.canUseStamina) {
@@ -414,6 +421,7 @@ public class PlayerControlls : MonoBehaviour
         animator.SetBool("Idle", isIdle);
         animator.SetBool("isCrouch", isCrouch);
         animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isSitting", isSitting);
     }
     
     public void InterruptCasting () {
@@ -472,5 +480,26 @@ public class PlayerControlls : MonoBehaviour
     }
     void UnlockGeneralAnimationExit () {
         animator.SetBool("blockGeneralExit", false);
+    }
+
+    public bool isDoingAnything () {
+        if (isCrouch || isJumping || isRolling || isMounted || isAttacking || isGettingHit || isCastingSkill || isFlying || isPickingArea || isAimingSkill)
+            return true;
+        else 
+            return false;
+    }
+
+    public void Sit (SittingSpot spot) {
+        if (isDoingAnything())
+            return;
+        isSitting = true;
+        animator.SetTrigger("Sit");
+        transform.position = spot.transform.position;
+        desiredLookDirection = spot.transform.eulerAngles.y;
+        spot.isTaken = true;
+    }
+    public void Unsit(SittingSpot spot) {
+        isSitting = false;
+        spot.isTaken = false;
     }
 }
