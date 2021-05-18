@@ -67,7 +67,7 @@ public class SimpleHumanoidFootIK : MonoBehaviour {
                 {
                     // feet position is lower than tolerated height near floor (root)
                     // Must place the feet on ground
-                    targets[i].position = targets[i].hit.point + new Vector3(0, targets[i].boneTargetDistance, 0);
+                    targets[i].position = targets[i].hit.point + new Vector3(0, targets[i].boneTargetDistance*0.9f, 0);
                     targets[i].rotation = Quaternion.FromToRotation(Vector3.up, targets[i].hit.normal) * animator.GetIKRotation(targets[i].ikGoal);
 
 

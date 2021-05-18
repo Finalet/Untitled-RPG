@@ -9,14 +9,17 @@ public class SittingSpot : MonoBehaviour
     PlayerControlls playerControlls;
     bool playerNearby;
 
+    float sitDelay = 2f;
+    float sitTime;
+
     void Start() {
         playerControlls = PlayerControlls.instance;
     }
 
     void Update() {
-        if (!playerNearby)
+        if (!playerNearby || Time.time - sitTime < sitDelay)
             return;
-        
+
         if (!playerControlls.isSitting) {
             if (isTaken)
                 return;
@@ -24,11 +27,15 @@ public class SittingSpot : MonoBehaviour
             PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Sit");
             if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
                 playerControlls.Sit(this);
+                PeaceCanvas.instance.HideKeySuggestion();
+                sitTime = Time.time;
             }
         } else {
             PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Get up");
             if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
                 playerControlls.Unsit(this);
+                PeaceCanvas.instance.HideKeySuggestion();
+                sitTime = Time.time;
             }
         }
     }

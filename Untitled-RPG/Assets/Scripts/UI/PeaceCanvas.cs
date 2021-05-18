@@ -142,7 +142,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void TogglePause () {
-        // return; //DISABLE PAUSE MENU WHILE WORKING ON THE GAME
+        return; //DISABLE PAUSE MENU WHILE WORKING ON THE GAME
 
         isGamePaused = !isGamePaused;
 

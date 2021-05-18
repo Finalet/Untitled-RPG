@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MalbersAnimations.HAP;
 using Cinemachine;
 using ECM.Controllers;
 
@@ -74,7 +73,7 @@ public class PlayerControlls : MonoBehaviour
     public SkinnedMeshRenderer skinnedMesh;
     [System.NonSerialized] public Animator animator;
 
-    bool rolled;
+    SittingSpot currentSittingSpot;
 
     public bool[] emptyAttackAnimatorStates = new bool[7];
 
@@ -109,7 +108,6 @@ public class PlayerControlls : MonoBehaviour
         }
         UpdateRotation();
         Sprinting();
-        MountAnimal();
         SetAnimatorVarialbes();
         InputMagnitudeFunc();
         CheckIsAttacking();
@@ -227,6 +225,8 @@ public class PlayerControlls : MonoBehaviour
         if (isSitting) {
             desiredSprintingDirection = 0;
             desiredRollDirection = 0;
+            transform.position = Vector3.MoveTowards(transform.position, currentSittingSpot.transform.position, Time.deltaTime * 7f);
+            desiredLookDirection = currentSittingSpot.transform.eulerAngles.y;
         }
     }
 
@@ -354,17 +354,6 @@ public class PlayerControlls : MonoBehaviour
         isSprinting = false;
     }
 
-    void MountAnimal () {
-        if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
-            if (!isMounted && !isFlying) {
-                GetComponent<MRider>().MountAnimal();
-                SprintOff();
-            }
-            else {
-                GetComponent<MRider>().DismountAnimal();
-            } 
-        }
-    }
 
 #endregion
 
@@ -489,17 +478,21 @@ public class PlayerControlls : MonoBehaviour
             return false;
     }
 
+    float timeSat;
     public void Sit (SittingSpot spot) {
-        if (isDoingAnything())
+        if (isDoingAnything() || Time.time-timeSat < 2)
             return;
         isSitting = true;
         animator.SetTrigger("Sit");
-        transform.position = spot.transform.position;
-        desiredLookDirection = spot.transform.eulerAngles.y;
         spot.isTaken = true;
+        timeSat = Time.time;
+        currentSittingSpot = spot;
     }
     public void Unsit(SittingSpot spot) {
+        if (Time.time-timeSat < 2)
+            return;
         isSitting = false;
         spot.isTaken = false;
+        currentSittingSpot = null;
     }
 }
