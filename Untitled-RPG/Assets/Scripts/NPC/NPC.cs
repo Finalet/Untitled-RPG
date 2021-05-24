@@ -7,7 +7,7 @@ using Cinemachine;
 public abstract class NPC : MonoBehaviour
 {
     public string npcName;
-    public string interractExplanationText;
+    public InterractionIcons interractionIcon;
     [Space]
     public CinemachineVirtualCamera npcCamera;
     public TextMeshPro npcNameLabel;
@@ -27,7 +27,7 @@ public abstract class NPC : MonoBehaviour
             return;
 
         if (playerDetected && !isInterracting) {
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], interractExplanationText);
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], interractionIcon);
             once = false;
         } else if (!once) {
             PeaceCanvas.instance.HideKeySuggestion();

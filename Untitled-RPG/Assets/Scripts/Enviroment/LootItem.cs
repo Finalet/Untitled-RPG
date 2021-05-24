@@ -47,7 +47,7 @@ public class LootItem : MonoBehaviour
 
         if (other.CompareTag("Player")) {
             playerDetected = true;
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Pick-up");
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], InterractionIcons.HandPickup);
             
             if (nearbyItemWithHigherPriority != null)
                 return;

@@ -687,7 +687,7 @@ namespace Crest
         {
             if (Viewpoint == null)
             {
-                Debug.LogError("Crest needs to know where to focus the ocean detail. Please set the <i>ViewCamera</i> or the <i>Viewpoint</i> property that will render the ocean, or tag the primary camera as <i>MainCamera</i>.", this);
+            //    Debug.LogError("Crest needs to know where to focus the ocean detail. Please set the <i>ViewCamera</i> or the <i>Viewpoint</i> property that will render the ocean, or tag the primary camera as <i>MainCamera</i>.", this);
             }
         }
 

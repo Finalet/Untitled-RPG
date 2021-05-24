@@ -13,6 +13,7 @@ public class StoreItemUI : MonoBehaviour
     [Space]
     public Image itemIcon;
     public TextMeshProUGUI itemTypeLabel;
+    public TextMeshProUGUI itemRarityLabel;
     public TextMeshProUGUI itemNameLabel;
     public TextMeshProUGUI itemPriceLabel;
     public Button itemBuyButton;
@@ -23,7 +24,8 @@ public class StoreItemUI : MonoBehaviour
 
         itemIcon.sprite = item.itemIcon;
         string color = ColorUtility.ToHtmlStringRGB(UI_General.getRarityColor(item.itemRarity));
-        itemTypeLabel.text = $"<b><color=#{color}>{item.itemRarity.ToString()}</color></b> {UI_General.getItemType(item)}";
+        itemTypeLabel.text = $"{UI_General.getItemType(item)}";
+        itemRarityLabel.text = $"<b><color=#{color}>{item.itemRarity.ToString()}</color></b>";
         itemNameLabel.text = item.itemName;
         itemPriceLabel.text = item.itemBasePrice.ToString();
         itemPriceLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPriceLabel.GetComponent<TextMeshProUGUI>().preferredWidth, 20);

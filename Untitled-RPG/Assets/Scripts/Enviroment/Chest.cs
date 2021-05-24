@@ -63,7 +63,7 @@ public class Chest : MonoBehaviour
             return;
             
         if (other.CompareTag("Player")) {
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Open");
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], InterractionIcons.Chest);
             
             if (Input.GetKeyDown(KeybindsManager.instance.interact) && !isLocked) {
                 OpenChest();

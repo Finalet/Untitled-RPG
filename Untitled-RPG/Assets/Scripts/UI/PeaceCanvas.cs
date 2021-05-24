@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using Cinemachine;
 using DG.Tweening;
 
+public enum InterractionIcons {Bag, Chest, Coins, Craft, HandPickup, HandShake,HandPray}
+
+
 public class PeaceCanvas : MonoBehaviour
 {
     public delegate void SaveLoadSlots();
@@ -23,14 +26,12 @@ public class PeaceCanvas : MonoBehaviour
     public Camera UICamera;
 
     [Header("Inventory")]
-    public GameObject MainContainer;
     public GameObject SkillsPanel;
     public GameObject Inventory;
     public GameObject EquipmentSlots;
     public GameObject PauseMenu;
     public GameObject storageWindow;
-    public TextMeshProUGUI statsLeftText;
-    public TextMeshProUGUI statsRightText;
+    public TextMeshProUGUI statsLabel;
 
     [Header("Button suggestion")]
     public GameObject buttonSuggestionUI;
@@ -56,6 +57,15 @@ public class PeaceCanvas : MonoBehaviour
     public AudioClip grabItemSound;
     public AudioClip dropItemSound;
     public AudioClip equipItemSound;
+
+    [Header("Icons")]
+    public Sprite bag;
+    public Sprite chest;
+    public Sprite coins;
+    public Sprite craft;
+    public Sprite handPickup;
+    public Sprite handshake;
+    public Sprite handpray;
 
     AudioSource audioSource;
 
@@ -106,9 +116,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void OpenSkillsPanel () {
-        MainContainer.SetActive(true);
         SkillsPanel.SetActive(true);
-        EquipmentSlots.SetActive(true);
         Inventory.SetActive(false);
         OpenMenuCamera(); 
         audioSource.clip = inventoryOpenSound;
@@ -116,7 +124,6 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void OpenInventory (bool exceptEquipmentSlots = false, bool noCameraZoom = false) {
-        MainContainer.SetActive(true);
         Inventory.SetActive(true);
         if (!exceptEquipmentSlots) EquipmentSlots.SetActive(true);
         SkillsPanel.SetActive(false);
@@ -127,7 +134,6 @@ public class PeaceCanvas : MonoBehaviour
 
     void EscapeButton () {
         if (anyPanelOpen) { //hide all panels
-            MainContainer.SetActive(false);
             SkillsPanel.SetActive(false);
             Inventory.SetActive(false);
             EquipmentSlots.SetActive(false);
@@ -238,7 +244,7 @@ public class PeaceCanvas : MonoBehaviour
     }
     IEnumerator OpenMenuCameraIE () {
         float x = 0.7f;
-        float right = 0.755f * Mathf.Log(Screen.width) - 4f; //Used excel to find trendline with points 1131, 1.3; 1448, 1.5; 1920, 1.7;
+        float right = 0.69f * Mathf.Log(Screen.width) - 4f; //Used excel to find trendline with camera position;
         while (x > 0 ) {
             x -= Time.fixedDeltaTime;
             Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * right;
@@ -256,8 +262,19 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void UpdateStats() {
-        statsLeftText.text = $"Max health {Characteristics.instance.maxHealth}\nMax stamina {Characteristics.instance.maxStamina}\nStrength {Characteristics.instance.strength}\nAgility {Characteristics.instance.agility}\nIntellect {Characteristics.instance.intellect}";
-        statsRightText.text = $"Melee attack {Characteristics.instance.meleeAttack}\nRanged attack {Characteristics.instance.rangedAttack}\nMagic power {Characteristics.instance.magicPower}\nHealing power {Characteristics.instance.healingPower}\nDefense {Characteristics.instance.defense}\nCasting time {Mathf.Round(Characteristics.instance.castingSpeed.z*100f)}%\n";
+        statsLabel.text = "";
+        statsLabel.text += $"Max health {Characteristics.instance.maxHealth}\n";
+        statsLabel.text += $"Max stamina {Characteristics.instance.maxStamina}\n";
+        statsLabel.text += $"Strength {Characteristics.instance.strength}\n";
+        statsLabel.text += $"Agility {Characteristics.instance.agility}\n";
+        statsLabel.text += $"Intellect {Characteristics.instance.intellect}\n";
+        statsLabel.text += $"Melee attack {Characteristics.instance.meleeAttack}\n";
+        statsLabel.text += $"Ranged attack {Characteristics.instance.rangedAttack}\n";
+        statsLabel.text += $"Magic power {Characteristics.instance.magicPower}\n";
+        statsLabel.text += $"Healing power {Characteristics.instance.healingPower}\n";
+        statsLabel.text += $"Defense {Characteristics.instance.defense}\n";
+        statsLabel.text += $"Casting time {Mathf.Round(Characteristics.instance.castingSpeed.z*100f)}%\n";
+        statsLabel.text += $"Attack speed {Mathf.Round(Characteristics.instance.attackSpeed.z*100f)}%\n";
     }
 
     public void SaveButton() {
@@ -265,13 +282,42 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void ShowKeySuggestion (string key, string action) {
-        buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = key;
-        buttonSuggestionUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = action;
-        Vector2 size = new Vector2(0, 40);
-        size.x = buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().textBounds.size.x <= 40 ? 40 : buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().textBounds.size.x + 16; 
-        buttonSuggestionUI.GetComponent<RectTransform>().sizeDelta = size;
+        buttonSuggestionUI.transform.GetChild(0).gameObject.SetActive(true);
+        buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = action; //Action label
+        buttonSuggestionUI.transform.GetChild(1).gameObject.SetActive(false); //Action icon
+        buttonSuggestionUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = key; //Key label
         buttonSuggestionUI.SetActive(true);
     }
+    public void ShowKeySuggestion (string key, InterractionIcons icon) {
+        buttonSuggestionUI.transform.GetChild(0).gameObject.SetActive(false); //Action label
+        buttonSuggestionUI.transform.GetChild(1).gameObject.SetActive(true);
+        switch (icon) {
+            case InterractionIcons.Bag:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = bag; //Action icon
+                break;
+            case InterractionIcons.Chest:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = chest; //Action icon
+                break;
+            case InterractionIcons.Coins:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = coins; //Action icon
+                break;
+            case InterractionIcons.Craft:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = craft; //Action icon
+                break;
+            case InterractionIcons.HandPickup:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = handPickup; //Action icon
+                break;
+            case InterractionIcons.HandShake:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = handshake; //Action icon
+                break;
+            case InterractionIcons.HandPray:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = handpray; //Action icon
+                break;
+        }
+        buttonSuggestionUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = key; //Key label
+        buttonSuggestionUI.SetActive(true);
+    }
+
     public void HideKeySuggestion (){
         if (buttonSuggestionUI.activeInHierarchy)
             buttonSuggestionUI.SetActive(false);

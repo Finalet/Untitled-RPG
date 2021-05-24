@@ -10,6 +10,10 @@ public class StoreWindowUI : MonoBehaviour
     [Space]
     public GameObject storeItemTemplate;
     public GameObject buyTab;
+    public Image buyButtonSprite;
+    public Image sellButtonSprite;
+    public Sprite greyButton;
+    public Sprite redButton;
     public UI_StoreCartSlot[] cartSlots;
     public UI_StoreSellSlot[] sellSlots;
     [Space]
@@ -40,6 +44,9 @@ public class StoreWindowUI : MonoBehaviour
 
         sellTotalLabel.text = ownerNPC.getTotalSellPrice().ToString();
         sellTotalLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(sellTotalLabel.GetPreferredValues().x, 20);
+
+        buyButtonSprite.sprite = ownerNPC.isBuyWindowOpen ? redButton : greyButton;
+        sellButtonSprite.sprite = ownerNPC.isSellWindowOpen ? redButton : greyButton;
     }
 
     public void PlayUISound () { //Played by "buy" "sell" tab buttons
