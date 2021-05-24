@@ -262,19 +262,23 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void UpdateStats() {
+        string highlightColor = "#" + ColorUtility.ToHtmlStringRGB(UI_General.secondaryHighlightTextColor);
         statsLabel.text = "";
-        statsLabel.text += $"Max health {Characteristics.instance.maxHealth}\n";
-        statsLabel.text += $"Max stamina {Characteristics.instance.maxStamina}\n";
-        statsLabel.text += $"Strength {Characteristics.instance.strength}\n";
-        statsLabel.text += $"Agility {Characteristics.instance.agility}\n";
-        statsLabel.text += $"Intellect {Characteristics.instance.intellect}\n";
-        statsLabel.text += $"Melee attack {Characteristics.instance.meleeAttack}\n";
-        statsLabel.text += $"Ranged attack {Characteristics.instance.rangedAttack}\n";
-        statsLabel.text += $"Magic power {Characteristics.instance.magicPower}\n";
-        statsLabel.text += $"Healing power {Characteristics.instance.healingPower}\n";
-        statsLabel.text += $"Defense {Characteristics.instance.defense}\n";
-        statsLabel.text += $"Casting time {Mathf.Round(Characteristics.instance.castingSpeed.z*100f)}%\n";
-        statsLabel.text += $"Attack speed {Mathf.Round(Characteristics.instance.attackSpeed.z*100f)}%\n";
+        statsLabel.text += $"Max health: <color={highlightColor}>{Characteristics.instance.maxHealth}</color>\n";
+        statsLabel.text += $"Max stamina: <color={highlightColor}>{Characteristics.instance.maxStamina}</color>\n";
+        statsLabel.text += "\n";
+        statsLabel.text += $"Strength: <color={highlightColor}>{Characteristics.instance.strength}</color>\n";
+        statsLabel.text += $"Agility: <color={highlightColor}>{Characteristics.instance.agility}</color>\n";
+        statsLabel.text += $"Intellect: <color={highlightColor}>{Characteristics.instance.intellect}</color>\n";
+        statsLabel.text += "\n";
+        statsLabel.text += $"Melee attack: <color={highlightColor}>{Characteristics.instance.meleeAttack}</color>\n";
+        statsLabel.text += $"Ranged attack: <color={highlightColor}>{Characteristics.instance.rangedAttack}</color>\n";
+        statsLabel.text += $"Magic power: <color={highlightColor}>{Characteristics.instance.magicPower}</color>\n";
+        statsLabel.text += $"Healing power: <color={highlightColor}>{Characteristics.instance.healingPower}</color>\n";
+        statsLabel.text += $"Defense: <color={highlightColor}>{Characteristics.instance.defense}</color>\n";
+        statsLabel.text += "\n";
+        statsLabel.text += $"Casting time: <color={highlightColor}>{Mathf.Round(Characteristics.instance.castingSpeed.z*100f)}%</color>\n";
+        statsLabel.text += $"Attack speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.attackSpeed.z*100f)}%</color>\n";
     }
 
     public void SaveButton() {

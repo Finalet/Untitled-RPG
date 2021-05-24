@@ -10,7 +10,7 @@ public class TooltipsManager : MonoBehaviour
     public GameObject toolTipPrefab;
 
     [Space]
-    public float toolTipDelay = 0.4f;
+    public float toolTipDelay = 0.2f;
     float startTime;
 
     Tooltip currentToolTip;

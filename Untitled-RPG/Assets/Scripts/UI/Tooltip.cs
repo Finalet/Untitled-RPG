@@ -8,10 +8,6 @@ public class Tooltip : MonoBehaviour
 {
 
     public Item focusItem;
-    [Header("Colors")]
-    public Color baseTextColor;
-    public Color secondaryTextColor;
-    public Color highlightColor;
 
     [Space]
     public Image itemIcon;
@@ -24,9 +20,9 @@ public class Tooltip : MonoBehaviour
     public TextMeshProUGUI itemPrice;
 
     void Awake() {
-        itemType.color = secondaryTextColor;
-        itemName.color = baseTextColor;
-        itemDescription.color = secondaryTextColor;
+        itemType.color = UI_General.secondaryTextColor;
+        itemName.color = UI_General.mainTextColor;
+        itemDescription.color = UI_General.secondaryTextColor;
     }
 
     void Update()
@@ -77,52 +73,53 @@ public class Tooltip : MonoBehaviour
 
     string generateItemStats (Item item) {
         string stats = "";
+        string highlightColor = "#" + ColorUtility.ToHtmlStringRGBA(UI_General.highlightTextColor);
         if (item is Consumable) {
             Consumable c = (Consumable)item;
             if (c.consumableType == ConsumableType.Health) {
-                stats = $"Restores around {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), "+" + c.effectAmount.ToString())} health\n"; 
+                stats = $"Restores around <color={highlightColor}> +{c.effectAmount.ToString()}</color> health\n"; 
             } else if (c.consumableType == ConsumableType.Stamina) {
-                stats = $"Restores around {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), "+" + c.effectAmount.ToString())} stamina\n";
+                stats = $"Restores around <color={highlightColor}> +{c.effectAmount.ToString()}</color> stamina\n";
             }
             if(c.cooldownTime > 0)
-                stats += $"\nCool down: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), c.cooldownTime.ToString())} seconds";
+                stats += $"\nCool down: <color={highlightColor}>{c.cooldownTime.ToString()}</color> seconds";
         } else if (item is Equipment) {
             Equipment w = (Equipment)item;
             if (w.MeleeAttack != 0) {
-                stats += $"Melee attack: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.MeleeAttack.ToString())}\n";
+                stats += $"Melee attack: <color={highlightColor}>{w.MeleeAttack.ToString()}</color>\n";
             }
             if (w.RangedAttack != 0) {
-                stats += $"Ranged attack: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.RangedAttack.ToString())}\n";
+                stats += $"Ranged attack: <color={highlightColor}>{w.RangedAttack.ToString()}</color>\n";
             }
             if (w.MagicPower != 0) {
-                stats += $"Magic power: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.MagicPower.ToString())}\n";
+                stats += $"Magic power: <color={highlightColor}>{w.MagicPower.ToString()}</color>\n";
             }
             if (w.HealingPower != 0) {
-                stats += $"Healing power: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.HealingPower.ToString())}\n";
+                stats += $"Healing power: <color={highlightColor}>{w.HealingPower.ToString()}</color>\n";
             }
             if (w.Defense != 0) {
-                stats += $"Defense: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.Defense.ToString())}\n";
+                stats += $"Defense: <color={highlightColor}>{w.Defense.ToString()}</color>\n";
             }
             if (w.Health != 0 || w.Stamina != 0) {
                 stats += "\n";
             }
             if (w.Health != 0) {
-                stats += $"Health: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.Health.ToString())}\n";
+                stats += $"Health: <color={highlightColor}>{w.Health.ToString()}</color>\n";
             }
             if (w.Stamina != 0) {
-                stats += $"Stamina: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.Stamina.ToString())}\n";
+                stats += $"Stamina: <color={highlightColor}>{w.Stamina.ToString()}</color>\n";
             }
             if (w.strength != 0 || w.agility != 0 || w.intellect != 0) {
                 stats += "\n";
             }
             if (w.strength != 0) {
-                stats += $"Strength: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.strength.ToString())}\n";
+                stats += $"Strength: <color={highlightColor}>{w.strength.ToString()}</color>\n";
             }
             if (w.agility != 0) {
-                stats += $"Agility: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.agility.ToString())}\n";
+                stats += $"Agility: <color={highlightColor}>{w.agility.ToString()}</color>\n";
             }
             if (w.intellect != 0) {
-                stats += $"Intellect: {string.Format( "<color=#{0}>{1}</color>", ColorUtility.ToHtmlStringRGBA(highlightColor), w.intellect.ToString())}\n";
+                stats += $"Intellect: <color={highlightColor}>{w.intellect.ToString()}</color>\n";
             }
         } else {
             stats = "NOT IMPLEMENTED";

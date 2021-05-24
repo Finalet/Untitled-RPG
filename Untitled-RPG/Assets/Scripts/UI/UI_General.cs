@@ -6,11 +6,15 @@ using UnityEngine.UI;
 [System.Serializable]
 public static class UI_General
 {
-    [Header("Rarity Colors")]
     public static Color commonRarityColor = Color.white;
     public static Color rareRarityColor = new Color(0.16f, 0.37f, 0.63f);
     public static Color epicRarityColor = new Color(0.63f, 0.16f, 0.60f);
     public static Color legendaryRarityColor = new Color(0.9f, 0.65f, 0.11f);
+
+    public static Color mainTextColor = Color.white;
+    public static Color secondaryTextColor = new Color (0.74f, 0.74f, 0.74f);
+    public static Color highlightTextColor = new Color (1, 0.74f, 0.35f);
+    public static Color secondaryHighlightTextColor = new Color (0, 0.9f, 0);
 
     public static IEnumerator PressAnimation (Image image, KeyCode pressedKey) {
         float animationDepth = 0.85f;

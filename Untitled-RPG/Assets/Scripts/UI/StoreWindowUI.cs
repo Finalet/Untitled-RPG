@@ -17,6 +17,7 @@ public class StoreWindowUI : MonoBehaviour
     public UI_StoreCartSlot[] cartSlots;
     public UI_StoreSellSlot[] sellSlots;
     [Space]
+    public Text titleLabel;
     public TextMeshProUGUI cartTotalLabel;
     public TextMeshProUGUI sellTotalLabel;
 
@@ -29,6 +30,7 @@ public class StoreWindowUI : MonoBehaviour
         }
         Destroy(storeItemTemplate);
         cartTotalLabel.text = ownerNPC.getCartTotalPrice().ToString();
+        titleLabel.text = ownerNPC.npcName;
     }
 
     public void Purchase() {
@@ -47,9 +49,10 @@ public class StoreWindowUI : MonoBehaviour
 
         buyButtonSprite.sprite = ownerNPC.isBuyWindowOpen ? redButton : greyButton;
         sellButtonSprite.sprite = ownerNPC.isSellWindowOpen ? redButton : greyButton;
+        titleLabel.text = ownerNPC.isBuyWindowOpen ? ownerNPC.npcName : "Sell";
     }
 
-    public void PlayUISound () { //Played by "buy" "sell" tab buttons
+    public void PlayUISound () { //Played акщь  "buy" "sell" tab button components
         PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
     }
 }

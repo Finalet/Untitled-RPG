@@ -205,32 +205,38 @@ public class CameraControll : MonoBehaviour
         impulseSource.GenerateImpulseAt(position, Vector3.one);
     }
 
+    bool currentlyUnderRoof;
+    float timerTriggeredCam;
     void CheckCameraUnderRoof () {
-        if (isUnderRoof()) {
-            ReduceFloatTo(ref CM_cam.m_Orbits[0].m_Height, 0.5f * topOrbit.x, 0.5f*topOrbit.x); //Top orbit height
-            ReduceFloatTo(ref CM_cam.m_Orbits[1].m_Height, 0.8f * middleOrbit.x, 0.2f*middleOrbit.x); //Middle orbit height
-            ReduceFloatTo(ref CM_cam.m_Orbits[1].m_Radius, 0.5f * middleOrbit.y, 0.5f*middleOrbit.y);  //Middle orbit raduis
-        } else {
-            IncreaseFloatTo(ref CM_cam.m_Orbits[0].m_Height, topOrbit.x, 0.5f*topOrbit.x); //Top orbit height
-            IncreaseFloatTo(ref CM_cam.m_Orbits[1].m_Height, middleOrbit.x, 0.2f*middleOrbit.x); //Middle orbit height
-            IncreaseFloatTo(ref CM_cam.m_Orbits[1].m_Radius, middleOrbit.y, 0.5f*middleOrbit.y); //Middle orbit raduis
+        if (isUnderRoof() && !currentlyUnderRoof) {
+            currentlyUnderRoof = true;
+            Invoke("ZoomInUnderRoof", 0.5f);
+            return;
         }
+        if (!isUnderRoof() && currentlyUnderRoof) {
+            currentlyUnderRoof = false;
+            Invoke("ZoomOutUnderRoof", 0.5f);
+            return;
+        }
+        if (Time.time - timerTriggeredCam < 0.5f)
+            return;
     }
-
-    void ReduceFloatTo (ref float variableToReduce, float reduceTo, float constantDistance, float duration = 0.2f) {
-        if (variableToReduce > reduceTo) {
-            variableToReduce -= Time.deltaTime * constantDistance / duration;
-        } else {
-            variableToReduce = reduceTo;
-        }
+    void ZoomInUnderRoof () {
+        if (!isUnderRoof())
+            return;
+        
+        DOTween.To(()=> CM_cam.m_Orbits[0].m_Height, x=> CM_cam.m_Orbits[0].m_Height = x, 0.5f * topOrbit.x, 0.5f).SetEase(Ease.OutCubic);
+        DOTween.To(()=> CM_cam.m_Orbits[1].m_Height, x=> CM_cam.m_Orbits[1].m_Height = x, 0.8f * middleOrbit.x, 0.5f).SetEase(Ease.OutCubic);
+        DOTween.To(()=> CM_cam.m_Orbits[1].m_Radius, x=> CM_cam.m_Orbits[1].m_Radius = x, 0.5f * middleOrbit.y, 0.5f).SetEase(Ease.OutCubic);
     }
-    void IncreaseFloatTo (ref float variableToIncrease, float increaseTo, float constantDistance, float duration = 0.2f) {
-        if (variableToIncrease < increaseTo) {
-            variableToIncrease += Time.deltaTime * constantDistance / duration;
-        } else {
-            variableToIncrease = increaseTo;
-        }
-    } 
+    void ZoomOutUnderRoof () {
+        if (isUnderRoof())
+            return;
+        
+        DOTween.To(()=> CM_cam.m_Orbits[0].m_Height, x=> CM_cam.m_Orbits[0].m_Height = x, topOrbit.x, 0.5f).SetEase(Ease.OutCubic);
+        DOTween.To(()=> CM_cam.m_Orbits[1].m_Height, x=> CM_cam.m_Orbits[1].m_Height = x, middleOrbit.x, 0.5f).SetEase(Ease.OutCubic);
+        DOTween.To(()=> CM_cam.m_Orbits[1].m_Radius, x=> CM_cam.m_Orbits[1].m_Radius = x, middleOrbit.y, 0.5f).SetEase(Ease.OutCubic);
+    }
 
     public bool isUnderRoof () {
         return Physics.Raycast(PlayerControlls.instance.transform.position + Vector3.up*1.6f, Vector3.up, 5, roofDetectionMask);
