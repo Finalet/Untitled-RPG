@@ -28,10 +28,10 @@ public class Characteristics : MonoBehaviour
     [Header("Misc")]
 
     [Tooltip("X - casting speed percentage (i.e. 1.1f), Y - casting speed adjustement (i.e. 0.1f), Z - casting speed inverted (i.e. 0.9f)")]
-    public Vector3 castingSpeed;
+    public Vector3 castingSpeed; public float castingSpeedFromEquip;
     float castingSpeedPercentage; float castingSpeedPercentageAdjustement; float castingSpeedPercentageIverted;
     [Tooltip("X - attack speed percentage (i.e. 1.0f), Y - attack speed adjustement (i.e. 0.1f), Z - attack speed inverted (i.e. 0.909f)")]
-    public Vector3 attackSpeed;
+    public Vector3 attackSpeed; public float attackSpeedFromEquip;
     float attackSpeedPercentage; float attackSpeedPercentageAdjustement; float attackSpeedPercentageInverted;
 
     public float magicSkillDistanceIncrease;
@@ -94,18 +94,18 @@ public class Characteristics : MonoBehaviour
         healingPower = Mathf.RoundToInt( ( (intellect / statsRatio) + healingPowerFromEquip) * healingPowerMultiplier);
         defense = Mathf.RoundToInt( ( (strength / statsRatio + agility / statsRatio) + defenseFromEquip) * defenseMultiplier);
 
-        attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement + agility*0.00025f;
+        attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement + agility*0.0001f - attackSpeedFromEquip;
         attackSpeedPercentageInverted = 1/attackSpeedPercentage;
 
         attackSpeed.x = attackSpeedPercentage;
-        attackSpeed.y = attackSpeedPercentageAdjustement;
+        attackSpeed.y = attackSpeedPercentageAdjustement + attackSpeedFromEquip;
         attackSpeed.z = attackSpeedPercentageInverted;
 
-        castingSpeedPercentage = 1 + castingSpeedPercentageAdjustement + intellect*0.00025f;
+        castingSpeedPercentage = 1 + castingSpeedPercentageAdjustement + intellect*0.0001f - castingSpeedFromEquip;
         castingSpeedPercentageIverted = 1/castingSpeedPercentage;
 
         castingSpeed.x = castingSpeedPercentage; 
-        castingSpeed.y = castingSpeedPercentageAdjustement; 
+        castingSpeed.y = castingSpeedPercentageAdjustement + castingSpeedFromEquip; 
         castingSpeed.z = castingSpeedPercentageIverted;
     }
 

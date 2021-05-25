@@ -110,6 +110,8 @@ public class EquipmentManager : MonoBehaviour
         characteristics.intellectFromEquip += item.intellect;
         characteristics.healthFromEquip += item.Health;
         characteristics.staminaFromEquip += item.Stamina;
+        characteristics.attackSpeedFromEquip += item.attackSpeed;
+        characteristics.castingSpeedFromEquip += item.castingTime;
     }
 
     void ResetStats () {
@@ -123,6 +125,8 @@ public class EquipmentManager : MonoBehaviour
         characteristics.intellectFromEquip = 0;
         characteristics.healthFromEquip = 0;
         characteristics.staminaFromEquip = 0;
+        characteristics.attackSpeedFromEquip = 0;
+        characteristics.castingSpeedFromEquip = 0;
     }
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {

@@ -9,7 +9,10 @@ public class Combat : MonoBehaviour
     public List<Enemy> enemiesInBattle = new List<Enemy>();
 
     [Space]
+    public int maxSkillPoints = 10;
+    public int availableSkillPoints;
     public SkillTree[] currentSkillTrees = new SkillTree[2];
+    public List<Skill> currentPickedSkills = new List<Skill>(); 
     public UI_SkillPanelSlot[] allSkillSlots;
 
     [Space]
@@ -26,29 +29,64 @@ public class Combat : MonoBehaviour
         }
     }
 
+    string savefilePath = "saves/combat.txt";
+
     void Awake() {
         instanace = this;
+    }
+    void Start() {
+        Load();
+        PeaceCanvas.saveGame += Save;
+    }
+
+    void Save () {
+        ES3.Save<SkillTree[]>("currentSkillTrees", currentSkillTrees, savefilePath);
+        List<int> skillIDs = new List<int>();
+        foreach (Skill sk in currentPickedSkills) 
+            skillIDs.Add(sk.ID);
+        ES3.Save<List<int>>("currentPickedSkillsIDs", skillIDs, savefilePath);
+    }
+    void Load() {
+        currentSkillTrees = ES3.Load<SkillTree[]>("currentSkillTrees", savefilePath, new SkillTree[2]);
+        List<int> skillIDs = ES3.Load<List<int>>("currentPickedSkillsIDs", savefilePath, new List<int>());
+        foreach (int ID in skillIDs)
+            currentPickedSkills.Add(AssetHolder.instance.getSkill(ID));
     }
 
     void Update() {
         PlayerControlls.instance.attackedByEnemies = enemiesInBattle.Count == 0 ? false : true;
+
+        availableSkillPoints = maxSkillPoints - currentPickedSkills.Count;
     }
     
     public void SetCurrentSkillTrees(SkillTree skillTree , int skillTreeNumber) {
         currentSkillTrees[skillTreeNumber] = skillTree;
         ValidateCurrentSkills();
     }
-    void ValidateCurrentSkills () {
-        for (int i = 0; i < allSkillSlots.Length; i++){ //for each skill slot
-            if (allSkillSlots[i].skillInSlot != null) {
-                bool valid = false;
-                for (int i1 = 0; i1 < currentSkillTrees.Length; i1++){ //for each skill tree
-                    if (allSkillSlots[i].skillInSlot.skillTree == currentSkillTrees[i1]) 
-                        valid = true;
-                }
-                if (!valid) allSkillSlots[i].ClearSlot();
+    public void ValidateCurrentSkills () {
+        for (int i = currentPickedSkills.Count-1; i >= 0; i--) { //for each skill
+            bool valid = false;
+            for (int i1 = 0; i1 < currentSkillTrees.Length; i1++){ //for each skill tree
+                if (currentPickedSkills[i].skillTree == currentSkillTrees[i1])
+                    valid = true;
             }
+            if (!valid) currentPickedSkills.Remove(currentPickedSkills[i]);
         }
+        ValidateSkillSlots();
+    }
+    public void ValidateSkillSlots () {
+        for (int i = 0; i < allSkillSlots.Length; i++){ //validate each skill slot
+            allSkillSlots[i].ValidateSkillSlot();
+        }
+    }
+
+    public bool isPickedSkillTree (SkillTree skillTree) {
+        bool p = false;
+        for (int i = 0; i < currentSkillTrees.Length; i++){
+            if (currentSkillTrees[i] == skillTree)
+                p = true;
+        }
+        return p;
     }
 
 

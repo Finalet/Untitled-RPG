@@ -8,18 +8,22 @@ using UnityEngine.Rendering.Universal;
 public class TooltipsManager : MonoBehaviour
 {
     public GameObject toolTipPrefab;
+    public GameObject skillToolTipPrefab;
 
     [Space]
     public float toolTipDelay = 0.2f;
     float startTime;
 
     Tooltip currentToolTip;
+    SkillTooltip currentSkillToolTip;
 
     Item focusItem;
     Vector3 screenPos;
     Vector3 lastScreenPos;
     Vector2 anchoredShift;
     Vector2 pivot;
+
+    Skill focusSkill;
 
     void Update() {
         if (!PeaceCanvas.instance.anyPanelOpen)
@@ -80,8 +84,24 @@ public class TooltipsManager : MonoBehaviour
                     return;
                 }
             }
+
+            //Skill panel
+            if (raycastResults[i].gameObject.GetComponent<SkillOnPanel>() != null) {
+                if (raycastResults[i].gameObject.GetComponent<SkillOnPanel>().skill != null) {
+                    lastScreenPos = screenPos;
+
+                    focusSkill = raycastResults[i].gameObject.GetComponent<SkillOnPanel>().skill;
+                    anchoredShift = new Vector2(-raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2, raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
+                    screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
+                    pivot = new Vector2(1, 1);
+                    if (lastScreenPos != screenPos)
+                        startTime = Time.realtimeSinceStartup;
+                    return;
+                }
+            }
         }
         focusItem = null;
+        focusSkill = null;
         screenPos = Vector2.zero;
         anchoredShift = Vector2.zero;
         pivot = Vector2.zero;
@@ -108,6 +128,28 @@ public class TooltipsManager : MonoBehaviour
             }
         } else if (currentToolTip != null) {
             Destroy(currentToolTip.gameObject);
+        }
+
+        if (focusSkill != null) {
+            if (Time.realtimeSinceStartup - startTime > toolTipDelay || currentSkillToolTip != null) {
+                if (currentSkillToolTip == null) {
+                    currentSkillToolTip = Instantiate(skillToolTipPrefab, PeaceCanvas.instance.transform).gameObject.GetComponent<SkillTooltip>();
+                }
+                currentSkillToolTip.gameObject.GetComponent<RectTransform>().position = screenPos;
+                currentSkillToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition += anchoredShift;
+                currentSkillToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
+                currentSkillToolTip.focusSkill = focusSkill;
+                currentSkillToolTip.Init();
+
+                if (!currentSkillToolTip.GetComponent<RectTransform>().IsFullyVisibleFrom(PlayerControlls.instance.playerCamera.GetUniversalAdditionalCameraData().cameraStack[0])) {
+                    pivot.x = Mathf.Abs(pivot.x-1);
+
+                    currentSkillToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
+                    currentSkillToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
+                }
+            }
+        } else if (currentSkillToolTip != null) {
+            Destroy(currentSkillToolTip.gameObject);
         }
     }
 }

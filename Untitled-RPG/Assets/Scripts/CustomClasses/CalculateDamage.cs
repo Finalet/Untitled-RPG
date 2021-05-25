@@ -14,14 +14,13 @@ public struct DamageInfo {
 
 public static class CalculateDamage
 {
-    static float damageVariation = 0.15f; //How much the damage can variate in %. I.E. damge of 100 can be 85 or 115.
     static float baseCritChance = 0.1f;
     static float baseCritMultiplier = 2;
 
     public static DamageInfo damageInfo (SkillTree skillTree, int baseDamagePercentage) {
         return damageInfo(skillTree, baseDamagePercentage, baseCritChance);
     }
-    public static DamageInfo damageInfo (SkillTree skillTree, int baseDamagePercentage, float critChance) {
+    public static DamageInfo damageInfo (SkillTree skillTree, int baseDamagePercentage, float critChance, float damageVariation = 0.15f) {
         int skillTreeAdjustedDamage;
         switch (skillTree) {
             case SkillTree.Knight:
@@ -54,7 +53,7 @@ public static class CalculateDamage
     public static DamageInfo enemyDamageInfo (int baseDamage) {
         return enemyDamageInfo(baseDamage, baseCritChance); 
     }
-    public static DamageInfo enemyDamageInfo (int baseDamage, float critChance) {
+    public static DamageInfo enemyDamageInfo (int baseDamage, float critChance, float damageVariation = 0.15f) {
         //appy players defense here
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(baseDamage * (1-damageVariation), baseDamage * (1+damageVariation)));
         bool isCritHit = isCrit(critChance);

@@ -28,6 +28,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
     protected virtual void Start() {
         Load();
+        PeaceCanvas.saveGame += Save;
     }
 
     protected virtual void Update () {
@@ -47,13 +48,6 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         
         if (itemAmount < 0 || itemInSlot == null)
             itemAmount = 0;
-    }
-
-    void OnEnable() {
-        PeaceCanvas.saveGame += Save;
-    }
-    void OnDisable() {
-        PeaceCanvas.saveGame -= Save;
     }
 
     public virtual void UseItem () {

@@ -3,36 +3,53 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
+    [Space]
+    public Skill skill;
+    public bool isPicked;
 
-    public int skillID;
-    public TextMeshProUGUI name1;
-
-    GameObject go;
+    [Space]
+    public Image frame;
+    public Sprite regularFrame;
+    public Sprite pickedFrame;
 
     void Start() {
-        name1.text = "";
-        Skill skill = AssetHolder.instance.getSkill(skillID);
-        GetComponent<Image>().sprite = skill.icon;
-        string[] words = skill.name.Split(' ');
-        if (words.Length == 0) {
-            name1.text = skill.name;
+        UpdateDisplay();
+    }
+
+    void Update() {
+        if (skill != null) isPicked = Combat.instanace.currentPickedSkills.Contains(skill);
+        UpdateDisplay();
+    }
+
+    public void UpdateDisplay () {
+        if (skill == null) 
             return;
-        }
-        for (int i = 0; i < words.Length; i++) {
-            name1.text += words[i] + "\n";
-        }
+        
+        frame.sprite = isPicked ? pickedFrame : regularFrame;
+        GetComponent<Image>().sprite = skill.icon;
+        if (Combat.instanace != null) GetComponent<Image>().color = Combat.instanace.isPickedSkillTree(skill.skillTree) ? Color.white : Color.gray;
+    }
+
+    void OnValidate() {
+        UpdateDisplay();
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
+        if (!isPicked)
+            return;
+
         if(eventData.button == PointerEventData.InputButton.Right)
             return;
 
-        PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, AssetHolder.instance.getSkill(skillID), null);
+        PeaceCanvas.instance.StartDraggingSkill(GetComponent<RectTransform>().sizeDelta, skill, null);
     }
 
     public void OnDrag (PointerEventData pointerData) {
+        if (!isPicked)
+            return;
+        
         if(pointerData.button == PointerEventData.InputButton.Right)
             return;
 
@@ -44,6 +61,32 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             return;
             
         PeaceCanvas.instance.EndDrag();
+    }
+
+    public virtual void OnPointerClick (PointerEventData pointerData) {
+        if (pointerData.button == PointerEventData.InputButton.Left && skill != null){
+            if (!isPicked) {
+                PickSkill();   
+            } else {
+                UnPickSkill();
+            }
+            UpdateDisplay();
+            PeaceCanvas.instance.SkillsPanel.GetComponent<SkillPanelUI>().UpdatePickedSkill();
+        }      
+    }
+
+    void PickSkill () {
+        if (Combat.instanace.availableSkillPoints <= 0)
+            return;
+        if (!Combat.instanace.isPickedSkillTree(skill.skillTree))
+            return;
+
+        if (!Combat.instanace.currentPickedSkills.Contains(skill))
+            Combat.instanace.currentPickedSkills.Add(skill);
+    }
+    void UnPickSkill () {
+        if (Combat.instanace.currentPickedSkills.Contains(skill))
+            Combat.instanace.currentPickedSkills.Remove(skill);
     }
 
 }

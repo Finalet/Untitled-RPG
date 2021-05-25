@@ -206,20 +206,17 @@ public class CameraControll : MonoBehaviour
     }
 
     bool currentlyUnderRoof;
-    float timerTriggeredCam;
     void CheckCameraUnderRoof () {
         if (isUnderRoof() && !currentlyUnderRoof) {
             currentlyUnderRoof = true;
-            Invoke("ZoomInUnderRoof", 0.5f);
+            Invoke("ZoomInUnderRoof", 0.3f);
             return;
         }
         if (!isUnderRoof() && currentlyUnderRoof) {
             currentlyUnderRoof = false;
-            Invoke("ZoomOutUnderRoof", 0.5f);
+            Invoke("ZoomOutUnderRoof", 0.3f);
             return;
         }
-        if (Time.time - timerTriggeredCam < 0.5f)
-            return;
     }
     void ZoomInUnderRoof () {
         if (!isUnderRoof())

@@ -22,6 +22,18 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         base.Start();
     }
 
+    public void ValidateSkillSlot() {
+        if (skillInSlot == null)
+            return;
+
+        bool valid = false;
+        for (int i = 0; i < Combat.instanace.currentPickedSkills.Count; i++){ //for each skill tree
+            if (skillInSlot == Combat.instanace.currentPickedSkills[i]) 
+                valid = true;
+        }
+        if (!valid) ClearSlot();
+    }
+
     protected override void Update() {
         if (skillInSlot != null) {
             DisplaySkill();

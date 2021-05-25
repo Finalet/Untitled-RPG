@@ -121,6 +121,15 @@ public class Tooltip : MonoBehaviour
             if (w.intellect != 0) {
                 stats += $"Intellect: <color={highlightColor}>{w.intellect.ToString()}</color>\n";
             }
+            if (w.castingTime != 0 || w.attackSpeed != 0) {
+                stats += "\n";
+            }
+            if (w.castingTime != 0) {
+                stats += $"Casting time: <color={highlightColor}>{(100*w.castingTime).ToString()}%</color>\n";
+            }
+            if (w.attackSpeed != 0) {
+                stats += $"Intellect: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>\n";
+            }
         } else {
             stats = "NOT IMPLEMENTED";
         }

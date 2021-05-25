@@ -174,7 +174,7 @@ public class PassiveNPC : MonoBehaviour
     }
 
     void OnAnimatorMove () {
-        if(Time.timeScale != 0 && NPCType != PassiveNPCType.Static)
+        if(Time.timeScale != 0 && NPCType != PassiveNPCType.Static && Time.deltaTime > 0)
             navAgent.speed = (animator.deltaPosition / Time.deltaTime).magnitude;
     }
 

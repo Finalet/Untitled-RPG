@@ -21,7 +21,7 @@ public class InventoryManager : MonoBehaviour
     int itemAmountToAdd = 1;
     Item itemToAdd;
     
-    protected string savefilePath;
+    protected string savefilePath = "saves/currency.txt";
 
     public InventoryManager () {
         if (instance == null)
@@ -32,7 +32,6 @@ public class InventoryManager : MonoBehaviour
         if (instance == null)
             instance = this;
         
-        savefilePath = "saves/currency.txt";
         PeaceCanvas.saveGame += Save;
 
         Load();

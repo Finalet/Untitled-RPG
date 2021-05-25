@@ -16,6 +16,9 @@ public class Equipment : Item
     public int strength;
     public int agility;
     public int intellect;
+    [Header("Thirdary Stats")]
+    public float castingTime;
+    public float attackSpeed;
 
     public override void Use (){}
     public override void Use (UI_InventorySlot initialSlot){

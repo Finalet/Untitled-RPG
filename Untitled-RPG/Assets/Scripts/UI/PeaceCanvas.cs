@@ -81,12 +81,18 @@ public class PeaceCanvas : MonoBehaviour
         else   
             anyPanelOpen = false;
 
-        if (Input.GetKeyDown(KeybindsManager.instance.skills) && !SkillsPanel.activeInHierarchy && currentInterractingNPC == null) {
-            OpenSkillsPanel();
+        if (Input.GetKeyDown(KeybindsManager.instance.skills)) {
+            if (!SkillsPanel.activeInHierarchy && currentInterractingNPC == null)
+                OpenSkillsPanel();
+            else 
+                CloseSkillsPanel();
         }
 
-        if (Input.GetKeyDown(KeybindsManager.instance.inventory) && !Inventory.activeInHierarchy && currentInterractingNPC == null) {
-            OpenInventory();    
+        if (Input.GetKeyDown(KeybindsManager.instance.inventory)) {
+            if (!Inventory.activeInHierarchy && currentInterractingNPC == null)
+                OpenInventory();
+            else
+                CloseInventory();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
@@ -116,14 +122,15 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void OpenSkillsPanel () {
+        if (Inventory.activeInHierarchy) CloseInventory();
         SkillsPanel.SetActive(true);
         Inventory.SetActive(false);
-        OpenMenuCamera(); 
         audioSource.clip = inventoryOpenSound;
         audioSource.Play();
     }
 
     public void OpenInventory (bool exceptEquipmentSlots = false, bool noCameraZoom = false) {
+        if (SkillsPanel.activeInHierarchy) CloseSkillsPanel();
         Inventory.SetActive(true);
         if (!exceptEquipmentSlots) EquipmentSlots.SetActive(true);
         SkillsPanel.SetActive(false);
@@ -131,24 +138,30 @@ public class PeaceCanvas : MonoBehaviour
         audioSource.clip = inventoryOpenSound;
         audioSource.Play();
     }
+    public void CloseInventory() {
+        Inventory.SetActive(false);
+        EquipmentSlots.SetActive(false);
+        CM_MenuCam.Priority = 0;
+        audioSource.clip = inventoryCloseSound;
+        audioSource.Play();
+    }
+    public void CloseSkillsPanel(){
+        SkillsPanel.SetActive(false);
+    }
 
     void EscapeButton () {
         if (anyPanelOpen) { //hide all panels
-            SkillsPanel.SetActive(false);
-            Inventory.SetActive(false);
-            EquipmentSlots.SetActive(false);
-            CM_MenuCam.Priority = 0;
+            if (SkillsPanel.activeInHierarchy) CloseSkillsPanel();
+            if (Inventory.activeInHierarchy) CloseInventory();
             if (currentInterractingNPC != null)
                 currentInterractingNPC.StopInterract();
-            audioSource.clip = inventoryCloseSound;
-            audioSource.Play();
         } else { //toggle pause
             TogglePause();
         }
     }
 
     public void TogglePause () {
-        return; //DISABLE PAUSE MENU WHILE WORKING ON THE GAME
+        //return; //DISABLE PAUSE MENU WHILE WORKING ON THE GAME
 
         isGamePaused = !isGamePaused;
 
