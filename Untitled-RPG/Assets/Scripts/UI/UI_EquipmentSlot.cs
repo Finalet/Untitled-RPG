@@ -28,6 +28,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
             ID = -1; //Slot is empty
 
         ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath);
+        print("called " + ID);
     }
     public override void Load () {
         savefilePath = "saves/equipmentSlots.txt";

@@ -26,7 +26,7 @@ public class Firewall : Skill
         else
             animator.CrossFade("Attacks.Mage.Firewall", 0.25f);
         
-        Invoke("Spawn", 1.6f * 0.5f * characteristics.attackSpeed.z);
+        Invoke("Spawn", 1.6f * 0.5f * characteristics.attackSpeed.y);
 
         for (int i = 0; i < hands.Length; i++) {
             ParticleSystem ps = Instantiate(handsEffect, hands[i]);

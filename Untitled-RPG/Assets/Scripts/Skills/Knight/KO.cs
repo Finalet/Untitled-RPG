@@ -36,14 +36,14 @@ public class KO : Skill
     }
     void PlaySounds() {
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
-            Invoke("PlaySoundTwohandedSword", 0.1f * characteristics.attackSpeed.z);
-            Invoke("PlaySoundTwohandedSword", 0.5f * characteristics.attackSpeed.z);
+            Invoke("PlaySoundTwohandedSword", 0.1f * characteristics.attackSpeed.y);
+            Invoke("PlaySoundTwohandedSword", 0.5f * characteristics.attackSpeed.y);
         } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
-            Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.z);
-            Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.z);
+            Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.y);
+            Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.y);
         } else {
-            Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.z);
-            Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.z);
+            Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.y);
+            Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.y);
         }
     }
     

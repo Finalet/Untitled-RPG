@@ -41,11 +41,11 @@ public class Slash : Skill
 
     protected override void CustomUse() {
         if (hits == 1) {
-            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  0.5f * characteristics.attackSpeed.z : 0.5f * characteristics.attackSpeed.z;
+            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  0.5f * characteristics.attackSpeed.y : 0.5f * characteristics.attackSpeed.y;
         } else if (hits == 2) {
-            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  0.6f * characteristics.attackSpeed.z : 0.5f * characteristics.attackSpeed.z;
+            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  0.6f * characteristics.attackSpeed.y : 0.5f * characteristics.attackSpeed.y;
         } else {
-            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  1.2f * characteristics.attackSpeed.z : 0.74f * characteristics.attackSpeed.z;
+            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword ?  1.2f * characteristics.attackSpeed.y : 0.74f * characteristics.attackSpeed.y;
         }
 
         if (Time.time - lastHitTime > timing)
@@ -96,13 +96,13 @@ public class Slash : Skill
     }
     void PlaySounds () {
         if (hits == 1) {
-            PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.z);
+            PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.y);
         } else if (hits == 2) {
-            PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.z);
+            PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.y);
         } else if (hits == 3) {
-            PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.z);
+            PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.y);
             if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
-                Invoke("PlayLastDualSwordsSound", 0.45f * characteristics.attackSpeed.z); //Invoke because otherwise the sound does not play
+                Invoke("PlayLastDualSwordsSound", 0.45f * characteristics.attackSpeed.y); //Invoke because otherwise the sound does not play
         }
     }
     void SetHitType () {

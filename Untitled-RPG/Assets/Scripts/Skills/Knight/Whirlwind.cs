@@ -58,7 +58,7 @@ public class Whirlwind : Skill
             timer -= Time.fixedDeltaTime;
             playerControlls.baseCharacterController.speedMultiplier = 1;
             if (hitTimer <= 0) {
-                hitTimer = 0.2f * characteristics.attackSpeed.z;
+                hitTimer = 0.2f * characteristics.attackSpeed.y;
                 Hit();
                 audioSource.time = 0.05f;
                 audioSource.Play();

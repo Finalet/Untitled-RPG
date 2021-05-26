@@ -5,6 +5,7 @@ using UnityEngine;
 public class PowerSphere : Skill
 {
     [Header("Custom Vars")]
+    public Buff buff;
     public float sphereSize = 14f;
     public float distance;
     public float duration = 20;
@@ -18,11 +19,6 @@ public class PowerSphere : Skill
     Transform[] hands;
     GameObject instanciatedSphere;
 
-    [Header("Buffs")]
-    public float castSpeedIncrease = 0.2f;
-    public float magicDamageIncrease = 0.2f;
-    public float defenseIncrease = 0.2f;
-
     protected override void Start() {
         base.Start();
         hands = new Transform[2];
@@ -31,7 +27,7 @@ public class PowerSphere : Skill
     }
 
     protected override float actualDistance () {
-        return distance + characteristics.magicSkillDistanceIncrease;
+        return distance + characteristics.skillDistanceIncrease;
     } 
 
     protected override void InterruptCasting() {

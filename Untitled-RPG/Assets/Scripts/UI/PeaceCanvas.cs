@@ -257,7 +257,8 @@ public class PeaceCanvas : MonoBehaviour
     }
     IEnumerator OpenMenuCameraIE () {
         float x = 0.7f;
-        float right = 0.69f * Mathf.Log(Screen.width) - 4f; //Used excel to find trendline with camera position;
+        float right = 1.1976f * Screen.width/Screen.height - 0.8741f; //Used excel to find trendline between local X of MenuLookAt and screen width/height;
+
         while (x > 0 ) {
             x -= Time.fixedDeltaTime;
             Vector3 pos = PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * right;
@@ -290,8 +291,8 @@ public class PeaceCanvas : MonoBehaviour
         statsLabel.text += $"Healing power: <color={highlightColor}>{Characteristics.instance.healingPower}</color>\n";
         statsLabel.text += $"Defense: <color={highlightColor}>{Characteristics.instance.defense}</color>\n";
         statsLabel.text += "\n";
-        statsLabel.text += $"Casting time: <color={highlightColor}>{Mathf.Round(Characteristics.instance.castingSpeed.z*100f)}%</color>\n";
-        statsLabel.text += $"Attack speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.attackSpeed.z*100f)}%</color>\n";
+        statsLabel.text += $"Casting speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.castingSpeed.y*1000f)/10f}%</color>\n";
+        statsLabel.text += $"Attack speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.attackSpeed.y*1000f)/10f}%</color>\n";
     }
 
     public void SaveButton() {

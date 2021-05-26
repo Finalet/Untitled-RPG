@@ -32,7 +32,7 @@ public class RainOfArrows : Skill
     }
 
     protected override float actualDistance () {
-        return skillDistance + characteristics.hunterSkillDistanceIncrease;
+        return skillDistance + characteristics.skillDistanceIncrease;
     } 
 
     protected override void CustomUse() {

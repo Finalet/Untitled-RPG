@@ -28,7 +28,7 @@ public class Dash : Skill
     protected override void CustomUse() {
         dashVFX.Play();
         animator.CrossFade("Attacks.Knight.Dash", 0.25f);
-        audioSource.PlayDelayed(0.1f * characteristics.attackSpeed.z);
+        audioSource.PlayDelayed(0.1f * characteristics.attackSpeed.y);
     }
 
     void OnTriggerEnter(Collider other) {

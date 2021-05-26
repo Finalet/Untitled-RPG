@@ -128,7 +128,7 @@ public class Tooltip : MonoBehaviour
                 stats += $"Casting time: <color={highlightColor}>{(100*w.castingTime).ToString()}%</color>\n";
             }
             if (w.attackSpeed != 0) {
-                stats += $"Intellect: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>\n";
+                stats += $"Attack speed: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>\n";
             }
         } else {
             stats = "NOT IMPLEMENTED";

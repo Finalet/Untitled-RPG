@@ -4,22 +4,24 @@ using TMPro;
 
 public class BuffIcon : MonoBehaviour
 {
-    public Skill skill;
+    public Buff buff;
 
     public float timer;
     public TextMeshProUGUI timerText;
 
     bool noTimer;
     void Start() {
-        GetComponent<Image>().sprite = skill.icon;
+        GetComponent<Image>().sprite = buff.skill.icon;
 
+        timer = buff.duration;
+        
         if (timer == 0) {
             noTimer = true;
             timerText.text = "";
         }
     }
     void Update() {
-        if (!Characteristics.instance.activeBuffs.Contains(skill)) {
+        if (!Characteristics.instance.activeBuffs.Contains(buff)) {
             Destroy(gameObject); //Not removing buff effects since they have already been removed, this is just for checking and removing the icons.
         }
 
@@ -34,7 +36,7 @@ public class BuffIcon : MonoBehaviour
     }
 
     void RemoveBuff () {
-        Characteristics.instance.RemoveBuff(skill);
+        Characteristics.instance.RemoveBuff(buff);
         Destroy(gameObject);
     }
 }

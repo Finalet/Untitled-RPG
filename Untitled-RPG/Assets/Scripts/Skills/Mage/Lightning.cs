@@ -74,7 +74,7 @@ public class Lightning : Skill
         PlayAnimation();
 
         lastShotTime = Time.time;
-        float actualDistance = distance + characteristics.magicSkillDistanceIncrease;
+        float actualDistance = distance + characteristics.skillDistanceIncrease;
 
         RaycastHit hit;
         if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, actualDistance, ~LayerMask.GetMask("Player"))) {

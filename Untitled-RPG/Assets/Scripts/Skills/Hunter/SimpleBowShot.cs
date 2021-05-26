@@ -92,7 +92,7 @@ public class SimpleBowShot : AimingSkill
         }
 
         animator.Play("AttacksUpperBody.Hunter.Simple Bow Shot_release");
-        coolDownTimer = coolDown * Characteristics.instance.attackSpeed.z;
+        coolDownTimer = coolDown * Characteristics.instance.attackSpeed.y;
         newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName);
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         grabBowstring = false;
@@ -106,13 +106,13 @@ public class SimpleBowShot : AimingSkill
 
     void DrawDebugs () {
         RaycastHit hit;
-        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, strength+characteristics.magicSkillDistanceIncrease, ignorePlayer)) {
+        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, strength+characteristics.skillDistanceIncrease, ignorePlayer)) {
             shootPoint = hit.point;        
         } else {
-            shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength + characteristics.magicSkillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
+            shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength + characteristics.skillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
         Debug.DrawLine(newArrow.transform.position, shootPoint, Color.blue);
-        Debug.DrawRay(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward * (strength + characteristics.magicSkillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance), Color.red);
+        Debug.DrawRay(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward * (strength + characteristics.skillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance), Color.red);
     }
 
     public void GrabBowstring() {

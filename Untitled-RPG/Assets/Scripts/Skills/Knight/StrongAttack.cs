@@ -34,11 +34,11 @@ public class StrongAttack : Skill
     }
     void PlaySounds () {
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
-            PlaySound(sounds[1], 0, 1, 1f * characteristics.attackSpeed.z);
+            PlaySound(sounds[1], 0, 1, 1f * characteristics.attackSpeed.y);
         } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
-            PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.z);
+            PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.y);
         } else {
-            PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.z);
+            PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.y);
         }
     }
 

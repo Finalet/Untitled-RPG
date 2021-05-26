@@ -19,23 +19,28 @@ public class Characteristics : MonoBehaviour
     public int agility; public int agilityFromEquip;
     public int intellect; public int intellectFromEquip;
     [Header("Attacks")]
-    public int meleeAttack; public int meleeAttackFromEquip; public float meleeMultiplier;
-    public int rangedAttack; public int rangedAttackFromEquip; public float rangedMultiplier;
-    public int magicPower; public int magicPowerFromEquip; public float magicPowerMultiplier;
-    public int healingPower; public int healingPowerFromEquip; public float healingPowerMultiplier;
-    public int defense; public int defenseFromEquip; public float defenseMultiplier;
+    public int meleeAttack; public int meleeAttackFromEquip;
+    public int rangedAttack; public int rangedAttackFromEquip;
+    public int magicPower; public int magicPowerFromEquip;
+    public int healingPower; public int healingPowerFromEquip;
+    public int defense; public int defenseFromEquip;
     
-    [Header("Misc")]
+    [Header("Speeds")]
+    [Tooltip("X - Casting speed percentage (i.e. 1.1f), Y - Casting speed inverted (i.e. 0.9f)")]
+    public Vector2 castingSpeed; public Vector2 castingSpeedFromEquip; //x = 1.1; y = 0.9;
+    [Tooltip("X - Attack speed percentage (i.e. 1.0f), Y - Attack speed inverted (i.e. 0.909f)")]
+    public Vector2 attackSpeed; public Vector2 attackSpeedFromEquip; //x = 1.1; y = 0.9;
 
-    [Tooltip("X - casting speed percentage (i.e. 1.1f), Y - casting speed adjustement (i.e. 0.1f), Z - casting speed inverted (i.e. 0.9f)")]
-    public Vector3 castingSpeed; public float castingSpeedFromEquip;
-    float castingSpeedPercentage; float castingSpeedPercentageAdjustement; float castingSpeedPercentageIverted;
-    [Tooltip("X - attack speed percentage (i.e. 1.0f), Y - attack speed adjustement (i.e. 0.1f), Z - attack speed inverted (i.e. 0.909f)")]
-    public Vector3 attackSpeed; public float attackSpeedFromEquip;
-    float attackSpeedPercentage; float attackSpeedPercentageAdjustement; float attackSpeedPercentageInverted;
-
-    public float magicSkillDistanceIncrease;
-    public float hunterSkillDistanceIncrease;
+    [Header("Buffs")]
+    public float meleeAttackBuff;
+    public float rangedAttackBuff;
+    public float magicPowerBuff;
+    public float healingPowerBuff;
+    public float defenseBuff;
+    public Vector2 castingSpeedBuff;
+    public Vector2 attackSpeedBuff;
+    public float walkSpeedBuff;
+    public float skillDistanceIncrease;
 
     int statsRatio = 2;
     [Header("Stats regeneration")]
@@ -46,7 +51,7 @@ public class Characteristics : MonoBehaviour
 
     public GameObject buffIcon;
 
-    public List<Skill> activeBuffs = new List<Skill>();
+    public List<Buff> activeBuffs = new List<Buff>();
 
     void Awake() {
         if (instance == null)
@@ -61,23 +66,23 @@ public class Characteristics : MonoBehaviour
         health = maxHealth;
         stamina = maxStamina;
         
-        meleeMultiplier = 1;
-        rangedMultiplier = 1;
-        magicPowerMultiplier = 1;
-        healingPowerMultiplier = 1;
-        defenseMultiplier= 1;
+        meleeAttackBuff = 1;
+        rangedAttackBuff = 1;
+        magicPowerBuff = 1;
+        healingPowerBuff = 1;
+        defenseBuff= 1;
 
         StatsCalculations();
     }
 
     void Update() {
+        CalculateBuffs();
         StatsCalculations();
         regenerateHealth();
         regenerateStamina();
     }
 
     public void StatsCalculations () {
-
         strength = Mathf.RoundToInt(strengthFromEquip);
         agility = Mathf.RoundToInt(agilityFromEquip);
         intellect = Mathf.RoundToInt(intellectFromEquip);
@@ -88,25 +93,17 @@ public class Characteristics : MonoBehaviour
         health = Mathf.Clamp(health, 0, maxHealth);
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
 
-        meleeAttack = Mathf.RoundToInt( ( (strength / statsRatio) + meleeAttackFromEquip) * meleeMultiplier);
-        rangedAttack = Mathf.RoundToInt( ( (agility / statsRatio) + rangedAttackFromEquip) * rangedMultiplier);
-        magicPower = Mathf.RoundToInt( ( (intellect / statsRatio) + magicPowerFromEquip) * magicPowerMultiplier);
-        healingPower = Mathf.RoundToInt( ( (intellect / statsRatio) + healingPowerFromEquip) * healingPowerMultiplier);
-        defense = Mathf.RoundToInt( ( (strength / statsRatio + agility / statsRatio) + defenseFromEquip) * defenseMultiplier);
+        meleeAttack = Mathf.RoundToInt( ( (strength / statsRatio) + meleeAttackFromEquip) * meleeAttackBuff);
+        rangedAttack = Mathf.RoundToInt( ( (agility / statsRatio) + rangedAttackFromEquip) * rangedAttackBuff);
+        magicPower = Mathf.RoundToInt( ( (intellect / statsRatio) + magicPowerFromEquip) * magicPowerBuff);
+        healingPower = Mathf.RoundToInt( ( (intellect / statsRatio) + healingPowerFromEquip) * healingPowerBuff);
+        defense = Mathf.RoundToInt( ( (strength / statsRatio + agility / statsRatio) + defenseFromEquip) * defenseBuff);
 
-        attackSpeedPercentage = 1 + attackSpeedPercentageAdjustement + agility*0.0001f - attackSpeedFromEquip;
-        attackSpeedPercentageInverted = 1/attackSpeedPercentage;
+        attackSpeed.x = 1 * attackSpeedFromEquip.x * (1+agility*0.0001f) * attackSpeedBuff.x;
+        attackSpeed.y = 1 * attackSpeedFromEquip.y * (1-agility*0.0001f) * attackSpeedBuff.y;
 
-        attackSpeed.x = attackSpeedPercentage;
-        attackSpeed.y = attackSpeedPercentageAdjustement + attackSpeedFromEquip;
-        attackSpeed.z = attackSpeedPercentageInverted;
-
-        castingSpeedPercentage = 1 + castingSpeedPercentageAdjustement + intellect*0.0001f - castingSpeedFromEquip;
-        castingSpeedPercentageIverted = 1/castingSpeedPercentage;
-
-        castingSpeed.x = castingSpeedPercentage; 
-        castingSpeed.y = castingSpeedPercentageAdjustement + castingSpeedFromEquip; 
-        castingSpeed.z = castingSpeedPercentageIverted;
+        castingSpeed.x = 1 * castingSpeedFromEquip.x * (1+intellect*0.0001f) * castingSpeedBuff.x;
+        castingSpeed.y = 1 * castingSpeedFromEquip.y * (1-intellect*0.0001f) * castingSpeedBuff.y;
     }
 
     float hpTimer = 1;
@@ -188,7 +185,12 @@ public class Characteristics : MonoBehaviour
         stamina -= amount;
     }
 
-    public void AddBuff(Skill skill) {
+    public void AddBuff(Buff buff) {
+        activeBuffs.Add(buff);
+        BuffIcon icon = Instantiate(buffIcon, CanvasScript.instance.buffs.transform).GetComponent<BuffIcon>();
+        icon.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        icon.buff = buff;
+        /*
         activeBuffs.Add(skill);
         GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
         icon.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
@@ -197,13 +199,14 @@ public class Characteristics : MonoBehaviour
         switch (skill.ID) {
             case 5: //Rage 
                 float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
-                meleeMultiplier += buffIncrease/100;
-                attackSpeedPercentageAdjustement += buffIncrease/100;
+                meleeMultiplier += buffIncrease;
+                
+                attackSpeedBuff *= new Vector2( (1+buffIncrease), (1-buffIncrease) );
                 icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Rage>().duration;
                 break;
             case 12: //Power sphere
                 magicPowerMultiplier += skill.GetComponent<PowerSphere>().magicDamageIncrease;
-                castingSpeedPercentageAdjustement += skill.GetComponent<PowerSphere>().castSpeedIncrease;
+                castingSpeedBuff += skill.GetComponent<PowerSphere>().castSpeedIncrease;
                 defenseMultiplier += skill.GetComponent<PowerSphere>().defenseIncrease;
                 //No timer since its active while player is indside;
                 break;
@@ -213,25 +216,27 @@ public class Characteristics : MonoBehaviour
                 icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Levitation>().flightDuration;
                 break;
             case 20: //Archers Practice
-                PlayerControlls.instance.baseWalkSpeed += skill.GetComponent<ArchersPractice>().buffIncrease/100;
-                attackSpeedPercentageAdjustement += skill.GetComponent<ArchersPractice>().buffIncrease/100;
+                PlayerControlls.instance.baseWalkSpeed += skill.GetComponent<ArchersPractice>().buffIncrease;
+                attackSpeedBuff *= new Vector2( (1+skill.GetComponent<ArchersPractice>().buffIncrease), (1-skill.GetComponent<ArchersPractice>().buffIncrease) );
                 icon.GetComponent<BuffIcon>().timer = skill.GetComponent<ArchersPractice>().duration;
                 break;
             default: Debug.LogError("Wrong skill ID for adding buff");
                 break;
-        }    
+        }    */
     }
 
-    public void RemoveBuff(Skill skill) {
-        switch (skill.ID) {
+    public void RemoveBuff(Buff buff) { 
+        if (activeBuffs.Contains(buff))
+            activeBuffs.Remove(buff);
+        /* switch (skill.ID) {
             case 5:
                 float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
-                meleeMultiplier -= buffIncrease/100;
-                attackSpeedPercentageAdjustement -= buffIncrease/100;
+                meleeMultiplier -= buffIncrease;
+                attackSpeedBuff -= buffIncrease;
                 break;
             case 12:
                 magicPowerMultiplier -= skill.GetComponent<PowerSphere>().magicDamageIncrease;
-                castingSpeedPercentageAdjustement -= skill.GetComponent<PowerSphere>().castSpeedIncrease;
+                castingSpeedBuff -= skill.GetComponent<PowerSphere>().castSpeedIncrease;
                 defenseMultiplier -= skill.GetComponent<PowerSphere>().defenseIncrease;
                 break;
             case 14:
@@ -240,13 +245,48 @@ public class Characteristics : MonoBehaviour
                 break;
             case 20: 
                 PlayerControlls.instance.baseWalkSpeed -= skill.GetComponent<ArchersPractice>().buffIncrease/100;
-                attackSpeedPercentageAdjustement -= skill.GetComponent<ArchersPractice>().buffIncrease/100;
+                attackSpeedBuff -= skill.GetComponent<ArchersPractice>().buffIncrease/100;
                 break;
             default: Debug.LogError("Wrong skill ID for buff removal");
                 break;
         }
 
-        activeBuffs.Remove(skill);
+        activeBuffs.Remove(skill); */
+    } 
+
+    void CalculateBuffs() {
+        ResetBuffStats();
+        for (int i = 0; i < activeBuffs.Count; i++){
+            meleeAttackBuff *= 1 + activeBuffs[i].meleeAttackBuff;
+            rangedAttackBuff *= 1 + activeBuffs[i].rangedAttackBuff;
+            magicPowerBuff *= 1 + activeBuffs[i].magicPowerBuff;
+            healingPowerBuff *= 1 + activeBuffs[i].healingPowerBuff;
+            defenseBuff *= 1 + activeBuffs[i].defenseBuff;
+
+            castingSpeedBuff.x *= (1-activeBuffs[i].castingSpeedBuff);
+            castingSpeedBuff.y *= (1+activeBuffs[i].castingSpeedBuff);
+
+            attackSpeedBuff.x *= (1-activeBuffs[i].attackSpeedBuff);
+            attackSpeedBuff.y *= (1+activeBuffs[i].attackSpeedBuff);
+
+            walkSpeedBuff *= (1+activeBuffs[i].walkSpeedBuff);
+
+            skillDistanceIncrease +=activeBuffs[i].skillDistanceBuff;
+        }
+    }
+    void ResetBuffStats() {
+        meleeAttackBuff = 1;
+        rangedAttackBuff = 1;
+        magicPowerBuff = 1;
+        healingPowerBuff = 1;
+        defenseBuff = 1;
+
+        castingSpeedBuff = Vector2.one;
+        attackSpeedBuff = Vector2.one;
+        
+        walkSpeedBuff = 1;
+
+        skillDistanceIncrease = 0;
     }
 
 #region Get hit overloads 

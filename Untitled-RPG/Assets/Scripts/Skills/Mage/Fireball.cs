@@ -48,7 +48,7 @@ public class Fireball : Skill
     protected override void CustomUse() {}
 
     public void FireProjectile () {
-        float actualDistance = distance + characteristics.magicSkillDistanceIncrease;
+        float actualDistance = distance + characteristics.skillDistanceIncrease;
 
         finishedCast = true;
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = false;
@@ -97,13 +97,13 @@ public class Fireball : Skill
 
     void DrawDebugs () {
         RaycastHit hit;
-        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, distance+characteristics.magicSkillDistanceIncrease, ignorePlayer)) {
+        if (Physics.Raycast(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward, out hit, distance+characteristics.skillDistanceIncrease, ignorePlayer)) {
             shootPoint = hit.point;        
         } else {
-            shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (distance + characteristics.magicSkillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
+            shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (distance + characteristics.skillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
         Debug.DrawLine(shootPosition.position, shootPoint, Color.blue);
-        Debug.DrawRay(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward * (distance + characteristics.magicSkillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance), Color.red);
+        Debug.DrawRay(PlayerControlls.instance.playerCamera.transform.position, PlayerControlls.instance.playerCamera.transform.forward * (distance + characteristics.skillDistanceIncrease + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance), Color.red);
     
     }
 }

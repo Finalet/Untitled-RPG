@@ -92,7 +92,7 @@ public class PlayerControlls : MonoBehaviour
         playerCamera = Camera.main;
         CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
         cameraControl = playerCamera.GetComponent<CameraControll>();
-        walkSpeed = baseWalkSpeed;
+        walkSpeed = baseWalkSpeed * Characteristics.instance.walkSpeedBuff;
     }
 
     void Update()
@@ -240,9 +240,9 @@ public class PlayerControlls : MonoBehaviour
     
     void GroundAnimations() {
         if ( (InputDirection == 90 || InputDirection == -90) && isRunning && !isSprinting)
-            walkSpeed = baseWalkSpeed * 1.2f;
+            walkSpeed = baseWalkSpeed * Characteristics.instance.walkSpeedBuff * 1.2f;
         else 
-            walkSpeed = baseWalkSpeed;
+            walkSpeed = baseWalkSpeed * Characteristics.instance.walkSpeedBuff;
 
         if (!isIdle) {
             InputDirection = Mathf.Atan2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * Mathf.Rad2Deg;

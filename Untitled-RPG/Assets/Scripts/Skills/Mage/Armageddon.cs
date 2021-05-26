@@ -34,7 +34,7 @@ public class Armageddon : Skill
     }
 
     protected override float actualDistance () {
-        return distance + characteristics.magicSkillDistanceIncrease;
+        return distance + characteristics.skillDistanceIncrease;
     } 
 
     protected override void CastingAnim() {

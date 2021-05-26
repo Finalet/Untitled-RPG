@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class Levitation : Skill
 {
-    [Header("Custom vars")] 
-    [Tooltip("Increase distance of mage skill by meters")] public float skillDistanceIncrease = 10;
-    public float magicPowerPercentageIncrease = 20;
+    [Header("Custom vars")]
     [Tooltip("Duration in seconds")] public float flightDuration = 120;
+    public Buff buff;
 
     Transform[] feetsAndHands;
     public ParticleSystem bodypartsVFX;
@@ -35,7 +34,7 @@ public class Levitation : Skill
     protected override void CustomUse() {
         PlayerControlls.instance.TakeOff();
         GetComponent<AudioSource>().PlayDelayed(0.4f);
-        characteristics.AddBuff(this);
+        characteristics.AddBuff(buff);
         StartCoroutine(flightTimer());
 
         for (int i = 0; i < feetsAndHands.Length; i ++) {

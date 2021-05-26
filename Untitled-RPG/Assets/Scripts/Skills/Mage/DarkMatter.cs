@@ -29,14 +29,14 @@ public class DarkMatter : Skill
         string anim = left ? "AttacksUpperBody.Mage.DarkMatter_left" : "AttacksUpperBody.Mage.DarkMatter_right";
         animator.CrossFade(anim, 0.25f);
 
-        Invoke("FireProjectile", 0.15f * characteristics.attackSpeed.z);
+        Invoke("FireProjectile", 0.15f * characteristics.attackSpeed.y);
 
         aimingTimer = Time.time;
         Invoke("Timer", 0.7f);
     }
 
     public void FireProjectile () {
-        float actualDistance = distance + characteristics.magicSkillDistanceIncrease;
+        float actualDistance = distance + characteristics.skillDistanceIncrease;
         Transform shootPosition = left ? hands[0] : hands[1];
         ignorePlayer =~ LayerMask.GetMask("Player");
 
@@ -69,7 +69,7 @@ public class DarkMatter : Skill
 
     protected override void LocalUse () {
         playerControlls.InterruptCasting();
-        coolDownTimer = coolDown * characteristics.attackSpeed.z;
+        coolDownTimer = coolDown * characteristics.attackSpeed.y;
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
         if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)

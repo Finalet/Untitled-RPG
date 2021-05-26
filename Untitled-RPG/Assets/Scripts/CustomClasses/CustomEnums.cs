@@ -33,5 +33,40 @@ public class RecurringEffect {
     }
 }
 
+[System.Serializable]
+public class Buff {
+    public string name;
+    public Skill skill;
+    public float duration;
+    [Space]
+    public float meleeAttackBuff;
+    public float rangedAttackBuff;
+    public float magicPowerBuff;
+    public float healingPowerBuff;
+    public float defenseBuff;
+    [Space]
+    public float castingSpeedBuff;
+    public float attackSpeedBuff;
+    [Space]
+    public float walkSpeedBuff;
+    [Space]
+    public int skillDistanceBuff;
+
+    public Buff (string _name, Skill _skill, float _duration, float _meleeAttackBuff, float _rangedAttackBuff, float _magicPowerBuff, float _healingPowerBuff, float _defenseBuff, float _castingSpeedBuff, float _attackSpeedBuff, float _walkSpeedBuff, int _skillDistanceBuff) {
+        this.name = _name;
+        this.skill = _skill;
+        this.duration = _duration;
+        this.meleeAttackBuff = _meleeAttackBuff;
+        this.rangedAttackBuff = _rangedAttackBuff;
+        this.magicPowerBuff = _magicPowerBuff;
+        this.healingPowerBuff = _healingPowerBuff;
+        this.defenseBuff = _defenseBuff;
+        this.castingSpeedBuff = _castingSpeedBuff;
+        this.attackSpeedBuff = _attackSpeedBuff;
+        this.walkSpeedBuff = _walkSpeedBuff;
+        this.skillDistanceBuff = _skillDistanceBuff;
+    }
+}
+
 public class CustomEnums : MonoBehaviour
 {}

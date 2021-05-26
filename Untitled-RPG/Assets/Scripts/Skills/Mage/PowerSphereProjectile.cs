@@ -66,7 +66,7 @@ public class PowerSphereProjectile : MonoBehaviour
         VFX.Stop();
         if (!invoked) {
             if (playerInside) {
-                Characteristics.instance.RemoveBuff(powerSphereSkill); //On trigger exit is not called when the collider is diactivated. Thus I stop checking triggers and just manually check if the player was outside or inside when destruction started
+                Characteristics.instance.RemoveBuff(powerSphereSkill.buff); //On trigger exit is not called when the collider is diactivated. Thus I stop checking triggers and just manually check if the player was outside or inside when destruction started
                 playerInside = false;
             }
             invoked = true;
@@ -84,7 +84,7 @@ public class PowerSphereProjectile : MonoBehaviour
             return;
 
         if (other.CompareTag("Player") && !other.isTrigger) {
-            Characteristics.instance.AddBuff(powerSphereSkill);
+            Characteristics.instance.AddBuff(powerSphereSkill.buff);
             playerInside = true;
         }
     }
@@ -93,7 +93,7 @@ public class PowerSphereProjectile : MonoBehaviour
             return;
 
         if (other.CompareTag("Player") && !other.isTrigger) {
-            Characteristics.instance.RemoveBuff(powerSphereSkill);
+            Characteristics.instance.RemoveBuff(powerSphereSkill.buff);
             playerInside = false;
         }
     }
