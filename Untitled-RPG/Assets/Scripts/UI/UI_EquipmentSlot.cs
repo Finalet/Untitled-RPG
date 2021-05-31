@@ -17,7 +17,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
 
     protected override void Start()
     {
-        //Not loading anything because already loaded when game launched from the EquipmentManager.
+        //Load() Not loading anything because already loaded when game launched from the EquipmentManager.
+        PeaceCanvas.saveGame += Save;
     }
 
     public override void Save (){
@@ -28,7 +29,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
             ID = -1; //Slot is empty
 
         ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath);
-        print("called " + ID);
     }
     public override void Load () {
         savefilePath = "saves/equipmentSlots.txt";

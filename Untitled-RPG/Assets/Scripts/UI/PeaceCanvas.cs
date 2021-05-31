@@ -38,8 +38,6 @@ public class PeaceCanvas : MonoBehaviour
     public NPC currentInterractingNPC;
 
     [Space]
-    public GameObject DebugChatPanel;
-    public TextMeshProUGUI debugChatText;
     public GameObject dragObject;
     public int maxChatLines;
     int chatLines;
@@ -68,6 +66,12 @@ public class PeaceCanvas : MonoBehaviour
     public Sprite handpray;
 
     AudioSource audioSource;
+
+    [Header("Debug")] 
+    public GameObject DebugChatPanel;
+    public TextMeshProUGUI debugChatText;
+    public GameObject DebugTooManyItems;
+    
 
     void Awake() {
         if (instance == null)
@@ -101,6 +105,8 @@ public class PeaceCanvas : MonoBehaviour
 
         if (Input.GetKeyDown(KeybindsManager.instance.damageChat)) {
             DebugChatPanel.SetActive(!DebugChatPanel.activeInHierarchy);
+        } else if (Input.GetKeyDown(KeybindsManager.instance.tooManyItems)) {
+            DebugTooManyItems.SetActive(!DebugTooManyItems.activeInHierarchy);
         } else if (Input.GetKeyDown(KeybindsManager.instance.hideUI)) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }

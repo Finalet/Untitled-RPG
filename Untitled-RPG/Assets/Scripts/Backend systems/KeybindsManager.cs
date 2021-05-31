@@ -18,6 +18,7 @@ public class KeybindsManager : MonoBehaviour
     public KeyCode interact = KeyCode.F;
     [Header("Misc")]
     public KeyCode damageChat = KeyCode.F1;
+    public KeyCode tooManyItems = KeyCode.F2;
     public KeyCode hideUI = KeyCode.F3;
 
     void Awake() {

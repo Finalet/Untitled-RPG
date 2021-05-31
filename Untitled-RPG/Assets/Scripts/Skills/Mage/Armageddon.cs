@@ -42,6 +42,8 @@ public class Armageddon : Skill
 
         AddParticles();
 
+        audioSource.pitch = Characteristics.instance.castingSpeed.x;
+        audioSource.time = 0.5f;
         audioSource.Play();
     }
 

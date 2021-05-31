@@ -43,9 +43,6 @@ public class InventoryManager : MonoBehaviour
         if (itemToAdd is Equipment)
             itemAmountToAdd = 1;
 
-        if (itemInputText.text != "" && ( Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) )
-            AddItemToInventoryDEBUG();
-
         if (goldInputText.text != "" && ( Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) )
             AddGoldDEBUG();
 
@@ -61,22 +58,6 @@ public class InventoryManager : MonoBehaviour
             currentGold = ES3.Load<int>("currentGold", savefilePath);
     }
 
-    public void AddItemToInventoryDEBUG () {
-        string input = itemInputText.text;
-        if (input.IndexOf('.') != -1 ) {
-            itemToAdd = AssetHolder.instance.getItem(int.Parse(input.Substring(0, input.IndexOf('.'))));
-            itemAmountToAdd = int.Parse(input.Substring(input.IndexOf('.') + 1));
-        } else {
-            itemToAdd = AssetHolder.instance.getItem(int.Parse(input));
-            itemAmountToAdd = 1;
-        }
-
-        if (itemToAdd == null)
-            return;
-        
-        AddItemToInventory (itemToAdd, itemAmountToAdd, null);
-        itemInputText.text = "";
-    }
     public void AddGoldDEBUG () {
         currentGold += int.Parse(goldInputText.text);
         goldInputText.text = "";

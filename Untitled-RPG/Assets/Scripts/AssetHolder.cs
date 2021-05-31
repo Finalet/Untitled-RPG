@@ -17,6 +17,7 @@ public class AssetHolder : MonoBehaviour
     public List<Item> consumables = new List<Item>();
     public List<Item> weapons = new List<Item>();
     public List<Item> armor = new List<Item>();
+    [Space]
     public List<Consumable> consumablesCoolingDown = new List<Consumable>();
 
     void Awake() {
