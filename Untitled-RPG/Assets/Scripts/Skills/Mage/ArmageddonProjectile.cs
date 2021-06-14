@@ -18,7 +18,7 @@ public class ArmageddonProjectile : MonoBehaviour
 
     void Start() {
         GetComponent<Rigidbody>().AddForce(Vector3.down * speed, ForceMode.Impulse);
-        Destroy(gameObject, 2);
+        Destroy(gameObject, 3.5f);
     }
 
     void OnTriggerEnter(Collider other) {

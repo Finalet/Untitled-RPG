@@ -94,6 +94,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
                 ClearSlot();
         } else if (itemInSlot is Equipment) {
             itemInSlot.Use(this); //"this" to let the item clear the current a slot if item was equiped
+        } else if (itemInSlot is Skillbook) {
+            itemInSlot.Use();
         }
     }
 
@@ -220,6 +222,10 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
     public virtual void OnPointerClick (PointerEventData pointerData) {
         if (pointerData.button == PointerEventData.InputButton.Right && itemInSlot != null){
+            UseItem();
+        }
+
+        if (pointerData.button == PointerEventData.InputButton.Left && pointerData.clickCount == 2) {
             UseItem();
         }      
     }

@@ -171,4 +171,8 @@ public class Slash : Skill
             sounds = dualSwordSounds;
         }
     }
+
+    public override string getDescription() {
+        return $"Simple slashes that deal <color=white>{CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0).damage.ToString()}</color> melee damage.";
+    }
 }

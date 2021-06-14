@@ -11,15 +11,13 @@ public class DEBUG_TooManyItems : MonoBehaviour
         if (grid.childCount != 0)
             return;
 
-        foreach (Item item in AssetHolder.instance.consumables) {
-            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, grid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
-            slot.AddItem(item, 1, null);
-        }
-        foreach (Item item in AssetHolder.instance.weapons) {
-            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, grid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
-            slot.AddItem(item, 1, null);
-        }
-        foreach (Item item in AssetHolder.instance.armor) {
+        List<Item> allItems = new List<Item>();
+        allItems.AddRange(AssetHolder.instance.consumables);
+        allItems.AddRange(AssetHolder.instance.weapons);
+        allItems.AddRange(AssetHolder.instance.armor);
+        allItems.AddRange(AssetHolder.instance.skillbooks);
+
+        foreach (Item item in allItems) {
             DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, grid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
             slot.AddItem(item, 1, null);
         }

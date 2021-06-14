@@ -20,4 +20,8 @@ public class Rage : Skill
         playerControlls.isAttacking = false;
         characteristics.AddBuff(buff);
     }
+
+    public override string getDescription() {
+        return $"Become enraged. Rage increases <color=white>melee attack</color> and <color=white>attack speed</color> by <color=white>{buff.meleeAttackBuff*100}%</color>.";
+    }
 }

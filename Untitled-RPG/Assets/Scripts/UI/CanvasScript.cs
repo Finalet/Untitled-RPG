@@ -16,7 +16,7 @@ public class CanvasScript : MonoBehaviour
     public GameObject castingBar;
 
     [Header("Overall UI")]
-    public TextMeshProUGUI warningText;
+    public Text warningText;
 
     [Header("Enemy")]
     public Image enemyHealthBar;

@@ -78,6 +78,8 @@ public static class UI_General
         } else if (item is Armor) {
             Armor w = (Armor)item;
             return w.armorType.ToString();
+        } else if (item is Skillbook) {
+            return "Skillbook";
         }
         return $"NOT IMPLEMENTED";
     }

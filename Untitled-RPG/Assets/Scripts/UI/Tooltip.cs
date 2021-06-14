@@ -18,6 +18,9 @@ public class Tooltip : MonoBehaviour
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemStats;
     public TextMeshProUGUI itemPrice;
+    public Image grantedSkillIcon;
+    public Image bottomBackground;
+    public TextMeshProUGUI grantedSkillNameLabel;
 
     void Awake() {
         itemType.color = UI_General.secondaryTextColor;
@@ -51,8 +54,8 @@ public class Tooltip : MonoBehaviour
             itemRarity.color = UI_General.getRarityColor(focusItem.itemRarity);
         }
 
-        if (itemDescription.text != focusItem.itemDesctription)
-            itemDescription.text = focusItem.itemDesctription;
+        if (itemDescription.text != focusItem.getItemDescription())
+            itemDescription.text = focusItem.getItemDescription();
 
         if (itemPrice.text != focusItem.itemBasePrice.ToString())
             itemPrice.text = focusItem.itemBasePrice.ToString();
@@ -60,15 +63,29 @@ public class Tooltip : MonoBehaviour
         if (itemStats.text != generateItemStats(focusItem))
             itemStats.text = generateItemStats(focusItem);
 
-        float tooltipHeight = 120 +
-            (itemDescription.preferredHeight <= 0 ? 0 : itemDescription.preferredHeight) +
-            (itemStats.preferredHeight <= 0 ? 0 : 38 + itemStats.preferredHeight);
+        int grantedSkillHeight = 0;
+        grantedSkillIcon.gameObject.SetActive(false);
+        if (focusItem is Equipment) {
+            Equipment eq = (Equipment)focusItem;
+            if (eq.grantedSkill != null) {
+                if (grantedSkillIcon.sprite != eq.grantedSkill.icon)
+                    grantedSkillIcon.sprite = eq.grantedSkill.icon;
+                if (grantedSkillNameLabel.text != eq.grantedSkill.skillName)
+                    grantedSkillNameLabel.text = eq.grantedSkill.skillName;
+                grantedSkillHeight = 100;
+
+                grantedSkillIcon.gameObject.SetActive(true);
+            }
+        }
+
+        int bottomBackgroundHeight = grantedSkillHeight == 0 ? 40 : 100;
+        bottomBackground.rectTransform.sizeDelta = new Vector2(bottomBackground.rectTransform.sizeDelta.x, bottomBackgroundHeight);
+        itemDescription.rectTransform.sizeDelta = new Vector2(itemDescription.rectTransform.sizeDelta.x, itemDescription.preferredHeight);
+        itemStats.rectTransform.sizeDelta = new Vector2(itemStats.rectTransform.sizeDelta.x, itemStats.preferredHeight);
+        itemPrice.rectTransform.sizeDelta = new Vector2(itemPrice.preferredWidth, 20);
+        
+        float tooltipHeight = 130 + itemDescription.preferredHeight + itemStats.preferredHeight;
         GetComponent<RectTransform>().sizeDelta = new Vector2(360, tooltipHeight);
-
-        float statsPos = itemDescription.GetComponent<RectTransform>().anchoredPosition.y - itemDescription.preferredHeight - 20;
-        itemStats.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, statsPos);
-
-        itemPrice.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPrice.GetComponent<TextMeshProUGUI>().preferredWidth, 20);
     }
 
     string generateItemStats (Item item) {
@@ -101,7 +118,7 @@ public class Tooltip : MonoBehaviour
                 stats += $"Defense: <color={highlightColor}>{w.Defense.ToString()}</color>\n";
             }
             if (w.Health != 0 || w.Stamina != 0) {
-                stats += "\n";
+                if (stats != "") stats += "\n";
             }
             if (w.Health != 0) {
                 stats += $"Health: <color={highlightColor}>{w.Health.ToString()}</color>\n";
@@ -110,7 +127,7 @@ public class Tooltip : MonoBehaviour
                 stats += $"Stamina: <color={highlightColor}>{w.Stamina.ToString()}</color>\n";
             }
             if (w.strength != 0 || w.agility != 0 || w.intellect != 0) {
-                stats += "\n";
+                if (stats != "") stats += "\n";
             }
             if (w.strength != 0) {
                 stats += $"Strength: <color={highlightColor}>{w.strength.ToString()}</color>\n";
@@ -122,7 +139,7 @@ public class Tooltip : MonoBehaviour
                 stats += $"Intellect: <color={highlightColor}>{w.intellect.ToString()}</color>\n";
             }
             if (w.castingTime != 0 || w.attackSpeed != 0) {
-                stats += "\n";
+                if (stats != "") stats += "\n";
             }
             if (w.castingTime != 0) {
                 stats += $"Casting time: <color={highlightColor}>{(100*w.castingTime).ToString()}%</color>\n";
@@ -130,6 +147,9 @@ public class Tooltip : MonoBehaviour
             if (w.attackSpeed != 0) {
                 stats += $"Attack speed: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>\n";
             }
+        } else if (item is Skillbook) {
+            Skillbook sb = (Skillbook)item;
+            stats = Combat.instanace.learnedSkills.Contains(AssetHolder.instance.getSkill(sb.learnedSkill.ID)) ? "<color=red>You already know this skill" : "";
         } else {
             stats = "NOT IMPLEMENTED";
         }

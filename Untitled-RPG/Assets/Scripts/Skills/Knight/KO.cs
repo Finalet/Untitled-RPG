@@ -36,8 +36,7 @@ public class KO : Skill
     }
     void PlaySounds() {
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
-            Invoke("PlaySoundTwohandedSword", 0.1f * characteristics.attackSpeed.y);
-            Invoke("PlaySoundTwohandedSword", 0.5f * characteristics.attackSpeed.y);
+            PlaySound(sounds[2], 0, characteristics.attackSpeed.x);
         } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
             Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.y);
             Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.y);
@@ -57,16 +56,6 @@ public class KO : Skill
             audioSource.clip = sounds[1];
             audioSource.Play();
             x = 0;
-        }
-    } 
-    float x1 = 0;
-    void PlaySoundTwohandedSword(){
-        if (x1 == 0) {
-            PlaySound(sounds[0]);
-            x1 = 1;
-        } else {
-            PlaySound(sounds[2], 0, 0.8f);
-            x1 = 0;
         }
     } 
 
@@ -114,5 +103,9 @@ public class KO : Skill
             colliderSize = colliderSizeDualSwords;
         }
         GetComponent<BoxCollider>().size = colliderSize;
+    }
+
+    public override string getDescription() {
+        return $"Knocks enemies down dealing <color=white>{CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0).damage.ToString()}</color> melee damage.";
     }
 }

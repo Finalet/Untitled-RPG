@@ -12,7 +12,10 @@ public class Combat : MonoBehaviour
     public int maxSkillPoints = 10;
     public int availableSkillPoints;
     public SkillTree[] currentSkillTrees = new SkillTree[2];
+    public List<Skill> learnedSkills = new List<Skill>();
     public List<Skill> currentPickedSkills = new List<Skill>(); 
+    public List<Skill> currentSkillsFromEquipment = new List<Skill>();
+    [Space]
     public UI_SkillPanelSlot[] allSkillSlots;
 
     [Space]
@@ -40,15 +43,32 @@ public class Combat : MonoBehaviour
     }
 
     void Save () {
+        //Save skill tress
         ES3.Save<SkillTree[]>("currentSkillTrees", currentSkillTrees, savefilePath);
+        
+        //Save learned skills
         List<int> skillIDs = new List<int>();
+        foreach (Skill sk in learnedSkills)
+            skillIDs.Add(sk.ID);
+        ES3.Save<List<int>>("learnedSkillsIDs", skillIDs, savefilePath);
+
+        //Save picked skills     
+        skillIDs.Clear();
         foreach (Skill sk in currentPickedSkills) 
             skillIDs.Add(sk.ID);
         ES3.Save<List<int>>("currentPickedSkillsIDs", skillIDs, savefilePath);
     }
     void Load() {
+        //Load current skill trees
         currentSkillTrees = ES3.Load<SkillTree[]>("currentSkillTrees", savefilePath, new SkillTree[2]);
-        List<int> skillIDs = ES3.Load<List<int>>("currentPickedSkillsIDs", savefilePath, new List<int>());
+        
+        //Load learned skills
+        List<int> skillIDs = ES3.Load<List<int>>("learnedSkillsIDs", savefilePath, new List<int>());
+        foreach (int ID in skillIDs)
+            learnedSkills.Add(AssetHolder.instance.getSkill(ID));
+        
+        //Load picked skills
+        skillIDs = ES3.Load<List<int>>("currentPickedSkillsIDs", savefilePath, new List<int>());
         foreach (int ID in skillIDs)
             currentPickedSkills.Add(AssetHolder.instance.getSkill(ID));
     }
@@ -78,6 +98,18 @@ public class Combat : MonoBehaviour
         for (int i = 0; i < allSkillSlots.Length; i++){ //validate each skill slot
             allSkillSlots[i].ValidateSkillSlot();
         }
+    }
+
+    public void LearnSkill (Skill skillToLearn) {
+        if (learnedSkills.Contains(skillToLearn)) {
+            CanvasScript.instance.DisplayWarning($"You already know {skillToLearn.skillName}");
+        } else {
+            learnedSkills.Add(skillToLearn);
+        }
+    }
+    public void ForgetSkill(Skill skillToForget) {
+        if (learnedSkills.Contains(skillToForget))
+            learnedSkills.Remove(skillToForget);
     }
 
     public bool isPickedSkillTree (SkillTree skillTree) {

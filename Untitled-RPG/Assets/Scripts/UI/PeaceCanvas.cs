@@ -25,7 +25,7 @@ public class PeaceCanvas : MonoBehaviour
     public Transform menuLookAt;
     public Camera UICamera;
 
-    [Header("Inventory")]
+    [Header("Panels")]
     public GameObject SkillsPanel;
     public GameObject Inventory;
     public GameObject EquipmentSlots;
@@ -66,6 +66,9 @@ public class PeaceCanvas : MonoBehaviour
     public Sprite handpray;
 
     AudioSource audioSource;
+
+    [Header("Misc")]
+    public GameObject skillbookPreviewPanel;
 
     [Header("Debug")] 
     public GameObject DebugChatPanel;
@@ -150,6 +153,7 @@ public class PeaceCanvas : MonoBehaviour
         CM_MenuCam.Priority = 0;
         audioSource.clip = inventoryCloseSound;
         audioSource.Play();
+        DebugTooManyItems.SetActive(false);
     }
     public void CloseSkillsPanel(){
         SkillsPanel.SetActive(false);
@@ -213,7 +217,7 @@ public class PeaceCanvas : MonoBehaviour
         dragGO.GetComponent<RectTransform>().sizeDelta = iconSize;
         dragGO.GetComponent<RectTransform>().anchoredPosition3D = new Vector3 (startPos.x, startPos.y, 0);
         dragGO.GetComponent<Image>().sprite = img;
-        if (amountOfDraggedItem == 0 || itemBeingDragged is Equipment) {
+        if (amountOfDraggedItem <= 1) {
             dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
         } else {
             dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = amountOfDraggedItem.ToString();

@@ -10,7 +10,6 @@ public abstract class Skill : MonoBehaviour
     public int ID;
     [Space]
     public string skillName;
-    public string description;
     public Sprite icon;
     [Tooltip("From what tree the skill is")] public SkillTree skillTree; 
     public SkillType skillType; 
@@ -196,5 +195,7 @@ public abstract class Skill : MonoBehaviour
     protected virtual void StopSounds () {
         audioSource.Stop();
     }
+
+    public virtual string getDescription() {return "";}
 }
 

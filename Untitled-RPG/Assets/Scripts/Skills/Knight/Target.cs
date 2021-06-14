@@ -107,14 +107,14 @@ public class Target : Skill
         GameObject newTargetPrefab = Instantiate(targetPrefab, Vector3.zero, Quaternion.identity, SkillTarget.transform);
         SkillTarget.TargetSkillDamagePercentage = damageIncrease;
 
-        float height = 0.1f + SkillTarget.globalEnemyBounds().y;
+        float height = 0.3f + SkillTarget.globalEnemyBounds().y;
 
         newTargetPrefab.SetActive(true);
         newTargetPrefab.transform.localPosition = Vector3.up * height;
 
         float y = 0;
         while (Time.realtimeSinceStartup - startTime < duration) {
-            y += Time.fixedDeltaTime * 4;
+            y += Time.fixedDeltaTime;
             newTargetPrefab.transform.localPosition = Vector3.up * (height + Mathf.Sin(y)/10);
             newTargetPrefab.transform.Rotate(Vector3.up, 1f);
             if (SkillTarget.isDead)
