@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class SkillbookPreview : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class SkillbookPreview : MonoBehaviour
     public Text skillTree;
     public Text skillDescription;
     public Text skillStats;
+    [Space]
+
+    public GameObject learnedSkillNotificationPrefab;
 
     void Start() {
         if (instance != null) {
@@ -55,7 +59,31 @@ public class SkillbookPreview : MonoBehaviour
     }
 
     public void LearnSkill (){
+        if (Combat.instanace.learnedSkills.Contains(focusSkill)) {
+            CanvasScript.instance.DisplayWarning($"You already know {focusSkill.skillName}");
+        } else {
+            StartCoroutine(learnSkill());
+        }
+    }
+    IEnumerator learnSkill () {
+        float learningDuration = 1;
+        float learningStarted = Time.time;
+        CanvasScript.instance.DisplayProgressBar(true);
+        while (Time.time - learningStarted < learningDuration) {
+            CanvasScript.instance.DisplayProgressBar(false, (Time.time-learningStarted)/learningDuration, false);
+            yield return null;
+        }
+        CanvasScript.instance.DisplayProgressBar(false, 1, true);
         Combat.instanace.LearnSkill(focusSkill);
+
+        GameObject notification = Instantiate(learnedSkillNotificationPrefab, PeaceCanvas.instance.transform);
+        notification.transform.localScale = Vector3.zero;
+        notification.GetComponentInChildren<Text>().text = $"You learned \"{focusSkill.skillName}\"";
+        notification.transform.DOScale(Vector3.one, 0.4f).SetEase(Ease.OutBack);
+        notification.transform.DOScale(Vector3.zero, 0.4f).SetEase(Ease.OutExpo).SetDelay(3);
+        notification.SetActive(true);
+        Destroy(notification, 3.8f);
+
         Destroy(gameObject);
     }
     
