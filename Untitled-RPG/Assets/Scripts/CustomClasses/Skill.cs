@@ -197,5 +197,8 @@ public abstract class Skill : MonoBehaviour
     }
 
     public virtual string getDescription() {return "";}
+
+    public virtual void OverrideLMBAction(){}
+    public virtual void OverrideLMBicon(UI_MiddleSkillPanelButtons slot){}
 }
 

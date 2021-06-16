@@ -10,16 +10,28 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     public bool isLBM;
     public Skill areaPickerSkill;
 
+    public Skill overrideSkill;
+    public bool overrideLMB;
+
     protected override void Update() {
         if (PeaceCanvas.instance.isGamePaused)
             return;
 
         if (PlayerControlls.instance.isPickingArea){
             PickingAreaIcons();
+            DetectKeyPress();
             return;
         } else if (PlayerControlls.instance.isAimingSkill) {
             AimingSkillIcons();
+            DetectKeyPress();
             return;
+        }
+        if (overrideSkill != null) {
+            if (overrideLMB && isLBM) {
+                overrideSkill.OverrideLMBicon(this);
+                DetectKeyPress();
+                return;
+            }
         }
         AssignSkill();
         base.Update();
@@ -36,8 +48,6 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
         cooldownTimerText.text = "";
 
         slotIcon.color = Color.white;
-        
-        DetectKeyPress();
     }
 
     void AimingSkillIcons () {
@@ -72,15 +82,13 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
             cooldownTimerText.text = "";
             slotIcon.color = Color.white;
         }
-
-        DetectKeyPress();
     }
 
     protected override void DetectKeyPress() {
         if (PeaceCanvas.instance.anyPanelOpen)
             return;
-        //If not picking area and not aiming skill, then act like a regular skill slot
-        if (!PlayerControlls.instance.isPickingArea && !PlayerControlls.instance.isAimingSkill) {
+        //If not picking area, not aiming skill, or no overrides then act like a regular skill slot
+        if (!PlayerControlls.instance.isPickingArea && !PlayerControlls.instance.isAimingSkill && overrideSkill == null) {
             base.DetectKeyPress();
             return;
         }
@@ -105,6 +113,14 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
             } else if (Input.GetKey(assignedKey)) {
                 Combat.instanace.AimingSkill.UseButtonHold();
             }
+        } else if (overrideSkill != null) {
+            if (overrideLMB && isLBM) {
+                if (Input.GetKeyDown(assignedKey)) {
+                    StartCoroutine(UI_General.PressAnimation(key, assignedKey));
+                } else if (Input.GetKeyUp(assignedKey)) {
+                    overrideSkill.OverrideLMBAction();
+                }
+            }
         }
     }
     void ConfirmArea () {
@@ -118,7 +134,11 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
 
     void AssignSkill () {
         if (!isLBM) {
-            AddSkill(AssetHolder.instance.getSkill(16), null);
+            if (EquipmentManager.instance.bow.itemInSlot != null){
+                AddSkill(AssetHolder.instance.getSkill(16), null);  
+            } else {
+                ClearSlot();
+            }
             return;
         }
 
@@ -127,6 +147,8 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
             AddSkill(AssetHolder.instance.getSkill(0), null);            
         } else if (rhs == SingleHandStatus.OneHandedStaff || rhs == SingleHandStatus.TwoHandedStaff) {
             AddSkill(AssetHolder.instance.getSkill(8), null);
+        } else {
+            ClearSlot();
         }
     }
 

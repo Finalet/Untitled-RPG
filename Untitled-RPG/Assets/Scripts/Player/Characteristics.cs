@@ -165,7 +165,7 @@ public class Characteristics : MonoBehaviour
     
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
-        ddText.GetComponent<ddText>().damageInfo = new DamageInfo(damage, false);
+        ddText.GetComponent<ddText>().damageInfo = new DamageInfo(damage, DamageType.Enemy, false);
         ddText.GetComponent<ddText>().isPlayer = true;
     }
     void DisplayHealNumber(int healAmount) {

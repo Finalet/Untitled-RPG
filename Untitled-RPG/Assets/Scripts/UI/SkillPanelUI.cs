@@ -36,7 +36,7 @@ public class SkillPanelUI : MonoBehaviour
     
     List<SkillTree> generatedTrees = new List<SkillTree>();
     List<Skill> generatedSkills = new List<Skill>();
-    public void UpdateLearnedSkills () { //TEST IF WORKS WHEN LEARNING NEW SKILL IN RUNTIME
+    public void UpdateLearnedSkills () {
         //Spawn skill tree rows
         foreach (Skill sk in Combat.instanace.learnedSkills) {
             if (generatedTrees.Contains(sk.skillTree))

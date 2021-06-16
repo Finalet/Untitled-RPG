@@ -79,6 +79,12 @@ public class UI_EquipmentSlot : UI_InventorySlot
         itemAmount = amount;
         DisplayItem();
         PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);
+
+        Equipment eq = (Equipment)item;
+        if (eq.grantedSkill != null && !Combat.instanace.currentSkillsFromEquipment.Contains(AssetHolder.instance.getSkill(eq.grantedSkill.ID))) {
+            Combat.instanace.currentSkillsFromEquipment.Add(AssetHolder.instance.getSkill(eq.grantedSkill.ID));
+            Combat.instanace.ValidateSkillSlots();
+        }
     }
 
     void MainHandAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -229,6 +235,14 @@ public class UI_EquipmentSlot : UI_InventorySlot
             if (equipmentSlotType != EquipmentSlotType.Necklace && equipmentSlotType != EquipmentSlotType.Ring)
                 EquipmentManager.instance.UnequipArmorVisual((Armor)itemInSlot);
         }
+        if (itemInSlot is Equipment) {
+            Equipment eq = (Equipment)itemInSlot;
+            if (eq.grantedSkill != null && Combat.instanace.currentSkillsFromEquipment.Contains(AssetHolder.instance.getSkill(eq.grantedSkill.ID))) {
+                Combat.instanace.currentSkillsFromEquipment.Remove(AssetHolder.instance.getSkill(eq.grantedSkill.ID));
+                Combat.instanace.ValidateSkillSlots();
+            }
+        }
+
         base.ClearSlot();
         PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);
     }

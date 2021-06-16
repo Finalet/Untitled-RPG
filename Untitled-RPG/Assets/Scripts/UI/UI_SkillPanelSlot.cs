@@ -12,8 +12,10 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
 
     [Header("Skill panel")]
     public Skill skillInSlot;
+    public bool containsUnavailableSkill;
     [Space]
-    public KeyCode assignedKey; //Main key "E"
+    public KeyCode assignedKey; 
+
 
     protected override void Awake() {
         savefilePath = "saves/skillPanelSlots.txt";
@@ -35,7 +37,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
             if (skillInSlot == Combat.instanace.currentSkillsFromEquipment[i]) 
                 valid = true;
         }
-        if (!valid) ClearSlot();
+        containsUnavailableSkill = valid ? false : true;
     }
 
     protected override void Update() {
@@ -63,6 +65,16 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     void DisplaySkill() {
         slotIcon.sprite = skillInSlot.icon;
         itemAmountText.text = "";
+        //UnavailableSkill
+        if (containsUnavailableSkill) {
+            slotIcon.color = new Color (1f, 0.6f, 0.6f, 0.95f);
+            if (keyText != null) keyText.color = new Color(0.6f, 0, 0, 1); 
+
+            cooldownImage.color = new Color(0, 0, 0, 0);
+            cooldownImage.fillAmount = 1;
+            cooldownTimerText.text = "";
+            return;
+        }
         //Cooldown
         if(skillInSlot.isCoolingDown) {
             cooldownImage.color = new Color(0, 0, 0, 0.9f);
@@ -75,6 +87,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
             cooldownTimerText.text = "";
             slotIcon.color = Color.white;
         }
+        //Skill active
         if (skillInSlot.skillActive()) {
             if (!skillInSlot.isCoolingDown) slotIcon.color = Color.white;
             if (keyText != null) keyText.color = Color.white;
@@ -90,10 +103,10 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
 
         if (Input.GetKeyDown(assignedKey)) {
             StartCoroutine(UI_General.PressAnimation(key, assignedKey));
-            if (skillInSlot != null && skillInSlot is AimingSkill) //If slot is taken with a skill
+            if (skillInSlot != null && skillInSlot is AimingSkill && !containsUnavailableSkill) //If slot is taken with aiming skill
                 skillInSlot.GetComponent<AimingSkill>().UseButtonDown();
         } else if (Input.GetKeyUp(assignedKey)) {
-            if (skillInSlot != null) //If slot is taken with a skill
+            if (skillInSlot != null && !containsUnavailableSkill) //If slot is taken with a skill
                 skillInSlot.Use();
             else if (itemInSlot != null) //If slot is taken with an item
                 UseItem();

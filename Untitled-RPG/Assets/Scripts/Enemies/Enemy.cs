@@ -265,10 +265,10 @@ public abstract class Enemy : MonoBehaviour
         
         if (stopHit || damageInfo.isCrit) StartCoroutine(HitStop(damageInfo.isCrit));
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
-        DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.isCrit), damageTextPos);
+        DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit), damageTextPos);
 
-        string criticalDEBUGtext = damageInfo.isCrit ? "CRITICAL " : "";
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit <color=red>{criticalDEBUGtext}{actualDamage}</color> points by <color=#80FFFF>{skillName}</color>.");
+        string criticalDEBUGtext = damageInfo.isCrit ? " CRITICAL" : "";
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType}</color> damage by <color=#80FFFF>{skillName}</color>.");
     }
 
     protected void DisplayDamageNumber(DamageInfo damageInfo, Vector3 position = new Vector3()) {

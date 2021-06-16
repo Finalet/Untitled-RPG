@@ -45,9 +45,9 @@ public class CameraControll : MonoBehaviour
 
     void Start()
     {
-        leftShoulder = new Vector3(-1, 0, 0);
-        rightShoulder = new Vector3(0.5f, 0.3f, 0);
-        center = new Vector3(0, 0, 0);
+        leftShoulder = new Vector3(-0.5f, 0.5f, 0);
+        rightShoulder = new Vector3(0.5f, 0.5f, 0);
+        center = new Vector3(0, 0.1f, 0);
 
         cam = GetComponent<Camera>();
 

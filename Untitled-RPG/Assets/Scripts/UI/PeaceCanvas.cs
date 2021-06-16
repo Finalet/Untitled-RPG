@@ -39,7 +39,6 @@ public class PeaceCanvas : MonoBehaviour
 
     [Space]
     public GameObject dragObject;
-    public int maxChatLines;
     int chatLines;
     GameObject dragGO;
 
@@ -73,6 +72,7 @@ public class PeaceCanvas : MonoBehaviour
     [Header("Debug")] 
     public GameObject DebugChatPanel;
     public TextMeshProUGUI debugChatText;
+    public int maxChatLines;
     public GameObject DebugTooManyItems;
     
 

@@ -31,17 +31,8 @@ public class Equipment : Item
     }
 
     protected virtual void Equip (UI_InventorySlot initialSlot) {
-        if (grantedSkill != null && !Combat.instanace.currentSkillsFromEquipment.Contains(AssetHolder.instance.getSkill(grantedSkill.ID))) {
-            Combat.instanace.currentSkillsFromEquipment.Add(AssetHolder.instance.getSkill(grantedSkill.ID));
-            Combat.instanace.ValidateSkillSlots();
-        }
     }
     protected virtual void Unequip (UI_InventorySlot initialSlot) {
-        if (grantedSkill != null && Combat.instanace.currentSkillsFromEquipment.Contains(AssetHolder.instance.getSkill(grantedSkill.ID))) {
-            Combat.instanace.currentSkillsFromEquipment.Remove(AssetHolder.instance.getSkill(grantedSkill.ID));
-            Combat.instanace.ValidateSkillSlots();
-        }
-
         InventoryManager.instance.AddItemToInventory(this, 1);
         initialSlot.ClearSlot();
     }
