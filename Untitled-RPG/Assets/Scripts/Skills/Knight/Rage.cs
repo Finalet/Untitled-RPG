@@ -22,6 +22,6 @@ public class Rage : Skill
     }
 
     public override string getDescription() {
-        return $"Become enraged. Rage increases <color=white>melee attack</color> and <color=white>attack speed</color> by <color=white>{buff.meleeAttackBuff*100}%</color>.";
+        return $"Become enraged for {buff.duration} seconds. Rage increases melee attack and attack speed by {buff.meleeAttackBuff*100}%.";
     }
 }

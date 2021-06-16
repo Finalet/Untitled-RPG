@@ -28,20 +28,11 @@ public class SkillbookPreview : MonoBehaviour
     }
 
     public void Init() {
-        if (skillIcon.sprite != focusSkill.icon)
-            skillIcon.sprite = focusSkill.icon;
-
-        if (skillName.text != focusSkill.skillName)
-            skillName.text = focusSkill.skillName;
-        
-        if (skillTree.text != focusSkill.skillTree.ToString())
-            skillTree.text = focusSkill.skillTree.ToString();
-
-        if (skillDescription.text != focusSkill.getDescription())
-            skillDescription.text = focusSkill.getDescription();
-
-        if (skillStats.text != generateSkillStats())
-            skillStats.text = generateSkillStats();
+        skillIcon.sprite = focusSkill.icon;
+        skillName.text = focusSkill.skillName;
+        skillTree.text = focusSkill.skillTree.ToString();
+        skillDescription.text = generateRichDescription(focusSkill.getDescription());
+        skillStats.text = generateSkillStats();
 
         skillDescription.rectTransform.sizeDelta = new Vector2(skillDescription.rectTransform.sizeDelta.x, skillDescription.preferredHeight);
         skillStats.rectTransform.sizeDelta = new Vector2(skillStats.rectTransform.sizeDelta.x, skillStats.preferredHeight);
@@ -65,6 +56,32 @@ public class SkillbookPreview : MonoBehaviour
             StartCoroutine(learnSkill());
         }
     }
+    string generateRichDescription(string _description) {
+        string description = _description;
+        List<string> digits = new List<string>();
+        List<int> indecies = new List<int>();
+        int numbers = 0;
+        int lastIndex = 0;
+        for (int i = 0; i < description.Length; i++) {
+            if (char.IsDigit(description[i]) || description[i] == '%') {
+                if (i-lastIndex > 1) {
+                    indecies.Insert(numbers, i);
+                    digits.Insert(numbers, "");
+                    digits[numbers] += description[i];
+                    numbers ++;
+                } else if (i-lastIndex == 1) {
+                    digits[numbers-1] += description[i];
+                }
+                lastIndex = i;
+            }
+        }
+        for (int i = 0; i < indecies.Count; i++){
+            description = description.Insert(indecies[i] + i * 21, "<color=white>");
+            description = description.Insert(i * 21 + 13 + indecies[i] + digits[i].Length, "</color>");
+        }
+        return description;
+    }
+
     IEnumerator learnSkill () {
         float learningDuration = 1;
         float learningStarted = Time.time;

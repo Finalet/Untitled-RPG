@@ -202,6 +202,8 @@ public class DancingSwords : Skill
 
     public override string getDescription()
     {
-        return $"Shoot levitating swords around you for <color=white>{skillDuration}</color> seconds dealing <color=white>{CalculateDamage.damageInfo(SkillTree.Knight, baseDamagePercentage/2, 0, 0).damage.ToString()}</color> melee and <color=white>{CalculateDamage.damageInfo(SkillTree.Hunter, baseDamagePercentage/2, 0, 0).damage.ToString()} ranged damage</color>.";
+        DamageInfo dmgMelee = CalculateDamage.damageInfo(SkillTree.Knight, baseDamagePercentage/2, 0, 0);
+        DamageInfo dmgHunter = CalculateDamage.damageInfo(SkillTree.Hunter, baseDamagePercentage/2, 0, 0);
+        return $"Shoot levitating swords around you for {skillDuration} seconds dealing {dmgMelee.damage} {dmgMelee.damageType} and {dmgHunter.damage} {dmgHunter.damageType} damage.";
     }
 }

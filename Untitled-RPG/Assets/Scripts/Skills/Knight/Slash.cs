@@ -173,6 +173,7 @@ public class Slash : Skill
     }
 
     public override string getDescription() {
-        return $"Simple slashes that deal <color=white>{CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0).damage.ToString()}</color> melee damage.";
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Simple slashes that deal {dmg.damage} {dmg.damageType} damage.";
     }
 }

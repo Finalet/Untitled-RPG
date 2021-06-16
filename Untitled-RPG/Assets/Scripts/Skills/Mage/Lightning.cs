@@ -131,4 +131,10 @@ public class Lightning : Skill
         ps.SetActive(true);
         Destroy(ps, 1);
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Shoot up to {maxShots} lightnings in short successions. Starting at {dmg.damage} {dmg.damageType} damage, each following lightning deals more damage.";
+    }
 }

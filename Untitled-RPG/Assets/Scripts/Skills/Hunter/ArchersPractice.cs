@@ -21,4 +21,9 @@ public class ArchersPractice : Skill
         playerControlls.isAttacking = false;
         characteristics.AddBuff(buff);
     }
+
+    public override string getDescription()
+    {
+        return $"Recall your archer's knowledge to increase ranged attack and attack speed by {buff.rangedAttackBuff*100}% for {buff.duration} seconds.";
+    }
 }

@@ -124,4 +124,10 @@ public class Target : Skill
         Destroy(newTargetPrefab);
         SkillTarget.TargetSkillDamagePercentage = 0;
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Mark an enemy as your primary target, increasing all damage it takes by {damageIncrease}% for {duration} seconds.";
+    }
 }

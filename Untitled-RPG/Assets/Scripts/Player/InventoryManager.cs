@@ -11,7 +11,6 @@ public class InventoryManager : MonoBehaviour
     public int currentGold;
     [Space]
     public InputField goldInputText;
-    public InputField itemInputText;
     [Space]
     public TextMeshProUGUI currentGoldLabel;
     public GameObject slots;

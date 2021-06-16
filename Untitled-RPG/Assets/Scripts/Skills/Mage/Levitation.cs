@@ -67,4 +67,9 @@ public class Levitation : Skill
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(staminaRequired);
         CustomUse();
     }
+
+    public override string getDescription()
+    {
+        return $"Taleoff and levitate in the sky for {flightDuration} seconds. Levitation increases magic power by {buff.magicPowerBuff*100}% and all ranged skills distance by {buff.skillDistanceBuff} meters.";
+    }
 }

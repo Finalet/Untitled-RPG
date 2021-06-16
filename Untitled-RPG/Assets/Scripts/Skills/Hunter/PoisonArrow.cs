@@ -90,4 +90,10 @@ public class PoisonArrow : Skill
             yield return null;
         }
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(poisonEffect.skillTree, poisonEffect.baseEffectPercentage, 0, 0);
+        return $"Launch an arrow that poisons its target. Poison deals {dmg.damage * poisonEffect.frequencyPerSecond} {dmg.damageType} damage per second for {poisonEffect.duration} seconds.";
+    }
 }

@@ -4,7 +4,7 @@ public enum ConsumableType {Health, Stamina, Buff};
 
 public enum SkillTree {Knight, Hunter, Mage, Agnel, Stealth, Defense, Summoner, Independent}
 public enum SkillType {Damaging, Healing, Buff }
-public enum DamageType {Melee, Ranged, Magic, Enemy}
+public enum DamageType {melee, ranged, magic, enemy}
 
 
 public enum EquipmentSlotType {Helmet, Chest, Gloves, Pants, Boots, Back, Necklace, Ring, MainHand, SecondaryHand, Bow}

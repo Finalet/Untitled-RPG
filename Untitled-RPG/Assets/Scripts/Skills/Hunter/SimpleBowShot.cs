@@ -125,4 +125,10 @@ public class SimpleBowShot : AimingSkill
     //     if (newArrow != null)
     //         DrawDebugs();
     // }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Shoot a regular arrow and deal {dmg.damage} {dmg.damageType} damage.";
+    }
 }

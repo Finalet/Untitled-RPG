@@ -88,4 +88,10 @@ public class ExplosiveArrow : Skill
             yield return null;
         }
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Launch an arrow that explodes on impact, dealing {dmg.damage} {dmg.damageType} to everyone inside the impact radius.";
+    }
 }

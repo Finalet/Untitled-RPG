@@ -74,4 +74,10 @@ public class Hailstone : Skill
             instanciatedEffects.Remove(instanciatedEffects[0]);
         }
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Crash a huge iceberg onto enemies in a specified area dealing {dmg.damage} {dmg.damageType} damage.";
+    }
 }

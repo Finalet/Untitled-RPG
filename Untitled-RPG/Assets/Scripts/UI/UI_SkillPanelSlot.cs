@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public Image key;
     public TextMeshProUGUI keyText;
@@ -184,5 +184,12 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
 
         base.OnDrop(pointerData);
+    }
+
+    public override void OnPointerEnter (PointerEventData pointerData) {
+        //
+    }
+    public override void OnPointerExit (PointerEventData pointerData) {
+        //
     }
 }

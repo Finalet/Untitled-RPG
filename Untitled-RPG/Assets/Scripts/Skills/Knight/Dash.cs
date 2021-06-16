@@ -62,6 +62,7 @@ public class Dash : Skill
     }
 
     public override string getDescription() {
-        return $"Rushes forward through enemies dealing <color=white>{CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0).damage.ToString()}</color> melee damage.";
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Rushes forward through enemies, dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

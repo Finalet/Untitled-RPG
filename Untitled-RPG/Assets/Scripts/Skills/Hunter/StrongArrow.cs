@@ -89,4 +89,10 @@ public class StrongArrow : Skill
             yield return null;
         }
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Shoot a powerful arrow that deals {dmg.damage} {dmg.damageType} damage and kickbacks an enemy.";
+    }
 }

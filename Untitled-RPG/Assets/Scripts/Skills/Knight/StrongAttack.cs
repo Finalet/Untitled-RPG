@@ -9,6 +9,7 @@ public class StrongAttack : Skill
     Vector3 colliderSize;
 
     [Header("Custom vars")]
+    public float critChance = 0.5f;
     public AudioClip[] sounds;
     public Vector3 colliderSizeDualSwords;
     public Vector3 colliderSizeTwohandedSword;
@@ -59,7 +60,7 @@ public class StrongAttack : Skill
 
     public void Hit () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0.5f), skillName, true, true, HitType.Kickback);
+            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage, critChance), skillName, true, true, HitType.Kickback);
         }
     }
 
@@ -80,5 +81,11 @@ public class StrongAttack : Skill
             colliderSize = colliderSizeDualSwords;
         }
         GetComponent<BoxCollider>().size = colliderSize;
+    }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Smash emeies with extra force and deal {dmg.damage} {dmg.damageType} damage. This skill has a {critChance*100}% chance of landing critical hits";
     }
 }

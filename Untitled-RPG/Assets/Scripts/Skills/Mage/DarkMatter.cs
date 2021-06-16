@@ -76,4 +76,10 @@ public class DarkMatter : Skill
                 WeaponsController.instance.InstantUnsheathe();
         playerControlls.isAttacking = true;
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Shoot small dark matter dealing {dmg.damage} {dmg.damageType} damage.";
+    }
 }

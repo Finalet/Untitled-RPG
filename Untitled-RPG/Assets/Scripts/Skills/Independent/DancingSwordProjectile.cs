@@ -30,13 +30,15 @@ public class DancingSwordProjectile : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         if (!instantShot) rb.isKinematic = true;
         rb.useGravity = false;
-        randomRotation = Random.Range(200, 1000);
+        randomRotation = Random.value < 0.5f ? -1*Random.Range(200, 1000) : Random.Range(200, 1000);
     }
 
     protected virtual void Update() {
         if (shot && rb.velocity.magnitude > 0) {
             transform.rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
             mesh.Rotate(Vector3.up, randomRotation * Time.deltaTime);
+        } else if (!shot) {
+            mesh.Rotate(Vector3.up, randomRotation*0.1f * Time.deltaTime);
         }
         
         if (shot && Time.time - timeShot >= lifeTime) {

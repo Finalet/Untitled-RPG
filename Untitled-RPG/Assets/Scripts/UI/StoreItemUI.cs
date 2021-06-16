@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class StoreItemUI : MonoBehaviour
+public class StoreItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Item item;
     public TradingNPC parentStoreNPC;
@@ -30,5 +28,15 @@ public class StoreItemUI : MonoBehaviour
         itemPriceLabel.text = item.itemBasePrice.ToString();
         itemPriceLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPriceLabel.GetComponent<TextMeshProUGUI>().preferredWidth, 20);
         itemBuyButton.onClick.AddListener(delegate{parentStoreNPC.AddToCart(item);});
+    }
+
+    public virtual void OnPointerEnter (PointerEventData pointerData) {
+        TooltipsManager.instance.RequestTooltip(item, gameObject);
+    }
+    public virtual void OnPointerExit (PointerEventData pointerData) {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
+    }
+    void OnDisable() {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
     }
 }

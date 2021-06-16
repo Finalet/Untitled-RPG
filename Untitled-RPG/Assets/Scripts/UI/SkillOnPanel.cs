@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
+public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [Space]
     public Skill skill;
@@ -102,4 +102,13 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             Combat.instanace.currentPickedSkills.Remove(skill);
     }
 
+    public virtual void OnPointerEnter (PointerEventData pointerData) {
+        TooltipsManager.instance.RequestTooltip(skill, gameObject);
+    }
+    public virtual void OnPointerExit (PointerEventData pointerData) {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
+    }
+    void OnDisable() {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
+    }
 }

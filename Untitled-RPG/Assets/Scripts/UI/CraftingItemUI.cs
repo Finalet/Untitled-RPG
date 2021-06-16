@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CraftingItemUI : MonoBehaviour
+public class CraftingItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Item item;
     public CraftingNPC parentCraftingNPC;
@@ -25,5 +24,15 @@ public class CraftingItemUI : MonoBehaviour
         itemRarityLabel.text = item.itemRarity.ToString();
         itemRarityLabel.color = UI_General.getRarityColor(item.itemRarity);
         GetComponent<Button>().onClick.AddListener(delegate{parentCraftingNPC.Select(item);});
+    }
+
+    public virtual void OnPointerEnter (PointerEventData pointerData) {
+        TooltipsManager.instance.RequestTooltip(item, gameObject);
+    }
+    public virtual void OnPointerExit (PointerEventData pointerData) {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
+    }
+    void OnDisable() {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
     }
 }

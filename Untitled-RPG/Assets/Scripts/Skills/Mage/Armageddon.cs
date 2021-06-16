@@ -122,4 +122,10 @@ public class Armageddon : Skill
             instanciatedEffects.Remove(instanciatedEffects[0]);
         }
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Create a meteor shower in a selected area for {duration} seconds. Each meteor deals {dmg.damage} {dmg.damageType} damage.";
+    }
 }

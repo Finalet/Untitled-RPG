@@ -119,4 +119,10 @@ public class RainOfArrows : Skill
         yield return new WaitForSeconds(0.5f);
         newArrow.GetComponent<Rigidbody>().AddForce(Vector3.up * 50, ForceMode.Impulse);
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Bring down hundreds of arrows at a selected area for {rainDuration} seconds. Each arrow deals {dmg.damage} {dmg.damageType} damage.";
+    }
 }

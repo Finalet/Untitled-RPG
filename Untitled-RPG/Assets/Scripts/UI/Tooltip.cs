@@ -18,6 +18,7 @@ public class Tooltip : MonoBehaviour
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemStats;
     public TextMeshProUGUI itemPrice;
+    public TextMeshProUGUI leftBottomLabel;
     public Image grantedSkillIcon;
     public Image bottomBackground;
     public TextMeshProUGUI grantedSkillNameLabel;
@@ -30,38 +31,21 @@ public class Tooltip : MonoBehaviour
 
     void Update()
     {
-        Init();
-
         if (!PeaceCanvas.instance.anyPanelOpen)
             Destroy(gameObject);
     }
 
-    public void Init () {
-        if (itemID.text != focusItem.ID.ToString())
-            itemID.text = focusItem.ID.ToString();
-
-        if (itemIcon.sprite != focusItem.itemIcon)
-            itemIcon.sprite = focusItem.itemIcon;
-
-        if (itemType.text != UI_General.getItemType(focusItem))
-            itemType.text = UI_General.getItemType(focusItem);
-
-        if (itemName.text != focusItem.itemName)
-            itemName.text = focusItem.itemName;
-        
-        if (itemRarity.text != focusItem.itemRarity.ToString()) {
-            itemRarity.text = focusItem.itemRarity.ToString();
-            itemRarity.color = UI_General.getRarityColor(focusItem.itemRarity);
-        }
-
-        if (itemDescription.text != focusItem.getItemDescription())
-            itemDescription.text = focusItem.getItemDescription();
-
-        if (itemPrice.text != focusItem.itemBasePrice.ToString())
-            itemPrice.text = focusItem.itemBasePrice.ToString();
-
-        if (itemStats.text != generateItemStats(focusItem))
-            itemStats.text = generateItemStats(focusItem);
+    public void Init (Item compareItem) {
+        itemID.text = focusItem.ID.ToString();
+        itemIcon.sprite = focusItem.itemIcon;
+        itemType.text = UI_General.getItemType(focusItem);
+        itemName.text = focusItem.itemName;
+        itemRarity.text = focusItem.itemRarity.ToString();
+        itemRarity.color = UI_General.getRarityColor(focusItem.itemRarity);
+        itemDescription.text = focusItem.getItemDescription();
+        itemPrice.text = focusItem.itemBasePrice.ToString();
+        itemStats.text = generateItemStats(focusItem, compareItem);
+        leftBottomLabel.text = "";
 
         int grantedSkillHeight = 0;
         grantedSkillIcon.gameObject.SetActive(false);
@@ -78,17 +62,15 @@ public class Tooltip : MonoBehaviour
             }
         }
 
-        int bottomBackgroundHeight = grantedSkillHeight == 0 ? 40 : 100;
-        bottomBackground.rectTransform.sizeDelta = new Vector2(bottomBackground.rectTransform.sizeDelta.x, bottomBackgroundHeight);
         itemDescription.rectTransform.sizeDelta = new Vector2(itemDescription.rectTransform.sizeDelta.x, itemDescription.preferredHeight);
         itemStats.rectTransform.sizeDelta = new Vector2(itemStats.rectTransform.sizeDelta.x, itemStats.preferredHeight);
         itemPrice.rectTransform.sizeDelta = new Vector2(itemPrice.preferredWidth, 20);
         
-        float tooltipHeight = 130 + itemDescription.preferredHeight + itemStats.preferredHeight;
+        float tooltipHeight = 130 + itemDescription.preferredHeight + itemStats.preferredHeight + grantedSkillHeight;
         GetComponent<RectTransform>().sizeDelta = new Vector2(360, tooltipHeight);
     }
 
-    string generateItemStats (Item item) {
+    string generateItemStats (Item item, Item compareItem) {
         string stats = "";
         string highlightColor = "#" + ColorUtility.ToHtmlStringRGBA(UI_General.highlightTextColor);
         if (item is Consumable) {
@@ -102,50 +84,66 @@ public class Tooltip : MonoBehaviour
                 stats += $"\nCool down: <color={highlightColor}>{c.cooldownTime.ToString()}</color> seconds";
         } else if (item is Equipment) {
             Equipment w = (Equipment)item;
+            Equipment wCompare = (Equipment)compareItem;
+            bool compare = compareItem != null ? true : false;
+            string compareText = "";
+            
             if (w.MeleeAttack != 0) {
-                stats += $"Melee attack: <color={highlightColor}>{w.MeleeAttack.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.MeleeAttack, wCompare.MeleeAttack) : "";
+                stats += $"Melee attack: <color={highlightColor}>{w.MeleeAttack.ToString()}</color>{compareText}\n";
             }
             if (w.RangedAttack != 0) {
-                stats += $"Ranged attack: <color={highlightColor}>{w.RangedAttack.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.RangedAttack, wCompare.RangedAttack) : "";
+                stats += $"Ranged attack: <color={highlightColor}>{w.RangedAttack.ToString()}</color>{compareText}\n";
             }
             if (w.MagicPower != 0) {
-                stats += $"Magic power: <color={highlightColor}>{w.MagicPower.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.MagicPower, wCompare.MagicPower) : "";
+                stats += $"Magic power: <color={highlightColor}>{w.MagicPower.ToString()}</color>{compareText}\n";
             }
             if (w.HealingPower != 0) {
-                stats += $"Healing power: <color={highlightColor}>{w.HealingPower.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.HealingPower, wCompare.HealingPower) : "";
+                stats += $"Healing power: <color={highlightColor}>{w.HealingPower.ToString()}</color>{compareText}\n";
             }
             if (w.Defense != 0) {
-                stats += $"Defense: <color={highlightColor}>{w.Defense.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.Defense, wCompare.Defense) : "";
+                stats += $"Defense: <color={highlightColor}>{w.Defense.ToString()}</color>{compareText}\n";
             }
             if (w.Health != 0 || w.Stamina != 0) {
                 if (stats != "") stats += "\n";
             }
             if (w.Health != 0) {
-                stats += $"Health: <color={highlightColor}>{w.Health.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.Health, wCompare.Health) : "";
+                stats += $"Health: <color={highlightColor}>{w.Health.ToString()}</color>{compareText}\n";
             }
             if (w.Stamina != 0) {
-                stats += $"Stamina: <color={highlightColor}>{w.Stamina.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.Stamina, wCompare.Stamina) : "";
+                stats += $"Stamina: <color={highlightColor}>{w.Stamina.ToString()}</color>{compareText}\n";
             }
             if (w.strength != 0 || w.agility != 0 || w.intellect != 0) {
                 if (stats != "") stats += "\n";
             }
             if (w.strength != 0) {
-                stats += $"Strength: <color={highlightColor}>{w.strength.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.strength, wCompare.strength) : "";
+                stats += $"Strength: <color={highlightColor}>{w.strength.ToString()}</color>{compareText}\n";
             }
             if (w.agility != 0) {
-                stats += $"Agility: <color={highlightColor}>{w.agility.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.agility, wCompare.agility) : "";
+                stats += $"Agility: <color={highlightColor}>{w.agility.ToString()}</color>{compareText}\n";
             }
             if (w.intellect != 0) {
-                stats += $"Intellect: <color={highlightColor}>{w.intellect.ToString()}</color>\n";
+                compareText = compare ? getCompareString(w.intellect, wCompare.intellect) : "";
+                stats += $"Intellect: <color={highlightColor}>{w.intellect.ToString()}</color>{compareText}\n";
             }
             if (w.castingTime != 0 || w.attackSpeed != 0) {
                 if (stats != "") stats += "\n";
             }
             if (w.castingTime != 0) {
-                stats += $"Casting time: <color={highlightColor}>{(100*w.castingTime).ToString()}%</color>\n";
+                compareText = compare ? $"-{getCompareString(w.castingTime, wCompare.castingTime)}" : "";
+                stats += $"Casting time: <color={highlightColor}>{(100*w.castingTime).ToString()}%</color>{compareText}\n";
             }
             if (w.attackSpeed != 0) {
-                stats += $"Attack speed: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>\n";
+                compareText = compare ? $"-{getCompareString(w.attackSpeed, wCompare.attackSpeed)}" : "";
+                stats += $"Attack speed: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>{compareText}\n";
             }
         } else if (item is Skillbook) {
             Skillbook sb = (Skillbook)item;
@@ -154,5 +152,12 @@ public class Tooltip : MonoBehaviour
             stats = "NOT IMPLEMENTED";
         }
         return stats;
+    }
+
+    string getCompareString (float first, float second) {
+        if (first == 0 || second == 0)
+            return "";
+        float delta = first - second;
+        return delta > 0 ? $" <color=green>▲{delta}</color>" : delta < 0 ? $" <color=red>▼{delta}</color>" : "";
     }
 }

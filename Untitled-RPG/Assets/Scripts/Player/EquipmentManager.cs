@@ -279,4 +279,85 @@ public class EquipmentManager : MonoBehaviour
             UnequipArmorVisual((Armor)back.itemInSlot);
         }
     }
+
+    public bool isSlotEquiped (ArmorType armorType, out Item equipedItem, bool secondary = false) {
+        bool equiped = false;
+        equipedItem = null;
+        switch (armorType) {
+            case ArmorType.Helmet:
+                equiped = helmet.itemInSlot == null ? false : true;
+                equipedItem = equiped ? helmet.itemInSlot : null;
+                break;
+            case ArmorType.Chest:
+                equiped = chest.itemInSlot == null ? false : true;
+                equipedItem = equiped ? chest.itemInSlot : null;
+                break;
+            case ArmorType.Gloves:
+                equiped = gloves.itemInSlot == null ? false : true;
+                equipedItem = equiped ? gloves.itemInSlot : null;
+                break;
+            case ArmorType.Pants:
+                equiped = pants.itemInSlot == null ? false : true;
+                equipedItem = equiped ? pants.itemInSlot : null;
+                break;
+            case ArmorType.Boots:
+                equiped = boots.itemInSlot == null ? false : true;
+                equipedItem = equiped ? boots.itemInSlot : null;
+                break;
+            case ArmorType.Back:
+                equiped = back.itemInSlot == null ? false : true;
+                equipedItem = equiped ? back.itemInSlot : null;
+                break;
+            case ArmorType.Necklace:
+                equiped = necklace.itemInSlot == null ? false : true;
+                equipedItem = equiped ? necklace.itemInSlot : null;
+                break;
+            case ArmorType.Ring:
+                equiped = secondary ? secondRing.itemInSlot == null ? false : true : ring.itemInSlot == null ? false : true;
+                equipedItem = equiped ? secondary ? secondRing.itemInSlot : ring.itemInSlot : null;
+                break;
+            default:
+                Debug.LogError("Can't check if slot is equiped: wrong armor type");
+                equiped = false;
+                equipedItem = null;
+                break;
+        }
+        return equiped;
+    }
+    public bool isSlotEquiped (WeaponType weaponType, out Item equipedItem, bool secondary = false) {
+        bool equiped = false;
+        equipedItem = null;
+        switch (weaponType) {
+            case WeaponType.Bow:
+                equiped = bow.itemInSlot == null ? false : true;
+                equipedItem = equiped ? bow.itemInSlot : null;
+                break;
+            case WeaponType.OneHandedStaff:
+                equiped = mainHand.itemInSlot == null ? false : true;
+                equipedItem = equiped ? mainHand.itemInSlot : null;
+                break;
+            case WeaponType.OneHandedSword:
+                equiped = secondary ? secondaryHand.itemInSlot == null ? false : true : mainHand.itemInSlot == null ? false : true;
+                equipedItem = equiped ? secondary ? secondaryHand.itemInSlot : mainHand.itemInSlot : null;
+                break;
+            case WeaponType.Shield:
+                equiped = secondaryHand.itemInSlot == null ? false : true;
+                equipedItem = equiped ? secondaryHand.itemInSlot : null;
+                break;
+            case WeaponType.TwoHandedStaff:
+                equiped = mainHand.itemInSlot == null ? false : true;
+                equipedItem = equiped ? mainHand.itemInSlot : null;
+                break;
+            case WeaponType.TwoHandedSword:
+                equiped = mainHand.itemInSlot == null ? false : true;
+                equipedItem = equiped ? mainHand.itemInSlot : null;
+                break;
+            default:
+                Debug.LogError("Can't check if slot is equiped: wrong weapon type");
+                equiped = false;
+                equipedItem = null;
+                break;
+        }
+        return equiped;
+    }
 }

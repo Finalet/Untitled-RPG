@@ -92,4 +92,10 @@ public class HuntersCage : Skill
             yield return null;
         }
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Launch an arrow that creates a cage around at the place of impact, locking everyone inside.";
+    }
 }

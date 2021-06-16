@@ -5,10 +5,13 @@ using Cinemachine;
 using System.Linq;
 using TMPro;
 
+public enum SortItemsBy {Price, Rarity, ID};
+
 public class TradingNPC : NPC
 {
     [Header("Store")]
     public Item[] storeItems;
+    public SortItemsBy sortItemsBy;
 
     [Space]
     public GameObject storeWindowPrefab;
@@ -22,7 +25,17 @@ public class TradingNPC : NPC
 
     protected override void Awake() {
         base.Awake();
-        storeItems = storeItems.OrderBy(x => x.itemBasePrice).ToArray();
+        switch (sortItemsBy){
+            case SortItemsBy.Price:
+                storeItems = storeItems.OrderBy(x => x.itemBasePrice).ToArray();
+                break;
+            case SortItemsBy.Rarity:
+                storeItems = storeItems.OrderBy(x => x.itemRarity).ToArray();
+                break;
+            case SortItemsBy.ID:
+                storeItems = storeItems.OrderBy(x => x.ID).ToArray();
+                break;
+        }
     }
 
     protected override void Update() {

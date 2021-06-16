@@ -62,4 +62,10 @@ public class Firewall : Skill
             spawnedPS.RemoveAt(0);
         }
     }
+
+    public override string getDescription()
+    {
+        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        return $"Create a wall of fire in front, blocking enemies and dealing {dmg.damage} {dmg.damageType} damage.";
+    }
 }

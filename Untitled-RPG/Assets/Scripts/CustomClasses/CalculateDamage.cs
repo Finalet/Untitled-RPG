@@ -28,19 +28,19 @@ public static class CalculateDamage
         switch (skillTree) {
             case SkillTree.Knight:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.meleeAttack);
-                damageType = DamageType.Melee;
+                damageType = DamageType.melee;
                 break;
             case SkillTree.Mage:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.magicPower);
-                damageType = DamageType.Magic;
+                damageType = DamageType.magic;
                 break;
             case SkillTree.Hunter:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.rangedAttack);
-                damageType = DamageType.Ranged;
+                damageType = DamageType.ranged;
                 break;
             default: 
                 Debug.LogError("Fuck you this can never happen");
-                damageType = DamageType.Melee;
+                damageType = DamageType.melee;
                 skillTreeAdjustedDamage = 0;
                 break;
         }
@@ -64,6 +64,6 @@ public static class CalculateDamage
         //appy players defense here
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(baseDamage * (1-damageVariation), baseDamage * (1+damageVariation)));
         bool isCritHit = isCrit(critChance);
-        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * baseCritMultiplier) : damageBeforeCrit, DamageType.Enemy, isCritHit);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * baseCritMultiplier) : damageBeforeCrit, DamageType.enemy, isCritHit);
     }
 }

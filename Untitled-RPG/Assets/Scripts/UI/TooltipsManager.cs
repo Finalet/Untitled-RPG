@@ -2,154 +2,196 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.Rendering.Universal;
 
 public class TooltipsManager : MonoBehaviour
 {
+    public static TooltipsManager instance;
+
     public GameObject toolTipPrefab;
     public GameObject skillToolTipPrefab;
-
     [Space]
     public float toolTipDelay = 0.2f;
-    float startTime;
 
     Tooltip currentToolTip;
+    Tooltip currentCompareTooltip;
     SkillTooltip currentSkillToolTip;
 
-    Item focusItem;
-    Vector3 screenPos;
-    Vector3 lastScreenPos;
-    Vector2 anchoredShift;
-    Vector2 pivot;
+    GameObject currentTooltipOwner;
+    bool cancelTooltip;
 
-    Skill focusSkill;
+    float timeStarted;
 
+    void Awake() {
+        instance = this;
+    }
     void Update() {
-        if (!PeaceCanvas.instance.anyPanelOpen)
-            return;
-
-        CheckMouseOver();
-        GenerateToolTip();
+        if (!PeaceCanvas.instance.anyPanelOpen) {
+            cancelTooltip = true;
+            currentTooltipOwner = null;
+            if(currentToolTip != null) {
+                Destroy(currentToolTip.gameObject); 
+            }
+            if (currentSkillToolTip != null) {
+                Destroy(currentSkillToolTip.gameObject); 
+            }
+        }
     }
 
-    void CheckMouseOver() {
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-        pointerEventData.position = Input.mousePosition;
+    public void RequestTooltip (Item focusItem, GameObject requestFrom) {
+        StartCoroutine(GenerateTooltip(focusItem, requestFrom.GetComponent<RectTransform>()));
+    }
+    public void RequestTooltip (Skill focusSkill, GameObject requestFrom) {
+        StartCoroutine(GenerateTooltip(focusSkill, requestFrom.GetComponent<RectTransform>()));
+    }
+    IEnumerator GenerateTooltip (Item focusItem, RectTransform slotTransform) {
+        timeStarted = Time.time;
+        currentTooltipOwner = slotTransform.gameObject;
+        cancelTooltip = false;
 
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
-        for (int i = 0; i < raycastResults.Count; i++) {
-            //UI_Inventory slots
-            if (raycastResults[i].gameObject.GetComponent<UI_InventorySlot>() != null) {
-                if (raycastResults[i].gameObject.GetComponent<UI_InventorySlot>().itemInSlot != null) {
-                    lastScreenPos = screenPos;
-
-                    focusItem = raycastResults[i].gameObject.GetComponent<UI_InventorySlot>().itemInSlot;
-                    screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
-                    anchoredShift = new Vector2(-raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2 - 10, +raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
-                    pivot = Vector2.one;
-                    if (lastScreenPos != screenPos)
-                        startTime = Time.realtimeSinceStartup;
-                    return;
-                }
+        if (currentCompareTooltip != null)
+            Destroy(currentCompareTooltip.gameObject);
+        
+        bool instant = false;
+        if (currentToolTip != null)
+            instant = true;
+        while (Time.time - timeStarted < toolTipDelay && !instant) {
+            if (cancelTooltip) {
+                cancelTooltip = false;
+                currentTooltipOwner = null;
+                yield break;
             }
+            yield return null;
+        }
+        if (currentTooltipOwner != slotTransform.gameObject) //protection layer. without it sometimes tooltip shows previous slot.
+            yield break;
+        
+        Item compareItem = null;
+        bool shouldCompare = shouldCompareEquipment(focusItem, out compareItem, slotTransform);
 
-            //StoreSlots
-            if (raycastResults[i].gameObject.GetComponent<StoreItemUI>() != null) {
-                if (raycastResults[i].gameObject.GetComponent<StoreItemUI>().item != null) {
-                    lastScreenPos = screenPos;
+        Vector2 pivot = Vector2.one;
+        Vector2 anchoredShift = new Vector2(-slotTransform.sizeDelta.x/2 - 10, +slotTransform.sizeDelta.y/2);
+        if (currentToolTip == null) {
+            currentToolTip = Instantiate(toolTipPrefab, PeaceCanvas.instance.transform).gameObject.GetComponent<Tooltip>();
+        }
+        RectTransform rt = currentToolTip.gameObject.GetComponent<RectTransform>();
+        rt.position = slotTransform.position;
+        rt.anchoredPosition += anchoredShift;
+        rt.pivot = pivot;
+        currentToolTip.focusItem = focusItem;
+        currentToolTip.Init(compareItem);
 
-                    focusItem = raycastResults[i].gameObject.GetComponent<StoreItemUI>().item;
-                    anchoredShift = new Vector2(raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2, raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
-                    screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
-                    pivot = new Vector2(0, 1);
-                    if (lastScreenPos != screenPos)
-                        startTime = Time.realtimeSinceStartup;
-                    return;
-                }
+        bool isVisible = true;
+        if (!currentToolTip.GetComponent<RectTransform>().IsFullyVisibleFrom(PlayerControlls.instance.playerCamera.GetUniversalAdditionalCameraData().cameraStack[0])) {
+            pivot.x = Mathf.Abs(pivot.x-1);
+
+            rt.anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
+            rt.pivot = pivot;
+
+            isVisible = false;
+        }
+
+        //Generate second tooltip fro comparing with equiped item
+        if (!shouldCompare)
+            yield break;
+        
+        yield return new WaitForSeconds(0.5f);
+        if (currentToolTip == null || currentTooltipOwner != slotTransform.gameObject) //check if there is still a tooltip || protection layer. without it sometimes tooltip shows previous slot.
+            yield break;
+        if (currentCompareTooltip == null) {
+            currentCompareTooltip = Instantiate(toolTipPrefab, currentToolTip.transform).gameObject.GetComponent<Tooltip>();
+        }
+        rt = currentCompareTooltip.gameObject.GetComponent<RectTransform>();
+        rt.position = slotTransform.position;
+        rt.anchoredPosition += anchoredShift;
+        rt.pivot = new Vector2(pivot.x * 2, pivot.y);
+        currentCompareTooltip.focusItem = compareItem;
+        currentCompareTooltip.Init(null);
+        currentCompareTooltip.leftBottomLabel.text = "Equiped";
+
+        if (!isVisible) {
+            pivot.x = -Mathf.Abs(pivot.x-1);
+
+            rt.anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
+            rt.pivot = pivot;
+        }
+
+        if (!currentCompareTooltip.GetComponent<RectTransform>().IsFullyVisibleFrom(PlayerControlls.instance.playerCamera.GetUniversalAdditionalCameraData().cameraStack[0])) {
+            pivot.x = 2 * Mathf.Abs(pivot.x-1);
+
+            rt.anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
+            rt.pivot = pivot;
+        }
+    }
+    IEnumerator GenerateTooltip (Skill focusSkill, RectTransform slotTransform) {
+        timeStarted = Time.time;
+        currentTooltipOwner = slotTransform.gameObject;
+        cancelTooltip = false;
+        
+        bool instant = false;
+        if (currentToolTip != null)
+            instant = true;
+        while (Time.time - timeStarted < toolTipDelay && !instant) {
+            if (cancelTooltip) {
+                cancelTooltip = false;
+                currentTooltipOwner = null;
+                yield break;
             }
-            
-            //CraftingSlots
-            if (raycastResults[i].gameObject.GetComponent<CraftingItemUI>() != null) {
-                if (raycastResults[i].gameObject.GetComponent<CraftingItemUI>().item != null) {
-                    lastScreenPos = screenPos;
+            yield return null;
+        }
+        Vector2 pivot = Vector2.one;
+        Vector2 anchoredShift = new Vector2(-slotTransform.sizeDelta.x/2 - 10, +slotTransform.sizeDelta.y/2);
+        if (currentSkillToolTip == null) {
+            currentSkillToolTip = Instantiate(skillToolTipPrefab, PeaceCanvas.instance.transform).gameObject.GetComponent<SkillTooltip>();
+        }
+        currentSkillToolTip.gameObject.GetComponent<RectTransform>().position = slotTransform.position;
+        currentSkillToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition += anchoredShift;
+        currentSkillToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
+        currentSkillToolTip.focusSkill = focusSkill;
+        currentSkillToolTip.Init();
 
-                    focusItem = raycastResults[i].gameObject.GetComponent<CraftingItemUI>().item;
-                    anchoredShift = new Vector2(-raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2, raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
-                    screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
-                    pivot = new Vector2(1, 1);
-                    if (lastScreenPos != screenPos)
-                        startTime = Time.realtimeSinceStartup;
-                    return;
-                }
+        if (!currentSkillToolTip.GetComponent<RectTransform>().IsFullyVisibleFrom(PlayerControlls.instance.playerCamera.GetUniversalAdditionalCameraData().cameraStack[0])) {
+            pivot.x = Mathf.Abs(pivot.x-1);
+
+            currentSkillToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
+            currentSkillToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
+        }
+    }
+    
+    public void CancelTooltipRequest (GameObject requestFrom) {
+        if (requestFrom == currentTooltipOwner) StartCoroutine(CancelTooltip(requestFrom));
+    }
+    IEnumerator CancelTooltip (GameObject requestFrom) {
+        yield return null; //Wait one frame before checking if you are still an owner;
+        if (requestFrom == currentTooltipOwner) {
+            cancelTooltip = true;
+            currentTooltipOwner = null;
+            if(currentToolTip != null) {
+                Destroy(currentToolTip.gameObject); 
             }
-
-            //Skill panel
-            if (raycastResults[i].gameObject.GetComponent<SkillOnPanel>() != null) {
-                if (raycastResults[i].gameObject.GetComponent<SkillOnPanel>().skill != null) {
-                    lastScreenPos = screenPos;
-
-                    focusSkill = raycastResults[i].gameObject.GetComponent<SkillOnPanel>().skill;
-                    anchoredShift = new Vector2(-raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.x/2, raycastResults[i].gameObject.GetComponent<RectTransform>().sizeDelta.y/2) ;
-                    screenPos = raycastResults[i].gameObject.GetComponent<RectTransform>().position;
-                    pivot = new Vector2(1, 1);
-                    if (lastScreenPos != screenPos)
-                        startTime = Time.realtimeSinceStartup;
-                    return;
-                }
+            if (currentSkillToolTip != null) {
+                Destroy(currentSkillToolTip.gameObject); 
             }
         }
-        focusItem = null;
-        focusSkill = null;
-        screenPos = Vector2.zero;
-        anchoredShift = Vector2.zero;
-        pivot = Vector2.zero;
     }
 
-    void GenerateToolTip () {
-        if (focusItem != null) {
-            if (Time.realtimeSinceStartup - startTime > toolTipDelay || currentToolTip != null) {
-                if (currentToolTip == null) {
-                    currentToolTip = Instantiate(toolTipPrefab, PeaceCanvas.instance.transform).gameObject.GetComponent<Tooltip>();
-                }
-                currentToolTip.gameObject.GetComponent<RectTransform>().position = screenPos;
-                currentToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition += anchoredShift;
-                currentToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
-                currentToolTip.focusItem = focusItem;
-                currentToolTip.Init();
-
-                if (!currentToolTip.GetComponent<RectTransform>().IsFullyVisibleFrom(PlayerControlls.instance.playerCamera.GetUniversalAdditionalCameraData().cameraStack[0])) {
-                    pivot.x = Mathf.Abs(pivot.x-1);
-
-                    currentToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
-                    currentToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
-                }
-            }
-        } else if (currentToolTip != null) {
-            Destroy(currentToolTip.gameObject);
+    bool shouldCompareEquipment (Item item, out Item comparedItem, RectTransform slot) {
+        comparedItem = null;
+        if (!(item is Equipment) || slot.GetComponent<UI_EquipmentSlot>() != null) {
+            return false;
         }
-
-        if (focusSkill != null) {
-            if (Time.realtimeSinceStartup - startTime > toolTipDelay || currentSkillToolTip != null) {
-                if (currentSkillToolTip == null) {
-                    currentSkillToolTip = Instantiate(skillToolTipPrefab, PeaceCanvas.instance.transform).gameObject.GetComponent<SkillTooltip>();
-                }
-                currentSkillToolTip.gameObject.GetComponent<RectTransform>().position = screenPos;
-                currentSkillToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition += anchoredShift;
-                currentSkillToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
-                currentSkillToolTip.focusSkill = focusSkill;
-                currentSkillToolTip.Init();
-
-                if (!currentSkillToolTip.GetComponent<RectTransform>().IsFullyVisibleFrom(PlayerControlls.instance.playerCamera.GetUniversalAdditionalCameraData().cameraStack[0])) {
-                    pivot.x = Mathf.Abs(pivot.x-1);
-
-                    currentSkillToolTip.gameObject.GetComponent<RectTransform>().anchoredPosition -= anchoredShift + new Vector2(anchoredShift.x, -anchoredShift.y);
-                    currentSkillToolTip.gameObject.GetComponent<RectTransform>().pivot = pivot;
-                }
+        
+        if (item is Weapon) {
+            Weapon wp = (Weapon)item;
+            if (EquipmentManager.instance.isSlotEquiped(wp.weaponType, out comparedItem)) {
+                return true;
             }
-        } else if (currentSkillToolTip != null) {
-            Destroy(currentSkillToolTip.gameObject);
+        } else if (item is Armor) {
+            Armor ar = (Armor)item;
+            if (EquipmentManager.instance.isSlotEquiped(ar.armorType, out comparedItem)) {
+                return true;
+            }
         }
+        return false;
     }
 }

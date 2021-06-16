@@ -83,4 +83,9 @@ public class PowerSphere : Skill
             instanciatedEffects.Remove(instanciatedEffects[0]);
         }
     }
+
+    public override string getDescription()
+    {
+        return $"Cover the battlefield with a powerful dome that increases your casting speed, magic power, and defense by {buff.castingSpeedBuff*100}% while you are inside.";
+    }
 }

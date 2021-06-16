@@ -165,7 +165,7 @@ public class Characteristics : MonoBehaviour
     
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
-        ddText.GetComponent<ddText>().damageInfo = new DamageInfo(damage, DamageType.Enemy, false);
+        ddText.GetComponent<ddText>().damageInfo = new DamageInfo(damage, DamageType.enemy, false);
         ddText.GetComponent<ddText>().isPlayer = true;
     }
     void DisplayHealNumber(int healAmount) {
@@ -190,68 +190,11 @@ public class Characteristics : MonoBehaviour
         BuffIcon icon = Instantiate(buffIcon, CanvasScript.instance.buffs.transform).GetComponent<BuffIcon>();
         icon.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         icon.buff = buff;
-        /*
-        activeBuffs.Add(skill);
-        GameObject icon = Instantiate(buffIcon, Vector3.zero, Quaternion.identity, CanvasScript.instance.buffs.transform);
-        icon.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        icon.GetComponent<BuffIcon>().skill = skill;
-
-        switch (skill.ID) {
-            case 5: //Rage 
-                float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
-                meleeMultiplier += buffIncrease;
-                
-                attackSpeedBuff *= new Vector2( (1+buffIncrease), (1-buffIncrease) );
-                icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Rage>().duration;
-                break;
-            case 12: //Power sphere
-                magicPowerMultiplier += skill.GetComponent<PowerSphere>().magicDamageIncrease;
-                castingSpeedBuff += skill.GetComponent<PowerSphere>().castSpeedIncrease;
-                defenseMultiplier += skill.GetComponent<PowerSphere>().defenseIncrease;
-                //No timer since its active while player is indside;
-                break;
-            case 14: // Levitation
-                magicSkillDistanceIncrease += skill.GetComponent<Levitation>().skillDistanceIncrease;
-                magicPowerMultiplier += skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
-                icon.GetComponent<BuffIcon>().timer = skill.GetComponent<Levitation>().flightDuration;
-                break;
-            case 20: //Archers Practice
-                PlayerControlls.instance.baseWalkSpeed += skill.GetComponent<ArchersPractice>().buffIncrease;
-                attackSpeedBuff *= new Vector2( (1+skill.GetComponent<ArchersPractice>().buffIncrease), (1-skill.GetComponent<ArchersPractice>().buffIncrease) );
-                icon.GetComponent<BuffIcon>().timer = skill.GetComponent<ArchersPractice>().duration;
-                break;
-            default: Debug.LogError("Wrong skill ID for adding buff");
-                break;
-        }    */
     }
 
     public void RemoveBuff(Buff buff) { 
         if (activeBuffs.Contains(buff))
             activeBuffs.Remove(buff);
-        /* switch (skill.ID) {
-            case 5:
-                float buffIncrease = skill.GetComponent<Rage>().buffIncrease;
-                meleeMultiplier -= buffIncrease;
-                attackSpeedBuff -= buffIncrease;
-                break;
-            case 12:
-                magicPowerMultiplier -= skill.GetComponent<PowerSphere>().magicDamageIncrease;
-                castingSpeedBuff -= skill.GetComponent<PowerSphere>().castSpeedIncrease;
-                defenseMultiplier -= skill.GetComponent<PowerSphere>().defenseIncrease;
-                break;
-            case 14:
-                magicSkillDistanceIncrease -= skill.GetComponent<Levitation>().skillDistanceIncrease;
-                magicPowerMultiplier -= skill.GetComponent<Levitation>().magicPowerPercentageIncrease/100;
-                break;
-            case 20: 
-                PlayerControlls.instance.baseWalkSpeed -= skill.GetComponent<ArchersPractice>().buffIncrease/100;
-                attackSpeedBuff -= skill.GetComponent<ArchersPractice>().buffIncrease/100;
-                break;
-            default: Debug.LogError("Wrong skill ID for buff removal");
-                break;
-        }
-
-        activeBuffs.Remove(skill); */
     } 
 
     void CalculateBuffs() {

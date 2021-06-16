@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
+public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Inventory slot")]
     public int slotID;
@@ -188,7 +188,11 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         AddItem(AssetHolder.instance.getItem(ID), amount, null);
     }
 
-    //--------------------------------Drag----------------------------------//
+    void OnDisable() {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
+    }
+
+    //--------------------------------Pointer----------------------------------//
     public virtual void OnBeginDrag (PointerEventData pointerData) {
         if (itemInSlot == null || pointerData.button == PointerEventData.InputButton.Right)
             return;
@@ -228,5 +232,13 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         if (pointerData.button == PointerEventData.InputButton.Left && pointerData.clickCount == 2) {
             UseItem();
         }      
+    }
+
+    public virtual void OnPointerEnter (PointerEventData pointerData) {
+        if (itemInSlot != null)
+            TooltipsManager.instance.RequestTooltip(itemInSlot, gameObject);
+    }
+    public virtual void OnPointerExit (PointerEventData pointerData) {
+        TooltipsManager.instance.CancelTooltipRequest(gameObject);
     }
 }
