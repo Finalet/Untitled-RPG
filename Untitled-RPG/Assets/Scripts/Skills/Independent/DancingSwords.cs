@@ -30,6 +30,8 @@ public class DancingSwords : Skill
     float lastShotTime;
     float skillStartedTime;
 
+    float lerpValue = 20;
+
     protected override void CustomUse()
     {
         StartCoroutine(SpawnSwords());
@@ -61,6 +63,7 @@ public class DancingSwords : Skill
     }
 
     IEnumerator SpawnSwords() {
+        lerpValue = 5;
         spawnedSwords = new Transform[swordPositions.Length];
         baseSwordPositions = new Vector3[swordPositions.Length];
         noisedSwordPositions = new Vector3[swordPositions.Length];
@@ -84,6 +87,7 @@ public class DancingSwords : Skill
 
         skillInAction = true;
         skillStartedTime = Time.time;
+        lerpValue = 20;
     }
     IEnumerator RespawnSword (int swordIndex) {
         float startTime = Time.time;
@@ -104,8 +108,8 @@ public class DancingSwords : Skill
         if (!spawned[swordIndex])
             return;
 
-        spawnedSwords[swordIndex].position = Vector3.Lerp(spawnedSwords[swordIndex].position, swordPositions[swordIndex].position, Time.deltaTime * 20f);
-        spawnedSwords[swordIndex].rotation = Quaternion.Lerp(spawnedSwords[swordIndex].rotation, swordPositions[swordIndex].rotation, Time.deltaTime * 20f);
+        spawnedSwords[swordIndex].position = Vector3.Lerp(spawnedSwords[swordIndex].position, swordPositions[swordIndex].position, Time.deltaTime * lerpValue);
+        spawnedSwords[swordIndex].rotation = Quaternion.Lerp(spawnedSwords[swordIndex].rotation, swordPositions[swordIndex].rotation, Time.deltaTime * lerpValue);
         
         if (Vector3.Distance(swordPositions[swordIndex].localPosition, noisedSwordPositions[swordIndex]) <= 0) {
             noisedSwordPositions[swordIndex] = baseSwordPositions[swordIndex] + new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0) * noiseStrength;
