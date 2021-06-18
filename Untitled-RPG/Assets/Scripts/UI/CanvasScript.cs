@@ -28,6 +28,11 @@ public class CanvasScript : MonoBehaviour
     public UI_MiddleSkillPanelButtons RMB;
     public Sprite cancelSprite;
 
+    [Header("Quick access menu")]
+    public QuickAccessMenu quickAccessMenu;
+    [DisplayWithoutEdit] public bool quickAccessMenuIsOpen;
+
+
     Characteristics characteristics;
 
     void Awake() {
@@ -41,6 +46,11 @@ public class CanvasScript : MonoBehaviour
 
     void Update() {
         DisplayHPandStamina();
+
+        if (Input.GetKeyDown(KeybindsManager.instance.quickAccessMenu))
+            OpenQuickAccessMenu();
+        else if (Input.GetKeyUp(KeybindsManager.instance.quickAccessMenu))
+            CloseQuickAccessMenu();
     }
 
     float staminaColorLerp;
@@ -160,5 +170,19 @@ public class CanvasScript : MonoBehaviour
     public void PickAreaForSkill (Skill skill) {
         LMB.areaPickerSkill = skill;
         RMB.areaPickerSkill = skill;
+    }
+
+    void OpenQuickAccessMenu(){
+        if (PeaceCanvas.instance.anyPanelOpen)
+            return;
+
+        quickAccessMenu.gameObject.SetActive(true);
+        PlayerControlls.instance.cameraControl.stopInput = true;
+        quickAccessMenuIsOpen = true;
+    }
+    public void CloseQuickAccessMenu () {
+        quickAccessMenu.gameObject.SetActive(false);
+        PlayerControlls.instance.cameraControl.stopInput = false;
+        quickAccessMenuIsOpen = false;
     }
 }

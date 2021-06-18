@@ -64,7 +64,7 @@ public class EnemyArrow : MonoBehaviour
         Collision(other.transform);
 
         if (other.CompareTag("Player") && other.GetType() == typeof(CapsuleCollider)) { 
-            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damageInfo.damage, hitType, 0.2f, 1.5f);
+            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damageInfo.damage, enemyName, hitType, 0.2f, 1.5f);
             Destroy(gameObject);
         }
     }

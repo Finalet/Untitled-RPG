@@ -116,10 +116,12 @@ public class PeaceCanvas : MonoBehaviour
 
         if (!isGamePaused) {
             if (!anyPanelOpen) {
-                Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 PlayerControlls.instance.disableControl = false;
-                PlayerControlls.instance.cameraControl.stopInput = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                if (!CanvasScript.instance.quickAccessMenuIsOpen) {
+                    PlayerControlls.instance.cameraControl.stopInput = false;
+                }
             } else {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;

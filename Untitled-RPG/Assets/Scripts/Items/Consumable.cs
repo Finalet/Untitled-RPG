@@ -15,9 +15,9 @@ public class Consumable : Item
 
     public override void Use () {
         if (consumableType == ConsumableType.Health)
-            Characteristics.instance.GetHealed(actualEffect());
+            Characteristics.instance.GetHealed(actualEffect(), itemName);
         else if (consumableType == ConsumableType.Stamina)
-            Characteristics.instance.GetStamina(actualEffect());
+            Characteristics.instance.GetStamina(actualEffect(), itemName);
 
         PlayerControlls.instance.PlayGeneralAnimation(0, false, 0, true);
         AssetHolder.instance.StartConsumableCooldown(this);

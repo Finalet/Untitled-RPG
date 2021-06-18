@@ -133,6 +133,7 @@ public class BigGoblin : Enemy
         go.SetActive(true);
         go.GetComponent<EnemyProjectile>().baseDamage = Mathf.RoundToInt(baseDamage*1.5f);
         go.GetComponent<EnemyProjectile>().hitType = hitType;
+        go.GetComponent<EnemyProjectile>().enemyName = enemyName;
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.3f) {
             if (isDead) {
                 Destroy(go);

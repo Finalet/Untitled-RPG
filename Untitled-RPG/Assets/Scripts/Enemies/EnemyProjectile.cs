@@ -9,6 +9,7 @@ public class EnemyProjectile : MonoBehaviour
     public ParticleSystem hitParticles;
     public bool shot;
 
+    public string enemyName;
     AudioSource audioSource;
 
     void Start() {
@@ -21,7 +22,7 @@ public class EnemyProjectile : MonoBehaviour
             return;
             
         if (other.CompareTag("Player") && other.GetType() == typeof(CapsuleCollider)) { // Checks if charater got hit, and not its triggers
-            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1f);
+            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), enemyName, hitType, 0.2f, 1f);
         }
         if (!other.isTrigger) {
             audioSource.PlayOneShot(audioSource.clip);

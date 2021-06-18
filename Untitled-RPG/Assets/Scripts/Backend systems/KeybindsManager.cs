@@ -13,6 +13,7 @@ public class KeybindsManager : MonoBehaviour
     public KeyCode toggleRunning = KeyCode.CapsLock;
     public KeyCode sheathe = KeyCode.H;
     [Header("Main")]
+    public KeyCode quickAccessMenu = KeyCode.Tab;
     public KeyCode inventory = KeyCode.I;
     public KeyCode skills = KeyCode.K;
     public KeyCode interact = KeyCode.F;

@@ -268,7 +268,7 @@ public abstract class Enemy : MonoBehaviour
         DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit), damageTextPos);
 
         string criticalDEBUGtext = damageInfo.isCrit ? " CRITICAL" : "";
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] {enemyName} was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType}</color> damage by <color=#80FFFF>{skillName}</color>.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color=blue>{enemyName}</color> was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType}</color> damage by <color=#80FFFF>{skillName}</color>.");
     }
 
     protected void DisplayDamageNumber(DamageInfo damageInfo, Vector3 position = new Vector3()) {
@@ -367,7 +367,7 @@ public abstract class Enemy : MonoBehaviour
     }
 
     public virtual void Hit () {
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), hitType, 0.2f, 1.5f);
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), enemyName, hitType, 0.2f, 1.5f);
     }
 
     public bool checkCanHit (float value) {

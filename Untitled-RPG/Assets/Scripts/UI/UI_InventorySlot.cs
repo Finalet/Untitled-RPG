@@ -43,14 +43,14 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     public virtual void ValidateSlot() {
-        if (itemInSlot != null && itemAmount <= 0)
+        if (itemAmount <= 0 || itemInSlot == null)
             ClearSlot();
-        
-        if (itemAmount < 0 || itemInSlot == null)
-            itemAmount = 0;
     }
 
     public virtual void UseItem () {
+        if (itemInSlot == null)
+            return;
+
         if (PeaceCanvas.instance.currentInterractingNPC != null) {  //need to interact with NPC
             if (PeaceCanvas.instance.currentInterractingNPC is TradingNPC) { //If its a trading NPC
                 TradingNPC npc = (TradingNPC)PeaceCanvas.instance.currentInterractingNPC;
