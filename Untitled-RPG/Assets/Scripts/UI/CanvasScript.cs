@@ -181,8 +181,9 @@ public class CanvasScript : MonoBehaviour
         quickAccessMenuIsOpen = true;
     }
     public void CloseQuickAccessMenu () {
-        quickAccessMenu.gameObject.SetActive(false);
+        //quickAccessMenu.gameObject.SetActive(false);
         PlayerControlls.instance.cameraControl.stopInput = false;
         quickAccessMenuIsOpen = false;
+        quickAccessMenu.Close();
     }
 }

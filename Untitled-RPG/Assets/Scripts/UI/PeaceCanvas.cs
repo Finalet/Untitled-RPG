@@ -32,6 +32,7 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject PauseMenu;
     public GameObject storageWindow;
     public TextMeshProUGUI statsLabel;
+    public TextMeshProUGUI nameLabel;
 
     [Header("Button suggestion")]
     public GameObject buttonSuggestionUI;
@@ -82,6 +83,11 @@ public class PeaceCanvas : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
     } 
+
+    void Start() {
+        nameLabel.text = Characteristics.instance.playerName;
+    }
+
     void Update() {
         if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null)
             anyPanelOpen = true;

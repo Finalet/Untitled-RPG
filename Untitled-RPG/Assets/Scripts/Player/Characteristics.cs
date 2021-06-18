@@ -9,6 +9,8 @@ public class Characteristics : MonoBehaviour
     public static Characteristics instance;
 
     public bool canGetHit;
+    
+    public string playerName;
     [Header("Main")]
     public int maxHealth; public int healthFromEquip;
     public int maxStamina; public int staminaFromEquip;
@@ -254,7 +256,7 @@ public class Characteristics : MonoBehaviour
         if (cameraShakeFrequency != 0 && cameraShakeAmplitude != 0)
             PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
 
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>Player</color> was hit with <color=red>{actualDamage}</color> damage by <color=#80FFFF>{enemyName}</color>.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> was hit with <color=red>{actualDamage}</color> damage by <color=#80FFFF>{enemyName}</color>.");
     }
 
 #endregion
@@ -262,11 +264,11 @@ public class Characteristics : MonoBehaviour
     public void GetHealed(int healAmount, string healingItem) {
         health += healAmount;
         DisplayHealNumber(healAmount);
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>Player</color> healed <color=green>{healAmount}</color> points with <color=#80FFFF>{healingItem}</color>.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> healed <color=green>{healAmount}</color> points with <color=#80FFFF>{healingItem}</color>.");
     }
     public void GetStamina(int staminaAmount, string staminaItem) {
         stamina += staminaAmount;
         DisplayStaminaNumber(staminaAmount);
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>Player</color> regenerated <color=green>{staminaAmount}</color> stamina from <color=#80FFFF>{staminaItem}</color>.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> regenerated <color=green>{staminaAmount}</color> stamina from <color=#80FFFF>{staminaItem}</color>.");
     }
 }

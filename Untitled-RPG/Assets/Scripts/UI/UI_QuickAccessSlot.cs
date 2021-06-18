@@ -27,16 +27,6 @@ public class UI_QuickAccessSlot : UI_InventorySlot
         if (!isParentSlot) isSelected = false;
     }
 
-    void OnDisable() {
-        if (isParentSlot)
-            return;
-
-        if (isSelected)
-            UseItem();
-        
-        isSelected = false;
-    }
-
     public override void AddItem(Item item, int amount, UI_InventorySlot initialSlot)
     {
         base.AddItem(item, amount, initialSlot);

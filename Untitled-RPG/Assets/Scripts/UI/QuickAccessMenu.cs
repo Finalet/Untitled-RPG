@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class QuickAccessMenu : MonoBehaviour
@@ -14,6 +13,51 @@ public class QuickAccessMenu : MonoBehaviour
 
     float angle;
     float magnitudeThreashold = 5;
+    
+    void OnEnable() {
+        rightSlot.GetComponent<RectTransform>().DOAnchorPosX(0, 0.2f).SetEase(Ease.OutCubic);
+        leftSlot.GetComponent<RectTransform>().DOAnchorPosX(0, 0.2f).SetEase(Ease.OutCubic);
+        topSlot.GetComponent<RectTransform>().DOAnchorPosY(0, 0.2f).SetEase(Ease.OutCubic);
+        bottomSlot.GetComponent<RectTransform>().DOAnchorPosY(0, 0.2f).SetEase(Ease.OutCubic);
+
+        rightSlot.GetComponent<RectTransform>().DOScale(Vector3.one, 0.2f);
+        leftSlot.GetComponent<RectTransform>().DOScale(Vector3.one, 0.2f);
+        topSlot.GetComponent<RectTransform>().DOScale(Vector3.one, 0.2f);
+        bottomSlot.GetComponent<RectTransform>().DOScale(Vector3.one, 0.2f);
+    }
+    
+    public void Close() {
+        rightSlot.GetComponent<RectTransform>().DOAnchorPosX(-100, 0.2f).SetEase(Ease.OutCubic);
+        leftSlot.GetComponent<RectTransform>().DOAnchorPosX(100, 0.2f).SetEase(Ease.OutCubic);
+        topSlot.GetComponent<RectTransform>().DOAnchorPosY(-100, 0.2f).SetEase(Ease.OutCubic);
+        bottomSlot.GetComponent<RectTransform>().DOAnchorPosY(100, 0.2f).SetEase(Ease.OutCubic);
+
+        rightSlot.GetComponent<RectTransform>().DOScale(Vector3.zero, 0.2f);
+        leftSlot.GetComponent<RectTransform>().DOScale(Vector3.zero, 0.2f);
+        topSlot.GetComponent<RectTransform>().DOScale(Vector3.zero, 0.2f);
+        bottomSlot.GetComponent<RectTransform>().DOScale(Vector3.zero, 0.2f);
+
+        if (topSlot.isSelected)
+            topSlot.UseItem();
+        else if (bottomSlot.isSelected)
+            bottomSlot.UseItem();
+        else if (rightSlot.isSelected)
+            rightSlot.UseItem();
+        else if (leftSlot.isSelected)
+            leftSlot.UseItem();
+
+        topSlot.isSelected = false;
+        bottomSlot.isSelected = false;
+        leftSlot.isSelected = false;
+        rightSlot.isSelected = false;
+
+        Invoke("SetInactive", 0.3f);
+    }
+
+    void SetInactive () {
+        gameObject.SetActive(false);
+    }
+
     void Update()
     {
         if (PeaceCanvas.instance.anyPanelOpen) {
