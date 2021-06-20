@@ -6,6 +6,8 @@ public enum GroundType {Grass, Stone};
 
 public class PlayerAudioController : MonoBehaviour
 {
+    public static PlayerAudioController instance;
+
     public bool footstepSoundsOn = true;
 
     public Transform leftFoot;
@@ -20,10 +22,20 @@ public class PlayerAudioController : MonoBehaviour
     [Header("Voices")]
     public AudioClip[] jumpingRollingGunts;
     public AudioClip[] getHit;
+    [Header("Loot")]
+    public AudioClip LootPickup;
+    public AudioClip LootGoldPickup;
 
     AudioClip[] currentArray;
     bool leftFootDown;
     bool rightFootDown;
+
+    AudioSource audioSource;
+
+    void Awake() {
+        instance = this;
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Update() {
         CheckSounds();
@@ -43,7 +55,7 @@ public class PlayerAudioController : MonoBehaviour
         }
     }
 
-    public float leftDisToGround;
+    float leftDisToGround;
     float rightDisToGround;
     float threashold;
     void CheckFootsteps () {
@@ -103,13 +115,18 @@ public class PlayerAudioController : MonoBehaviour
 
     public void PlayJumpRollSound () {
         int playID = Random.Range(0, jumpingRollingGunts.Length);
-        GetComponent<AudioSource>().clip = jumpingRollingGunts[playID];
-        GetComponent<AudioSource>().Play();
+        audioSource.clip = jumpingRollingGunts[playID];
+        audioSource.Play();
     }
 
     public void PlayGetHitSound () {
         int playID = Random.Range(0, getHit.Length);
-        GetComponent<AudioSource>().clip = getHit[playID];
-        GetComponent<AudioSource>().Play();
+        audioSource.clip = getHit[playID];
+        audioSource.Play();
+    }
+
+    public void PlayPlayerSound (AudioClip sound){
+        audioSource.clip = sound;
+        audioSource.Play();
     }
 }

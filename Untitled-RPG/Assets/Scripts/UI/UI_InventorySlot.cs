@@ -199,7 +199,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
 
         PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, itemInSlot, itemAmount, this);
         ClearSlot();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.grabItemSound);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.GrabItem);
     }
 
     public virtual void OnDrag (PointerEventData pointerData) {
@@ -220,7 +220,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         if (PeaceCanvas.instance.itemBeingDragged != null) { //Dropping Item
             PeaceCanvas.instance.dragSuccess = true;
             AddItem(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, PeaceCanvas.instance.initialSlot);
-            PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
+            UIAudioManager.instance.PlayUISound(UIAudioManager.instance.DropItem);
         }
     }
 

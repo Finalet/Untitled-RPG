@@ -78,12 +78,22 @@ public class UI_EquipmentSlot : UI_InventorySlot
         itemInSlot = item;
         itemAmount = amount;
         DisplayItem();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);
-
+        
         Equipment eq = (Equipment)item;
         if (eq.grantedSkill != null && !Combat.instanace.currentSkillsFromEquipment.Contains(AssetHolder.instance.getSkill(eq.grantedSkill.ID))) {
             Combat.instanace.currentSkillsFromEquipment.Add(AssetHolder.instance.getSkill(eq.grantedSkill.ID));
             Combat.instanace.ValidateSkillSlots();
+        }
+
+        if (item is Armor) {
+            UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipArmor);
+        }
+        else if (item is Weapon) {
+            Weapon w = (Weapon)item;
+            if (w.weaponType == WeaponType.Bow)
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipBow);
+            else
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipWeapon);
         }
     }
 
@@ -220,20 +230,30 @@ public class UI_EquipmentSlot : UI_InventorySlot
             Weapon w = (Weapon)itemInSlot;
             if (w.weaponType == WeaponType.TwoHandedSword) {
                 EquipmentManager.instance.UnequipWeaponPrefab(false, false, false, true);
+
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
             } else if (w.weaponType == WeaponType.TwoHandedStaff) {
                 EquipmentManager.instance.UnequipWeaponPrefab(true);
+
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
             } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) {
                 if (equipmentSlotType == EquipmentSlotType.MainHand) {
                     EquipmentManager.instance.UnequipWeaponPrefab(false);
                 } else {
                     EquipmentManager.instance.UnequipWeaponPrefab(false, true);
                 }
+
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
             } else if (w.weaponType == WeaponType.Bow) {
                 EquipmentManager.instance.UnequipWeaponPrefab(false, false, true);
+
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipBow);
             }
         } else if (itemInSlot is Armor) {
             if (equipmentSlotType != EquipmentSlotType.Necklace && equipmentSlotType != EquipmentSlotType.Ring)
                 EquipmentManager.instance.UnequipArmorVisual((Armor)itemInSlot);
+            
+            UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipArmor);
         }
         if (itemInSlot is Equipment) {
             Equipment eq = (Equipment)itemInSlot;
@@ -244,6 +264,21 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
 
         base.ClearSlot();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.equipItemSound);
+    }
+
+    public override void OnBeginDrag (PointerEventData pointerData) { //overriding these to not play UI sounds when equiping / unequiping by drag
+        if (itemInSlot == null || pointerData.button == PointerEventData.InputButton.Right)
+            return;
+
+        PeaceCanvas.instance.StartDraggingItem(GetComponent<RectTransform>().sizeDelta, itemInSlot, itemAmount, this);
+        ClearSlot();
+        //UIAudioManager.instance.PlayUISound(UIAudioManager.instance.GrabItem);
+    }
+    public override void OnDrop (PointerEventData pointerData) {
+        if (PeaceCanvas.instance.itemBeingDragged != null) { //Dropping Item
+            PeaceCanvas.instance.dragSuccess = true;
+            AddItem(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, PeaceCanvas.instance.initialSlot);
+            //UIAudioManager.instance.PlayUISound(UIAudioManager.instance.DropItem);
+        }
     }
 }

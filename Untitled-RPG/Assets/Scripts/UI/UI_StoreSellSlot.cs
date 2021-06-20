@@ -32,6 +32,6 @@ public class UI_StoreSellSlot : UI_InventorySlot, IDropHandler, IDragHandler, IB
     {
         InventoryManager.instance.AddItemToInventory(itemInSlot, itemAmount);
         ClearSlot();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.DropItem);
     }
 }

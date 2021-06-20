@@ -60,9 +60,11 @@ public class LootItem : MonoBehaviour
                             return;
                         }
                         InventoryManager.instance.AddItemToInventory(item, itemAmount, null);
+                        PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.LootPickup);
                         break;
                     case true:
                         InventoryManager.instance.AddGold(itemAmount);
+                        PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.LootGoldPickup);
                         break;
                 }
                 PlayerControlls.instance.PlayGeneralAnimation(1);

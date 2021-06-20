@@ -21,8 +21,13 @@ public class Chest : MonoBehaviour
     GameObject chest;
     GameObject lid;
 
+    [Header("Sounds")]
+    public AudioClip openChest;
+    AudioSource audioSource;
+
     void Awake() {
         UpdateMesh();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void OnValidate() {
@@ -86,6 +91,9 @@ public class Chest : MonoBehaviour
         lid.transform.DOLocalRotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic).SetDelay(1);
         Invoke("DropItems", 1.5f);
         isOpened = true;
+
+        audioSource.clip = openChest;
+        audioSource.Play();
     }
 
     void DropItems () {

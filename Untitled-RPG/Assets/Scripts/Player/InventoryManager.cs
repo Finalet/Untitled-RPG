@@ -174,5 +174,7 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < allItemsAmounts.Count; i++) {
             AddItemToInventory(allItemsAmounts[i].item1, allItemsAmounts[i].amount1, null);
         }
+
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 }

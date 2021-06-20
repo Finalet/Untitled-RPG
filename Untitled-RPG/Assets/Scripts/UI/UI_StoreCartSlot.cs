@@ -35,6 +35,6 @@ public class UI_StoreCartSlot : UI_InventorySlot, IDropHandler, IDragHandler, IB
     public override void UseItem()
     {
         ClearSlot();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.DropItem);
     }
 }

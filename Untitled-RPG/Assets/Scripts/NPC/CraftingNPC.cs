@@ -13,6 +13,10 @@ public class CraftingNPC : NPC
 
     [Space]
     public GameObject craftingWindowPrefab;
+    [Header("Sounds")]
+    public AudioClip openCraftSound;
+    public AudioClip closeCraftSound;
+    public AudioClip startCraftSound;
 
     float craftingTime = 2;
     bool craftCanceled;
@@ -37,19 +41,23 @@ public class CraftingNPC : NPC
         instanciatedCraftingWindow = Instantiate(craftingWindowPrefab, PeaceCanvas.instance.transform).GetComponent<CraftingWindowUI>();
         instanciatedCraftingWindow.ownerNPC = this;
         instanciatedCraftingWindow.Init();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.inventoryOpenSound);
 
         selectedItem = craftingItems[0];
         instanciatedCraftingWindow.DisplaySelectedItem();
+
+        audioSource.clip = openCraftSound;
+        audioSource.Play();
     }
 
     void CloseCraftingWindow (){
         craftQuanitity = 1;
         Destroy(instanciatedCraftingWindow.gameObject);
+        audioSource.clip = closeCraftSound;
+        audioSource.Play();
     }
 
     public void Select(Item item) {
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.grabItemSound);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         selectedItem = item;
         instanciatedCraftingWindow.DisplaySelectedItem();
     }
@@ -68,7 +76,6 @@ public class CraftingNPC : NPC
                 CanvasScript.instance.DisplayWarning("Inventory is full");
                 return;
             }
-            PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.grabItemSound);
             StartCoroutine(Crafting());
         }
     }
@@ -76,6 +83,7 @@ public class CraftingNPC : NPC
     IEnumerator Crafting () {
         PlayerControlls.instance.PlayGeneralAnimation(2, true);
         CanvasScript.instance.DisplayProgressBar(true);
+        audioSource.clip = startCraftSound;
         audioSource.Play();
         float startedTime = Time.time;
         while (Time.time - startedTime < craftingTime){
@@ -100,7 +108,7 @@ public class CraftingNPC : NPC
     
     public void CancelCraft () {
         craftCanceled = true;
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 
     void CompleteCraft () {

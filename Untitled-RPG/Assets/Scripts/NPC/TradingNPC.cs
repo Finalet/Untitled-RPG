@@ -18,6 +18,8 @@ public class TradingNPC : NPC
     public bool isBuyWindowOpen;
     public bool isSellWindowOpen;
     [Header("Sounds")]
+    public AudioClip openStoreSound;
+    public AudioClip closeStoreSound;
     public AudioClip addToCartSound;
     public AudioClip purchaseSound;
     
@@ -48,7 +50,7 @@ public class TradingNPC : NPC
     protected override void CustomInterract()
     {
         OpenStoreWindow();
-        PeaceCanvas.instance.OpenInventory(true, true);
+        PeaceCanvas.instance.OpenInventory(true, true, false);
     }
     protected override void CustomStopInterract()
     {
@@ -62,6 +64,8 @@ public class TradingNPC : NPC
         instanciatedStoreWindow = Instantiate(storeWindowPrefab, PeaceCanvas.instance.transform).GetComponent<StoreWindowUI>();
         instanciatedStoreWindow.ownerNPC = this;
         instanciatedStoreWindow.Init();
+        audioSource.clip = openStoreSound;
+        audioSource.Play();
     }
     void CloseStoreWindow (){
         if (instanciatedStoreWindow != null){
@@ -71,6 +75,8 @@ public class TradingNPC : NPC
             }
             Destroy(instanciatedStoreWindow.gameObject);
         }
+        audioSource.clip = closeStoreSound;
+        audioSource.Play();
     }
 
     public int getCartTotalPrice () {

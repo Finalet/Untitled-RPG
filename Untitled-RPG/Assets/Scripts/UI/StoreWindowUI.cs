@@ -52,7 +52,11 @@ public class StoreWindowUI : MonoBehaviour
         titleLabel.text = ownerNPC.isBuyWindowOpen ? ownerNPC.npcName : "Sell";
     }
 
-    public void PlayUISound () { //Played акщь  "buy" "sell" tab button components
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.dropItemSound);
+    public void PlayUISound (bool buyTab) { //Played акщь  "buy" "sell" tab button components
+        if (buyTab && ownerNPC.isBuyWindowOpen)
+            return;
+        if (!buyTab && ownerNPC.isSellWindowOpen)
+            return;
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 }

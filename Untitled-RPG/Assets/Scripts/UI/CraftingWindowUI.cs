@@ -88,11 +88,13 @@ public class CraftingWindowUI : MonoBehaviour
     void QuantityUp () {
         ownerNPC.craftQuanitity += UI_General.getClickAmount();
         quanitityInputField.text = ownerNPC.craftQuanitity.ToString();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.grabItemSound);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+
     }
     void QuantityDown () {
         ownerNPC.craftQuanitity -= UI_General.getClickAmount();
         quanitityInputField.text = ownerNPC.craftQuanitity.ToString();
-        PeaceCanvas.instance.PlaySound(PeaceCanvas.instance.grabItemSound);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+
     }
 }

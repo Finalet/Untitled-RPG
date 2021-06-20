@@ -49,13 +49,6 @@ public class PeaceCanvas : MonoBehaviour
     public int amountOfDraggedItem;
     public UI_InventorySlot initialSlot;
 
-    [Header("Sounds")]
-    public AudioClip inventoryOpenSound;
-    public AudioClip inventoryCloseSound;
-    public AudioClip grabItemSound;
-    public AudioClip dropItemSound;
-    public AudioClip equipItemSound;
-
     [Header("Icons")]
     public Sprite bag;
     public Sprite chest;
@@ -64,8 +57,6 @@ public class PeaceCanvas : MonoBehaviour
     public Sprite handPickup;
     public Sprite handshake;
     public Sprite handpray;
-
-    AudioSource audioSource;
 
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
@@ -80,8 +71,6 @@ public class PeaceCanvas : MonoBehaviour
     void Awake() {
         if (instance == null)
             instance = this;
-
-        audioSource = GetComponent<AudioSource>();
     } 
 
     void Start() {
@@ -102,7 +91,7 @@ public class PeaceCanvas : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeybindsManager.instance.inventory)) {
-            if (!Inventory.activeInHierarchy && currentInterractingNPC == null)
+            if (!Inventory.activeInHierarchy)
                 OpenInventory();
             else
                 CloseInventory();
@@ -142,29 +131,30 @@ public class PeaceCanvas : MonoBehaviour
         if (Inventory.activeInHierarchy) CloseInventory();
         SkillsPanel.SetActive(true);
         Inventory.SetActive(false);
-        audioSource.clip = inventoryOpenSound;
-        audioSource.Play();
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.SkillsPanelOpen);
     }
 
-    public void OpenInventory (bool exceptEquipmentSlots = false, bool noCameraZoom = false) {
+    public void OpenInventory (bool hideEquipmentSlots = false, bool noCameraZoom = false, bool playSound = true) {
         if (SkillsPanel.activeInHierarchy) CloseSkillsPanel();
         Inventory.SetActive(true);
-        if (!exceptEquipmentSlots) EquipmentSlots.SetActive(true);
+        
+        if (currentInterractingNPC != null) hideEquipmentSlots = true;
+        if (!hideEquipmentSlots) EquipmentSlots.SetActive(true);
+        
         SkillsPanel.SetActive(false);
         if (!noCameraZoom) OpenMenuCamera();
-        audioSource.clip = inventoryOpenSound;
-        audioSource.Play();
+        if (playSound) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.InventoryOpen);
     }
     public void CloseInventory() {
         Inventory.SetActive(false);
         EquipmentSlots.SetActive(false);
         CM_MenuCam.Priority = 0;
-        audioSource.clip = inventoryCloseSound;
-        audioSource.Play();
         DebugTooManyItems.SetActive(false);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.InventoryClose);
     }
     public void CloseSkillsPanel(){
         SkillsPanel.SetActive(false);
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.SkillsPanelClose);
     }
 
     void EscapeButton () {
@@ -357,10 +347,5 @@ public class PeaceCanvas : MonoBehaviour
     public void HideKeySuggestion (){
         if (buttonSuggestionUI.activeInHierarchy)
             buttonSuggestionUI.SetActive(false);
-    }
-
-    public void PlaySound(AudioClip clip) {
-        audioSource.clip = clip;
-        audioSource.Play();
     }
 }

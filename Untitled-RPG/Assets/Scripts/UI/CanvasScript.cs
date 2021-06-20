@@ -31,6 +31,7 @@ public class CanvasScript : MonoBehaviour
     [Header("Quick access menu")]
     public QuickAccessMenu quickAccessMenu;
     [DisplayWithoutEdit] public bool quickAccessMenuIsOpen;
+    float quickAccessMenuTimer;
 
 
     Characteristics characteristics;
@@ -173,15 +174,18 @@ public class CanvasScript : MonoBehaviour
     }
 
     void OpenQuickAccessMenu(){
-        if (PeaceCanvas.instance.anyPanelOpen)
+        if (PeaceCanvas.instance.anyPanelOpen || Time.time - quickAccessMenuTimer < 0.5f || quickAccessMenuIsOpen)
             return;
 
+        quickAccessMenuTimer = Time.time;
         quickAccessMenu.gameObject.SetActive(true);
         PlayerControlls.instance.cameraControl.stopInput = true;
         quickAccessMenuIsOpen = true;
     }
     public void CloseQuickAccessMenu () {
-        //quickAccessMenu.gameObject.SetActive(false);
+        if (!quickAccessMenuIsOpen)
+            return;
+            
         PlayerControlls.instance.cameraControl.stopInput = false;
         quickAccessMenuIsOpen = false;
         quickAccessMenu.Close();

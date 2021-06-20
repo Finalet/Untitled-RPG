@@ -7,6 +7,8 @@ public class UI_QuickAccessSlot : UI_InventorySlot
     public UI_QuickAccessSlot pairedSlot;
     public bool isParentSlot;
     [Space]
+    public bool isCancel;
+    [Space]
     public bool isSelected;
     public Image frame;
     
@@ -29,16 +31,25 @@ public class UI_QuickAccessSlot : UI_InventorySlot
 
     public override void AddItem(Item item, int amount, UI_InventorySlot initialSlot)
     {
+        if (isCancel)
+            return;
+
         base.AddItem(item, amount, initialSlot);
         SyncItem();
     }
     public override void ClearSlot()
     {
+        if (isCancel)
+            return;
+
         base.ClearSlot();
         SyncItem();
     }
     public override void UseItem()
     {
+        if (isCancel)
+            return;
+
         base.UseItem();
         SyncItem();
     }
