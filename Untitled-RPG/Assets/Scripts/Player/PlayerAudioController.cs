@@ -25,6 +25,9 @@ public class PlayerAudioController : MonoBehaviour
     [Header("Loot")]
     public AudioClip LootPickup;
     public AudioClip LootGoldPickup;
+    [Header("Other sounds")]
+    public AudioClip drink;
+    public AudioClip blacksmithHammer;
 
     AudioClip[] currentArray;
     bool leftFootDown;
@@ -127,6 +130,12 @@ public class PlayerAudioController : MonoBehaviour
 
     public void PlayPlayerSound (AudioClip sound){
         audioSource.clip = sound;
+        audioSource.Play();
+    }
+    public void PlayPlayerAnimationSound (AnimationEvent animEvent){
+        if (animEvent.intParameter == 0)
+            audioSource.clip = blacksmithHammer;
+                
         audioSource.Play();
     }
 }

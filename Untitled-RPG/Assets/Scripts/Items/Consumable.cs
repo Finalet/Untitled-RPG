@@ -20,6 +20,7 @@ public class Consumable : Item
             Characteristics.instance.GetStamina(actualEffect(), itemName);
 
         PlayerControlls.instance.PlayGeneralAnimation(0, false, 0, true);
+        PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.drink);
         AssetHolder.instance.StartConsumableCooldown(this);
     }
     public override void Use (UI_InventorySlot initialSlot){}

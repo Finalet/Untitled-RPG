@@ -13,6 +13,8 @@ public class CraftingNPC : NPC
 
     [Space]
     public GameObject craftingWindowPrefab;
+    public GameObject craftingHammerPrefab;
+    GameObject spawnedCraftingHammer;
     [Header("Sounds")]
     public AudioClip openCraftSound;
     public AudioClip closeCraftSound;
@@ -81,12 +83,21 @@ public class CraftingNPC : NPC
     }
 
     IEnumerator Crafting () {
-        PlayerControlls.instance.PlayGeneralAnimation(2, true);
+        float finalCraftingTime = craftingTime;
+        if (selectedItem is Consumable) {
+            PlayerControlls.instance.PlayGeneralAnimation(2, true);
+        } else if (selectedItem is Equipment) {
+            PlayerControlls.instance.PlayGeneralAnimation(3, true); 
+            finalCraftingTime *= 2;
+            if (spawnedCraftingHammer == null)
+                spawnedCraftingHammer = Instantiate(craftingHammerPrefab, PlayerControlls.instance.rightHandWeaponSlot);
+        }
+        
         CanvasScript.instance.DisplayProgressBar(true);
         audioSource.clip = startCraftSound;
         audioSource.Play();
         float startedTime = Time.time;
-        while (Time.time - startedTime < craftingTime){
+        while (Time.time - startedTime < finalCraftingTime){
             if (craftCanceled){
                 craftCanceled = false;
                 PlayerControlls.instance.ExitGeneralAnimation();
@@ -95,13 +106,15 @@ public class CraftingNPC : NPC
                 audioSource.Stop();
                 yield break;
             }
-            CanvasScript.instance.DisplayProgressBar(false, (Time.time - startedTime) / craftingTime, in craftCanceled);
+            CanvasScript.instance.DisplayProgressBar(false, (Time.time - startedTime) / finalCraftingTime, in craftCanceled);
             instanciatedCraftingWindow.cancelButton.interactable = true;
             yield return null;
         }
         instanciatedCraftingWindow.cancelButton.interactable = false;
         PlayerControlls.instance.ExitGeneralAnimation();
         CanvasScript.instance.DisplayProgressBar(false, 1, true);
+        if (spawnedCraftingHammer != null)
+            Destroy(spawnedCraftingHammer);
         audioSource.Stop();
         CompleteCraft();
     }
@@ -109,13 +122,21 @@ public class CraftingNPC : NPC
     public void CancelCraft () {
         craftCanceled = true;
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+        if (spawnedCraftingHammer != null)
+            Destroy(spawnedCraftingHammer);
     }
 
     void CompleteCraft () {
         for (int i = 0; i < selectedItem.craftingRecipe.Length; i++) {
-                InventoryManager.instance.RemoveItemFromInventory(selectedItem.craftingRecipe[i].resource, selectedItem.craftingRecipe[i].requiredAmount*craftQuanitity);      
+            InventoryManager.instance.RemoveItemFromInventory(selectedItem.craftingRecipe[i].resource, selectedItem.craftingRecipe[i].requiredAmount*craftQuanitity);      
+        }
+        if (selectedItem.isStackable) {
+            InventoryManager.instance.AddItemToInventory(selectedItem, craftQuanitity);
+        } else {
+            for (int i = 0; i < craftQuanitity; i++) {
+                InventoryManager.instance.AddItemToInventory(selectedItem, 1);
             }
-        InventoryManager.instance.AddItemToInventory(selectedItem, craftQuanitity);
+        }
         instanciatedCraftingWindow.DisplaySelectedItem(); 
 
         CraftCompletedNotification();
