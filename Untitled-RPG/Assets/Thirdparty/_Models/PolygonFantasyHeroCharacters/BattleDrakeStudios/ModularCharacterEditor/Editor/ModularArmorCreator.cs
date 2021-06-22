@@ -43,7 +43,7 @@ namespace BattleDrakeStudios.ModularCharacters {
 
         private Gender currentGender;
 
-        [MenuItem("BattleDrakeStudios/ModularCharacter/ArmorCreator")]
+        [MenuItem("Window/BattleDrakeStudios/ModularCharacter/ArmorCreator")]
         public static void ShowWindow() {
             EditorWindow newWindow = GetWindow<ModularArmorCreator>("Modular Armor Creator");
             newWindow.minSize = new Vector2(600, 425);

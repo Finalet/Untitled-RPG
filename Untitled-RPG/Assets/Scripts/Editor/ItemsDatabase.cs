@@ -1,12 +1,11 @@
-// Create a foldable menu that hides/shows the selected transform position.
-// If no Transform is selected, the Foldout item will be folded until
-// a transform is selected.
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class ItemsDatabase : EditorWindow
 {
+    bool showIconsToggle = true;
+
     bool showWeapons;
     bool showArmor;
     bool showSkillbooks;
@@ -28,7 +27,7 @@ public class ItemsDatabase : EditorWindow
     Editor selectedWindow;
     bool changingSelectedItemName = false;
 
-    [MenuItem("Window/Items Database")]
+    [MenuItem("Finale/Items Database")]
     static void Init()
     {
         ItemsDatabase window = (ItemsDatabase)GetWindow(typeof(ItemsDatabase), false, "Items Database");
@@ -37,6 +36,7 @@ public class ItemsDatabase : EditorWindow
 
     public void OnGUI()
     {
+        Debug.Log("AD");
         if (GameObject.Find("AssetHolder") == null) {
             EditorGUILayout.LabelField("Asset Holder not found in the scene.");
             return;
@@ -45,7 +45,11 @@ public class ItemsDatabase : EditorWindow
         
         EditorGUILayout.BeginHorizontal();
 
+
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        showIconsToggle = EditorGUILayout.ToggleLeft("Show icons", showIconsToggle);
+        EditorGUILayout.Space(10);
+
         EditorGUI.indentLevel = 0;
         showWeapons = EditorGUILayout.Foldout(showWeapons, "Weapons");
         if (showWeapons) {
@@ -109,7 +113,8 @@ public class ItemsDatabase : EditorWindow
 
     void DrawTitles (List<Item> list) {
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("ID", EditorStyles.boldLabel, GUILayout.Width(50 + EditorGUI.indentLevel * 8));
+        int iconSpace = showIconsToggle ? 35 : 0;
+        EditorGUILayout.LabelField("ID", EditorStyles.boldLabel, GUILayout.Width(50 + iconSpace + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField("Item name", EditorStyles.boldLabel, GUILayout.Width(230 + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField("Item rarity", EditorStyles.boldLabel, GUILayout.Width(100 + EditorGUI.indentLevel * 8));
         DrawAdditionalFieldsTitles(list);
@@ -125,6 +130,7 @@ public class ItemsDatabase : EditorWindow
         foreach (Item item in list){
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(item.ID.ToString(), EditorStyles.boldLabel, GUILayout.Width(50 + EditorGUI.indentLevel * 8));
+            if (showIconsToggle) DrawTexturePreview(EditorGUILayout.GetControlRect(GUILayout.Width(30), GUILayout.Height(30)), item.itemIcon);
             EditorGUILayout.LabelField(item.name, GUILayout.Width(230 + EditorGUI.indentLevel * 8));
             EditorGUILayout.LabelField(item.itemRarity.ToString(), GUILayout.Width(100 + EditorGUI.indentLevel * 8));
             DrawAdditionalFields(item);
@@ -136,6 +142,7 @@ public class ItemsDatabase : EditorWindow
                 return;
             }
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space(5);
         }
         EditorGUILayout.BeginHorizontal();
         GUILayout.Space(20 * EditorGUI.indentLevel);
@@ -349,4 +356,30 @@ public class ItemsDatabase : EditorWindow
     {
         this.Repaint();
     }
+
+    void DrawTexturePreview(Rect position, Sprite sprite)
+        {
+            if (sprite == null)
+                return;
+            Vector2 fullSize = new Vector2(sprite.texture.width, sprite.texture.height);
+            Vector2 size = new Vector2(sprite.textureRect.width, sprite.textureRect.height);
+ 
+            Rect coords = sprite.textureRect;
+            coords.x /= fullSize.x;
+            coords.width /= fullSize.x;
+            coords.y /= fullSize.y;
+            coords.height /= fullSize.y;
+ 
+            Vector2 ratio;
+            ratio.x = position.width / size.x;
+            ratio.y = position.height / size.y;
+            float minRatio = Mathf.Min(ratio.x, ratio.y);
+ 
+            Vector2 center = position.center;
+            position.width = size.x * minRatio;
+            position.height = size.y * minRatio;
+            position.center = center;
+ 
+            GUI.DrawTextureWithTexCoords(position, sprite.texture, coords);
+        }
 }

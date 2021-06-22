@@ -17,7 +17,7 @@ public abstract class Skill : MonoBehaviour
     [Tooltip("Damage in % from players attack")] public int baseDamagePercentage;
     public float coolDown;
     public float coolDownTimer;
-    public bool isCoolingDown;
+    [DisplayWithoutEdit] public bool isCoolingDown;
     public bool weaponOutRequired;
     public bool bowOutRequired;
 

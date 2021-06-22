@@ -124,7 +124,7 @@ namespace BattleDrakeStudios.ModularCharacters {
         private Vector2 scrollPos;
         private bool selectionInitialized;
 
-        [MenuItem("BattleDrakeStudios/ModularCharacter/CharacterEditor")]
+        [MenuItem("Window/BattleDrakeStudios/ModularCharacter/CharacterEditor")]
         public static void ShowWindow() {
             ModularCharacterEditor editorWindow = EditorWindow.GetWindow<ModularCharacterEditor>();
             editorWindow.titleContent = new GUIContent("Modular Character Editor");

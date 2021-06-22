@@ -56,7 +56,7 @@ public class SkillPanelUI : MonoBehaviour
                 case SkillTree.Mage:
                     MageRow = rt.transform;
                     break;
-                case SkillTree.Agnel:
+                case SkillTree.Angel:
                     AngelRow = rt.transform;
                     break;
                 case SkillTree.Stealth:
@@ -89,7 +89,7 @@ public class SkillPanelUI : MonoBehaviour
                 case SkillTree.Mage:
                     row = MageRow;
                     break;
-                case SkillTree.Agnel:
+                case SkillTree.Angel:
                     row = AngelRow;
                     break;
                 case SkillTree.Stealth:

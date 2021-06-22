@@ -55,7 +55,7 @@ namespace BattleDrakeStudios.SimpleIconCreator {
 
         public event Action<CustomPreviewEditor> OnPreviewCreated;
 
-        [MenuItem("BattleDrakeStudios/SimpleIconCreator")]
+        [MenuItem("Window/BattleDrakeStudios/SimpleIconCreator")]
         public static void ShowWindow() {
             IconCreatorWindow editorWindow = EditorWindow.GetWindow<IconCreatorWindow>("Simple Icon Creator");
 

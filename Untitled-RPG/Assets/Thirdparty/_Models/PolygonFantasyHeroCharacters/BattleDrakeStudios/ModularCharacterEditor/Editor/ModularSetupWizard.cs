@@ -23,7 +23,7 @@ namespace BattleDrakeStudios.ModularCharacters {
         private string materialName;
         private bool isNewMaterial;
 
-        [MenuItem("BattleDrakeStudios/ModularCharacter/SetupWizard")]
+        [MenuItem("Window/BattleDrakeStudios/ModularCharacter/SetupWizard")]
         public static void ShowWizard() {
             ModularSetupWizard wizardWindow = GetWindow<ModularSetupWizard>();
             wizardWindow.titleContent = new GUIContent("Setup Wizard");

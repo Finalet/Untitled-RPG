@@ -55,7 +55,7 @@ public class ReviveStatueWindowUI : MonoBehaviour
                 firstSkillTree = SkillTree.Stealth;
                 break;
             case 5:
-                firstSkillTree = SkillTree.Agnel;
+                firstSkillTree = SkillTree.Angel;
                 break;
             case 6:
                 firstSkillTree = SkillTree.Defense;
@@ -83,7 +83,7 @@ public class ReviveStatueWindowUI : MonoBehaviour
                 secondSkillTree = SkillTree.Stealth;
                 break;
             case 5:
-                secondSkillTree = SkillTree.Agnel;
+                secondSkillTree = SkillTree.Angel;
                 break;
             case 6:
                 secondSkillTree = SkillTree.Defense;
