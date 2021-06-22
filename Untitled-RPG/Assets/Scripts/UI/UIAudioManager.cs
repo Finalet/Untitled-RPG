@@ -14,6 +14,8 @@ public class UIAudioManager : MonoBehaviour
     [Header("Skills panel")]
     public AudioClip SkillsPanelOpen;
     public AudioClip SkillsPanelClose;
+    public AudioClip ReadBook;
+    public AudioClip CloseBook;
     [Header("Items")]
     public AudioClip GrabItem;
     public AudioClip DropItem;

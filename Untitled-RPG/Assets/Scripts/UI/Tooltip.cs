@@ -138,11 +138,11 @@ public class Tooltip : MonoBehaviour
                 if (stats != "") stats += "\n";
             }
             if (w.castingTime != 0) {
-                compareText = compare ? $"-{getCompareString(w.castingTime, wCompare.castingTime)}" : "";
+                compareText = compare ? $"{getCompareString(w.castingTime, wCompare.castingTime, true)}" : "";
                 stats += $"Casting time: <color={highlightColor}>{(100*w.castingTime).ToString()}%</color>{compareText}\n";
             }
             if (w.attackSpeed != 0) {
-                compareText = compare ? $"-{getCompareString(w.attackSpeed, wCompare.attackSpeed)}" : "";
+                compareText = compare ? $"{getCompareString(w.attackSpeed, wCompare.attackSpeed, true)}" : "";
                 stats += $"Attack speed: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>{compareText}\n";
             }
         } else if (item is Skillbook) {
@@ -154,10 +154,16 @@ public class Tooltip : MonoBehaviour
         return stats;
     }
 
-    string getCompareString (float first, float second) {
+    string getCompareString (float first, float second, bool percentages = false) {
         if (first == 0 || second == 0)
             return "";
         float delta = first - second;
-        return delta > 0 ? $" <color=green>▲{delta}</color>" : delta < 0 ? $" <color=red>▼{delta}</color>" : "";
+
+        if (percentages){
+            delta*=100;
+            return delta > 0 ? $" <color=red>▼{Mathf.Abs(delta)}</color>" : delta < 0 ? $" <color=green>▲{Mathf.Abs(delta)}</color>" : "";
+        } else {
+            return delta > 0 ? $" <color=green>▲{Mathf.Abs(delta)}</color>" : delta < 0 ? $" <color=red>▼{Mathf.Abs(delta)}</color>" : "";
+        } 
     }
 }

@@ -49,6 +49,8 @@ public class CraftingNPC : NPC
 
         audioSource.clip = openCraftSound;
         audioSource.Play();
+
+        StartCoroutine(WeaponsController.instance.Sheathe());
     }
 
     void CloseCraftingWindow (){

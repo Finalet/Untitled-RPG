@@ -8,6 +8,8 @@ public class DEBUG_TooManyItems : MonoBehaviour
     public Transform grid;
 
     void OnEnable() {
+        transform.SetAsLastSibling();
+
         if (grid.childCount != 0)
             return;
 

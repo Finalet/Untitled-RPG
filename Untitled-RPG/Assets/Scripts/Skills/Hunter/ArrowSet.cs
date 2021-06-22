@@ -119,6 +119,6 @@ public class ArrowSet : Skill
     public override string getDescription()
     {
         DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
-        return $"Cover vast area in front by launching multiple arrows and dealing {dmg.damage} {dmg.damageType} damage.";
+        return $"Cover vast area in front by launching multiple arrows and dealing {dmg.damage} {dmg.damageType} damage with each shot.";
     }
 }

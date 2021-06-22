@@ -103,7 +103,7 @@ public class PeaceCanvas : MonoBehaviour
 
         if (Input.GetKeyDown(KeybindsManager.instance.damageChat)) {
             DebugChatPanel.SetActive(!DebugChatPanel.activeInHierarchy);
-        } else if (Input.GetKeyDown(KeybindsManager.instance.tooManyItems)) {
+        } else if (Input.GetKeyDown(KeybindsManager.instance.tooManyItems) && Inventory.activeInHierarchy) {
             DebugTooManyItems.SetActive(!DebugTooManyItems.activeInHierarchy);
         } else if (Input.GetKeyDown(KeybindsManager.instance.hideUI)) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
@@ -241,6 +241,9 @@ public class PeaceCanvas : MonoBehaviour
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), pos, PeaceCanvas.instance.UICamera, out pos);
         dragGO.GetComponent<RectTransform>().anchoredPosition = pos;
+    }
+    public bool isDragging () {
+        return dragGO != null ? true : false;
     }
 
     [System.NonSerialized] public bool dragSuccess;

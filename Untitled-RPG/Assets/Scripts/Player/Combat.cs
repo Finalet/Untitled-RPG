@@ -71,6 +71,8 @@ public class Combat : MonoBehaviour
         skillIDs = ES3.Load<List<int>>("currentPickedSkillsIDs", savefilePath, new List<int>());
         foreach (int ID in skillIDs)
             currentPickedSkills.Add(AssetHolder.instance.getSkill(ID));
+
+        ValidateSkillSlots();
     }
 
     void Update() {

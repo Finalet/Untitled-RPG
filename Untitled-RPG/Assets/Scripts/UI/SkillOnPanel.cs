@@ -80,7 +80,7 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if (pointerData.button == PointerEventData.InputButton.Left && skill != null){
             if (!isPicked) {
                 PickSkill();   
-            } else {
+            } else if (!PeaceCanvas.instance.isDragging()) {
                 UnPickSkill();
             }
             UpdateDisplay();
@@ -96,10 +96,14 @@ public class SkillOnPanel : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
         if (!Combat.instanace.currentPickedSkills.Contains(skill))
             Combat.instanace.currentPickedSkills.Add(skill);
+
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
     void UnPickSkill () {
         if (Combat.instanace.currentPickedSkills.Contains(skill))
             Combat.instanace.currentPickedSkills.Remove(skill);
+        
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 
     public virtual void OnPointerEnter (PointerEventData pointerData) {

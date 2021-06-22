@@ -34,15 +34,22 @@ public class WeaponsController : MonoBehaviour
     public Transform twohandedStaffSlot;
     public Transform twohandedSwordSlot;
     public Transform bowSlot;
+    [Header("Sounds")]
+    public AudioClip unsheathSword;
+    public AudioClip sheathSword;
+    public AudioClip unsheathBow;
+    public AudioClip sheathBow;
+    AudioSource audioSource;
 
-    public AudioClip[] sheathSounds;
-
-    public bool sheathingUnsheathing;
+    [Space]
+    [DisplayWithoutEdit] public bool sheathingUnsheathing;
     bool blockSheathe;
 
     void Awake() {
         if (instance == null)
             instance = this;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Start () {
@@ -54,18 +61,16 @@ public class WeaponsController : MonoBehaviour
         ReleaseEmptyHandAnim();
 
         //Manual Sheath
-        if (Input.GetKeyDown(KeybindsManager.instance.sheathe) && isWeaponOut) {
+        if (Input.GetKeyDown(KeybindsManager.instance.sheathe) && (isWeaponOut || isBowOut) ) {
             StartCoroutine(Sheathe());
         }
     }
 
-    public IEnumerator UnSheathe () {
+    public IEnumerator UnSheathe () { //LEGACY not using it anywhere for now
         blockSheathe = true; //So that you cant immediately sheathe after unsheathing;
         
         sheathingUnsheathing = true;
         animator.SetTrigger("UnSheath");
-        GetComponent<AudioSource>().clip = sheathSounds[0];
-        GetComponent<AudioSource>().PlayDelayed(0.3f);
         weight = 0;
         while (weight <= 1) {
             animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), weight);
@@ -108,9 +113,6 @@ public class WeaponsController : MonoBehaviour
         sheathingUnsheathing = true;
         animator.SetTrigger("Sheath"); 
 
-        GetComponent<AudioSource>().clip = sheathSounds[1];
-        GetComponent<AudioSource>().PlayDelayed(0.3f);
-
         weight = 0;
         while (weight <= 1) {
             animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), weight);
@@ -125,6 +127,7 @@ public class WeaponsController : MonoBehaviour
         if (leftHandStatus != SingleHandStatus.Empty)
             animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 1);
 
+        PlaySheathSounds();
         SheathObj();
         weight = 1;
         while (weight >= 0) {
@@ -310,7 +313,19 @@ public class WeaponsController : MonoBehaviour
         }
     }
 
-    void UnblockSheath() {
+    void UnblockSheath () {
         blockSheathe = false;
+    }
+
+    void PlaySounds (AudioClip clip) {
+        audioSource.clip = clip;
+        audioSource.Play();
+    }
+    void PlaySheathSounds () {
+        if (isBowOut) {
+            PlaySounds(sheathBow);
+        } else {
+            PlaySounds(sheathSword);
+        }
     }
 }
