@@ -101,11 +101,11 @@ public class Characteristics : MonoBehaviour
         healingPower = Mathf.RoundToInt( ( (intellect / statsRatio) + healingPowerFromEquip) * healingPowerBuff);
         defense = Mathf.RoundToInt( ( (strength / statsRatio + agility / statsRatio) + defenseFromEquip) * defenseBuff);
 
-        attackSpeed.x = 1 * attackSpeedFromEquip.x * (1+agility*0.0001f) * attackSpeedBuff.x;
-        attackSpeed.y = 1 * attackSpeedFromEquip.y * (1-agility*0.0001f) * attackSpeedBuff.y;
+        attackSpeed.x = 1 * attackSpeedFromEquip.x * (1+agility*0.00005f) * attackSpeedBuff.x;
+        attackSpeed.y = 1 * attackSpeedFromEquip.y * (1-agility*0.00005f) * attackSpeedBuff.y;
 
-        castingSpeed.x = 1 * castingSpeedFromEquip.x * (1+intellect*0.0001f) * castingSpeedBuff.x;
-        castingSpeed.y = 1 * castingSpeedFromEquip.y * (1-intellect*0.0001f) * castingSpeedBuff.y;
+        castingSpeed.x = 1 * castingSpeedFromEquip.x * (1+intellect*0.00005f) * castingSpeedBuff.x;
+        castingSpeed.y = 1 * castingSpeedFromEquip.y * (1-intellect*0.00005f) * castingSpeedBuff.y;
     }
 
     float hpTimer = 1;

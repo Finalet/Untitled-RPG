@@ -36,7 +36,6 @@ public class ItemsDatabase : EditorWindow
 
     public void OnGUI()
     {
-        Debug.Log("AD");
         if (GameObject.Find("AssetHolder") == null) {
             EditorGUILayout.LabelField("Asset Holder not found in the scene.");
             return;

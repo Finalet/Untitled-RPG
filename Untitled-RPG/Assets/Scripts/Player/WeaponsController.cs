@@ -6,6 +6,9 @@ using UnityEngine.Animations;
 public enum BothHandsStatus {RightHandSwordOnly, RightHandStaffOnly, RightStaffLeftSword, RightStaffLeftShield, LeftHandSwordOnly, DualSwords, SwordShield, ShieldOnly, TwoHandedSword, TwoHandedStaff, AllEmpty};
 public enum SingleHandStatus {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Shield, Empty};
 
+public enum BothHandsStatusSimple {TwoHanded, DualOneHanded, LeftOneHanded, RightOneHanded, OneHandedPlusShield, ShieldOnly, BothEmpty};
+public enum SingleHandStatusSimple {OneHanded, TwoHanded, Shield, Empty};
+
 public class WeaponsController : MonoBehaviour
 {
     public static WeaponsController instance;
