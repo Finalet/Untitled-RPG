@@ -28,6 +28,11 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         if (skillInSlot == null)
             return;
 
+        if (skillInSlot.skillTree == SkillTree.Independent){
+            containsUnavailableSkill = false;
+            return;
+        }
+
         bool valid = false;
         for (int i = 0; i < Combat.instanace.currentPickedSkills.Count; i++){ //for each picked skill
             if (skillInSlot == Combat.instanace.currentPickedSkills[i]) 
@@ -151,6 +156,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         itemInSlot = null;
         itemAmount = 0;
         itemAmountText.text = "";
+        ValidateSkillSlot();
     }
 
     public override void AddItem (Item item, int amount, UI_InventorySlot initialSlot) {

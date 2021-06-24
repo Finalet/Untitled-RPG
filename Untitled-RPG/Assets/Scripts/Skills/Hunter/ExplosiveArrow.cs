@@ -28,7 +28,7 @@ public class ExplosiveArrow : Skill
     protected override void CastingAnim() {
         animator.CrossFade("Attacks.Hunter.Explosive Arrow", 0.25f);
         StartCoroutine(SpawnArrowIE());
-        PlaySound(castingSound, 0.15f, 0.6f);
+        PlaySound(castingSound, 0.37f, characteristics.castingSpeed.x);
         
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = true;
     }
@@ -44,13 +44,13 @@ public class ExplosiveArrow : Skill
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength/2 + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
 
-        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 1), skillName); //could be null if just canceled skill
+        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage, 1), skillName); //could be null if just canceled skill
         playerControlls.isAttacking = false;
         grabBowstring = false;
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         newArrow = null;
         Invoke("StopAiming", 0.5f);
-        PlaySound(shootSound, 0, 1, 0, 0.25f);
+        PlaySound(shootSound, 0.1f, 1, 0, 0.5f);
     }
 
     public void GrabBowstring () {
@@ -91,7 +91,7 @@ public class ExplosiveArrow : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Launch an arrow that explodes on impact, dealing {dmg.damage} {dmg.damageType} to everyone inside the impact radius.";
     }
 }

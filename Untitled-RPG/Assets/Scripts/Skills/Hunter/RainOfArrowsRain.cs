@@ -12,6 +12,11 @@ public class RainOfArrowsRain : MonoBehaviour
     
     void Start() {
         Destroy(gameObject, skill.rainDuration);
+        AudioSource audioSource =  GetComponent<AudioSource>();
+        audioSource.spatialBlend = 1;
+        audioSource.maxDistance = 100;
+        audioSource.clip = skill.rainSound;
+        audioSource.PlayDelayed(0.5f);
     }
     void Update() {
         if (Time.time - frequencyTimer >= 1/skill.rainFrequency) {
@@ -36,7 +41,8 @@ public class RainOfArrowsRain : MonoBehaviour
         pos.y = transform.position.y;
 
         Arrow ar = Instantiate(skill.arrowPrefab, pos, Quaternion.identity).GetComponent<Arrow>();
+        ar.GetComponent<AudioSource>().clip = null;
         ar.instantShot = true;
-        ar.Shoot(10, ar.transform.position + Vector3.down * 10, CalculateDamage.damageInfo(skill.skillTree, skill.baseDamagePercentage), skill.skillName);
+        ar.Shoot(10, ar.transform.position + Vector3.down * 10, CalculateDamage.damageInfo(skill.damageType, skill.baseDamagePercentage), skill.skillName);
     }
 }

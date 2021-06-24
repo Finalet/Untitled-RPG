@@ -15,7 +15,6 @@ public class Hailstone : Skill
     public List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
 
     public AudioClip castingSound;
-    public AudioClip fireSound;
 
     protected override void Start() {
         base.Start();
@@ -42,7 +41,7 @@ public class Hailstone : Skill
         AddParticles();
 
 
-        PlaySound(castingSound, 0, 0.3f, 0.3f);
+        PlaySound(castingSound, 0.1f, characteristics.castingSpeed.x);
     }
 
     protected override void CustomUse() {}
@@ -53,10 +52,8 @@ public class Hailstone : Skill
         finishedCast = true;
 
         GameObject go = Instantiate (projectile, pickedPosition, Quaternion.LookRotation(-playerControlls.transform.forward, Vector3.up));
-        go.transform.GetChild(0).GetComponent<HailstoneProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
+        go.transform.GetChild(0).GetComponent<HailstoneProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
         go.SetActive(true);
-
-        PlaySound(fireSound);
     }
 
     void AddParticles() {
@@ -77,7 +74,7 @@ public class Hailstone : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Crash a huge iceberg onto enemies in a specified area dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

@@ -8,6 +8,8 @@ public class Whirlwind : Skill
 
     [Header("CustomVars")]
     public float duration;
+    public AudioClip start;
+    public AudioClip loop;
 
     protected override void CustomUse() {
         StartCoroutine(Using());
@@ -21,18 +23,20 @@ public class Whirlwind : Skill
     IEnumerator Using () {
         Combat.instanace.blockSkills = true;
 
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
             animator.CrossFade("Attacks.Knight.Whirlwind Two handed", 0.25f);
-        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) 
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) 
             animator.CrossFade("Attacks.Knight.Whirlwind Dual swords", 0.25f);
         else
             animator.CrossFade("Attacks.Knight.Whirlwind Dual swords", 0.25f);
 
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+        PlaySound(start, 0, characteristics.attackSpeed.x, 0.1f);
+
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded) {
             while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")). IsName("Whirlwind_loop Two handed")) {
                 yield return null;
             }
-        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) {
             while (!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")). IsName("Whirlwind_loop Dual swords")) {
                 yield return null;
             }
@@ -49,6 +53,7 @@ public class Whirlwind : Skill
             wasFlying = true;
         }
 
+        PlaySound(loop);
 
         Characteristics.instance.canGetHit = false;
         
@@ -60,8 +65,6 @@ public class Whirlwind : Skill
             if (hitTimer <= 0) {
                 hitTimer = 0.2f * characteristics.attackSpeed.y;
                 Hit();
-                audioSource.time = 0.05f;
-                audioSource.Play();
             } else {
                 hitTimer -= Time.fixedDeltaTime;
             }
@@ -73,9 +76,9 @@ public class Whirlwind : Skill
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
         
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
             animator.CrossFade("Attacks.Knight.Whirlwind_end Two handed", 0.25f);
-        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) 
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) 
             animator.CrossFade("Attacks.Knight.Whirlwind_end Dual swords", 0.25f);
         else
             animator.CrossFade("Attacks.Knight.Whirlwind_end Dual swords", 0.25f);
@@ -83,6 +86,8 @@ public class Whirlwind : Skill
         playerControlls.forceRigidbodyMovement = false;
         Characteristics.instance.canGetHit = true;
         Combat.instanace.blockSkills = false;
+
+        audioSource.Stop();
     }   
 
     void OnTriggerEnter(Collider other) {
@@ -102,7 +107,7 @@ public class Whirlwind : Skill
 
     public void Hit () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, false, true, HitType.Interrupt);
+            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, false, true, HitType.Interrupt);
         }
     }
 
@@ -116,7 +121,7 @@ public class Whirlwind : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Spin your sword for {duration} seconds, dealing {dmg.damage} {dmg.damageType} damage to everyone around.";
     }
 

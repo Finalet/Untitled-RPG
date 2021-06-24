@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Audio;
 
 public class RainOfArrows : Skill
 {
@@ -17,7 +18,8 @@ public class RainOfArrows : Skill
     
     [Header("Sounds")]
     public AudioClip castingSound;
-    public AudioClip shootSound;
+    public AudioClip rainSound;
+    public AudioMixerGroup mixedGroup;
 
     LayerMask ignorePlayer;
     GameObject newArrow;
@@ -43,15 +45,17 @@ public class RainOfArrows : Skill
             return;
 
         RainOfArrowsRain rain = new GameObject().AddComponent(typeof(RainOfArrowsRain)) as RainOfArrowsRain;
+        rain.gameObject.AddComponent<AudioSource>();
         rain.name = skillName;
         rain.transform.position = pickedPosition + Vector3.up * 20;
         rain.skill = this;
+        rain.GetComponent<AudioSource>().outputAudioMixerGroup = mixedGroup;
     }
 
     protected override void CastingAnim() {
         animator.CrossFade("Attacks.Hunter.Rain of Arrows", 0.25f);
         StartCoroutine(SpawnArrowIE());
-        PlaySound(castingSound, 0.15f, 0.6f);
+        PlaySound(castingSound, 0, characteristics.castingSpeed.x);
     }
 
     public void Shoot (bool spawnArrows = false) {
@@ -75,7 +79,6 @@ public class RainOfArrows : Skill
         grabBowstring = false;
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         newArrow = null;
-        PlaySound(shootSound, 0, 1, 0, 0.25f);
 
         isCanceled = false;
     }
@@ -122,7 +125,7 @@ public class RainOfArrows : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Bring down hundreds of arrows at a selected area for {rainDuration} seconds. Each arrow deals {dmg.damage} {dmg.damageType} damage.";
     }
 }

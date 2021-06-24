@@ -35,21 +35,20 @@ public class StoneHit : Skill
     }
 
     IEnumerator Using () {
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
             animator.CrossFade("Attacks.Knight.StoneHit Two handed", 0.25f);
-        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
             animator.CrossFade("Attacks.Knight.StoneHit Dual swords", 0.25f);
         else 
             animator.CrossFade("Attacks.Knight.StoneHit Dual swords", 0.25f);
 
+        PlaySound(first, 0f, characteristics.attackSpeed.x, 0.2f);
         while(!yes) {
             yield return null;
         }
         transform.GetChild(0).GetComponent<ParticleSystem>().Play();
 
         GameObject soundFX = Instantiate(SFX.gameObject, transform.position, Quaternion.identity);
-        soundFX.GetComponent<AudioSource>().clip = first;
-        soundFX.GetComponent<AudioSource>().Play();
 
         playerControlls.playerCamera.GetComponent<CameraControll>().CameraShake();
 
@@ -85,7 +84,7 @@ public class StoneHit : Skill
             return;
 
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
+            en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
             enemiesHit.Add(en);
         }
     }
@@ -99,7 +98,7 @@ public class StoneHit : Skill
     }
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Hit the ground in front of you, knicking down enemies and dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

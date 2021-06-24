@@ -143,7 +143,7 @@ public class DancingSwords : Skill
             tryNumber ++;
             if(tryNumber >=4) return;
         }
-        spawnedSwords[currentShotIndex].GetComponent<DancingSwordProjectile>().Shoot(strength, shootPoint, CalculateDamage.damageInfo(SkillTree.Knight, baseDamagePercentage/2), CalculateDamage.damageInfo(SkillTree.Hunter, baseDamagePercentage/2), skillName);
+        spawnedSwords[currentShotIndex].GetComponent<DancingSwordProjectile>().Shoot(strength, shootPoint, CalculateDamage.damageInfo(DamageType.Melee, baseDamagePercentage/2), CalculateDamage.damageInfo(DamageType.Ranged, baseDamagePercentage/2), skillName);
         spawnedSwords[currentShotIndex] = null;
         spawned[currentShotIndex] = false;
         StartCoroutine(RespawnSword(currentShotIndex));
@@ -206,8 +206,8 @@ public class DancingSwords : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmgMelee = CalculateDamage.damageInfo(SkillTree.Knight, baseDamagePercentage/2, 0, 0);
-        DamageInfo dmgHunter = CalculateDamage.damageInfo(SkillTree.Hunter, baseDamagePercentage/2, 0, 0);
+        DamageInfo dmgMelee = CalculateDamage.damageInfo(DamageType.Melee, baseDamagePercentage/2, 0, 0);
+        DamageInfo dmgHunter = CalculateDamage.damageInfo(DamageType.Ranged, baseDamagePercentage/2, 0, 0);
         return $"Shoot levitating swords around you for {skillDuration} seconds dealing {dmgMelee.damage} {dmgMelee.damageType} and {dmgHunter.damage} {dmgHunter.damageType} damage.";
     }
 }

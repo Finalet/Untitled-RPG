@@ -60,7 +60,11 @@ public class Combat : MonoBehaviour
     }
     void Load() {
         //Load current skill trees
-        currentSkillTrees = ES3.Load<SkillTree[]>("currentSkillTrees", savefilePath, new SkillTree[2]);
+        SkillTree[] defaultSkilltrees = new SkillTree[2];
+        defaultSkilltrees[0] = SkillTree.Knight;
+        defaultSkilltrees[1] = SkillTree.Hunter;
+
+        currentSkillTrees = ES3.Load<SkillTree[]>("currentSkillTrees", savefilePath, defaultSkilltrees);
         
         //Load learned skills
         List<int> skillIDs = ES3.Load<List<int>>("learnedSkillsIDs", savefilePath, new List<int>());

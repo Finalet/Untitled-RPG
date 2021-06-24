@@ -36,7 +36,7 @@ public class Fireball : Skill
         else 
             animator.CrossFade("Attacks.Mage.Fireball", 0.25f);
 
-        PlaySound(castingSound, 0.15f, 0.75f);
+        PlaySound(castingSound, 0, characteristics.castingSpeed.x);
 
         ParticleSystem ps = Instantiate(HandsEffect, hand);
         instanciatedEffects.Add(ps);
@@ -69,7 +69,7 @@ public class Fireball : Skill
         Fireball.SetActive(true);
         Fireball.GetComponent<Rigidbody>().AddForce(direction.normalized * speed, ForceMode.Impulse);
         Fireball.GetComponent<FireballProjectile>().distance = actualDistance;
-        Fireball.GetComponent<FireballProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
+        Fireball.GetComponent<FireballProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
         Fireball.GetComponent<FireballProjectile>().doNotDestroy = false;
         playerControlls.isAttacking = false;
     }
@@ -109,7 +109,7 @@ public class Fireball : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Cast a fireball that deals {dmg.damage} {dmg.damageType} damage.";
     }
 }

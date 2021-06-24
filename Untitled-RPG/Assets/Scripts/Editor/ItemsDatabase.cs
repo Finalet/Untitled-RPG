@@ -133,7 +133,7 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.LabelField(item.name, GUILayout.Width(230 + EditorGUI.indentLevel * 8));
             EditorGUILayout.LabelField(item.itemRarity.ToString(), GUILayout.Width(100 + EditorGUI.indentLevel * 8));
             DrawAdditionalFields(item);
-            EditorGUI.BeginDisabledGroup(true); EditorGUILayout.ObjectField("", item, typeof(Item), false, GUILayout.Width(150)); EditorGUI.EndDisabledGroup();
+            EditorGUI.BeginDisabledGroup(true); EditorGUILayout.ObjectField("", item, typeof(Item), false, GUILayout.Width(100)); EditorGUI.EndDisabledGroup();
             if (GUILayout.Button("Open", GUILayout.Width(70)))
                 selectedItem = item;
             if (GUILayout.Button("-", GUILayout.Width(15))){

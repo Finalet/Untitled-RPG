@@ -13,6 +13,7 @@ public abstract class Skill : MonoBehaviour
     public Sprite icon;
     [Tooltip("From what tree the skill is")] public SkillTree skillTree; 
     public SkillType skillType; 
+    public DamageType damageType;
     public int staminaRequired; 
     [Tooltip("Damage in % from players attack")] public int baseDamagePercentage;
     public float coolDown;

@@ -167,18 +167,15 @@ public class Characteristics : MonoBehaviour
     
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
-        ddText.GetComponent<ddText>().damageInfo = new DamageInfo(damage, DamageType.enemy, false);
-        ddText.GetComponent<ddText>().isPlayer = true;
+        ddText.GetComponent<ddText>().Init(new DamageInfo(damage, DamageType.Enemy, false));
     }
     void DisplayHealNumber(int healAmount) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 2f, Quaternion.identity);
-        ddText.GetComponent<ddText>().healAmount = healAmount;
-        ddText.GetComponent<ddText>().isPlayer = true;
+        ddText.GetComponent<ddText>().Init(healAmount);
     }
     void DisplayStaminaNumber(int staminaAmount) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 2f, Quaternion.identity);
-        ddText.GetComponent<ddText>().staminaAmount = staminaAmount;
-        ddText.GetComponent<ddText>().isPlayer = true;
+        ddText.GetComponent<ddText>().Init(staminaAmount, true);
     }
 
     public void UseOrRestoreStamina (int amount) {
@@ -248,7 +245,7 @@ public class Characteristics : MonoBehaviour
             PlayerControlls.instance.InterruptCasting();
         }
 
-        int actualDamage = Mathf.RoundToInt(damage); 
+        int actualDamage = Mathf.RoundToInt( damage * defenseCoeff() ); 
         health -= actualDamage;
         DisplayDamageNumber(actualDamage);
         GetComponent<PlayerAudioController>().PlayGetHitSound();
@@ -257,6 +254,11 @@ public class Characteristics : MonoBehaviour
             PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
 
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> was hit with <color=red>{actualDamage}</color> damage by <color=#80FFFF>{enemyName}</color>.");
+    }
+
+    float defenseCoeff () { //https://www.desmos.com/calculator/pjaj8kestx
+        float g = 0.99985f;
+        return Mathf.Pow(g, defense + Mathf.Log(1, g));
     }
 
 #endregion

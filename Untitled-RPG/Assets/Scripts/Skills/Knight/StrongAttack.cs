@@ -26,17 +26,17 @@ public class StrongAttack : Skill
     }  
 
     void PlayAnimation() {
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
             animator.CrossFade("Attacks.Knight.StrongAttack Two handed", 0.25f);
-        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords)
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
             animator.CrossFade("Attacks.Knight.StrongAttack Dual swords", 0.25f);
         else 
             animator.CrossFade("Attacks.Knight.StrongAttack Dual swords", 0.25f);
     }
     void PlaySounds () {
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
-            PlaySound(sounds[1], 0, 1, 1f * characteristics.attackSpeed.y);
-        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded) {
+            PlaySound(sounds[1], 0, characteristics.attackSpeed.x, 0, 0.4f);
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) {
             PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.y);
         } else {
             PlaySound(sounds[0], 0, 1, 0.35f * characteristics.attackSpeed.y);
@@ -60,7 +60,7 @@ public class StrongAttack : Skill
 
     public void Hit () {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage, critChance), skillName, true, true, HitType.Kickback);
+            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, critChance), skillName, true, true, HitType.Kickback);
         }
     }
 
@@ -73,9 +73,9 @@ public class StrongAttack : Skill
     }
 
     void ChooseColliderSize() {
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded) {
             colliderSize = colliderSizeTwohandedSword;
-        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) { 
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) { 
             colliderSize = colliderSizeDualSwords;
         } else {
             colliderSize = colliderSizeDualSwords;
@@ -85,7 +85,7 @@ public class StrongAttack : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Smash emeies with extra force and deal {dmg.damage} {dmg.damageType} damage. This skill has a {critChance*100}% chance of landing critical hits";
     }
 }

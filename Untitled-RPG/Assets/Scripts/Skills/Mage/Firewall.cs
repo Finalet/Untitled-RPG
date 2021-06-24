@@ -7,6 +7,7 @@ public class Firewall : Skill
     [Header("Custom vars")]
     public float duration = 20;
     public GameObject firewall;
+    public AudioClip castingSound;
     Vector3 spawnPos;
 
     Transform[] hands;
@@ -26,6 +27,8 @@ public class Firewall : Skill
         else
             animator.CrossFade("Attacks.Mage.Firewall", 0.25f);
         
+        PlaySound(castingSound, 0, characteristics.castingSpeed.x);
+
         Invoke("Spawn", 1.6f * 0.5f * characteristics.attackSpeed.y);
 
         for (int i = 0; i < hands.Length; i++) {
@@ -48,7 +51,7 @@ public class Firewall : Skill
 
         GameObject fw = Instantiate(firewall, spawnPos, Quaternion.LookRotation(playerControlls.transform.forward, Vector3.up));
         fw.GetComponent<FirewallWall>().duration = duration;
-        fw.GetComponent<FirewallWall>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
+        fw.GetComponent<FirewallWall>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
         fw.SetActive(true);
 
         DeleteEffects();
@@ -65,7 +68,7 @@ public class Firewall : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Create a wall of fire in front, blocking enemies and dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

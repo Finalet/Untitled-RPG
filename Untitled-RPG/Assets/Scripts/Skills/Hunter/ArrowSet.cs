@@ -10,7 +10,6 @@ public class ArrowSet : Skill
     public float strength = 100;
     [Header("Sounds")]
     public AudioClip castingSound;
-    public AudioClip shootSound;
 
     LayerMask ignorePlayer;
     public Arrow[] newArrows;
@@ -29,7 +28,7 @@ public class ArrowSet : Skill
     protected override void CastingAnim() {
         animator.CrossFade("Attacks.Hunter.Arrow Set", 0.25f);
         StartCoroutine(SpawnArrowIE());
-        PlaySound(castingSound, 0.15f, 0.6f);
+        PlaySound(castingSound, 0.5f, characteristics.castingSpeed.x);
         
         playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = true;
     }
@@ -59,7 +58,7 @@ public class ArrowSet : Skill
             if (newArrows[i] != null) {
                 Vector3 newShootPoint = shootPoint + transform.right * (i-numberOfArrows/2f) * adjustingDistanceBetweenArrows;
                 newArrows[i].instantShot = true;
-                newArrows[i].Shoot(strength, newShootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName); //could be null if just canceled skill
+                newArrows[i].Shoot(strength, newShootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName); //could be null if just canceled skill
                 newArrows[i] = null;
             }
         }
@@ -67,7 +66,6 @@ public class ArrowSet : Skill
         grabBowstring = false;
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         Invoke("StopAiming", 0.5f);
-        PlaySound(shootSound, 0, 1, 0, 0.25f);
     }
 
     public void GrabBowstring () {
@@ -118,7 +116,7 @@ public class ArrowSet : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Cover vast area in front by launching multiple arrows and dealing {dmg.damage} {dmg.damageType} damage with each shot.";
     }
 }

@@ -60,10 +60,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 7
   skillName: Whirlwind
-  description: Spins around dealing damage to everyone close by.
   icon: {fileID: 21300000, guid: 7a487265c4ea74d44b002d6a213dfc53, type: 3}
   skillTree: 0
   skillType: 0
+  damageType: 0
   staminaRequired: 0
   baseDamagePercentage: 50
   coolDown: 30
@@ -78,6 +78,8 @@ MonoBehaviour:
   areaPickerPrefab: {fileID: 0}
   areaPickerSize: 0
   duration: 4
+  start: {fileID: 8300000, guid: 5796a1fe77f4d0b48840fb51fea4baf4, type: 3}
+  loop: {fileID: 8300000, guid: 0233410c5d8760b4185103ccb9d6dca9, type: 3}
 --- !u!82 &6268073020377969972
 AudioSource:
   m_ObjectHideFlags: 0
@@ -89,7 +91,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -6621450033256751156, guid: 876c84e2c7654764f9483b4add6c8fe5,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: b7034f8d6091cac4baac25c3d63eaa68, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

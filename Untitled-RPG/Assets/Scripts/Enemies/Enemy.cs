@@ -276,7 +276,7 @@ public abstract class Enemy : MonoBehaviour
             position = transform.position + Vector3.up * 1.5f;
 
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, position, Quaternion.identity);
-        ddText.GetComponent<ddText>().damageInfo = damageInfo;
+        ddText.GetComponent<ddText>().Init(damageInfo);
     }
 
     protected int calculateActualDamage (int damage) {
@@ -433,7 +433,7 @@ public abstract class Enemy : MonoBehaviour
             currentRecurringEffects[i].frequencyTimer -= Time.deltaTime;
             currentRecurringEffects[i].durationTimer -= Time.deltaTime;
             if (currentRecurringEffects[i].frequencyTimer <= 0) {
-                GetHit(CalculateDamage.damageInfo(currentRecurringEffects[i].skillTree, currentRecurringEffects[i].baseEffectPercentage, 0), currentRecurringEffects[i].name);
+                GetHit(CalculateDamage.damageInfo(currentRecurringEffects[i].damageType, currentRecurringEffects[i].baseEffectPercentage, 0), currentRecurringEffects[i].name);
                 currentRecurringEffects[i].frequencyTimer = 1/currentRecurringEffects[i].frequencyPerSecond;
             }
             if (currentRecurringEffects[i].durationTimer <= 0) {
@@ -445,7 +445,7 @@ public abstract class Enemy : MonoBehaviour
     }
     
     public virtual void AddRecurringEffect (RecurringEffect effect) {
-        RecurringEffect newEffect = new RecurringEffect(effect.name, effect.skillTree, effect.baseEffectPercentage, effect.frequencyPerSecond, effect.duration,
+        RecurringEffect newEffect = new RecurringEffect(effect.name, effect.skillTree, effect.damageType, effect.baseEffectPercentage, effect.frequencyPerSecond, effect.duration,
                     effect.vfx, effect.frequencyTimer, effect.durationTimer);
         newEffect.durationTimer = newEffect.duration;
         newEffect.frequencyTimer = 0;

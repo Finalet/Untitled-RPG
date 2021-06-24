@@ -12,8 +12,6 @@ public class InventoryManager : MonoBehaviour
 
     public int currentGold;
     [Space]
-    public InputField goldInputText;
-    [Space]
     public TextMeshProUGUI currentGoldLabel;
     public Dropdown sortDropDown;
     [Space]
@@ -46,9 +44,6 @@ public class InventoryManager : MonoBehaviour
         if (itemToAdd is Equipment)
             itemAmountToAdd = 1;
 
-        if (goldInputText.text != "" && ( Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) )
-            AddGoldDEBUG();
-
         currentGoldLabel.text = currentGold.ToString();
         currentGoldLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentGoldLabel.GetComponent<TextMeshProUGUI>().textBounds.size.x, 20);
     }
@@ -59,11 +54,6 @@ public class InventoryManager : MonoBehaviour
     void Load () {
         if (ES3.FileExists(savefilePath))
             currentGold = ES3.Load<int>("currentGold", savefilePath);
-    }
-
-    public void AddGoldDEBUG () {
-        currentGold += int.Parse(goldInputText.text);
-        goldInputText.text = "";
     }
 
     public void AddItemToInventory (Item item, int amount, UI_InventorySlot slotToExclude = null) {

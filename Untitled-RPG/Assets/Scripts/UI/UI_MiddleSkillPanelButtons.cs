@@ -143,10 +143,18 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
         }
 
         SingleHandStatus rhs = WeaponsController.instance.rightHandStatus;
-        if (rhs == SingleHandStatus.OneHandedSword || rhs == SingleHandStatus.TwoHandedSword) {
-            AddSkill(AssetHolder.instance.getSkill(0), null);            
-        } else if (rhs == SingleHandStatus.OneHandedStaff || rhs == SingleHandStatus.TwoHandedStaff) {
-            AddSkill(AssetHolder.instance.getSkill(8), null);
+        if (EquipmentManager.instance.mainHand.itemInSlot != null) {
+            Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)
+                AddSkill(AssetHolder.instance.getSkill(0), null);
+            else if (w.weaponType == WeaponType.OneHandedStaff || w.weaponType == WeaponType.TwoHandedStaff)
+                AddSkill(AssetHolder.instance.getSkill(8), null);
+        } else if (EquipmentManager.instance.secondaryHand.itemInSlot != null) {
+            Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
+            if (w.weaponType == WeaponType.OneHandedSword)
+                AddSkill(AssetHolder.instance.getSkill(0), null);
+            else if (w.weaponType == WeaponType.OneHandedStaff)
+                AddSkill(AssetHolder.instance.getSkill(8), null);
         } else {
             ClearSlot();
         }

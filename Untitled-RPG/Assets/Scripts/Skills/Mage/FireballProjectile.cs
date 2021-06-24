@@ -28,9 +28,6 @@ public class FireballProjectile : MonoBehaviour
         fire.GetComponent<ParticleSystem>().Play();
         begPos = transform.position;
 
-        GetComponent<AudioSource>().time = 0.1f; 
-        GetComponent<AudioSource>().pitch = 1.2f; 
-        GetComponent<AudioSource>().Play(); 
         explosionRadius = GetComponent<SphereCollider>().radius * 3;
     }
 
@@ -79,6 +76,7 @@ public class FireballProjectile : MonoBehaviour
     void Explode () {
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f, 0.1f, transform.position);
         explostionSparks.Play();
+        GetComponent<AudioSource>().Play(); 
         fire.Stop();
         light1.SetActive(false);
         GetComponent<Rigidbody>().isKinematic = true;

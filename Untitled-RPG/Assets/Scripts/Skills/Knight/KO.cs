@@ -27,17 +27,17 @@ public class KO : Skill
 
     
     void PlayAnimation () {
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
             animator.CrossFade("Attacks.Knight.KO Two handed", 0.25f);
-        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) 
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) 
             animator.CrossFade("Attacks.Knight.KO Dual swords", 0.25f);
         else 
             animator.CrossFade("Attacks.Knight.KO Dual swords", 0.25f);
     }
     void PlaySounds() {
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded) {
             PlaySound(sounds[2], 0, characteristics.attackSpeed.x);
-        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) {
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) {
             Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.y);
             Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.y);
         } else {
@@ -77,12 +77,12 @@ public class KO : Skill
     public void Hit (float knockDown) {
         for (int i = 0; i < enemiesInTrigger.Count; i++) {
             if (knockDown == 1) {
-                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
+                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
             } else {
-                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true, HitType.Normal);
+                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Normal);
             }
         }
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword)
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
             twohandedSwordVFX.Play();
     }
 
@@ -95,9 +95,9 @@ public class KO : Skill
     }
 
     void ChooseColliderSize() {
-        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHandedSword) {
+        if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded) {
             colliderSize = colliderSizeTwohandedSword;
-        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualSwords) { 
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) { 
             colliderSize = colliderSizeDualSwords;
         } else {
             colliderSize = colliderSizeDualSwords;
@@ -106,7 +106,7 @@ public class KO : Skill
     }
 
     public override string getDescription() {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Knock down enemies and deal {dmg.damage} {dmg.damageType} damage.";
     }
 }

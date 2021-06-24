@@ -29,7 +29,7 @@ public class PoisonArrow : Skill
     protected override void CastingAnim() {
         animator.CrossFade("Attacks.Hunter.Poison Arrow", 0.25f);
         StartCoroutine(SpawnArrowIE());
-        PlaySound(castingSound, 0.15f, 0.6f);
+        PlaySound(castingSound, 0.37f, characteristics.castingSpeed.x);
         
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = true;
     }
@@ -45,14 +45,14 @@ public class PoisonArrow : Skill
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength/2 + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
 
-        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName); //could be null if just canceled skill
+        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName); //could be null if just canceled skill
         if (newArrow != null) newArrow.poisonEffect = poisonEffect;
         playerControlls.isAttacking = false;
         grabBowstring = false;
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         newArrow = null;
         Invoke("StopAiming", 0.5f);
-        PlaySound(shootSound, 0, 1, 0, 0.25f);
+        PlaySound(shootSound, 0, 1, 0, 0.5f);
     }
 
     public void GrabBowstring () {
@@ -93,7 +93,7 @@ public class PoisonArrow : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(poisonEffect.skillTree, poisonEffect.baseEffectPercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(poisonEffect.damageType, poisonEffect.baseEffectPercentage, 0, 0);
         return $"Launch an arrow that poisons its target. Poison deals {dmg.damage * poisonEffect.frequencyPerSecond} {dmg.damageType} damage per second for {poisonEffect.duration} seconds.";
     }
 }

@@ -11,7 +11,6 @@ public class PowerSphere : Skill
     public float duration = 20;
     public GameObject powerSphere;
     public AudioClip castingSound;
-    public AudioClip shootSound;
     
     public ParticleSystem HandsEffect;
     public List<ParticleSystem> instanciatedEffects = new List<ParticleSystem>();
@@ -45,7 +44,7 @@ public class PowerSphere : Skill
 
         AddParticles();
 
-        PlaySound(castingSound, 0, 0.7f, 0);
+        PlaySound(castingSound, 0.1f, characteristics.castingSpeed.x);
     }
 
     protected override void CustomUse(){}
@@ -63,7 +62,6 @@ public class PowerSphere : Skill
     public void ShootSphere () {
         finishedCast = true;
 
-        PlaySound(shootSound, 0.1f, 1.2f);
         RemoveParticles();
         if (instanciatedSphere != null) instanciatedSphere.GetComponent<PowerSphereProjectile>().shoot = true; //Sometimes gives an error when canceling skill since it still tries to shoot it
     }

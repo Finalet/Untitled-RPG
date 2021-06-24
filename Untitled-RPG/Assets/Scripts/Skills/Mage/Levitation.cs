@@ -33,7 +33,7 @@ public class Levitation : Skill
 
     protected override void CustomUse() {
         PlayerControlls.instance.TakeOff();
-        GetComponent<AudioSource>().PlayDelayed(0.4f);
+        PlaySound(audioSource.clip, 0, characteristics.castingSpeed.x);
         characteristics.AddBuff(buff);
         StartCoroutine(flightTimer());
 

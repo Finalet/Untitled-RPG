@@ -37,7 +37,7 @@ public class Dash : Skill
             return;
 
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName, true, true);
+            en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true);
             enemiesHit.Add(en);
         }
     }
@@ -62,7 +62,7 @@ public class Dash : Skill
     }
 
     public override string getDescription() {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Rushes forward through enemies, dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

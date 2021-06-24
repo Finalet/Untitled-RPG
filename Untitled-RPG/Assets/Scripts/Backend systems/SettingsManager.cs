@@ -20,7 +20,9 @@ public class SettingsManager : MonoBehaviour
     public Text mouseSensitivityText;
     public Toggle invertYToggle;
     public Toggle displayHelmetToggle;
+    public Toggle displayHelmetToggleInSlot;
     public Toggle displayCapeToggle;
+    public Toggle displayCapeToggleInSlot;
 
     void Awake() {
         if (instance == null)
@@ -57,10 +59,26 @@ public class SettingsManager : MonoBehaviour
     public void SetDisplayHelmet () {
         displayHelmet = displayHelmetToggle.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayHelmet();
+        if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+        UpdateSettingsUI();
     }
     public void SetDisplayCape () {
         displayCape = displayCapeToggle.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayCape();
+        if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+        UpdateSettingsUI();
+    }
+    public void SetDisplayHelmetSlot () {
+        displayHelmet = displayHelmetToggleInSlot.isOn;
+        if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayHelmet();
+        if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+        UpdateSettingsUI();
+    }
+    public void SetDisplayCapeSlot () {
+        displayCape = displayCapeToggleInSlot.isOn;
+        if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayCape();
+        if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+        UpdateSettingsUI();
     }
 
     void UpdateSettingsUI () {
@@ -69,5 +87,7 @@ public class SettingsManager : MonoBehaviour
         invertYToggle.isOn = invertY;
         displayHelmetToggle.isOn = displayHelmet;
         displayCapeToggle.isOn = displayCape;
+        displayHelmetToggleInSlot.isOn = displayHelmet;
+        displayCapeToggleInSlot.isOn = displayCape;
     }
 }

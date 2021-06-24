@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 
-public enum BothHandsStatus {RightHandSwordOnly, RightHandStaffOnly, RightStaffLeftSword, RightStaffLeftShield, LeftHandSwordOnly, DualSwords, SwordShield, ShieldOnly, TwoHandedSword, TwoHandedStaff, AllEmpty};
-public enum SingleHandStatus {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Shield, Empty};
+//public enum BothHandsStatus {RightHandSwordOnly, RightHandStaffOnly, RightStaffLeftSword, RightStaffLeftShield, LeftHandSwordOnly, DualSwords, SwordShield, ShieldOnly, TwoHandedSword, TwoHandedStaff, AllEmpty};
+//public enum SingleHandStatus {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Shield, Empty};
 
-public enum BothHandsStatusSimple {TwoHanded, DualOneHanded, LeftOneHanded, RightOneHanded, OneHandedPlusShield, ShieldOnly, BothEmpty};
-public enum SingleHandStatusSimple {OneHanded, TwoHanded, Shield, Empty};
+public enum BothHandsStatus {TwoHanded, DualOneHanded, LeftOneHanded, RightOneHanded, OneHandedPlusShield, ShieldOnly, BothEmpty};
+public enum SingleHandStatus {OneHanded, TwoHanded, Shield, Empty};
 
 public class WeaponsController : MonoBehaviour
 {
@@ -26,7 +26,6 @@ public class WeaponsController : MonoBehaviour
     public GameObject BowObj;
     [Header("Hands")]
     public BothHandsStatus bothHandsStatus;
-    [Space]
     public SingleHandStatus leftHandStatus;
     public SingleHandStatus rightHandStatus;
     public Transform LeftHandTrans;
@@ -158,12 +157,12 @@ public class WeaponsController : MonoBehaviour
             SheathObj();
 
         animator.SetTrigger("UnSheath"); //Triggered to play animation of closed fist
-        if (bothHandsStatus == BothHandsStatus.DualSwords) { //Currently not all weapons types supported, add ELSE IF to add more support 
+        if (bothHandsStatus == BothHandsStatus.DualOneHanded) { //Currently not all weapons types supported, add ELSE IF to add more support 
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             SetParentAndTransorm(ref LeftHandEquipObj, LeftHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
             animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
-        } else if (bothHandsStatus == BothHandsStatus.TwoHandedSword || bothHandsStatus == BothHandsStatus.TwoHandedStaff) {
+        } else if (bothHandsStatus == BothHandsStatus.TwoHanded) {
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
         } else {
@@ -195,13 +194,15 @@ public class WeaponsController : MonoBehaviour
             return;
         }
         
-        if (bothHandsStatus == BothHandsStatus.DualSwords) {
+        if (bothHandsStatus == BothHandsStatus.DualOneHanded) {
             SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
             SetParentAndTransorm(ref LeftHandEquipObj, rightHipSlot);
-        } else if (bothHandsStatus == BothHandsStatus.TwoHandedStaff) {
-            SetParentAndTransorm(ref RightHandEquipObj, twohandedStaffSlot);
-        } else if (bothHandsStatus == BothHandsStatus.TwoHandedSword) {
-            SetParentAndTransorm(ref RightHandEquipObj, twohandedSwordSlot);
+        } else if (bothHandsStatus == BothHandsStatus.TwoHanded) {
+            Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+            if (w.weaponType == WeaponType.TwoHandedSword)
+                SetParentAndTransorm(ref RightHandEquipObj, twohandedSwordSlot);
+            else if (w.weaponType == WeaponType.TwoHandedStaff)
+                SetParentAndTransorm(ref RightHandEquipObj, twohandedStaffSlot);
         } else {
             Debug.LogError("Sheathing for this type of weapon is not implemented yet");
         }
@@ -225,21 +226,17 @@ public class WeaponsController : MonoBehaviour
 
         //Assign single hand status
         if (RightHandEquipObj != null && r != null) {
-            if (r.weaponType == WeaponType.OneHandedSword) {
-                rightHandStatus = SingleHandStatus.OneHandedSword;
-            } else if (r.weaponType == WeaponType.TwoHandedSword) {
-                rightHandStatus = SingleHandStatus.TwoHandedSword;
-            } else if (r.weaponType == WeaponType.OneHandedStaff) {
-                rightHandStatus = SingleHandStatus.OneHandedStaff;
-            } else if (r.weaponType == WeaponType.TwoHandedStaff) {
-                rightHandStatus = SingleHandStatus.TwoHandedStaff;
-            } 
+            if (r.weaponType == WeaponType.OneHandedSword || r.weaponType == WeaponType.OneHandedStaff) {
+                rightHandStatus = SingleHandStatus.OneHanded;
+            } else if (r.weaponType == WeaponType.TwoHandedSword || r.weaponType == WeaponType.TwoHandedStaff) {
+                rightHandStatus = SingleHandStatus.TwoHanded;
+            }
         } else {
             rightHandStatus = SingleHandStatus.Empty;
         }
         if (LeftHandEquipObj != null && l != null) {
-            if (l.weaponType == WeaponType.OneHandedSword) {
-                leftHandStatus = SingleHandStatus.OneHandedSword;
+            if (l.weaponType == WeaponType.OneHandedSword || l.weaponType == WeaponType.OneHandedStaff) {
+                leftHandStatus = SingleHandStatus.OneHanded;
             } else if (l.weaponType == WeaponType.Shield) {
                 leftHandStatus = SingleHandStatus.Shield;
             }
@@ -254,36 +251,24 @@ public class WeaponsController : MonoBehaviour
             return;
         }
 
-        //Assign total status
+        //Assign both hands status
         if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.Empty) {
-            bothHandsStatus = BothHandsStatus.AllEmpty;
+            bothHandsStatus = BothHandsStatus.BothEmpty;
             animatorWeaponType = -1;
-        } else if (rightHandStatus == SingleHandStatus.OneHandedSword && leftHandStatus == SingleHandStatus.Empty) {
-            bothHandsStatus = BothHandsStatus.RightHandSwordOnly;
+        } else if (rightHandStatus == SingleHandStatus.OneHanded && leftHandStatus == SingleHandStatus.Empty) {
+            bothHandsStatus = BothHandsStatus.RightOneHanded;
             animatorWeaponType = -1; //FIX LATER
-        } else if (rightHandStatus == SingleHandStatus.OneHandedSword && leftHandStatus == SingleHandStatus.OneHandedSword) {
-            bothHandsStatus = BothHandsStatus.DualSwords;
+        } else if (rightHandStatus == SingleHandStatus.OneHanded && leftHandStatus == SingleHandStatus.OneHanded) {
+            bothHandsStatus = BothHandsStatus.DualOneHanded;
             animatorWeaponType = 0;
-        } else if (rightHandStatus == SingleHandStatus.TwoHandedSword && leftHandStatus == SingleHandStatus.Empty) {
-            bothHandsStatus = BothHandsStatus.TwoHandedSword;
+        } else if (rightHandStatus == SingleHandStatus.TwoHanded && leftHandStatus == SingleHandStatus.Empty) {
+            bothHandsStatus = BothHandsStatus.TwoHanded;
             animatorWeaponType = 1;
-        } else if (rightHandStatus == SingleHandStatus.TwoHandedStaff && leftHandStatus == SingleHandStatus.Empty) {
-            bothHandsStatus = BothHandsStatus.TwoHandedStaff;
-            animatorWeaponType = 1;
-        } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.OneHandedSword) {
-            bothHandsStatus = BothHandsStatus.LeftHandSwordOnly;
+        } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.OneHanded) {
+            bothHandsStatus = BothHandsStatus.LeftOneHanded;
             animatorWeaponType = -1; //FIX LATER
-        } else if (rightHandStatus == SingleHandStatus.OneHandedSword && leftHandStatus == SingleHandStatus.Shield) {
-            bothHandsStatus = BothHandsStatus.SwordShield;
-            animatorWeaponType = -1; //FIX LATER
-        } else if (rightHandStatus == SingleHandStatus.OneHandedStaff && leftHandStatus == SingleHandStatus.Empty) {
-            bothHandsStatus = BothHandsStatus.RightHandStaffOnly;
-            animatorWeaponType = -1; //FIX LATER
-        } else if (rightHandStatus == SingleHandStatus.OneHandedStaff && leftHandStatus == SingleHandStatus.OneHandedSword) {
-            bothHandsStatus = BothHandsStatus.RightStaffLeftSword;
-            animatorWeaponType = -1; //FIX LATER
-        } else if (rightHandStatus == SingleHandStatus.OneHandedStaff && leftHandStatus == SingleHandStatus.Shield) {
-            bothHandsStatus = BothHandsStatus.RightStaffLeftShield;
+        } else if (rightHandStatus == SingleHandStatus.OneHanded && leftHandStatus == SingleHandStatus.Shield) {
+            bothHandsStatus = BothHandsStatus.OneHandedPlusShield;
             animatorWeaponType = -1; //FIX LATER
         } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.Shield) {
             bothHandsStatus = BothHandsStatus.ShieldOnly;

@@ -30,7 +30,7 @@ public class HuntersCage : Skill
     protected override void CastingAnim() {
         animator.CrossFade("Attacks.Hunter.Hunters Cage", 0.25f);
         StartCoroutine(SpawnArrowIE());
-        PlaySound(castingSound, 0.15f, 0.6f);
+        PlaySound(castingSound, 0.15f, 0.6f * characteristics.castingSpeed.x);
         
         playerControlls.playerCamera.GetComponent<CameraControll>().isAiming = true;
     }
@@ -47,7 +47,7 @@ public class HuntersCage : Skill
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength/2 + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
 
-        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(skillTree, baseDamagePercentage), skillName); //could be null if just canceled skill
+        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName); //could be null if just canceled skill
         if (newArrow != null) newArrow.duraiton = duration;
         playerControlls.isAttacking = false;
         grabBowstring = false;
@@ -95,7 +95,7 @@ public class HuntersCage : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Launch an arrow that creates a cage around at the place of impact, locking everyone inside.";
     }
 }

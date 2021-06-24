@@ -47,17 +47,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 4
   skillName: Target
-  description: Sets an enemy as a "main target", which then gets 20% more damage
-    for 15 seconds.
   icon: {fileID: 21300000, guid: 110e14c2d23805f4cbee7472b57b7cf4, type: 3}
   skillTree: 0
   skillType: 2
+  damageType: 4
   staminaRequired: 0
   baseDamagePercentage: 0
   coolDown: 22
   coolDownTimer: 0
   isCoolingDown: 0
   weaponOutRequired: 0
+  bowOutRequired: 0
   castingTime: 0
   nomralizedCastingAnim: 0
   finishedCast: 0
@@ -70,7 +70,6 @@ MonoBehaviour:
   targetPrefab: {fileID: 6850994744321980146}
   SkillTarget: {fileID: 0}
   damageIncrease: 20
-  timer: 0
 --- !u!82 &1728811979842729296
 AudioSource:
   m_ObjectHideFlags: 0
@@ -219,6 +218,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

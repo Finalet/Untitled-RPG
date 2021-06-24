@@ -19,28 +19,29 @@ public static class CalculateDamage
     static float baseCritChance = 0.1f;
     static float baseCritMultiplier = 2;
 
-    public static DamageInfo damageInfo (SkillTree skillTree, int baseDamagePercentage) {
-        return damageInfo(skillTree, baseDamagePercentage, baseCritChance);
+    public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage) {
+        return damageInfo(damageType, baseDamagePercentage, baseCritChance);
     }
-    public static DamageInfo damageInfo (SkillTree skillTree, int baseDamagePercentage, float critChance, float damageVariation = 0.15f) {
+    public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage, float critChance, float damageVariation = 0.15f) {
         int skillTreeAdjustedDamage;
-        DamageType damageType;
-        switch (skillTree) {
-            case SkillTree.Knight:
+        switch (damageType) {
+            case DamageType.Melee:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.meleeAttack);
-                damageType = DamageType.melee;
                 break;
-            case SkillTree.Mage:
+            case DamageType.Magic:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.magicPower);
-                damageType = DamageType.magic;
                 break;
-            case SkillTree.Hunter:
+            case DamageType.Ranged:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.rangedAttack);
-                damageType = DamageType.ranged;
+                break;
+            case DamageType.Enemy:
+                skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f);
+                break;
+            case DamageType.NoDamage:
+                skillTreeAdjustedDamage = 0;
                 break;
             default: 
                 Debug.LogError("Fuck you this can never happen");
-                damageType = DamageType.melee;
                 skillTreeAdjustedDamage = 0;
                 break;
         }
@@ -60,10 +61,10 @@ public static class CalculateDamage
     public static DamageInfo enemyDamageInfo (int baseDamage) {
         return enemyDamageInfo(baseDamage, baseCritChance); 
     }
-    public static DamageInfo enemyDamageInfo (int baseDamage, float critChance, float damageVariation = 0.15f) {
+    public static DamageInfo enemyDamageInfo (int baseDamage, float critChance = 0, float damageVariation = 0.15f) {
         //appy players defense here
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(baseDamage * (1-damageVariation), baseDamage * (1+damageVariation)));
         bool isCritHit = isCrit(critChance);
-        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * baseCritMultiplier) : damageBeforeCrit, DamageType.enemy, isCritHit);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * baseCritMultiplier) : damageBeforeCrit, DamageType.Enemy, isCritHit);
     }
 }

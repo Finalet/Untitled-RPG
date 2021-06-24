@@ -101,7 +101,7 @@ public class Armageddon : Skill
         pos.y = mainPos.y;
 
         GameObject go = Instantiate(projectile, pos, projectile.transform.rotation);
-        go.GetComponent<ArmageddonProjectile>().damageInfo = CalculateDamage.damageInfo(skillTree, baseDamagePercentage);
+        go.GetComponent<ArmageddonProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
         go.GetComponent<ArmageddonProjectile>().speed = projectileSpeed;
         go.SetActive(true);
         //playerControlls.GetComponent<Characteristics>().UseOrRestoreStamina(10);
@@ -125,7 +125,7 @@ public class Armageddon : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(skillTree, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
         return $"Create a meteor shower in a selected area for {duration} seconds. Each meteor deals {dmg.damage} {dmg.damageType} damage.";
     }
 }

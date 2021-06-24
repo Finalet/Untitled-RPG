@@ -147,9 +147,10 @@ public class SkillsDatabase : EditorWindow
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(skill.ID.ToString(), EditorStyles.boldLabel, GUILayout.Width(30 + EditorGUI.indentLevel * 8));
             GUILayout.Box(skill.icon.texture, GUILayout.Width(30), GUILayout.Height(30));
-            EditorGUILayout.LabelField(skill.skillName, GUILayout.Width(150 + EditorGUI.indentLevel * 8));
+            EditorGUILayout.LabelField(skill.skillName, GUILayout.Width(120 + EditorGUI.indentLevel * 8));
             EditorGUILayout.LabelField(skill.skillTree.ToString(), GUILayout.Width(80 + EditorGUI.indentLevel * 8));
             EditorGUILayout.LabelField(skill.skillType.ToString(), GUILayout.Width(80 + EditorGUI.indentLevel * 8));
+            EditorGUILayout.LabelField(skill.damageType.ToString(), GUILayout.Width(80 + EditorGUI.indentLevel * 8));
             string castingTIme = skill.castingTime == 0 ? "Instant" : skill.castingTime.ToString();
             EditorGUILayout.LabelField(castingTIme, GUILayout.Width(90 + EditorGUI.indentLevel * 8));
             string bdp = skill.skillType == SkillType.Damaging ? skill.baseDamagePercentage.ToString() : "-";
@@ -158,7 +159,7 @@ public class SkillsDatabase : EditorWindow
             
             Skill skillPrefab = PrefabUtility.GetCorrespondingObjectFromSource(skill);
 
-            EditorGUI.BeginDisabledGroup(true); EditorGUILayout.ObjectField("", skillPrefab, typeof(Item), false, GUILayout.Width(150)); EditorGUI.EndDisabledGroup();
+            EditorGUI.BeginDisabledGroup(true); EditorGUILayout.ObjectField("", skillPrefab, typeof(Item), false, GUILayout.Width(100)); EditorGUI.EndDisabledGroup();
             if (GUILayout.Button("Open", GUILayout.Width(70))) {
                 selectedSkill = skillPrefab;
                 Selection.activeObject = skillPrefab;
@@ -170,9 +171,10 @@ public class SkillsDatabase : EditorWindow
     void DrawTitles () {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("ID", EditorStyles.boldLabel, GUILayout.Width(65 + EditorGUI.indentLevel * 8));
-        EditorGUILayout.LabelField("Skill name", EditorStyles.boldLabel, GUILayout.Width(150 + EditorGUI.indentLevel * 8));
+        EditorGUILayout.LabelField("Skill name", EditorStyles.boldLabel, GUILayout.Width(120 + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField("Skilltree", EditorStyles.boldLabel, GUILayout.Width(80 + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField("Skill type", EditorStyles.boldLabel, GUILayout.Width(80 + EditorGUI.indentLevel * 8));
+        EditorGUILayout.LabelField("Damage type", EditorStyles.boldLabel, GUILayout.Width(80 + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField("Casting time", EditorStyles.boldLabel, GUILayout.Width(90    + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField(new GUIContent("BDP", "Base damage percentage"), EditorStyles.boldLabel, GUILayout.Width(50 + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField(new GUIContent("CD", "Cooldown"), EditorStyles.boldLabel, GUILayout.Width(50 + EditorGUI.indentLevel * 8));
