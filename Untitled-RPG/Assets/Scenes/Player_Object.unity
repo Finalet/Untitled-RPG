@@ -9501,7 +9501,7 @@ RectTransform:
   - {fileID: 3450248008006407067}
   - {fileID: 3450248007843365228}
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -16410,7 +16410,7 @@ RectTransform:
   - {fileID: 1640687213}
   - {fileID: 199582353}
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -18556,7 +18556,7 @@ RectTransform:
   - {fileID: 680546665}
   - {fileID: 1720139064}
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -22010,7 +22010,7 @@ RectTransform:
   - {fileID: 1672650158}
   - {fileID: 1572713837}
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -54872,6 +54872,86 @@ MonoBehaviour:
   mainHand: {fileID: 162249521}
   secondaryHand: {fileID: 2037758463}
   bow: {fileID: 698006530}
+  commonSetBuff:
+    name: Common armor set
+    description: Five or more common armor pieces.
+    icon: {fileID: 2327596565073326761, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 1000
+    staminaBuff: 100
+    strengthBuff: 50
+    agilityBuff: 50
+    intellectBuff: 50
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: -0.02
+    attackSpeedBuff: -0.02
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    associatedSkill: {fileID: 0}
+  rareSetBuff:
+    name: Rare armor set
+    description: Five or more rare armor pieces.
+    icon: {fileID: -9171415415634856004, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 2000
+    staminaBuff: 150
+    strengthBuff: 70
+    agilityBuff: 70
+    intellectBuff: 70
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: -0.02
+    attackSpeedBuff: -0.02
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    associatedSkill: {fileID: 0}
+  epicSetBuff:
+    name: Epic armor set
+    description: Five or more epic armor pieces.
+    icon: {fileID: 7581896100967011195, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 4000
+    staminaBuff: 100
+    strengthBuff: 100
+    agilityBuff: 100
+    intellectBuff: 100
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: -0.03
+    attackSpeedBuff: -0.03
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    associatedSkill: {fileID: 0}
+  legendarySetBuff:
+    name: Legendary armor set
+    description: Five or more legendary armor pieces.
+    icon: {fileID: -3796704913345747774, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 6000
+    staminaBuff: 200
+    strengthBuff: 200
+    agilityBuff: 200
+    intellectBuff: 200
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: -0.05
+    attackSpeedBuff: -0.05
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    associatedSkill: {fileID: 0}
   capeBoneTail: {fileID: 6526474379051252896}
 --- !u!208 &4675846284446074615
 NavMeshObstacle:
@@ -57046,7 +57126,6 @@ RectTransform:
   - {fileID: 6317566773475128052}
   - {fileID: 704832178}
   - {fileID: 2317584039565499743}
-  - {fileID: 6317566773881438553}
   - {fileID: 1040103774}
   - {fileID: 414699211}
   - {fileID: 746117892}
@@ -57055,6 +57134,7 @@ RectTransform:
   - {fileID: 6317566774659238413}
   - {fileID: 6317566773629902263}
   - {fileID: 831050178}
+  - {fileID: 6317566773881438553}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -57512,7 +57592,7 @@ Transform:
   m_LocalScale: {x: 1.678178, y: 1.678178, z: 1.678178}
   m_Children: []
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6317566773881438552
 GameObject:
@@ -57543,7 +57623,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 4
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -57570,7 +57650,7 @@ MonoBehaviour:
   m_ChildAlignment: 2
   m_StartCorner: 1
   m_StartAxis: 0
-  m_CellSize: {x: 30, y: 30}
+  m_CellSize: {x: 36, y: 36}
   m_Spacing: {x: 10, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -57604,7 +57684,7 @@ RectTransform:
   - {fileID: 6317566774411358001}
   - {fileID: 6317566773446106017}
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -57794,7 +57874,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -57873,7 +57953,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6317566772848477781}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

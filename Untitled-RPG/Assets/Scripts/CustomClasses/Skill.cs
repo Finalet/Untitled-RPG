@@ -201,5 +201,7 @@ public abstract class Skill : MonoBehaviour
 
     public virtual void OverrideLMBAction(){}
     public virtual void OverrideLMBicon(UI_MiddleSkillPanelButtons slot){}
+
+    public virtual void OnBuffRemove () {}
 }
 

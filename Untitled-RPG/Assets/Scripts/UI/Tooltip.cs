@@ -108,9 +108,11 @@ public class Tooltip : MonoBehaviour
                 compareText = compare ? getCompareString(w.Defense, wCompare.Defense) : "";
                 stats += $"Defense: <color={highlightColor}>{w.Defense.ToString()}</color>{compareText}\n";
             }
+
             if (w.Health != 0 || w.Stamina != 0) {
-                if (stats != "") stats += "\n";
+                if (stats != "") stats += addSpace();
             }
+
             if (w.Health != 0) {
                 compareText = compare ? getCompareString(w.Health, wCompare.Health) : "";
                 stats += $"Health: <color={highlightColor}>{w.Health.ToString()}</color>{compareText}\n";
@@ -120,7 +122,7 @@ public class Tooltip : MonoBehaviour
                 stats += $"Stamina: <color={highlightColor}>{w.Stamina.ToString()}</color>{compareText}\n";
             }
             if (w.strength != 0 || w.agility != 0 || w.intellect != 0) {
-                if (stats != "") stats += "\n";
+                if (stats != "") stats += addSpace();
             }
             if (w.strength != 0) {
                 compareText = compare ? getCompareString(w.strength, wCompare.strength) : "";
@@ -135,7 +137,7 @@ public class Tooltip : MonoBehaviour
                 stats += $"Intellect: <color={highlightColor}>{w.intellect.ToString()}</color>{compareText}\n";
             }
             if (w.castingTime != 0 || w.attackSpeed != 0) {
-                if (stats != "") stats += "\n";
+                if (stats != "") stats += addSpace();
             }
             if (w.castingTime != 0) {
                 compareText = compare ? $"{getCompareString(w.castingTime, wCompare.castingTime, true)}" : "";
@@ -152,6 +154,10 @@ public class Tooltip : MonoBehaviour
             stats = "NOT IMPLEMENTED";
         }
         return stats;
+    }
+
+    string addSpace() {
+        return "<size=8>\n</size>";
     }
 
     string getCompareString (float first, float second, bool percentages = false) {

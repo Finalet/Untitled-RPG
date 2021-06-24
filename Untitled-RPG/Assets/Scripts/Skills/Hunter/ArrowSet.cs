@@ -28,7 +28,7 @@ public class ArrowSet : Skill
     protected override void CastingAnim() {
         animator.CrossFade("Attacks.Hunter.Arrow Set", 0.25f);
         StartCoroutine(SpawnArrowIE());
-        PlaySound(castingSound, 0.5f, characteristics.castingSpeed.x);
+        PlaySound(castingSound, 0, characteristics.castingSpeed.x);
         
         playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = true;
     }

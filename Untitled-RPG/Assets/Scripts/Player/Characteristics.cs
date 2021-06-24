@@ -12,14 +12,14 @@ public class Characteristics : MonoBehaviour
     
     public string playerName;
     [Header("Main")]
-    public int maxHealth; public int healthFromEquip;
-    public int maxStamina; public int staminaFromEquip;
+    public int maxHealth; public int healthFromEquip; int healthFromBuff;
+    public int maxStamina; public int staminaFromEquip; int staminaFromBuff;
     public int health; 
     public int stamina; 
     [Header("Stats")]
-    public int strength; public int strengthFromEquip;
-    public int agility; public int agilityFromEquip;
-    public int intellect; public int intellectFromEquip;
+    public int strength; public int strengthFromEquip; int strengthFromBuff;
+    public int agility; public int agilityFromEquip; int agilityFromBuff;
+    public int intellect; public int intellectFromEquip; int intellectFromBuff;
     [Header("Attacks")]
     public int meleeAttack; public int meleeAttackFromEquip;
     public int rangedAttack; public int rangedAttackFromEquip;
@@ -85,12 +85,12 @@ public class Characteristics : MonoBehaviour
     }
 
     public void StatsCalculations () {
-        strength = Mathf.RoundToInt(strengthFromEquip);
-        agility = Mathf.RoundToInt(agilityFromEquip);
-        intellect = Mathf.RoundToInt(intellectFromEquip);
+        strength = Mathf.RoundToInt(strengthFromEquip + strengthFromBuff);
+        agility = Mathf.RoundToInt(agilityFromEquip + agilityFromBuff);
+        intellect = Mathf.RoundToInt(intellectFromEquip + intellectFromBuff);
 
-        maxHealth = 10000 + (strength / statsRatio) + healthFromEquip;
-        maxStamina = 0 + ((agility + intellect) / statsRatio) + staminaFromEquip;
+        maxHealth = 10000 + (strength / statsRatio) + healthFromEquip + healthFromBuff;
+        maxStamina = 0 + ((agility + intellect) / statsRatio) + staminaFromEquip + staminaFromBuff;
 
         health = Mathf.Clamp(health, 0, maxHealth);
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
@@ -185,6 +185,9 @@ public class Characteristics : MonoBehaviour
     }
 
     public void AddBuff(Buff buff) {
+        if (activeBuffs.Contains(buff))
+            return;
+
         activeBuffs.Add(buff);
         BuffIcon icon = Instantiate(buffIcon, CanvasScript.instance.buffs.transform).GetComponent<BuffIcon>();
         icon.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
@@ -192,13 +195,22 @@ public class Characteristics : MonoBehaviour
     }
 
     public void RemoveBuff(Buff buff) { 
-        if (activeBuffs.Contains(buff))
+        if (activeBuffs.Contains(buff)) {
+            if (buff.associatedSkill != null) buff.associatedSkill.OnBuffRemove();
             activeBuffs.Remove(buff);
+        }
     } 
 
     void CalculateBuffs() {
         ResetBuffStats();
         for (int i = 0; i < activeBuffs.Count; i++){
+            healthFromBuff += activeBuffs[i].healthBuff;
+            staminaFromBuff += activeBuffs[i].staminaBuff;
+            
+            strengthFromBuff += activeBuffs[i].strengthBuff;
+            agilityFromBuff += activeBuffs[i].agilityBuff;
+            intellectFromBuff += activeBuffs[i].intellectBuff;
+
             meleeAttackBuff *= 1 + activeBuffs[i].meleeAttackBuff;
             rangedAttackBuff *= 1 + activeBuffs[i].rangedAttackBuff;
             magicPowerBuff *= 1 + activeBuffs[i].magicPowerBuff;
@@ -217,6 +229,13 @@ public class Characteristics : MonoBehaviour
         }
     }
     void ResetBuffStats() {
+        healthFromBuff = 0;
+        staminaFromBuff = 0;
+        
+        strengthFromBuff = 0;
+        agilityFromBuff = 0;
+        intellectFromBuff = 0;
+        
         meleeAttackBuff = 1;
         rangedAttackBuff = 1;
         magicPowerBuff = 1;

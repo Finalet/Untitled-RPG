@@ -30,6 +30,7 @@ public class HailstoneProjectile : MonoBehaviour
             go.GetComponent<Rigidbody>().AddForce(transform.right * Random.Range(18f, 22f), ForceMode.Impulse);
         }
 
+        GetComponent<AudioSource>().PlayDelayed(0.8f);
         Destroy(transform.parent.gameObject, 2f);
     }
 
@@ -46,10 +47,5 @@ public class HailstoneProjectile : MonoBehaviour
 
         finalDebrisPos = debirsPos.position;
         Instantiate(debris, finalDebrisPos, debris.transform.rotation, transform.parent).Play();
-        
-        if (!isExtra) {
-            GetComponent<AudioSource>().time = 0.4f;
-            GetComponent<AudioSource>().Play();
-        }
     }
 }

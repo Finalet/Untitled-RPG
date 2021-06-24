@@ -29,6 +29,9 @@ public class Levitation : Skill
         feetsAndHands[1] = PlayerControlls.instance.rightFootRoot;
         feetsAndHands[2] = PlayerControlls.instance.leftHandWeaponSlot;
         feetsAndHands[3] = PlayerControlls.instance.rightHandWeaponSlot;
+
+        buff.icon = icon;
+        buff.associatedSkill = this;
     }
 
     protected override void CustomUse() {
@@ -49,6 +52,9 @@ public class Levitation : Skill
 
     IEnumerator flightTimer () {
         yield return new WaitForSeconds(flightDuration);
+        StopFlight();
+    }
+    public void StopFlight () {
         PlayerControlls.instance.LandFromFlying();
 
         int x = instanciatedParticles.Count;
@@ -59,6 +65,11 @@ public class Levitation : Skill
         }
 
         fullbodyVFX.Stop();
+    }
+
+    public override void OnBuffRemove()
+    {
+        StopFlight();
     }
 
     protected override void LocalUse () {

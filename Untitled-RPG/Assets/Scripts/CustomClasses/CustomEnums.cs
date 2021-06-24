@@ -40,8 +40,16 @@ public class RecurringEffect {
 [System.Serializable]
 public class Buff {
     public string name;
-    public Skill skill;
+    public string description;
+    public Sprite icon;
     public float duration;
+    [Space]
+    public int healthBuff;
+    public int staminaBuff;
+    [Space]
+    public int strengthBuff;
+    public int agilityBuff;
+    public int intellectBuff;
     [Space]
     public float meleeAttackBuff;
     public float rangedAttackBuff;
@@ -55,22 +63,29 @@ public class Buff {
     public float walkSpeedBuff;
     [Space]
     public int skillDistanceBuff;
+    [Space]
+    public Skill associatedSkill;
 
-    public Buff (string _name, Skill _skill, float _duration, float _meleeAttackBuff, float _rangedAttackBuff, float _magicPowerBuff, float _healingPowerBuff, float _defenseBuff, float _castingSpeedBuff, float _attackSpeedBuff, float _walkSpeedBuff, int _skillDistanceBuff) {
-        this.name = _name;
-        this.skill = _skill;
-        this.duration = _duration;
-        this.meleeAttackBuff = _meleeAttackBuff;
-        this.rangedAttackBuff = _rangedAttackBuff;
-        this.magicPowerBuff = _magicPowerBuff;
-        this.healingPowerBuff = _healingPowerBuff;
-        this.defenseBuff = _defenseBuff;
-        this.castingSpeedBuff = _castingSpeedBuff;
-        this.attackSpeedBuff = _attackSpeedBuff;
-        this.walkSpeedBuff = _walkSpeedBuff;
-        this.skillDistanceBuff = _skillDistanceBuff;
+    public Buff(string name, string description, Sprite icon, float duration, int healthBuff, int staminaBuff, int strengthBuff, int agilityBuff, int intellectBuff, float meleeAttackBuff, float rangedAttackBuff, float magicPowerBuff, float healingPowerBuff, float defenseBuff, float castingSpeedBuff, float attackSpeedBuff, float walkSpeedBuff, int skillDistanceBuff, Skill associatedSkill)
+    {
+        this.name = name;
+        this.description = description;
+        this.icon = icon;
+        this.duration = duration;
+        this.healthBuff = healthBuff;
+        this.staminaBuff = staminaBuff;
+        this.strengthBuff = strengthBuff;
+        this.agilityBuff = agilityBuff;
+        this.intellectBuff = intellectBuff;
+        this.meleeAttackBuff = meleeAttackBuff;
+        this.rangedAttackBuff = rangedAttackBuff;
+        this.magicPowerBuff = magicPowerBuff;
+        this.healingPowerBuff = healingPowerBuff;
+        this.defenseBuff = defenseBuff;
+        this.castingSpeedBuff = castingSpeedBuff;
+        this.attackSpeedBuff = attackSpeedBuff;
+        this.walkSpeedBuff = walkSpeedBuff;
+        this.skillDistanceBuff = skillDistanceBuff;
+        this.associatedSkill = associatedSkill;
     }
 }
-
-public class CustomEnums : MonoBehaviour
-{}

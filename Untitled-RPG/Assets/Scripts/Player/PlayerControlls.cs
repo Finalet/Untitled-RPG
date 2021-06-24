@@ -364,7 +364,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void FlyingAnimations () {
-        if (!isIdle) {
+        if (!isIdle && !PeaceCanvas.instance.anyPanelOpen) {
             InputDirection = Mathf.Atan2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * Mathf.Rad2Deg;
             lastInputDirection = InputDirection;
         } else {

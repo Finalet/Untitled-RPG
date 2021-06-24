@@ -23,6 +23,9 @@ public class PowerSphere : Skill
         hands = new Transform[2];
         hands[0] = PlayerControlls.instance.leftHandWeaponSlot;
         hands[1] = PlayerControlls.instance.rightHandWeaponSlot;
+
+        buff.icon = icon;
+        buff.associatedSkill = this;
     }
 
     protected override float actualDistance () {

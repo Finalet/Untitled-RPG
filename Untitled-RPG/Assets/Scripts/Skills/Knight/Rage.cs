@@ -9,6 +9,9 @@ public class Rage : Skill
     
     protected override void CustomUse() {
         StartCoroutine(Using());
+
+        buff.icon = icon;
+        buff.associatedSkill = this;
     }
 
     IEnumerator Using () {

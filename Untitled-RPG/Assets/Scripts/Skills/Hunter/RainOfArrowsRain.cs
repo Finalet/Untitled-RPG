@@ -15,6 +15,7 @@ public class RainOfArrowsRain : MonoBehaviour
         AudioSource audioSource =  GetComponent<AudioSource>();
         audioSource.spatialBlend = 1;
         audioSource.maxDistance = 100;
+        audioSource.minDistance = 1;
         audioSource.clip = skill.rainSound;
         audioSource.PlayDelayed(0.5f);
     }
