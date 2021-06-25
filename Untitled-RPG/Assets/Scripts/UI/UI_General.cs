@@ -74,31 +74,22 @@ public static class UI_General
             return "Consumable";
         } else if (item is Weapon) {
             Weapon w = (Weapon)item;
-            string text ="";
-            switch (w.weaponType) {
-                case WeaponType.OneHandedSword:
-                    text = "One handed sword";
+            string hand ="";
+            switch (w.weaponHand) {
+                case WeaponHand.OneHanded:
+                    hand = "One handed";
                     break;
-                case WeaponType.OneHandedStaff:
-                    text = "One handed staff";
+                case WeaponHand.TwoHanded:
+                    hand = "One handed";
                     break;
-                case WeaponType.Bow:
-                    text = "Bow";
+                case WeaponHand.BowHand:
+                    hand = "";
                     break;
-                case WeaponType.Shield:
-                    text = "Shield";
-                    break;
-                case WeaponType.TwoHandedStaff:
-                    text = "Two-handed staff";
-                    break;
-                case WeaponType.TwoHandedSword:
-                    text = "Two-handed sword";
-                    break;
-                default:
-                    text = "NOT IMPLEMENTED";
+                case WeaponHand.SecondaryHand:
+                    hand = "";
                     break;
             }
-            return text;
+            return $"{hand} {w.weaponCategory}";
         } else if (item is Armor) {
             Armor w = (Armor)item;
             return w.armorType.ToString();

@@ -6,22 +6,23 @@ using UnityEngine;
 public class Weapon : Equipment
 {
     [Header("Weapon info")]
-    public WeaponType weaponType;
+    public WeaponCategory weaponCategory;
+    public WeaponHand weaponHand;
     public GameObject weaponPrefab;
 
     protected override void Equip (UI_InventorySlot initialSlot) {
         base.Equip(initialSlot);
         
-        if (weaponType == WeaponType.OneHandedSword || weaponType == WeaponType.OneHandedStaff) {
+        if (weaponHand == WeaponHand.OneHanded) {
             OneHandedEquip(initialSlot);
-        } else if (weaponType == WeaponType.TwoHandedSword || weaponType == WeaponType.TwoHandedStaff) {
+        } else if (weaponHand == WeaponHand.TwoHanded) {
             TwoHandedEquip(initialSlot);
-        } else if (weaponType == WeaponType.Bow) {
+        } else if (weaponCategory == WeaponCategory.Bow) {
             BowEquip(initialSlot);
-        } else if (weaponType == WeaponType.Shield) {
+        } else if (weaponCategory == WeaponCategory.Shield) {
             ShieldEquip(initialSlot);
         } else {
-            Debug.LogError($"Equiping {weaponType} is not supported yet");
+            Debug.LogError($"Equiping {weaponHand} {weaponCategory} is not supported yet");
             //IMPLEMENT OTHER EQUIPMENT TYPES
         }
     }
@@ -31,7 +32,7 @@ public class Weapon : Equipment
             EquipmentManager.instance.mainHand.AddItem(this, 1, initialSlot);
         } else if (EquipmentManager.instance.secondaryHand.itemInSlot == null) { 
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) { //if main hand is busy with one handed weapon, and secondary hand is free, equip if there
+            if (w.weaponHand == WeaponHand.OneHanded) { //if main hand is busy with one handed weapon, and secondary hand is free, equip if there
                 EquipmentManager.instance.secondaryHand.AddItem(this, 1, initialSlot);
             } else {
                 EquipmentManager.instance.mainHand.AddItem(this, 1, initialSlot); //if main hand is busy with two handed weapon, replace it;
@@ -51,5 +52,12 @@ public class Weapon : Equipment
 
     void ShieldEquip (UI_InventorySlot initialSlot) {
         EquipmentManager.instance.secondaryHand.AddItem(this, 1, initialSlot);
+    }
+
+    void OnValidate() {
+        if (weaponCategory == WeaponCategory.Bow)
+            weaponHand = WeaponHand.BowHand;
+        else if (weaponCategory == WeaponCategory.Shield)
+            weaponHand = WeaponHand.SecondaryHand;
     }
 }

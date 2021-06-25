@@ -8,7 +8,9 @@ public enum DamageType {Melee, Ranged, Magic, Enemy, NoDamage}
 
 
 public enum EquipmentSlotType {Helmet, Chest, Gloves, Pants, Boots, Back, Necklace, Ring, MainHand, SecondaryHand, Bow}
-public enum WeaponType {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Bow, Shield}
+//public enum WeaponType {OneHandedSword, OneHandedStaff, TwoHandedSword, TwoHandedStaff, Bow, Shield}
+public enum WeaponCategory {Sword, Staff, Bow, Shield}
+public enum WeaponHand {OneHanded, TwoHanded, SecondaryHand, BowHand};
 public enum ArmorType {Helmet, Chest, Gloves, Pants, Boots, Back, Necklace, Ring}
 public enum ItemRarity {Common, Rare, Epic, Legendary}
 

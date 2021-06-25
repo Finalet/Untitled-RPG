@@ -22,7 +22,7 @@ public class ArmageddonProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<ArmageddonProjectile>() != null)
+        if (other.GetComponent<ArmageddonProjectile>() != null || other.isTrigger)
             return;
 
         if (!exploded) {

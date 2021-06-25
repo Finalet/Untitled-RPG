@@ -147,52 +147,65 @@ public class EquipmentManager : MonoBehaviour
     }
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
-        Transform parent;
-        if (weapon.weaponType == WeaponType.TwoHandedSword) { //Two handed sword
-            if (!WeaponsController.instance.isWeaponOut) {
-                parent = TwohandedSwordSlot;
-            } else {
-                parent = RightHandTrans;
+        Transform parent = null;
+        if (weapon.weaponHand == WeaponHand.TwoHanded) { //Two handed;
+            if (weapon.weaponCategory == WeaponCategory.Sword) { //two handed sword
+                if (!WeaponsController.instance.isWeaponOut) {
+                    parent = TwohandedSwordSlot;
+                } else {
+                    parent = RightHandTrans;
+                }
+            } else if (weapon.weaponCategory == WeaponCategory.Staff) { //two handed staff
+                if (!WeaponsController.instance.isWeaponOut) {
+                    parent = TwohandedStaffSlot;
+                } else {
+                    parent = RightHandTrans;
+                }
             }
-        } else if (weapon.weaponType == WeaponType.TwoHandedStaff) { //Two handed staff
-            if (!WeaponsController.instance.isWeaponOut) {
-                parent = TwohandedStaffSlot;
-            } else {
-                parent = RightHandTrans;
+        } else if (weapon.weaponHand == WeaponHand.OneHanded) { //One handed
+            if (!secondary) {   //Main hand
+                if (!WeaponsController.instance.isWeaponOut) {
+                    parent = MainHandSlot;
+                } else {
+                    parent = RightHandTrans;
+                }
+            } else { //Secondary hand
+                if (!WeaponsController.instance.isWeaponOut) {
+                    parent = SecondaryHandSlot;
+                } else {
+                    parent = LeftHandTrans;
+                }
             }
-        } else if (!secondary && weapon.weaponType != WeaponType.Bow) {  // Main hand
-            if (!WeaponsController.instance.isWeaponOut) {
-                parent = MainHandSlot;
-            } else {
-                parent = RightHandTrans;
-            }
-        } else if (secondary && weapon.weaponType != WeaponType.Bow && weapon.weaponType != WeaponType.Shield) { //Secondary hand
-            if (!WeaponsController.instance.isWeaponOut) {
-                parent = SecondaryHandSlot;
-            } else {
-                parent = LeftHandTrans;
-            }
-        } else if (weapon.weaponType == WeaponType.Bow) {   //Bow
+        } else if (weapon.weaponHand == WeaponHand.BowHand) { //Bow
             if (!WeaponsController.instance.isBowOut) {
                 parent = BowSlot;
             } else {
                 parent = LeftHandTrans;
             }
-        } else if (weapon.weaponType == WeaponType.Shield) {   //Shield
-            if (!WeaponsController.instance.isWeaponOut) {
-                parent = ShieldSlot;
+        } else if (weapon.weaponHand == WeaponHand.SecondaryHand) {
+            if (weapon.weaponCategory == WeaponCategory.Shield) {
+                if (!WeaponsController.instance.isWeaponOut) {
+                    parent = ShieldSlot;
+                } else {
+                    parent = LeftHandShieldTrans;
+                }
             } else {
-                parent = LeftHandShieldTrans;
+                if (!WeaponsController.instance.isWeaponOut) {
+                    parent = SecondaryHandSlot;
+                } else {
+                    parent = LeftHandTrans;
+                }
             }
         } else {
-            Debug.LogError("Weapon type not yet supported");
+            Debug.LogError($"Equiping prefab of {weapon.weaponHand} {weapon.weaponCategory} is not supported yet.");
             return;
         }
+
         GameObject w = Instantiate(weapon.weaponPrefab, parent);
         w.transform.localPosition = Vector3.zero;
         w.transform.localEulerAngles = Vector3.zero;
         w.transform.localScale = Vector3.one;
-        if (weapon.weaponType == WeaponType.Bow) {
+        if (weapon.weaponCategory == WeaponCategory.Bow) {
             WeaponsController.instance.BowObj = w;
             return;
         }
@@ -203,48 +216,61 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    public void UnequipWeaponPrefab (bool twoHandedStaff, bool secondary = false, bool bow = false, bool twoHandedSword = false, bool shield = false) {
-        Transform slot;
-        if (twoHandedStaff) {
-            if (!WeaponsController.instance.isWeaponOut) {
-                slot = TwohandedStaffSlot;
-            } else {
-                slot = RightHandTrans;
+    public void UnequipWeaponPrefab (Weapon weapon, bool secondary = false) {
+        Transform slot = null;
+        if (weapon.weaponHand == WeaponHand.TwoHanded) {
+            if (weapon.weaponCategory == WeaponCategory.Sword) {
+                if (!WeaponsController.instance.isWeaponOut) {
+                    slot = TwohandedSwordSlot;
+                } else {
+                    slot = RightHandTrans;
+                }
+            } else if (weapon.weaponCategory == WeaponCategory.Staff) {
+                if (!WeaponsController.instance.isWeaponOut) {
+                    slot = TwohandedStaffSlot;
+                } else {
+                    slot = RightHandTrans;
+                }
             }
-        } else if (twoHandedSword) {
-            if (!WeaponsController.instance.isWeaponOut) {
-                slot = TwohandedSwordSlot;
+        } else if (weapon.weaponHand == WeaponHand.OneHanded) {
+            if (!secondary) {
+                if (!WeaponsController.instance.isWeaponOut) {
+                    slot = MainHandSlot;
+                } else {
+                    slot = RightHandTrans;
+                }
             } else {
-                slot = RightHandTrans;
+                if (!WeaponsController.instance.isWeaponOut) {
+                    slot = SecondaryHandSlot;
+                } else {
+                    slot = LeftHandTrans;
+                }
             }
-        } else if (!secondary && !bow && !shield) {
-            if (!WeaponsController.instance.isWeaponOut) {
-                slot = MainHandSlot;
-            } else {
-                slot = RightHandTrans;
-            }
-        } else if (secondary && !bow) {
-            if (!WeaponsController.instance.isWeaponOut) {
-                slot = SecondaryHandSlot;
-            } else {
-                slot = LeftHandTrans;
-            }
-        } else if (bow) { //Bow
+        } else if (weapon.weaponHand == WeaponHand.BowHand) {
             if (!WeaponsController.instance.isBowOut) {
                 slot = BowSlot;
             } else {
                 slot = LeftHandTrans;
             }
-        } else if (shield) { //shield
-            if (!WeaponsController.instance.isWeaponOut) {
-                slot = ShieldSlot;
+        } else if (weapon.weaponHand == WeaponHand.SecondaryHand) {
+            if (weapon.weaponCategory == WeaponCategory.Shield) {
+                if (!WeaponsController.instance.isWeaponOut) {
+                    slot = ShieldSlot;
+                } else {
+                    slot = LeftHandShieldTrans;
+                }
             } else {
-                slot = LeftHandShieldTrans;
+                if (!WeaponsController.instance.isWeaponOut) {
+                    slot = SecondaryHandSlot;
+                } else {
+                    slot = LeftHandTrans;
+                }
             }
         } else {
-            Debug.LogError("Weapon type unsupported");
+            Debug.LogError($"{weapon.weaponHand} {weapon.weaponCategory} unsupported");
             return;
         }
+
         foreach (Transform child in slot) {
             Destroy(child.gameObject);
         }
@@ -348,36 +374,28 @@ public class EquipmentManager : MonoBehaviour
         }
         return equiped;
     }
-    public bool isSlotEquiped (WeaponType weaponType, out Item equipedItem, bool secondary = false) {
+    public bool isSlotEquiped (WeaponHand weaponHand, out Item equipedItem, bool secondary = false) {
         bool equiped = false;
         equipedItem = null;
-        switch (weaponType) {
-            case WeaponType.Bow:
+        switch (weaponHand) {
+            case WeaponHand.BowHand:
                 equiped = bow.itemInSlot == null ? false : true;
                 equipedItem = equiped ? bow.itemInSlot : null;
                 break;
-            case WeaponType.OneHandedStaff:
+            case WeaponHand.TwoHanded:
                 equiped = mainHand.itemInSlot == null ? false : true;
                 equipedItem = equiped ? mainHand.itemInSlot : null;
                 break;
-            case WeaponType.OneHandedSword:
+            case WeaponHand.OneHanded:
                 equiped = secondary ? secondaryHand.itemInSlot == null ? false : true : mainHand.itemInSlot == null ? false : true;
                 equipedItem = equiped ? secondary ? secondaryHand.itemInSlot : mainHand.itemInSlot : null;
                 break;
-            case WeaponType.Shield:
+            case WeaponHand.SecondaryHand:
                 equiped = secondaryHand.itemInSlot == null ? false : true;
                 equipedItem = equiped ? secondaryHand.itemInSlot : null;
                 break;
-            case WeaponType.TwoHandedStaff:
-                equiped = mainHand.itemInSlot == null ? false : true;
-                equipedItem = equiped ? mainHand.itemInSlot : null;
-                break;
-            case WeaponType.TwoHandedSword:
-                equiped = mainHand.itemInSlot == null ? false : true;
-                equipedItem = equiped ? mainHand.itemInSlot : null;
-                break;
             default:
-                Debug.LogError("Can't check if slot is equiped: wrong weapon type");
+                Debug.LogError($"Can't check if slot is equiped: wrong weaponHand: {weaponHand}");
                 equiped = false;
                 equipedItem = null;
                 break;

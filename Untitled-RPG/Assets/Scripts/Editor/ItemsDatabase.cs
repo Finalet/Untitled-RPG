@@ -12,8 +12,8 @@ public class ItemsDatabase : EditorWindow
     bool showConsumables;
 
     bool showAllWeapons;
-    bool showOneHanded;
-    bool showTwoHanded;
+    bool showSwords;
+    bool showStaffs;
     bool showBows;
     bool showShields;
 
@@ -258,31 +258,25 @@ public class ItemsDatabase : EditorWindow
     }
 
     void DrawWeaponsList (AssetHolder ah) {
-        List<Item> OneHanded = new List<Item>();
-        List<Item> TwoHanded = new List<Item>();
+        List<Item> Swords = new List<Item>();
+        List<Item> Staffs = new List<Item>();
         List<Item> Bows = new List<Item>();
         List<Item> Shields = new List<Item>();
 
         Weapon w;
         foreach (Item item in ah.weapons){
             w = (Weapon)item;
-            switch (w.weaponType) {
-                case WeaponType.OneHandedSword:
-                    OneHanded.Add(w);
+            switch (w.weaponCategory) {
+                case WeaponCategory.Sword:
+                    Swords.Add(w);
                     break;
-                case WeaponType.OneHandedStaff:
-                    OneHanded.Add(w);
+                case WeaponCategory.Staff:
+                    Staffs.Add(w);
                     break;
-                case WeaponType.TwoHandedSword:
-                    TwoHanded.Add(w);
-                    break;
-                case WeaponType.TwoHandedStaff:
-                    TwoHanded.Add(w);
-                    break;
-                case WeaponType.Bow:
+                case WeaponCategory.Bow:
                     Bows.Add(w);
                     break;
-                case WeaponType.Shield:
+                case WeaponCategory.Shield:
                     Shields.Add(w);
                     break;
             }
@@ -298,14 +292,14 @@ public class ItemsDatabase : EditorWindow
         }
 
         EditorGUI.indentLevel = 1;
-        showOneHanded = EditorGUILayout.Foldout(showOneHanded, "One handed");
-        if (showOneHanded) {
-            DrawList(OneHanded, true);
+        showSwords = EditorGUILayout.Foldout(showSwords, "Swords");
+        if (showSwords) {
+            DrawList(Swords, true);
         }
         EditorGUI.indentLevel = 1;
-        showTwoHanded = EditorGUILayout.Foldout(showTwoHanded, "Two handed");
-        if (showTwoHanded) {
-            DrawList(TwoHanded, true);
+        showStaffs = EditorGUILayout.Foldout(showStaffs, "Staffs");
+        if (showStaffs) {
+            DrawList(Staffs, true);
         }
         EditorGUI.indentLevel = 1;
         showBows = EditorGUILayout.Foldout(showBows, "Bows");
@@ -323,7 +317,8 @@ public class ItemsDatabase : EditorWindow
         AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
         
         if (list[0] is Weapon) {
-            EditorGUILayout.LabelField("Weapon type", EditorStyles.boldLabel, GUILayout.Width(150));
+            EditorGUILayout.LabelField("Category", EditorStyles.boldLabel, GUILayout.Width(100));
+            EditorGUILayout.LabelField("Hand", EditorStyles.boldLabel, GUILayout.Width(150));
         } else if (list[0] is Armor) {
             EditorGUILayout.LabelField("Armor type", EditorStyles.boldLabel, GUILayout.Width(150));
         } else if (list[0] is Skillbook) {
@@ -335,7 +330,8 @@ public class ItemsDatabase : EditorWindow
     void DrawAdditionalFields (Item item) {
         if (item is Weapon) {
             Weapon w = (Weapon)item;
-            EditorGUILayout.LabelField(w.weaponType.ToString(), GUILayout.Width(150));
+            EditorGUILayout.LabelField(w.weaponCategory.ToString(), GUILayout.Width(100));
+            EditorGUILayout.LabelField(w.weaponHand.ToString(), GUILayout.Width(150));
         } else if (item is Armor) {
             Armor a = (Armor)item;
             EditorGUILayout.LabelField(a.armorType.ToString(), GUILayout.Width(150));
@@ -401,11 +397,11 @@ public class ItemsDatabase : EditorWindow
             if (list != ah.weapons && list[0] is Weapon) {
                 Weapon existingWeapon = (Weapon)list[0];
                 Weapon w = ScriptableObject.CreateInstance<Weapon>();
-                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Weapons/New {existingWeapon.weaponType}.asset");
+                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Weapons/New {existingWeapon.weaponCategory}.asset");
                 AssetDatabase.CreateAsset(w, name);
                 w.ID = list[list.Count-1].ID + 1;
-                w.itemName = $"New {existingWeapon.weaponType}";
-                w.weaponType = existingWeapon.weaponType;
+                w.itemName = $"New {existingWeapon.weaponCategory}";
+                w.weaponCategory = existingWeapon.weaponCategory;
                 ah.weapons.Add(w);
                 selectedItem = w;
             }

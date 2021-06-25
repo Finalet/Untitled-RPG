@@ -170,6 +170,9 @@ public class WeaponsController : MonoBehaviour
         } else if (bothHandsStatus == BothHandsStatus.OneHandedPlusShield) {
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             SetParentAndTransorm(ref LeftHandEquipObj, LeftHandShieldTrans);
+            if (LeftHandEquipObj.TryGetComponent<Shield>(out Shield shield)) {
+                shield.ShiftMeshPos();
+            } 
             animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
         } else {
@@ -206,13 +209,16 @@ public class WeaponsController : MonoBehaviour
             SetParentAndTransorm(ref LeftHandEquipObj, rightHipSlot);
         } else if (bothHandsStatus == BothHandsStatus.TwoHanded) {
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponType == WeaponType.TwoHandedSword)
+            if (w.weaponCategory == WeaponCategory.Sword)
                 SetParentAndTransorm(ref RightHandEquipObj, twohandedSwordSlot);
-            else if (w.weaponType == WeaponType.TwoHandedStaff)
+            else if (w.weaponCategory == WeaponCategory.Staff)
                 SetParentAndTransorm(ref RightHandEquipObj, twohandedStaffSlot);
         } if (bothHandsStatus == BothHandsStatus.OneHandedPlusShield) {
             SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
             SetParentAndTransorm(ref LeftHandEquipObj, shieldBackSlot);
+            if (LeftHandEquipObj.TryGetComponent<Shield>(out Shield shield)) {
+                shield.ShiftMeshPos(true);
+            }
         } else {
             Debug.LogError("Sheathing for this type of weapon is not implemented yet");
         }
@@ -222,24 +228,24 @@ public class WeaponsController : MonoBehaviour
     public void EnableTrails() {
         if (LeftHandEquipObj != null) {
             Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
-            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)
+            if (w.weaponCategory == WeaponCategory.Sword)
                 LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
         }
         if (RightHandEquipObj != null) {
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)            
+            if (w.weaponCategory == WeaponCategory.Sword)            
                 RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
         }
     }
     public void DisableTrails() {
         if (LeftHandEquipObj != null){
             Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
-            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)
+            if (w.weaponCategory == WeaponCategory.Sword)
                 LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
         }
         if (RightHandEquipObj != null){
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)
+            if (w.weaponCategory == WeaponCategory.Sword)
                 RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
         }
     }
@@ -252,18 +258,18 @@ public class WeaponsController : MonoBehaviour
 
         //Assign single hand status
         if (RightHandEquipObj != null && r != null) {
-            if (r.weaponType == WeaponType.OneHandedSword || r.weaponType == WeaponType.OneHandedStaff) {
+            if (r.weaponHand == WeaponHand.OneHanded) {
                 rightHandStatus = SingleHandStatus.OneHanded;
-            } else if (r.weaponType == WeaponType.TwoHandedSword || r.weaponType == WeaponType.TwoHandedStaff) {
+            } else if (r.weaponHand == WeaponHand.TwoHanded) {
                 rightHandStatus = SingleHandStatus.TwoHanded;
             }
         } else {
             rightHandStatus = SingleHandStatus.Empty;
         }
         if (LeftHandEquipObj != null && l != null) {
-            if (l.weaponType == WeaponType.OneHandedSword || l.weaponType == WeaponType.OneHandedStaff) {
+            if (l.weaponHand == WeaponHand.OneHanded) {
                 leftHandStatus = SingleHandStatus.OneHanded;
-            } else if (l.weaponType == WeaponType.Shield) {
+            } else if (l.weaponCategory == WeaponCategory.Shield) {
                 leftHandStatus = SingleHandStatus.Shield;
             }
         } else {

@@ -90,8 +90,10 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
         else if (item is Weapon) {
             Weapon w = (Weapon)item;
-            if (w.weaponType == WeaponType.Bow)
+            if (w.weaponCategory == WeaponCategory.Bow)
                 UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipBow);
+            else if (w.weaponCategory == WeaponCategory.Shield)
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipShield);
             else
                 UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipWeapon);
         }
@@ -105,12 +107,12 @@ public class UI_EquipmentSlot : UI_InventorySlot
 
         Weapon w = (Weapon)item;
 
-        if (w.weaponType == WeaponType.Bow) {
+        if (w.weaponHand == WeaponHand.BowHand || w.weaponHand == WeaponHand.SecondaryHand) { //if bow or secondary, return back.
             initialSlot.AddItem(item, amount, null);
             return;
         }
 
-        if ( (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff) && EquipmentManager.instance.secondaryHand.itemInSlot != null) { //if its two handed and second hand is busy, clear the second hand.
+        if ( w.weaponHand == WeaponHand.TwoHanded && EquipmentManager.instance.secondaryHand.itemInSlot != null) { //if its two handed and second hand is busy, clear the second hand.
             InventoryManager.instance.AddItemToInventory(EquipmentManager.instance.secondaryHand.itemInSlot, EquipmentManager.instance.secondaryHand.itemAmount, initialSlot);
             EquipmentManager.instance.secondaryHand.ClearSlot();
         }
@@ -127,16 +129,22 @@ public class UI_EquipmentSlot : UI_InventorySlot
         
         Weapon w = (Weapon)item;
 
-        if (w.weaponType == WeaponType.TwoHandedSword || w.weaponType == WeaponType.TwoHandedStaff || w.weaponType == WeaponType.Bow) {  //if weapon is two handed or a bow, return it to initial slot
+        if (w.weaponHand == WeaponHand.TwoHanded || w.weaponHand == WeaponHand.BowHand) {  //if weapon is two handed or a bow, return it to initial slot
             initialSlot.AddItem(item, amount, initialSlot); 
             return;
-        } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) { //if weapon is onehanded, but main hand is already carryign two handed weapon, return to initial slot
-            Weapon mw = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (mw != null && (mw.weaponType == WeaponType.TwoHandedSword || mw.weaponType == WeaponType.TwoHandedStaff) ) {
-                initialSlot.AddItem(item, amount, null); 
-                return;
-            }
-        }    
+        }
+        Weapon mw = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+        if (mw != null && (mw.weaponHand == WeaponHand.TwoHanded) ) { //if main hand is busy with a who handed weapon, remove two handed weapon
+            InventoryManager.instance.AddItemToInventory(EquipmentManager.instance.mainHand.itemInSlot, EquipmentManager.instance.mainHand.itemAmount, initialSlot);
+            EquipmentManager.instance.mainHand.ClearSlot();
+        }
+        
+        Weapon wInSlot = (Weapon)itemInSlot;
+        if (wInSlot != null && wInSlot.weaponHand == WeaponHand.SecondaryHand) { // if slot already contains item that only for the secondary hand, return it to inventory
+            InventoryManager.instance.AddItemToInventory(itemInSlot, itemAmount, initialSlot);
+            ClearSlot();
+        }
+
         SharedAdd(item, amount, initialSlot);
         EquipmentManager.instance.EquipWeaponPrefab(w, true);
     }
@@ -149,7 +157,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
 
         Weapon w = (Weapon)item;
 
-        if (w.weaponType != WeaponType.Bow) {   //If its not a bow, return to initial slot
+        if (w.weaponHand != WeaponHand.BowHand) {   //If its not a bow, return to initial slot
             initialSlot.AddItem(item, amount, null);
             return;
         }
@@ -228,31 +236,15 @@ public class UI_EquipmentSlot : UI_InventorySlot
     {
         if (itemInSlot is Weapon) {
             Weapon w = (Weapon)itemInSlot;
-            if (w.weaponType == WeaponType.TwoHandedSword) {
-                EquipmentManager.instance.UnequipWeaponPrefab(false, false, false, true);
-
-                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
-            } else if (w.weaponType == WeaponType.TwoHandedStaff) {
-                EquipmentManager.instance.UnequipWeaponPrefab(true);
-
-                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
-            } else if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.OneHandedStaff) {
-                if (equipmentSlotType == EquipmentSlotType.MainHand) {
-                    EquipmentManager.instance.UnequipWeaponPrefab(false);
-                } else {
-                    EquipmentManager.instance.UnequipWeaponPrefab(false, true);
-                }
-
-                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
-            } else if (w.weaponType == WeaponType.Bow) {
-                EquipmentManager.instance.UnequipWeaponPrefab(false, false, true);
-
+            if (w.weaponCategory == WeaponCategory.Bow) {
                 UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipBow);
-            } else if (w.weaponType == WeaponType.Shield) {
-                EquipmentManager.instance.UnequipWeaponPrefab(false, false, false, false, true);
-
+            } else if (w.weaponCategory == WeaponCategory.Shield) {
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipShield);
+            } else {
                 UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
             }
+
+            EquipmentManager.instance.UnequipWeaponPrefab(w, equipmentSlotType == EquipmentSlotType.SecondaryHand ? true : false);
         } else if (itemInSlot is Armor) {
             if (equipmentSlotType != EquipmentSlotType.Necklace && equipmentSlotType != EquipmentSlotType.Ring)
                 EquipmentManager.instance.UnequipArmorVisual((Armor)itemInSlot);

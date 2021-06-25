@@ -294,7 +294,7 @@ public class PlayerControlls : MonoBehaviour
     
     float jumpDis;
     public bool canJump() {
-        if (!isGrounded || isFlying || isCrouch || isRolling || isAttacking || isGettingHit || isJumping) {
+        if (!isGrounded || isFlying || isCrouch || isRolling || isAttacking || isGettingHit || isJumping || PeaceCanvas.instance.anyPanelOpen) {
             return false;
         } else {
             return true;

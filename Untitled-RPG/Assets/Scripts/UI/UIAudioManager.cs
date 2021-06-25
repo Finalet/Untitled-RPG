@@ -22,9 +22,11 @@ public class UIAudioManager : MonoBehaviour
     public AudioClip EquipArmor;
     public AudioClip EquipWeapon;
     public AudioClip EquipBow;
+    public AudioClip EquipShield;
     public AudioClip UnequipArmor;
     public AudioClip UnequipWeapon;
     public AudioClip UnequipBow;
+    public AudioClip UnequipShield;
     [Header("UI")]
     public AudioClip UI_Select;
 

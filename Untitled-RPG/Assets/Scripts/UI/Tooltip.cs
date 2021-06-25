@@ -141,11 +141,13 @@ public class Tooltip : MonoBehaviour
             }
             if (w.castingTime != 0) {
                 compareText = compare ? $"{getCompareString(w.castingTime, wCompare.castingTime, true)}" : "";
-                stats += $"Casting time: <color={highlightColor}>{(100*w.castingTime).ToString()}%</color>{compareText}\n";
+                string plusSign = w.castingTime > 0 ? "+" : "";
+                stats += $"Casting time: <color={highlightColor}>{plusSign}{(100*w.castingTime).ToString()}%</color>{compareText}\n";
             }
             if (w.attackSpeed != 0) {
                 compareText = compare ? $"{getCompareString(w.attackSpeed, wCompare.attackSpeed, true)}" : "";
-                stats += $"Attack speed: <color={highlightColor}>{ (100*w.attackSpeed).ToString()}%</color>{compareText}\n";
+                string plusSign = w.attackSpeed > 0 ? "+" : "";
+                stats += $"Attack speed: <color={highlightColor}>{plusSign}{(100*w.attackSpeed).ToString()}%</color>{compareText}\n";
             }
         } else if (item is Skillbook) {
             Skillbook sb = (Skillbook)item;

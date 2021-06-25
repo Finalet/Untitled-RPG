@@ -183,7 +183,7 @@ public class TooltipsManager : MonoBehaviour
         
         if (item is Weapon) {
             Weapon wp = (Weapon)item;
-            if (EquipmentManager.instance.isSlotEquiped(wp.weaponType, out comparedItem)) {
+            if (EquipmentManager.instance.isSlotEquiped(wp.weaponHand, out comparedItem)) {
                 return true;
             }
         } else if (item is Armor) {
