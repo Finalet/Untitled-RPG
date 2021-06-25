@@ -30,12 +30,14 @@ public class WeaponsController : MonoBehaviour
     public SingleHandStatus rightHandStatus;
     public Transform LeftHandTrans;
     public Transform RightHandTrans;
-    [Header("Slots")]
+    public Transform LeftHandShieldTrans;
+    [Header("Slots on root")]
     public Transform leftHipSlot;
     public Transform rightHipSlot;
     public Transform twohandedStaffSlot;
     public Transform twohandedSwordSlot;
     public Transform bowSlot;
+    public Transform shieldBackSlot;
     [Header("Sounds")]
     public AudioClip unsheathSword;
     public AudioClip sheathSword;
@@ -165,6 +167,11 @@ public class WeaponsController : MonoBehaviour
         } else if (bothHandsStatus == BothHandsStatus.TwoHanded) {
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
+        } else if (bothHandsStatus == BothHandsStatus.OneHandedPlusShield) {
+            SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
+            SetParentAndTransorm(ref LeftHandEquipObj, LeftHandShieldTrans);
+            animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
+            animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
         } else {
             Debug.LogError("Instant unsheathing for this type of weapon is not implemented yet");
         }
@@ -203,6 +210,9 @@ public class WeaponsController : MonoBehaviour
                 SetParentAndTransorm(ref RightHandEquipObj, twohandedSwordSlot);
             else if (w.weaponType == WeaponType.TwoHandedStaff)
                 SetParentAndTransorm(ref RightHandEquipObj, twohandedStaffSlot);
+        } if (bothHandsStatus == BothHandsStatus.OneHandedPlusShield) {
+            SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
+            SetParentAndTransorm(ref LeftHandEquipObj, shieldBackSlot);
         } else {
             Debug.LogError("Sheathing for this type of weapon is not implemented yet");
         }
@@ -210,12 +220,28 @@ public class WeaponsController : MonoBehaviour
     }
 
     public void EnableTrails() {
-        if (LeftHandEquipObj != null) LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
-        if (RightHandEquipObj != null) RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
+        if (LeftHandEquipObj != null) {
+            Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
+            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)
+                LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
+        }
+        if (RightHandEquipObj != null) {
+            Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)            
+                RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
+        }
     }
     public void DisableTrails() {
-        if (LeftHandEquipObj != null) LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
-        if (RightHandEquipObj != null) RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
+        if (LeftHandEquipObj != null){
+            Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
+            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)
+                LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
+        }
+        if (RightHandEquipObj != null){
+            Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+            if (w.weaponType == WeaponType.OneHandedSword || w.weaponType == WeaponType.TwoHandedSword)
+                RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
+        }
     }
 
     void CheckHandsEquip() {
@@ -269,7 +295,7 @@ public class WeaponsController : MonoBehaviour
             animatorWeaponType = -1; //FIX LATER
         } else if (rightHandStatus == SingleHandStatus.OneHanded && leftHandStatus == SingleHandStatus.Shield) {
             bothHandsStatus = BothHandsStatus.OneHandedPlusShield;
-            animatorWeaponType = -1; //FIX LATER
+            animatorWeaponType = 0; //FIX THIS, WE NEED TO PLAY SPECIFIC ANIM FOR SHIELD AND SWORD;
         } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.Shield) {
             bothHandsStatus = BothHandsStatus.ShieldOnly;
             animatorWeaponType = -1; //FIX LATER

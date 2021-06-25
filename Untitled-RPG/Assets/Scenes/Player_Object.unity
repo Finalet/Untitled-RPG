@@ -15428,7 +15428,7 @@ Transform:
   m_GameObject: {fileID: 668747522}
   m_LocalRotation: {x: -0.6409538, y: 0.7083367, z: -0.13195029, w: 0.2646255}
   m_LocalPosition: {x: -7.1000037, y: -17.500002, z: -9.799999}
-  m_LocalScale: {x: 69.99996, y: 69.999985, z: 69.999985}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 6528459659750750471}
   m_RootOrder: 0
@@ -38833,6 +38833,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807146473}
   m_CullTransparentMesh: 0
+--- !u!1 &1816082272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1816082273}
+  m_Layer: 10
+  m_Name: ShieldSlotUnshiethed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1816082273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816082272}
+  m_LocalRotation: {x: -0.017874336, y: -0.63190025, z: -0.77391034, w: 0.038017254}
+  m_LocalPosition: {x: -8.1, y: -3.7, z: 1.1}
+  m_LocalScale: {x: 99.999985, y: 100, z: 100}
+  m_Children: []
+  m_Father: {fileID: 6528447180593733107}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 258.358, y: 174.204, z: 10.350006}
 --- !u!1001 &1831388354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49526,7 +49556,7 @@ Transform:
   m_LocalScale: {x: 100.000015, y: 100, z: 100.00008}
   m_Children: []
   m_Father: {fileID: 6528447180593733107}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 175, y: 77.041, z: 93.82001}
 --- !u!1 &3453714230835295220
 GameObject:
@@ -49632,7 +49662,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3453714231342623450}
   m_Layer: 10
-  m_Name: SheildSlot
+  m_Name: ShieldSlotOnBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49647,7 +49677,7 @@ Transform:
   m_GameObject: {fileID: 3453714231342623449}
   m_LocalRotation: {x: 0.45451933, y: -0.54167545, z: 0.4545193, w: 0.5416753}
   m_LocalPosition: {x: -0.40003228, y: -11.000059, z: 0}
-  m_LocalScale: {x: 70, y: 69.999985, z: 69.999985}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 6528459659750750471}
   m_RootOrder: 1
@@ -54806,11 +54836,13 @@ MonoBehaviour:
   rightHandStatus: 3
   LeftHandTrans: {fileID: 3453714230689416966}
   RightHandTrans: {fileID: 3453714230517631787}
+  LeftHandShieldTrans: {fileID: 1816082273}
   leftHipSlot: {fileID: 3453714229524092668}
   rightHipSlot: {fileID: 3453714231089758624}
   twohandedStaffSlot: {fileID: 3453714231134536879}
   twohandedSwordSlot: {fileID: 1774746831}
   bowSlot: {fileID: 668747523}
+  shieldBackSlot: {fileID: 3453714231342623450}
   unsheathSword: {fileID: 8300000, guid: db2fddd9f139902448d6a83a3392e048, type: 3}
   sheathSword: {fileID: 8300000, guid: 15c157c32ca26d3439d2f758c8322449, type: 3}
   unsheathBow: {fileID: 8300000, guid: 9dd8cad58f16eab4b9cda6ab91c4af8f, type: 3}
@@ -58351,7 +58383,7 @@ Transform:
   m_Children:
   - {fileID: 6528337707915183563}
   m_Father: {fileID: 6528447180593733107}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &6522923684743579811
 Transform:
@@ -59239,7 +59271,7 @@ Transform:
   m_Children:
   - {fileID: 6523015549239531605}
   m_Father: {fileID: 6528447180593733107}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &6522999771685212699
 Transform:
@@ -79857,7 +79889,7 @@ Transform:
   m_Children:
   - {fileID: 6528002414747471155}
   m_Father: {fileID: 6528447180593733107}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &6528014988262833701
 Transform:
@@ -84558,6 +84590,7 @@ Transform:
   m_LocalPosition: {x: -27.114529, y: 0, z: -0.038136426}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1816082273}
   - {fileID: 3453714230689416966}
   - {fileID: 6522998829973165635}
   - {fileID: 6528014234062292093}
@@ -128405,13 +128438,15 @@ MonoBehaviour:
   weapons:
   - {fileID: 11400000, guid: fba573bc27dd92042a1cedecb8e7d1d8, type: 2}
   - {fileID: 11400000, guid: 775ca3ebcd8fa0b419fe0325e10c3881, type: 2}
+  - {fileID: 11400000, guid: 5dca50cf313934f4396504e9bc2edaeb, type: 2}
+  - {fileID: 11400000, guid: f06d55f880bc95444be82338dc09d534, type: 2}
+  - {fileID: 11400000, guid: a9271d2abd63ae74cb957cd2cce40767, type: 2}
+  - {fileID: 11400000, guid: f060874663e1e4846834223accdd0ab1, type: 2}
   - {fileID: 11400000, guid: bd8d37d16898faf47bb70706120d760b, type: 2}
   - {fileID: 11400000, guid: 4e7ab8b5b3300774d818ba92b8d532cc, type: 2}
   - {fileID: 11400000, guid: a758883d19a3e9c4f81cdb7d726bc615, type: 2}
-  - {fileID: 11400000, guid: a9271d2abd63ae74cb957cd2cce40767, type: 2}
-  - {fileID: 11400000, guid: f060874663e1e4846834223accdd0ab1, type: 2}
-  - {fileID: 11400000, guid: 5dca50cf313934f4396504e9bc2edaeb, type: 2}
-  - {fileID: 11400000, guid: f06d55f880bc95444be82338dc09d534, type: 2}
+  - {fileID: 11400000, guid: 0d53cbf5a5f0ee74e844c28ab1575570, type: 2}
+  - {fileID: 11400000, guid: a696bad7a97862040ae81c8ea2596ab2, type: 2}
   armor:
   - {fileID: 11400000, guid: d16e95d8adea5aa41bbe8ab10274d2b8, type: 2}
   - {fileID: 11400000, guid: 85b1db6bbaa0f7c41aa4b02e24b451be, type: 2}
@@ -128420,12 +128455,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ed4bd49a53640834aa13736c41630361, type: 2}
   - {fileID: 11400000, guid: 35909761d285ba94babc39e6973f4a03, type: 2}
   - {fileID: 11400000, guid: c54fa735fff15684b96d6304cab52feb, type: 2}
+  - {fileID: 11400000, guid: 475950cffe783574f844b45ff0cb170e, type: 2}
   - {fileID: 11400000, guid: ac4c64be505222f42be242a87fad87d2, type: 2}
   - {fileID: 11400000, guid: 7bce76a901a98f5489a769747ca3a9ba, type: 2}
+  - {fileID: 11400000, guid: 5bca41c0cb861574cab139aa4ccf57c3, type: 2}
   - {fileID: 11400000, guid: e753017ab81ca6241af1bed814a4b755, type: 2}
   - {fileID: 11400000, guid: 35b571a40ef4b124c8c1f75578fbd075, type: 2}
-  - {fileID: 11400000, guid: 475950cffe783574f844b45ff0cb170e, type: 2}
-  - {fileID: 11400000, guid: 5bca41c0cb861574cab139aa4ccf57c3, type: 2}
   skillbooks:
   - {fileID: 11400000, guid: a29bc20b45db41548a7bf20bafc4288f, type: 2}
   - {fileID: 11400000, guid: c0920a75900958e4c87f3390be713ffe, type: 2}

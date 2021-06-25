@@ -248,6 +248,10 @@ public class UI_EquipmentSlot : UI_InventorySlot
                 EquipmentManager.instance.UnequipWeaponPrefab(false, false, true);
 
                 UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipBow);
+            } else if (w.weaponType == WeaponType.Shield) {
+                EquipmentManager.instance.UnequipWeaponPrefab(false, false, false, false, true);
+
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
             }
         } else if (itemInSlot is Armor) {
             if (equipmentSlotType != EquipmentSlotType.Necklace && equipmentSlotType != EquipmentSlotType.Ring)

@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Equipment : Item
 {
@@ -19,7 +22,7 @@ public class Equipment : Item
     [Header("Thirdary Stats")]
     public float castingTime;
     public float attackSpeed;
-    [Header("Skill")]
+    [Space]
     public Skill grantedSkill;
 
     public override void Use (){}

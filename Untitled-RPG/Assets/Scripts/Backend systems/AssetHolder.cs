@@ -102,6 +102,13 @@ public class AssetHolder : MonoBehaviour
         li.itemAmount = Mathf.RoundToInt(Random.Range(0.8f*amount, 1.2f*amount));
         li.Drop();
     }
+
+    public void SortAllByID () {
+        consumables.Sort((x, y) => x.ID.CompareTo(y.ID));
+        weapons.Sort((x, y) => x.ID.CompareTo(y.ID));
+        armor.Sort((x, y) => x.ID.CompareTo(y.ID));
+        skillbooks.Sort((x, y) => x.ID.CompareTo(y.ID));
+    }
 }
 
 [CustomEditor(typeof(AssetHolder))]
@@ -113,10 +120,7 @@ public class AssetHolderInspector : Editor
         AssetHolder assetHolder = (AssetHolder)target;
         GUILayout.Space(10);
         if(GUILayout.Button("Sort all by ID")) {
-            assetHolder.consumables.Sort((x, y) => x.ID.CompareTo(y.ID));
-            assetHolder.weapons.Sort((x, y) => x.ID.CompareTo(y.ID));
-            assetHolder.armor.Sort((x, y) => x.ID.CompareTo(y.ID));
-            assetHolder.skillbooks.Sort((x, y) => x.ID.CompareTo(y.ID));
+            assetHolder.SortAllByID();
         }
     }
 }

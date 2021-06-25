@@ -13,9 +13,11 @@ public class EquipmentManager : MonoBehaviour
     Transform MainHandSlot;
     Transform SecondaryHandSlot;
     Transform BowSlot;
+    Transform ShieldSlot;
 
     Transform LeftHandTrans;
     Transform RightHandTrans;
+    Transform LeftHandShieldTrans;
 
     [Header("Slots")]
     public UI_EquipmentSlot helmet;
@@ -56,10 +58,12 @@ public class EquipmentManager : MonoBehaviour
         TwohandedStaffSlot = WeaponsController.instance.twohandedStaffSlot;
         TwohandedSwordSlot = WeaponsController.instance.twohandedSwordSlot;
         BowSlot = WeaponsController.instance.bowSlot;
+        ShieldSlot = WeaponsController.instance.shieldBackSlot;
         MainHandSlot = WeaponsController.instance.leftHipSlot;
         SecondaryHandSlot = WeaponsController.instance.rightHipSlot;
         LeftHandTrans = WeaponsController.instance.LeftHandTrans;
         RightHandTrans = WeaponsController.instance.RightHandTrans;
+        LeftHandShieldTrans = WeaponsController.instance.LeftHandShieldTrans;
         LoadEquip();
     }
 
@@ -162,7 +166,7 @@ public class EquipmentManager : MonoBehaviour
             } else {
                 parent = RightHandTrans;
             }
-        } else if (secondary && weapon.weaponType != WeaponType.Bow) { //Secondary hand
+        } else if (secondary && weapon.weaponType != WeaponType.Bow && weapon.weaponType != WeaponType.Shield) { //Secondary hand
             if (!WeaponsController.instance.isWeaponOut) {
                 parent = SecondaryHandSlot;
             } else {
@@ -173,6 +177,12 @@ public class EquipmentManager : MonoBehaviour
                 parent = BowSlot;
             } else {
                 parent = LeftHandTrans;
+            }
+        } else if (weapon.weaponType == WeaponType.Shield) {   //Shield
+            if (!WeaponsController.instance.isWeaponOut) {
+                parent = ShieldSlot;
+            } else {
+                parent = LeftHandShieldTrans;
             }
         } else {
             Debug.LogError("Weapon type not yet supported");
@@ -188,12 +198,12 @@ public class EquipmentManager : MonoBehaviour
         }
         if (parent == TwohandedSwordSlot || parent == TwohandedStaffSlot || parent == MainHandSlot || parent == RightHandTrans) {
             WeaponsController.instance.RightHandEquipObj = w;
-        } else if (parent == SecondaryHandSlot || parent == LeftHandTrans) {
+        } else if (parent == SecondaryHandSlot || parent == LeftHandTrans || parent == ShieldSlot || parent == LeftHandShieldTrans) {
             WeaponsController.instance.LeftHandEquipObj = w;
         }
     }
 
-    public void UnequipWeaponPrefab (bool twoHandedStaff, bool secondary = false, bool bow = false, bool twoHandedSword = false) {
+    public void UnequipWeaponPrefab (bool twoHandedStaff, bool secondary = false, bool bow = false, bool twoHandedSword = false, bool shield = false) {
         Transform slot;
         if (twoHandedStaff) {
             if (!WeaponsController.instance.isWeaponOut) {
@@ -207,7 +217,7 @@ public class EquipmentManager : MonoBehaviour
             } else {
                 slot = RightHandTrans;
             }
-        } else if (!secondary && !bow) {
+        } else if (!secondary && !bow && !shield) {
             if (!WeaponsController.instance.isWeaponOut) {
                 slot = MainHandSlot;
             } else {
@@ -224,6 +234,12 @@ public class EquipmentManager : MonoBehaviour
                 slot = BowSlot;
             } else {
                 slot = LeftHandTrans;
+            }
+        } else if (shield) { //shield
+            if (!WeaponsController.instance.isWeaponOut) {
+                slot = ShieldSlot;
+            } else {
+                slot = LeftHandShieldTrans;
             }
         } else {
             Debug.LogError("Weapon type unsupported");

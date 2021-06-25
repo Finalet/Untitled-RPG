@@ -11,6 +11,12 @@ public class ItemsDatabase : EditorWindow
     bool showSkillbooks;
     bool showConsumables;
 
+    bool showAllWeapons;
+    bool showOneHanded;
+    bool showTwoHanded;
+    bool showBows;
+    bool showShields;
+
     bool showAllArmor;
     bool showHelmets;
     bool showChests;
@@ -52,14 +58,14 @@ public class ItemsDatabase : EditorWindow
         EditorGUI.indentLevel = 0;
         showWeapons = EditorGUILayout.Foldout(showWeapons, "Weapons");
         if (showWeapons) {
-            DrawList(ah.weapons);
+            DrawWeaponsList(ah);
             EditorGUILayout.Space(5, false);
         }
 
         EditorGUI.indentLevel = 0;
         showArmor = EditorGUILayout.Foldout(showArmor, "Armor");
         if (showArmor) {
-            DrawArmorList(ah.armor);
+            DrawArmorList(ah);
             EditorGUILayout.Space(5, false);
         }
 
@@ -77,6 +83,12 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.Space(5, false);
         }
         
+        EditorGUI.indentLevel = 0;
+        EditorGUILayout.Space(10);
+        if (GUILayout.Button("Sort all by ID", GUILayout.Width(200))) {
+            ah.SortAllByID();
+        }
+
         EditorGUILayout.EndScrollView();
         
         //---------------Selection View--------------/
@@ -100,7 +112,7 @@ public class ItemsDatabase : EditorWindow
 
             selectedWindow = Editor.CreateEditor(selectedItem);
             selectedWindow.DrawDefaultInspector();
-            
+
             EditorGUILayout.EndScrollView();
         } else {
             changingSelectedItemName = false;
@@ -150,7 +162,8 @@ public class ItemsDatabase : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    void DrawArmorList (List<Item> list) {
+    
+    void DrawArmorList (AssetHolder ah) {
         List<Item> helmets = new List<Item>();
         List<Item> chests = new List<Item>();
         List<Item> gloves = new List<Item>();
@@ -160,8 +173,10 @@ public class ItemsDatabase : EditorWindow
         List<Item> necklaces = new List<Item>();
         List<Item> rings = new List<Item>();
         
+
+
         Armor e;
-        foreach (Item item in list){
+        foreach (Item item in ah.armor){
             e = (Armor)item;
             switch (e.armorType) {
                 case ArmorType.Helmet:
@@ -192,12 +207,12 @@ public class ItemsDatabase : EditorWindow
         }
 
         EditorGUI.indentLevel = 2;
-        DrawTitles(list);
+        DrawTitles(ah.armor);
         
         EditorGUI.indentLevel = 1;
         showAllArmor = EditorGUILayout.Foldout(showAllArmor, "All armor");
         if(showAllArmor) {
-            DrawList(list, true);
+            DrawList(ah.armor, true);
         }
 
         EditorGUI.indentLevel = 1;
@@ -239,6 +254,68 @@ public class ItemsDatabase : EditorWindow
         showRings = EditorGUILayout.Foldout(showRings, "Rings");
         if (showRings) {
             DrawList(rings, true);
+        }
+    }
+
+    void DrawWeaponsList (AssetHolder ah) {
+        List<Item> OneHanded = new List<Item>();
+        List<Item> TwoHanded = new List<Item>();
+        List<Item> Bows = new List<Item>();
+        List<Item> Shields = new List<Item>();
+
+        Weapon w;
+        foreach (Item item in ah.weapons){
+            w = (Weapon)item;
+            switch (w.weaponType) {
+                case WeaponType.OneHandedSword:
+                    OneHanded.Add(w);
+                    break;
+                case WeaponType.OneHandedStaff:
+                    OneHanded.Add(w);
+                    break;
+                case WeaponType.TwoHandedSword:
+                    TwoHanded.Add(w);
+                    break;
+                case WeaponType.TwoHandedStaff:
+                    TwoHanded.Add(w);
+                    break;
+                case WeaponType.Bow:
+                    Bows.Add(w);
+                    break;
+                case WeaponType.Shield:
+                    Shields.Add(w);
+                    break;
+            }
+        }
+
+        EditorGUI.indentLevel = 2;
+        DrawTitles(ah.weapons);
+        
+        EditorGUI.indentLevel = 1;
+        showAllWeapons = EditorGUILayout.Foldout(showAllWeapons, "All weapons");
+        if(showAllWeapons) {
+            DrawList(ah.weapons, true);
+        }
+
+        EditorGUI.indentLevel = 1;
+        showOneHanded = EditorGUILayout.Foldout(showOneHanded, "One handed");
+        if (showOneHanded) {
+            DrawList(OneHanded, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showTwoHanded = EditorGUILayout.Foldout(showTwoHanded, "Two handed");
+        if (showTwoHanded) {
+            DrawList(TwoHanded, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showBows = EditorGUILayout.Foldout(showBows, "Bows");
+        if (showBows) {
+            DrawList(Bows, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showShields = EditorGUILayout.Foldout(showShields, "Shields");
+        if (showShields) {
+            DrawList(Shields, true);
         }
     }
 
@@ -318,6 +395,19 @@ public class ItemsDatabase : EditorWindow
                 a.armorType = existingArmor.armorType;
                 ah.armor.Add(a);
                 selectedItem = a;
+            }
+
+            //-------------Different types of Weapons-------------//
+            if (list != ah.weapons && list[0] is Weapon) {
+                Weapon existingWeapon = (Weapon)list[0];
+                Weapon w = ScriptableObject.CreateInstance<Weapon>();
+                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Weapons/New {existingWeapon.weaponType}.asset");
+                AssetDatabase.CreateAsset(w, name);
+                w.ID = list[list.Count-1].ID + 1;
+                w.itemName = $"New {existingWeapon.weaponType}";
+                w.weaponType = existingWeapon.weaponType;
+                ah.weapons.Add(w);
+                selectedItem = w;
             }
         }
     }

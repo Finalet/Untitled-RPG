@@ -18,7 +18,10 @@ public class Weapon : Equipment
             TwoHandedEquip(initialSlot);
         } else if (weaponType == WeaponType.Bow) {
             BowEquip(initialSlot);
+        } else if (weaponType == WeaponType.Shield) {
+            ShieldEquip(initialSlot);
         } else {
+            Debug.LogError($"Equiping {weaponType} is not supported yet");
             //IMPLEMENT OTHER EQUIPMENT TYPES
         }
     }
@@ -44,5 +47,9 @@ public class Weapon : Equipment
 
     void BowEquip (UI_InventorySlot initialSlot) {
         EquipmentManager.instance.bow.AddItem(this, 1, initialSlot);
+    }
+
+    void ShieldEquip (UI_InventorySlot initialSlot) {
+        EquipmentManager.instance.secondaryHand.AddItem(this, 1, initialSlot);
     }
 }
