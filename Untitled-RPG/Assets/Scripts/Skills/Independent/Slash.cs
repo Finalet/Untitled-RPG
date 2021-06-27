@@ -22,6 +22,7 @@ public class Slash : Skill
     [Header("Collider sizes")]
     public Vector3[] colliderSizeDualHands;
     public Vector3[] colliderSizeTwohanded;
+    public Vector3[] colliderSizeOnahanded;
 
     protected override void Start() {
         base.Start();
@@ -41,11 +42,27 @@ public class Slash : Skill
 
     protected override void CustomUse() {
         if (hits == 1) {
-            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded ?  0.5f * characteristics.attackSpeed.y : 0.5f * characteristics.attackSpeed.y;
+            if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
+                timing = 0.5f * characteristics.attackSpeed.y;
+            else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
+                timing = 0.5f * characteristics.attackSpeed.y;
+            else 
+                timing = 0.5f * characteristics.attackSpeed.y;
+
         } else if (hits == 2) {
-            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded ?  0.6f * characteristics.attackSpeed.y : 0.5f * characteristics.attackSpeed.y;
+            if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
+                timing = 0.6f * characteristics.attackSpeed.y;
+            else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
+                timing = 0.5f * characteristics.attackSpeed.y;
+            else 
+                timing = 0.5f * characteristics.attackSpeed.y;
         } else {
-            timing = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded ?  1.2f * characteristics.attackSpeed.y : 0.74f * characteristics.attackSpeed.y;
+            if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
+                timing = 1.2f * characteristics.attackSpeed.y;
+            else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
+                timing = 0.74f * characteristics.attackSpeed.y;
+            else 
+                timing = 0.74f * characteristics.attackSpeed.y;
         }
 
         if (Time.time - lastHitTime > timing)
@@ -76,14 +93,14 @@ public class Slash : Skill
             else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
                 animator.CrossFade("Attacks.Knight.Slash_1 Dual swords", 0.2f);
             else 
-                animator.CrossFade("Attacks.Knight.Slash_1 Dual swords", 0.2f);
+                animator.CrossFade("Attacks.Knight.Slash_1 One handed", 0.2f);
         } else if (hits == 2) {
             if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
                 animator.CrossFade("Attacks.Knight.Slash_2 Two handed", 0.2f);
             else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
                 animator.CrossFade("Attacks.Knight.Slash_2 Dual swords", 0.2f);
             else
-                animator.CrossFade("Attacks.Knight.Slash_2 Dual swords", 0.2f);
+                animator.CrossFade("Attacks.Knight.Slash_2 One handed", 0.2f);
             
         } else if (hits == 3) {
             if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
@@ -91,16 +108,17 @@ public class Slash : Skill
             else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
                 animator.CrossFade("Attacks.Knight.Slash_3 Dual swords", 0.2f);
             else
-                animator.CrossFade("Attacks.Knight.Slash_3 Dual swords", 0.2f);
+                animator.CrossFade("Attacks.Knight.Slash_3 One handed", 0.2f);
         }
     }
     void PlaySounds () {
+        float delayMult = WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded || WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded ? 1 : 0.8f;
         if (hits == 1) {
             PlaySound(sounds[0], 0, 1, 0.15f * characteristics.attackSpeed.y);
         } else if (hits == 2) {
-            PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.y);
+            PlaySound(sounds[1], 0, 1, 0.2f * characteristics.attackSpeed.y * delayMult);
         } else if (hits == 3) {
-            PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.y);
+            PlaySound(sounds[2], 0, 1, 0.3f * characteristics.attackSpeed.y * delayMult);
             if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
                 Invoke("PlayLastDualSwordsSound", 0.45f * characteristics.attackSpeed.y); //Invoke because otherwise the sound does not play
         }
@@ -159,7 +177,7 @@ public class Slash : Skill
         } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) { 
             colliderSize = colliderSizeDualHands;
         } else {
-            colliderSize = colliderSizeDualHands;
+            colliderSize = colliderSizeOnahanded;
         }
     }
     void ChooseSounds() {

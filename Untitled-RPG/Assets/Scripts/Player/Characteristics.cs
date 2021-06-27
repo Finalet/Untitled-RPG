@@ -276,7 +276,7 @@ public class Characteristics : MonoBehaviour
     }
 
     float defenseCoeff () { //https://www.desmos.com/calculator/pjaj8kestx
-        float g = 0.99985f;
+        float g = 0.9999f;
         return Mathf.Pow(g, defense + Mathf.Log(1, g));
     }
 

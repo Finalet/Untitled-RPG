@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -108,9 +109,11 @@ public class AssetHolder : MonoBehaviour
         weapons.Sort((x, y) => x.ID.CompareTo(y.ID));
         armor.Sort((x, y) => x.ID.CompareTo(y.ID));
         skillbooks.Sort((x, y) => x.ID.CompareTo(y.ID));
+        Skills = Skills.OrderBy(x => x.ID).ToArray();
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(AssetHolder))]
 public class AssetHolderInspector : Editor
 {
@@ -124,3 +127,5 @@ public class AssetHolderInspector : Editor
         }
     }
 }
+
+#endif

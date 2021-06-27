@@ -177,7 +177,7 @@ public class PassiveNPC : MonoBehaviour
         if(Time.timeScale != 0 && NPCType != PassiveNPCType.Static && Time.deltaTime > 0)
             navAgent.speed = (animator.deltaPosition / Time.deltaTime).magnitude;
     }
-
+#if UNITY_EDITOR
     void OnValidate() {
         meshIndex = Mathf.Clamp(meshIndex, 0, meshes.Length-1);
         materialIndex = Mathf.Clamp(materialIndex, 0, materials.Length-1);
@@ -216,6 +216,7 @@ public class PassiveNPC : MonoBehaviour
             }
         }
     }
+#endif
 
     void CrossFadeNewTalkAnim () {
         switchedTalkAnim = true;
@@ -247,6 +248,7 @@ public class PassiveNPC : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     public void GenerateRandomPath (int _maxPathLength = -1, int _minPathLength = -1, float maxAreaRadius = -1) {
         List<Transform> paths = new List<Transform>();
         for (int i = 0; i < allPathPoints.transform.childCount; i++)
@@ -274,6 +276,7 @@ public class PassiveNPC : MonoBehaviour
         System.GC.Collect();
         EditorUtility.SetDirty(this);
     }
+#endif
 }
 
 #if UNITY_EDITOR
@@ -312,14 +315,6 @@ public class PassiveNPCEditor : Editor
 
             npc.maxPatrollingRadius = areaRadius;
         }
-    }
-
-    void Reset() {
-        npc = (PassiveNPC)target;
-        if (npc.allPathPoints == null)
-            return;
-        minPathLength = 2;
-        maxPathLength = npc.allPathPoints.transform.childCount;
     }
 
     void OnSceneGUI() {

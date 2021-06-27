@@ -7,9 +7,11 @@ using UnityEngine.UI;
 public static class UI_General
 {
     public static Color commonRarityColor = Color.white;
-    public static Color rareRarityColor = new Color(0.16f, 0.37f, 0.63f);
-    public static Color epicRarityColor = new Color(0.63f, 0.16f, 0.60f);
+    public static Color uncommonRarityColor = new Color(0.0f, 0.8f, 0);
+    public static Color rareRarityColor = new Color(0.2f, 0.45f, 0.76f);
+    public static Color epicRarityColor = new Color(0.69f, 0.18f, 0.66f);
     public static Color legendaryRarityColor = new Color(0.9f, 0.65f, 0.11f);
+    public static Color relicRarityColor = new Color(0.8f, 0, 0);
 
     public static Color mainTextColor = Color.white;
     public static Color secondaryTextColor = new Color (0.74f, 0.74f, 0.74f);
@@ -38,31 +40,20 @@ public static class UI_General
         image.GetComponent<RectTransform>().localScale = Vector2.one;
     }
 
-    public static Color getRarityColor (Item item) {
-        switch (item.itemRarity) {
-            case ItemRarity.Common:
-                return commonRarityColor;
-            case ItemRarity.Rare:
-                return rareRarityColor;
-            case ItemRarity.Epic:
-                return epicRarityColor;
-            case ItemRarity.Legendary:
-                return legendaryRarityColor;
-            default:
-                Debug.LogError("This could never happen, moron");
-                return new Color();
-        }
-    }
-    public static Color getRarityColor (ItemRarity itemRarity) {
+       public static Color getRarityColor (ItemRarity itemRarity) {
         switch (itemRarity) {
             case ItemRarity.Common:
                 return commonRarityColor;
+            case ItemRarity.Uncommon:
+                return uncommonRarityColor;
             case ItemRarity.Rare:
                 return rareRarityColor;
             case ItemRarity.Epic:
                 return epicRarityColor;
             case ItemRarity.Legendary:
                 return legendaryRarityColor;
+            case ItemRarity.Relic:
+                return relicRarityColor;
             default:
                 Debug.LogError("This could never happen, moron");
                 return new Color();

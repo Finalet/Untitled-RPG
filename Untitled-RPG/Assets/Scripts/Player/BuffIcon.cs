@@ -42,7 +42,7 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             } else {
                 timer -= Time.deltaTime;
             }
-            timerText.text = Mathf.RoundToInt(timer).ToString();
+            timerText.text = timer > 120 ? Mathf.RoundToInt(timer/60).ToString() + "m" : Mathf.RoundToInt(timer).ToString();
         }
     }
 

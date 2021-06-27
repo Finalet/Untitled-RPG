@@ -26,7 +26,7 @@ public abstract class Item : ScriptableObject
     public abstract void Use ();
     public abstract void Use (UI_InventorySlot initialSlot);
 
-    void OnValidate() {
+    protected virtual void OnValidate() {
         craftingRecipe = isCraftable ? craftingRecipe : null;
         maxStackAmount = isStackable ? maxStackAmount : 1;
 
@@ -39,5 +39,8 @@ public abstract class Item : ScriptableObject
 
     public virtual string getItemDescription() {
         return itemDesctription;
+    }
+    public virtual int getItemValue() {
+        return 0;
     }
 }

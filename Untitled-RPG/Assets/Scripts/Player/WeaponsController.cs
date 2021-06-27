@@ -220,7 +220,7 @@ public class WeaponsController : MonoBehaviour
                 shield.ShiftMeshPos(true);
             }
         } else {
-            Debug.LogError("Sheathing for this type of weapon is not implemented yet");
+            Debug.LogWarning("Sheathing for this type of weapon is not implemented yet");
         }
         isWeaponOut = false;
     }

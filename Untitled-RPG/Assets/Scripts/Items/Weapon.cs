@@ -54,7 +54,9 @@ public class Weapon : Equipment
         EquipmentManager.instance.secondaryHand.AddItem(this, 1, initialSlot);
     }
 
-    void OnValidate() {
+    protected override void OnValidate() {
+        base.OnValidate();
+        
         if (weaponCategory == WeaponCategory.Bow)
             weaponHand = WeaponHand.BowHand;
         else if (weaponCategory == WeaponCategory.Shield)

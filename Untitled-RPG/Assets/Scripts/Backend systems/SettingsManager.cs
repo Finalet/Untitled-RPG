@@ -87,7 +87,8 @@ public class SettingsManager : MonoBehaviour
         invertYToggle.isOn = invertY;
         displayHelmetToggle.isOn = displayHelmet;
         displayCapeToggle.isOn = displayCape;
-        displayHelmetToggleInSlot.isOn = displayHelmet;
-        displayCapeToggleInSlot.isOn = displayCape;
+
+        if (displayHelmetToggleInSlot != null) displayHelmetToggleInSlot.isOn = displayHelmet;
+        if (displayCapeToggleInSlot != null) displayCapeToggleInSlot.isOn = displayCape;
     }
 }

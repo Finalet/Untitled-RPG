@@ -11823,7 +11823,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: -3.9999967, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &516953710
 MonoBehaviour:
@@ -11846,7 +11846,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 60, y: 60}
-  m_Spacing: {x: 15, y: 15}
+  m_Spacing: {x: 14, y: 15}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &516953711
@@ -17738,10 +17738,10 @@ RectTransform:
   m_Father: {fileID: 830012943}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -30, y: -133}
-  m_SizeDelta: {x: 250, y: 30}
+  m_SizeDelta: {x: -60, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!1 &797149536
 GameObject:
@@ -21980,7 +21980,7 @@ Transform:
   - {fileID: 1918128337}
   - {fileID: 700851099}
   m_Father: {fileID: 3453714230835295221}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1010376332 stripped
 MonoBehaviour:
@@ -25906,6 +25906,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1165068135}
   m_CullTransparentMesh: 1
+--- !u!1 &1165741976
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1165741977}
+  m_Layer: 10
+  m_Name: Defense
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1165741977
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165741976}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2147419979}
+  m_Father: {fileID: 3453714230835295221}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1170687940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46119,6 +46150,93 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2143201325}
   m_CullTransparentMesh: 0
+--- !u!1001 &2147419978
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1165741977}
+    m_Modifications:
+    - target: {fileID: 1766505328427174222, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_Name
+      value: Hardening
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: eebbf97f54731f44c90c8bb76839ad9d, type: 3}
+--- !u!4 &2147419979 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2147419978}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2147419980 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -29725803680631389, guid: eebbf97f54731f44c90c8bb76839ad9d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2147419978}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48a46f21a16611649805f32bd6e652ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &49375821839002065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49831,6 +49949,7 @@ Transform:
   - {fileID: 4442432216564370761}
   - {fileID: 29603616}
   - {fileID: 5824796822367820343}
+  - {fileID: 1165741977}
   - {fileID: 1005447336}
   m_Father: {fileID: 4675846284445915795}
   m_RootOrder: 2
@@ -55152,7 +55271,47 @@ MonoBehaviour:
     description: Five or more common armor pieces.
     icon: {fileID: 2327596565073326761, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
     duration: 0
-    healthBuff: 1000
+    healthBuff: 500
+    staminaBuff: 50
+    strengthBuff: 20
+    agilityBuff: 20
+    intellectBuff: 20
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: 0
+    attackSpeedBuff: 0
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    associatedSkill: {fileID: 0}
+  uncommonSetBuff:
+    name: Uncommon armor set
+    description: Five or more uncommon armor pieces.
+    icon: {fileID: -9171415415634856004, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 700
+    staminaBuff: 70
+    strengthBuff: 30
+    agilityBuff: 30
+    intellectBuff: 30
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: 0
+    attackSpeedBuff: 0
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    associatedSkill: {fileID: 0}
+  rareSetBuff:
+    name: Rare armor set
+    description: Five or more rare armor pieces.
+    icon: {fileID: 7581896100967011195, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 1200
     staminaBuff: 100
     strengthBuff: 50
     agilityBuff: 50
@@ -55162,15 +55321,15 @@ MonoBehaviour:
     magicPowerBuff: 0
     healingPowerBuff: 0
     defenseBuff: 0
-    castingSpeedBuff: -0.02
-    attackSpeedBuff: -0.02
+    castingSpeedBuff: -0.01
+    attackSpeedBuff: -0.01
     walkSpeedBuff: 0
     skillDistanceBuff: 0
     associatedSkill: {fileID: 0}
-  rareSetBuff:
-    name: Rare armor set
-    description: Five or more rare armor pieces.
-    icon: {fileID: -9171415415634856004, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+  epicSetBuff:
+    name: Epic armor set
+    description: Five or more epic armor pieces.
+    icon: {fileID: -3796704913345747774, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
     duration: 0
     healthBuff: 2000
     staminaBuff: 150
@@ -55183,36 +55342,16 @@ MonoBehaviour:
     healingPowerBuff: 0
     defenseBuff: 0
     castingSpeedBuff: -0.02
-    attackSpeedBuff: -0.02
-    walkSpeedBuff: 0
-    skillDistanceBuff: 0
-    associatedSkill: {fileID: 0}
-  epicSetBuff:
-    name: Epic armor set
-    description: Five or more epic armor pieces.
-    icon: {fileID: 7581896100967011195, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
-    duration: 0
-    healthBuff: 4000
-    staminaBuff: 100
-    strengthBuff: 100
-    agilityBuff: 100
-    intellectBuff: 100
-    meleeAttackBuff: 0
-    rangedAttackBuff: 0
-    magicPowerBuff: 0
-    healingPowerBuff: 0
-    defenseBuff: 0
-    castingSpeedBuff: -0.03
-    attackSpeedBuff: -0.03
+    attackSpeedBuff: -0.05
     walkSpeedBuff: 0
     skillDistanceBuff: 0
     associatedSkill: {fileID: 0}
   legendarySetBuff:
     name: Legendary armor set
     description: Five or more legendary armor pieces.
-    icon: {fileID: -3796704913345747774, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    icon: {fileID: -2803830192038148270, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
     duration: 0
-    healthBuff: 6000
+    healthBuff: 4000
     staminaBuff: 200
     strengthBuff: 200
     agilityBuff: 200
@@ -55224,6 +55363,26 @@ MonoBehaviour:
     defenseBuff: 0
     castingSpeedBuff: -0.05
     attackSpeedBuff: -0.05
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    associatedSkill: {fileID: 0}
+  relicSetBuff:
+    name: Relic armor set
+    description: Five or more relic armor pieces.
+    icon: {fileID: 3896588098151782276, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 8000
+    staminaBuff: 300
+    strengthBuff: 300
+    agilityBuff: 300
+    intellectBuff: 300
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0.2
+    castingSpeedBuff: -0.08
+    attackSpeedBuff: -0.08
     walkSpeedBuff: 0
     skillDistanceBuff: 0
     associatedSkill: {fileID: 0}
@@ -128670,6 +128829,7 @@ MonoBehaviour:
   - {fileID: 1505111560}
   - {fileID: 934648429}
   - {fileID: 221089586}
+  - {fileID: 2147419980}
   - {fileID: 700851100}
   consumables:
   - {fileID: 11400000, guid: 7842c36d8c056d54db4e7570847850c4, type: 2}
@@ -128691,7 +128851,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d53cbf5a5f0ee74e844c28ab1575570, type: 2}
   - {fileID: 11400000, guid: a696bad7a97862040ae81c8ea2596ab2, type: 2}
   armor:
-  - {fileID: 11400000, guid: d16e95d8adea5aa41bbe8ab10274d2b8, type: 2}
+  - {fileID: 11400000, guid: d4e4d240350b15148b0498f5b369fc55, type: 2}
   - {fileID: 11400000, guid: 85b1db6bbaa0f7c41aa4b02e24b451be, type: 2}
   - {fileID: 11400000, guid: 71da5ee9e82ade0418d985e00e26a1d2, type: 2}
   - {fileID: 11400000, guid: 10c02986f8c68a24daef0c78fa3a20d3, type: 2}
@@ -128726,6 +128886,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: faacd2d63ab42824090ad601c1f3c920, type: 2}
   - {fileID: 11400000, guid: 16a02f92c2877514c88cb85e18385e04, type: 2}
   - {fileID: 11400000, guid: 91eefe32be9f66e4ba7f16ed33372ce6, type: 2}
+  - {fileID: 11400000, guid: 9cce4d83c5deee749b3e0ee9d91634ea, type: 2}
   consumablesCoolingDown: []
 --- !u!114 &8716438737783131324
 MonoBehaviour:

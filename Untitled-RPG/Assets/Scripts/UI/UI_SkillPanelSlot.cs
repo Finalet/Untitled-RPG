@@ -84,7 +84,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         if(skillInSlot.isCoolingDown) {
             cooldownImage.color = new Color(0, 0, 0, 0.9f);
             cooldownImage.fillAmount = skillInSlot.coolDownTimer/skillInSlot.coolDown;
-            cooldownTimerText.text = Mathf.RoundToInt(skillInSlot.coolDownTimer).ToString();
+            cooldownTimerText.text = skillInSlot.coolDownTimer > 120 ? Mathf.RoundToInt(skillInSlot.coolDownTimer/60).ToString() + "m" : Mathf.RoundToInt(skillInSlot.coolDownTimer).ToString();
             slotIcon.color = new Color(0.65f,0.65f,0.65f,1);
         } else {
             cooldownImage.color = new Color(0, 0, 0, 0);

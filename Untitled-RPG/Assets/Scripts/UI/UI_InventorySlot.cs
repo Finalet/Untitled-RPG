@@ -145,7 +145,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         Consumable c = (Consumable)itemInSlot;
         if(c.isCoolingDown) {
             cooldownImage.color = new Color(0, 0, 0, 0.8f);
-            cooldownTimerText.text = Mathf.RoundToInt(c.cooldownTimer).ToString();
+            cooldownTimerText.text = c.cooldownTimer > 120 ? Mathf.RoundToInt(c.cooldownTimer/60).ToString() + "m" : Mathf.RoundToInt(c.cooldownTimer).ToString();
         } else {
             cooldownImage.color = new Color(0, 0, 0, 0);
             cooldownTimerText.text = "";

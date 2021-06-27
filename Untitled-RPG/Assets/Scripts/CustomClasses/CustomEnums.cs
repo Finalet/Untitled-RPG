@@ -12,7 +12,7 @@ public enum EquipmentSlotType {Helmet, Chest, Gloves, Pants, Boots, Back, Neckla
 public enum WeaponCategory {Sword, Staff, Bow, Shield}
 public enum WeaponHand {OneHanded, TwoHanded, SecondaryHand, BowHand};
 public enum ArmorType {Helmet, Chest, Gloves, Pants, Boots, Back, Necklace, Ring}
-public enum ItemRarity {Common, Rare, Epic, Legendary}
+public enum ItemRarity {Common, Uncommon, Rare, Epic, Legendary, Relic}
 
 [System.Serializable]
 public class RecurringEffect {

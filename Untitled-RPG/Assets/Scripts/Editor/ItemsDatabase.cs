@@ -128,6 +128,7 @@ public class ItemsDatabase : EditorWindow
         EditorGUILayout.LabelField("ID", EditorStyles.boldLabel, GUILayout.Width(50 + iconSpace + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField("Item name", EditorStyles.boldLabel, GUILayout.Width(230 + EditorGUI.indentLevel * 8));
         EditorGUILayout.LabelField("Item rarity", EditorStyles.boldLabel, GUILayout.Width(100 + EditorGUI.indentLevel * 8));
+        EditorGUILayout.LabelField("Item price", EditorStyles.boldLabel, GUILayout.Width(100 + EditorGUI.indentLevel * 8));
         DrawAdditionalFieldsTitles(list);
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.Space(5, false);
@@ -144,6 +145,7 @@ public class ItemsDatabase : EditorWindow
             if (showIconsToggle) DrawTexturePreview(EditorGUILayout.GetControlRect(GUILayout.Width(30), GUILayout.Height(30)), item.itemIcon);
             EditorGUILayout.LabelField(item.name, GUILayout.Width(230 + EditorGUI.indentLevel * 8));
             EditorGUILayout.LabelField(item.itemRarity.ToString(), GUILayout.Width(100 + EditorGUI.indentLevel * 8));
+            EditorGUILayout.LabelField(item.itemBasePrice.ToString(), GUILayout.Width(100 + EditorGUI.indentLevel * 8));
             DrawAdditionalFields(item);
             EditorGUI.BeginDisabledGroup(true); EditorGUILayout.ObjectField("", item, typeof(Item), false, GUILayout.Width(100)); EditorGUI.EndDisabledGroup();
             if (GUILayout.Button("Open", GUILayout.Width(70)))
@@ -340,7 +342,7 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.LabelField(c.consumableType.ToString(), GUILayout.Width(150));
         } else if (item is Skillbook) {
             Skillbook s = (Skillbook)item;
-            EditorGUILayout.LabelField(s.learnedSkill.skillTree.ToString(), GUILayout.Width(150));
+            EditorGUILayout.LabelField(s.learnedSkill != null ? s.learnedSkill.skillTree.ToString() : "No skills assigned", GUILayout.Width(150));
         }
     }
 
@@ -411,7 +413,7 @@ public class ItemsDatabase : EditorWindow
     void DeleteItem (List<Item> list, Item itemToDelete) {
         AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
         
-        if (!EditorUtility.DisplayDialog($"Delete {itemToDelete.name}?", $"Are you sure you want to delete {itemToDelete.name}? This action is irreversable.", "Cancel", "Delete")) {          
+        if (EditorUtility.DisplayDialog($"Delete {itemToDelete.name}?", $"Are you sure you want to delete {itemToDelete.name}? This action is irreversable.", "Delete", "Cancel")) {          
             string folder = "";
             if (list == ah.weapons) {
                 folder = "Weapons";

@@ -13,6 +13,7 @@ public class Equipment : Item
     public int MagicPower;
     public int HealingPower;
     public int Defense;
+    [Space]
     public int Health;
     public int Stamina;
     [Header("Secondary Stats")]
@@ -38,5 +39,30 @@ public class Equipment : Item
     protected virtual void Unequip (UI_InventorySlot initialSlot) {
         InventoryManager.instance.AddItemToInventory(this, 1);
         initialSlot.ClearSlot();
+    }
+
+    public override int getItemValue()
+    {
+        float attacksValue = 10;
+        float healthStaminaValue = 5;
+        float statsValue = 50;
+        float speedStatsValue = -100000;
+        float grantedSkillValue = 10000;
+        float rarityValue = 3000;
+
+        float value = 0;
+        value += attacksValue * (MeleeAttack + RangedAttack + MagicPower + HealingPower + Defense);
+        value += healthStaminaValue * (Health + Stamina);
+        value += statsValue * (strength + agility + intellect);
+        value += speedStatsValue * (castingTime + attackSpeed);
+        value += grantedSkill == null ? 0 : grantedSkillValue;
+        value += rarityValue * (int)itemRarity;
+        
+        return Mathf.RoundToInt(value);
+    }
+
+    protected override void OnValidate() {
+        base.OnValidate();
+        itemBasePrice = getItemValue();
     }
 }

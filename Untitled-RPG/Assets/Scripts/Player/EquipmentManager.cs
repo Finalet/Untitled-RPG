@@ -35,9 +35,11 @@ public class EquipmentManager : MonoBehaviour
 
     [Header("Rarity set buffs")]
     public Buff commonSetBuff;
+    public Buff uncommonSetBuff;
     public Buff rareSetBuff;
     public Buff epicSetBuff;
     public Buff legendarySetBuff;
+    public Buff relicSetBuff;
 
     [Header("Misc")]
     public TailAnimator2 capeBoneTail;
@@ -405,28 +407,35 @@ public class EquipmentManager : MonoBehaviour
 
     void CalculateSetRarityBuffs (){
         int numberOfCommonArmor = 0;
+        int numberOfUncommonArmor = 0;
         int numberOfRareArmor = 0;
         int numberOfEpicArmor = 0;
         int numberOfLegendaryArmor = 0;
-        if (helmet.itemInSlot != null) CheckItemForRarity(helmet.itemInSlot, ref numberOfCommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor);
-        if (chest.itemInSlot != null) CheckItemForRarity(chest.itemInSlot, ref numberOfCommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor);
-        if (gloves.itemInSlot != null) CheckItemForRarity(gloves.itemInSlot, ref numberOfCommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor);
-        if (pants.itemInSlot != null) CheckItemForRarity(pants.itemInSlot, ref numberOfCommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor);
-        if (boots.itemInSlot != null) CheckItemForRarity(boots.itemInSlot, ref numberOfCommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor);
-        if (back.itemInSlot != null) CheckItemForRarity(back.itemInSlot, ref numberOfCommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor);
+        int numberOfRelicArmor = 0;
+
+        if (helmet.itemInSlot != null) CheckItemForRarity(helmet.itemInSlot, ref numberOfCommonArmor, ref numberOfUncommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor, ref numberOfRelicArmor);
+        if (chest.itemInSlot != null) CheckItemForRarity(chest.itemInSlot, ref numberOfCommonArmor, ref numberOfUncommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor, ref numberOfRelicArmor);
+        if (gloves.itemInSlot != null) CheckItemForRarity(gloves.itemInSlot, ref numberOfCommonArmor, ref numberOfUncommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor, ref numberOfRelicArmor);
+        if (pants.itemInSlot != null) CheckItemForRarity(pants.itemInSlot, ref numberOfCommonArmor, ref numberOfUncommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor, ref numberOfRelicArmor);
+        if (boots.itemInSlot != null) CheckItemForRarity(boots.itemInSlot, ref numberOfCommonArmor, ref numberOfUncommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor, ref numberOfRelicArmor);
+        if (back.itemInSlot != null) CheckItemForRarity(back.itemInSlot, ref numberOfCommonArmor, ref numberOfUncommonArmor, ref numberOfRareArmor, ref numberOfEpicArmor, ref numberOfLegendaryArmor, ref numberOfRelicArmor);
     
         if (numberOfCommonArmor >= 5) characteristics.AddBuff(commonSetBuff); else characteristics.RemoveBuff(commonSetBuff);
+        if (numberOfUncommonArmor >= 5) characteristics.AddBuff(uncommonSetBuff); else characteristics.RemoveBuff(uncommonSetBuff);
         if (numberOfRareArmor >= 5) characteristics.AddBuff(rareSetBuff); else characteristics.RemoveBuff(rareSetBuff);
         if (numberOfEpicArmor >= 5) characteristics.AddBuff(epicSetBuff); else characteristics.RemoveBuff(epicSetBuff);
         if (numberOfLegendaryArmor >= 5) characteristics.AddBuff(legendarySetBuff); else characteristics.RemoveBuff(legendarySetBuff);
+        if (numberOfRelicArmor >= 5) characteristics.AddBuff(relicSetBuff); else characteristics.RemoveBuff(relicSetBuff);
     }
 
-    void CheckItemForRarity (Item item, ref int common, ref int rare, ref int epic, ref int legendary) {
+    void CheckItemForRarity (Item item, ref int common, ref int uncommon, ref int rare, ref int epic, ref int legendary, ref int relic) {
         switch (item.itemRarity) {
             case ItemRarity.Common: common++; break;
+            case ItemRarity.Uncommon: uncommon++; break;
             case ItemRarity.Rare: rare++; break;
             case ItemRarity.Epic: epic++; break;
             case ItemRarity.Legendary: legendary++; break;
+            case ItemRarity.Relic: relic++; break;
         }
     }
 }
