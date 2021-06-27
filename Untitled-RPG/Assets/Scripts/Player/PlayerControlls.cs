@@ -75,7 +75,10 @@ public class PlayerControlls : MonoBehaviour
 
     SittingSpot currentSittingSpot;
 
-    public bool[] emptyAttackAnimatorStates = new bool[7];
+    public bool upperBodyLayerAnimRest;
+    public bool layerAnimRest;
+    public bool treeAnimRest;
+    public bool upperBodyTreeAnimRest;
 
     void Awake() {
         if (instance == null) 
@@ -422,25 +425,17 @@ public class PlayerControlls : MonoBehaviour
     }
 
     void CheckIsAttacking () {
-        if ( (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1] || emptyAttackAnimatorStates[6]) && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) ) {
+        if (layerAnimRest && upperBodyLayerAnimRest)
             isAttacking = false;
-            // isCastingSkill = false;
-        }
+        
+        if (upperBodyLayerAnimRest && treeAnimRest)
+            isAttacking = false;
 
-        if (emptyAttackAnimatorStates[4] && emptyAttackAnimatorStates[5]) {
+        if (layerAnimRest && upperBodyTreeAnimRest)
             isAttacking = false;
-            // isCastingSkill = false;
-        }
 
-        if ( emptyAttackAnimatorStates[5] && (emptyAttackAnimatorStates[0] || emptyAttackAnimatorStates[1]  || emptyAttackAnimatorStates[6]) ) {
+        if (treeAnimRest && upperBodyTreeAnimRest)
             isAttacking = false;
-            // isCastingSkill = false;
-        }
-
-        if ( emptyAttackAnimatorStates[4] && (emptyAttackAnimatorStates[2] || emptyAttackAnimatorStates[3]) ) {
-            isAttacking = false;
-            // isCastingSkill = false;
-        }
     }
 
     void InBattleCheck () {

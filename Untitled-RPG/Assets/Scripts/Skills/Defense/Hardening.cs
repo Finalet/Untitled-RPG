@@ -17,7 +17,7 @@ public class Hardening : Skill
     }
 
     IEnumerator Using () {
-        animator.CrossFade("Attacks.Hunter.Archers Practice start", 0.25f);
+        animator.CrossFade("Attacks.Defense.Hardening start", 0.25f);
         yield return new WaitForSeconds(0.33f * (PlayerControlls.instance.GetComponent<Characteristics>().attackSpeed.y));
         audioSource.Play();
         VFX.Play();

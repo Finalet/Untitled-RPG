@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AnimStates {upperBodyLayerAnimRest, layerAnimRest, treeAnimRest, upperBodyTreeAnimRest}
+
 public class IsAttackingCheck : StateMachineBehaviour
 {
     public bool Player;
     public bool Enemy;
 
-    public byte ID;
+    public AnimStates animState;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) { //This was Update, i dont remember why but i remember it was important
         if (Player){
@@ -18,7 +20,7 @@ public class IsAttackingCheck : StateMachineBehaviour
     }
     override public void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) {
         if (Player){
-            PlayerControlls.instance.emptyAttackAnimatorStates[ID] = false;
+            SetAnimBool(false);
             
             if (!PlayerControlls.instance.isCastingSkill && !PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().isAiming)
                 PlayerControlls.instance.isAttacking = true;
@@ -32,6 +34,20 @@ public class IsAttackingCheck : StateMachineBehaviour
         if (!Player)
             return;
             
-        PlayerControlls.instance.emptyAttackAnimatorStates[ID] = true;
+        SetAnimBool(true);
+    }
+
+    public void SetAnimBool (bool _true) {
+        switch (animState)
+        {
+            case AnimStates.upperBodyLayerAnimRest: PlayerControlls.instance.upperBodyLayerAnimRest = _true ? true : false;
+                break;
+            case AnimStates.layerAnimRest: PlayerControlls.instance.layerAnimRest = _true ? true : false;
+                break;
+            case AnimStates.treeAnimRest: PlayerControlls.instance.treeAnimRest = _true ? true : false;
+                break;
+            case AnimStates.upperBodyTreeAnimRest: PlayerControlls.instance.upperBodyTreeAnimRest = _true ? true : false;
+                break;
+        }
     }
 }
