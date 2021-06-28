@@ -28,7 +28,7 @@ public class Arrow : MonoBehaviour
     }
 
     protected virtual void Update() {
-        if (shot && rb.velocity.magnitude > 0)
+        if (shot && rb != null && rb.velocity.magnitude > 0)
             transform.rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
         
         if (shot && Time.time - timeShot >= lifeTime) {
@@ -39,7 +39,7 @@ public class Arrow : MonoBehaviour
     }
 
     protected virtual void FixedUpdate() {
-        if (applyGravity)
+        if (applyGravity && rb != null)
             rb.AddForce(Physics.gravity * gravityScale);
     }
 
@@ -82,7 +82,7 @@ public class Arrow : MonoBehaviour
         transform.position -= rb.velocity * Time.fixedDeltaTime;
         transform.SetParent(collisionObj);
         
-        rb.isKinematic = true;
+        Destroy(rb);
         
         GetComponent<CapsuleCollider>().enabled = false;
         trail.emitting = false;

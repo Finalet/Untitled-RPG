@@ -56,7 +56,7 @@ public class PlayerControlls : MonoBehaviour
     [System.NonSerialized] public CameraControll cameraControl;
     [System.NonSerialized] public CinemachineFreeLook CM_Camera;
     [System.NonSerialized] public PlayerAudioController audioController;
-    [System.NonSerialized] public BaseCharacterController baseCharacterController;
+    [System.NonSerialized] public PlayerCharacterController characterController;
 
     [Space]
     public bool forceRigidbodyMovement; //when TRUE rootAnimations will be ignored;
@@ -89,7 +89,7 @@ public class PlayerControlls : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         audioController = GetComponent<PlayerAudioController>();
-        baseCharacterController = GetComponent<BaseCharacterController>();
+        characterController = GetComponent<PlayerCharacterController>();
         rb = GetComponent<Rigidbody>();
 
         playerCamera = Camera.main;
@@ -100,8 +100,8 @@ public class PlayerControlls : MonoBehaviour
 
     void Update()
     {
-        isGrounded = baseCharacterController.isGrounded; //IsGrounded(); LEGACY
-        isJumping = baseCharacterController.isJumping;
+        isGrounded = characterController.isGrounded; //IsGrounded(); LEGACY
+        isJumping = characterController.isJumping;
 
         if (!isMounted && !isFlying && !disableControl) {
             GroundMovement();
@@ -379,22 +379,22 @@ public class PlayerControlls : MonoBehaviour
         isCrouch = false;
         desiredSprintingDirection = 0;
         animator.CrossFade("Locomotion.Flying.Takeoff", 0.1f);
-        baseCharacterController.SwitchRootAnimation(false);
+        characterController.SwitchRootAnimation(false);
         isFlying = true;
     }
     public void LandFromFlying () {
         animator.CrossFade("Locomotion.Flying.Land", 0.1f);
     }
     public void FlyUp () { //Called from take off animation
-        baseCharacterController.allowVerticalMovement = true;
-        baseCharacterController.movement.DisableGroundDetection();
-        baseCharacterController.movement.ApplyVerticalImpulse(10);
+        characterController.allowVerticalMovement = true;
+        characterController.movement.DisableGroundDetection();
+        characterController.movement.ApplyVerticalImpulse(10);
         SprintOff();
     }
     public void LandDown () { //Called from landing animation
-        baseCharacterController.allowVerticalMovement = false;
-        baseCharacterController.movement.EnableGroundDetection();
-        baseCharacterController.SwitchRootAnimation(true);
+        characterController.allowVerticalMovement = false;
+        characterController.movement.EnableGroundDetection();
+        characterController.SwitchRootAnimation(true);
         isFlying = false;
     }
 

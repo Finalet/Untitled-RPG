@@ -70,12 +70,14 @@ public abstract class Enemy : MonoBehaviour
     protected Vector3 initialPos;
     protected SkinnedMeshRenderer skinnedMesh;
     protected FieldOfView fieldOfView;
+    protected RagdollController ragdollController;
 
     protected float agrDelay; 
     protected float agrDelayTimer;
     protected bool delayingAgr;
 
     protected virtual void Start() {
+        ragdollController = GetComponent<RagdollController>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         fieldOfView = GetComponent<FieldOfView>();
@@ -311,9 +313,11 @@ public abstract class Enemy : MonoBehaviour
 
         animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
+        ragdollController.EnableRagdoll(-transform.forward * 50 + Vector3.up*2);
         yield return new WaitForSeconds(Random.Range(1.8f, 2.2f));
         if (isDead)
             yield break;
+        ragdollController.StopRagdoll();
         animator.CrossFade("GetHit.GetUp", 0.1f);
         yield return new WaitForSeconds(2);
         isKnockedDown = false;
@@ -334,7 +338,7 @@ public abstract class Enemy : MonoBehaviour
         }
 
         if (distanceToPlayer <= 25) {
-            healthBar.transform.GetChild(0).localScale = new Vector3((float)currentHealth/maxHealth, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+            healthBar.transform.GetChild(0).localScale = new Vector3((float)currentHealth/maxHealth, healthBar.transform.GetChild(0).transform.localScale.y, healthBar.transform.GetChild(0).transform.localScale.z);
             healthBar.transform.LookAt (healthBar.transform.position + PlayerControlls.instance.playerCamera.transform.rotation * Vector3.back, PlayerControlls.instance.playerCamera.transform.rotation * Vector3.up);
             healthBar.SetActive(true);
         } else {

@@ -147,14 +147,14 @@ public class Slash : Skill
         if (en == null || other.isTrigger)
             return;
 
-        enemiesInCombatTrigger.Add(en);
+        if (!enemiesInCombatTrigger.Contains(en)) enemiesInCombatTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
         Enemy en = other.transform.GetComponentInParent<Enemy>();
         if (en == null || other.isTrigger)
             return;
 
-        enemiesInCombatTrigger.Remove(en);
+        if (enemiesInCombatTrigger.Contains(en)) enemiesInCombatTrigger.Remove(en);
     }
 
     public void Hit () {

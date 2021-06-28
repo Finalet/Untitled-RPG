@@ -1,5 +1,4 @@
 ﻿using ECM.Common;
-using ECM.Controllers;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -96,9 +95,6 @@ namespace ECM.Components
         private Vector3 _savedVelocity;
         private Vector3 _savedAngularVelocity;
 
-        Vector3 baseCapsuleCenter;
-        BaseCharacterController baseCharacterController;
-
         #endregion
 
         #region PROPERTIES
@@ -185,7 +181,7 @@ namespace ECM.Components
         public float slideGravityMultiplier
         {
             get { return _slideGravityMultiplier; }
-            set { _slideGravityMultiplier = Mathf.Max(0.0f, value); }
+            set { _slideGravityMultiplier = Mathf.Max(1.0f, value); }
         }
 
         /// <summary>
@@ -600,7 +596,7 @@ namespace ECM.Components
         {
             capsuleHeight = Mathf.Max(capsuleCollider.radius * 2.0f, capsuleHeight);
 
-            capsuleCollider.center = baseCharacterController.isCrouching ? baseCapsuleCenter : new Vector3(0.0f, capsuleHeight * 0.5f, 0.0f);
+            capsuleCollider.center = new Vector3(0.0f, capsuleHeight * 0.5f, 0.0f);
             capsuleCollider.height = capsuleHeight;
         }
 
@@ -1204,11 +1200,11 @@ namespace ECM.Components
         private void ApplyAirMovement(Vector3 desiredVelocity, float maxDesiredSpeed, float acceleration,
             float deceleration, float friction, float brakingFriction, bool onlyLateral = true)
         {
-            
             // If onlyLateral, discards any vertical velocity (leaves rigidbody's vertical velocity unaffected)
             
             var up = transform.up;
             var v = onlyLateral ? Vector3.ProjectOnPlane(velocity, up) : velocity;
+
             // If onlyLateral, discards any vertical velocity
 
             if (onlyLateral)
@@ -1631,8 +1627,6 @@ namespace ECM.Components
 
         public void Awake()
         {
-            baseCapsuleCenter = GetComponent<CapsuleCollider>().center;
-            baseCharacterController = GetComponent<BaseCharacterController>();
             // Cache an initialize components
 
             groundDetection = GetComponent<BaseGroundDetection>();

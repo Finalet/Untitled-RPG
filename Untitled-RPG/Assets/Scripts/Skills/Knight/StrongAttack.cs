@@ -48,14 +48,14 @@ public class StrongAttack : Skill
         if (en == null || other.isTrigger)
             return;
 
-        enemiesInTrigger.Add(en);
+        if (!enemiesInTrigger.Contains(en)) enemiesInTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
         Enemy en = other.transform.GetComponentInParent<Enemy>();
         if (en == null || other.isTrigger)
             return;
 
-        enemiesInTrigger.Remove(en);
+        if (enemiesInTrigger.Contains(en)) enemiesInTrigger.Remove(en);
     }
 
     public void Hit () {

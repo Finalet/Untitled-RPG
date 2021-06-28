@@ -45,10 +45,10 @@ public class Dash : Skill
     public void Hit (float stopHit) {
         if (stopHit == 0) {
             GetComponent<BoxCollider>().enabled = true;
-            playerControlls.baseCharacterController.speedMultiplier = 10;
+            playerControlls.characterController.speedMultiplier = 10;
         } else {
             GetComponent<BoxCollider>().enabled = false;
-            playerControlls.baseCharacterController.speedMultiplier = 1;
+            playerControlls.characterController.speedMultiplier = 1;
             enemiesHit.Clear();
         }
     }
