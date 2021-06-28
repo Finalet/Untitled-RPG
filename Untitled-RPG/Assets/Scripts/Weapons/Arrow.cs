@@ -18,6 +18,7 @@ public class Arrow : MonoBehaviour
     protected bool applyGravity;
 
     protected Rigidbody rb;
+    protected AudioSource audioSource;
 
     protected List<Enemy> enemiesHit = new List<Enemy>();
     protected virtual void Start() {
@@ -94,5 +95,16 @@ public class Arrow : MonoBehaviour
             en.GetHit(damageInfo, skillName, false, false, HitType.Interrupt, transform.position);
             enemiesHit.Add(en);
         }
-    }    
+    }   
+
+    protected virtual void PlaySound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {
+        audioSource.clip = clip;
+        audioSource.time = timeOffest;
+        audioSource.pitch = pitch;
+        audioSource.volume = volume;
+        if (delay == 0)
+            audioSource.Play();
+        else
+            audioSource.PlayDelayed(delay);
+    } 
 }

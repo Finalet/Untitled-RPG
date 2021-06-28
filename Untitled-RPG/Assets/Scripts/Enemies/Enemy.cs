@@ -21,9 +21,11 @@ public abstract class Enemy : MonoBehaviour
     public int baseDamage;
     public float attackRange;
     public HitType hitType;
+    [Space]
     public bool immuneToInterrupt;
     public bool immuneToKnockDown;
     public bool immuneToKickBack;
+    [Space]
     public Vector3 localEnemyBounds;
     [Header("Loot")]
     public Loot[] itemsLoot;
@@ -49,6 +51,7 @@ public abstract class Enemy : MonoBehaviour
     public bool isGettingInterrupted;
     public bool isDead;
     public bool isKnockedDown;
+    public bool isRagdoll;
     public bool canGetHit = true;
     public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
 
@@ -71,12 +74,14 @@ public abstract class Enemy : MonoBehaviour
     protected SkinnedMeshRenderer skinnedMesh;
     protected FieldOfView fieldOfView;
     protected RagdollController ragdollController;
+    protected EnemyController enemyController;
 
     protected float agrDelay; 
     protected float agrDelayTimer;
     protected bool delayingAgr;
 
     protected virtual void Start() {
+        enemyController = GetComponent<EnemyController>();
         ragdollController = GetComponent<RagdollController>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
@@ -105,6 +110,9 @@ public abstract class Enemy : MonoBehaviour
             return;
         }
         
+        if(ragdollController != null) isRagdoll = ragdollController.ragdolled;
+        else isRagdoll = false;
+
         Health();
         ShowHealthBar();
         if (isDead) return; //need second check since he dies after running "Health()"
@@ -112,6 +120,7 @@ public abstract class Enemy : MonoBehaviour
         AttackCoolDown();
 
         distanceToPlayer = fieldOfView.distanceToTarget;
+
     
         CheckAgr();
     
@@ -124,6 +133,7 @@ public abstract class Enemy : MonoBehaviour
 
         AI();
         RunRecurringEffects();
+        RunKnockDowns();
     }
 
     protected virtual void AI () {
@@ -135,7 +145,7 @@ public abstract class Enemy : MonoBehaviour
         
         if (agr) {
             if (distanceToPlayer > attackRange) {
-                if (!isAttacking) currentState = EnemyState.Approaching;
+                if(!isAttacking) currentState = EnemyState.Approaching;
             } else {
                 currentState = EnemyState.Attacking;
             } 
@@ -171,7 +181,7 @@ public abstract class Enemy : MonoBehaviour
         if (!PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Add(this);
 
-        if (isCoolingDown || isDead || isKnockedDown || !fieldOfView.isTargetVisible)
+        if (isCoolingDown || isDead || isKnockedDown || !fieldOfView.isTargetVisible || isRagdoll)
             return;
         
         if (navAgent.enabled) navAgent.isStopped = true;
@@ -202,14 +212,13 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void Die () {
         isDead = true;
+        gameObject.SetLayer(LayerMask.NameToLayer("Dead Enemy"), true);
         animator.CrossFade("GetHit.Die", 0.25f);
         animator.SetBool("isDead", true);
         StartCoroutine(die());
         DropLoot();
         if (navAgent != null && navAgent.enabled) navAgent.enabled = false;
-        foreach (Collider col in GetComponentsInChildren<Collider>()){
-            if (col.gameObject.layer == LayerMask.NameToLayer("Enemy")) col.enabled = false;
-        }
+        if (ragdollController != null) ragdollController.EnableRagdoll();
     }
 
     protected virtual void DropLoot () {
@@ -255,9 +264,9 @@ public abstract class Enemy : MonoBehaviour
             animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
             animator.CrossFade("Attacks.Empty", 0.1f);
         } else if (hitType == HitType.Kickback) {
-            StartCoroutine(KickBack());
+            KickBack();
         } else if (hitType == HitType.Knockdown) {
-            StartCoroutine(KnockedDown());
+            KnockedDown();
         }
 
         currentHealth -= actualDamage;
@@ -297,31 +306,44 @@ public abstract class Enemy : MonoBehaviour
         Time.fixedDeltaTime = 0.02f;
     }
     
-    protected IEnumerator KnockedDown () {
+    protected void KnockedDown () {
         animator.CrossFade("GetHit.KnockDown", 0.1f);
         isKnockedDown = true;
-        yield return new WaitForSeconds(Random.Range(2.5f, 3.5f));
-        if (isDead)
-            yield break;
-        animator.CrossFade("GetHit.GetUp", 0.1f);
-        yield return new WaitForSeconds(0.7f);
-        isKnockedDown = false;
+        gettingUp = false;
+        timeKnockedDown = Time.time;
+        knockDownDuration *= 0.8f + Random.value * 0.4f;
     }
-    protected virtual IEnumerator KickBack () {
+    protected virtual void KickBack () {
         //rotate to face the player so the enemy would fly away from the player
         StartCoroutine(InstantFaceTarget());
-
+        timeKnockedDown = Time.time;
         animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
+        gettingUp = false;
         ragdollController.EnableRagdoll(-transform.forward * 50 + Vector3.up*2);
-        yield return new WaitForSeconds(Random.Range(1.8f, 2.2f));
-        if (isDead)
-            yield break;
+        knockDownDuration *= 0.8f + Random.value * 0.4f;
+    }
+    protected virtual void GetUpFromKnockDown () {
+        gettingUp = true;
         ragdollController.StopRagdoll();
         animator.CrossFade("GetHit.GetUp", 0.1f);
-        yield return new WaitForSeconds(2);
-        isKnockedDown = false;
     }
+
+    float timeKnockedDown;
+    float knockDownDuration = 2;
+    bool gettingUp;
+    protected virtual void RunKnockDowns () {
+        if (!isKnockedDown)
+            return;
+        
+        if (Time.time - timeKnockedDown > knockDownDuration && !gettingUp) {
+            GetUpFromKnockDown();
+        } else if (Time.time - timeKnockedDown > knockDownDuration + 0.7f) {
+            gettingUp = false;
+            isKnockedDown = false;
+        }
+    }
+
     protected IEnumerator InstantFaceTarget () {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
@@ -340,6 +362,7 @@ public abstract class Enemy : MonoBehaviour
         if (distanceToPlayer <= 25) {
             healthBar.transform.GetChild(0).localScale = new Vector3((float)currentHealth/maxHealth, healthBar.transform.GetChild(0).transform.localScale.y, healthBar.transform.GetChild(0).transform.localScale.z);
             healthBar.transform.LookAt (healthBar.transform.position + PlayerControlls.instance.playerCamera.transform.rotation * Vector3.back, PlayerControlls.instance.playerCamera.transform.rotation * Vector3.up);
+            healthBar.transform.position = animator.GetBoneTransform(HumanBodyBones.Head).position + Vector3.up * 0.5f;
             healthBar.SetActive(true);
         } else {
             healthBar.SetActive(false);

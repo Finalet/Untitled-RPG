@@ -36,6 +36,15 @@ public class ArrowExplosive : Arrow
         explosionCollider.enabled = true;
         DOTween.To(()=> explosionCollider.radius, x=> explosionCollider.radius = x, 3.2f, 0.2f).SetEase(Ease.OutSine);
         exploded = true;
+
+        foreach (Collider col in Physics.OverlapSphere(transform.position, 3f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide)){
+            RagdollController rag = col.GetComponentInParent<RagdollController>();
+            if (rag != null) {
+                rag.EnableExplosionRagdoll(3f, 50f, transform.position, 3);
+                break; //break so it does it only once, and not for each bodypart collider;
+            }
+        }
+
         Destroy(explosionCollider, 0.3f);
     }
 

@@ -90,7 +90,7 @@ public class Whirlwind : Skill
         audioSource.Stop();
     }   
 
-    void OnTriggerEnter(Collider other) {
+    void OnTriggerStay(Collider other) {
         Enemy en = other.transform.GetComponentInParent<Enemy>();
         if (en == null || other.isTrigger)
             return;

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System.Linq;
+using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -111,6 +110,50 @@ public class AssetHolder : MonoBehaviour
         skillbooks.Sort((x, y) => x.ID.CompareTo(y.ID));
         Skills = Skills.OrderBy(x => x.ID).ToArray();
     }
+
+     public void CheckUsedLayers()
+     {
+        Debug.Log("Check used layers");
+        Dictionary<string, int> layerCount = new Dictionary<string, int>();
+        List<GameObject> gameObjects = FindObjectsOfType<GameObject>().ToList();
+
+        // iterate objects and save to dictionary
+        for (int i = 0; i < gameObjects.Count; ++i)
+        {
+            string layerName = LayerMask.LayerToName(gameObjects[i].layer);
+            if (layerCount.ContainsKey(layerName))
+            {
+                layerCount[layerName]++;
+            }
+            else
+            {
+                layerCount.Add(layerName, 1);
+            }
+        }
+
+        // log to console
+        foreach (KeyValuePair<string, int> entry in layerCount)
+        {
+            Debug.Log(entry.Key + ": " + entry.Value);
+        }
+
+        // unused layers
+        List<string> layerNames = new List<string>();
+        for (int i = 8; i <= 31; i++) //user defined layers start with layer 8 and unity supports 31 layers
+        {
+            var layerN = LayerMask.LayerToName(i); //get the name of the layer
+            if (layerN.Length > 0) //only add the layer if it has been named (comment this line out if you want every layer)
+                layerNames.Add(layerN);
+        }
+
+        List<string> listOfKeys = layerCount.Keys.ToList();
+        List<string> unusedLayers = layerNames.Except(listOfKeys).ToList();
+        string joined = string.Join(", ", unusedLayers);
+        Scene scene = SceneManager.GetActiveScene();
+        Debug.Log("Unused layers in " + scene.name + ": " + joined);
+
+        Debug.Log("Check used layers done");
+    }
 }
 
 #if UNITY_EDITOR
@@ -124,6 +167,9 @@ public class AssetHolderInspector : Editor
         GUILayout.Space(10);
         if(GUILayout.Button("Sort all by ID")) {
             assetHolder.SortAllByID();
+        }
+        if (GUILayout.Button("Check used Layers")) {
+            assetHolder.CheckUsedLayers();
         }
     }
 }

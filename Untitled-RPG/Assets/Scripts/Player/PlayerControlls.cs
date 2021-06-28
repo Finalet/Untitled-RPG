@@ -115,6 +115,7 @@ public class PlayerControlls : MonoBehaviour
         InputMagnitudeFunc();
         CheckIsAttacking();
         InBattleCheck();
+        PushEnemies();
 
         if (Input.GetKeyDown(KeybindsManager.instance.toggleRunning))
             toggleRunning = !toggleRunning;
@@ -489,5 +490,15 @@ public class PlayerControlls : MonoBehaviour
         isSitting = false;
         spot.isTaken = false;
         currentSittingSpot = null;
+    }
+
+    void PushEnemies() {
+        foreach (Collider col in Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.7f, 0.5f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide)) {
+            if (col.TryGetComponent(out Rigidbody rb)) {
+                if (!rb.isKinematic) {
+                    rb.AddForce(transform.forward * 20 + transform.InverseTransformPoint(col.transform.position).x * transform.right * 20);
+                }
+            }
+        }
     }
 }

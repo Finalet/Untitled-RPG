@@ -8,24 +8,35 @@ using UnityEditor;
 
 public class RagdollController : MonoBehaviour
 { 
-    Rigidbody rb;
 
     public Rigidbody chestRigidbody;
+
+    Rigidbody rb;
+	Vector3 deltaPosWhenRagdoll;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
     }
 
-    public void EnableRagdoll (Vector3 addForce) {
+    public void EnableRagdoll (Vector3 addForce = new Vector3()) {
         EnableRagdoll(-1, addForce);
     }
 
-    public void EnableRagdoll (float duration, Vector3 addForce = new Vector3()) {
+	public void EnableExplosionRagdoll (float ragdollDuration, float explosionForce, Vector3 explosionPos, float explosionRadius) {
+        ragdolled = true;
+        chestRigidbody.AddExplosionForce(explosionForce, explosionPos, explosionRadius, 10f, ForceMode.VelocityChange);
+
+        if (ragdollDuration > 0) Invoke("StopRagdoll", ragdollDuration);
+    }
+
+    public void EnableRagdoll (float ragdollDuration, Vector3 addForce = new Vector3()) {
         ragdolled = true;
         chestRigidbody.AddForce(addForce, ForceMode.VelocityChange);
 
-        if (duration > 0) Invoke("StopRagdoll", duration);
+        if (ragdollDuration > 0) Invoke("StopRagdoll", ragdollDuration);
     }
+
+
     public void StopRagdoll () {
         ragdolled = false;
     }
@@ -67,14 +78,7 @@ public class RagdollController : MonoBehaviour
 					ragdolledHipPosition=anim.GetBoneTransform(HumanBodyBones.Hips).position;
 						
 					//Initiate the get up animation
-					// if (anim.GetBoneTransform(HumanBodyBones.Hips).forward.y>0) //hip hips forward vector pointing upwards, initiate the get up from back animation
-					// {
-					// 	anim.SetBool("GetUpFromBack",true);
-					// }
-					// else{
-					// 	anim.SetBool("GetUpFromBelly",true);
-					// }
-                    //anim.CrossFade("GetHit.GetUp", 0.1f);
+					//anim.CrossFade("GetHit.GetUp", 0.1f);
 				} //if (state==RagdollState.ragdolled)
 			}	//if value==false	
 		} //set
@@ -147,16 +151,21 @@ public class RagdollController : MonoBehaviour
     public void SetupBodyparts () {
         //Find all the transforms in the character, assuming that this script is attached to the root
 		//Component[] components=GetComponentsInChildren(typeof(Transform));
-		
+		bodyParts.Clear();
+
         List<Component> components = new List<Component>(GetComponentsInChildren(typeof(Transform)));
         if (components.Contains(transform)) components.Remove(transform);
 		//For each of the transforms, create a BodyPart instance and store the transform 
 		foreach (Component c in components)
 		{
+			if (c.GetComponent<Rigidbody>() == null)
+				continue;
 			BodyPart bodyPart=new BodyPart();
 			bodyPart.transform=c as Transform;
 			bodyParts.Add(bodyPart);
-		} 
+		}
+
+		chestRigidbody = GetComponent<Animator>().GetBoneTransform(HumanBodyBones.Spine).GetComponent<Rigidbody>();
     }
 		
 	void LateUpdate()
@@ -219,6 +228,11 @@ public class RagdollController : MonoBehaviour
 				state=RagdollState.animated;
 				return;
 			}
+		} else if (state == RagdollState.ragdolled) { //when ragdolling, move the ragdoll and root to each other.
+			deltaPosWhenRagdoll = transform.position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
+
+			transform.position -= deltaPosWhenRagdoll;
+			anim.GetBoneTransform(HumanBodyBones.Hips).position += deltaPosWhenRagdoll;
 		}
 	}
 }
@@ -236,6 +250,7 @@ public class RagdollControllerInspector : Editor {
             r.SetupBodyparts();
         }
     } 
+	
 }
 #endif
 

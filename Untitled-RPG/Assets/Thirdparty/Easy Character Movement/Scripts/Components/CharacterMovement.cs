@@ -668,7 +668,6 @@ namespace ECM.Components
                 if (i < --overlapCount)
                     OverlappedColliders[i] = OverlappedColliders[overlapCount];
             }
-
             return OverlappedColliders;
         }
 

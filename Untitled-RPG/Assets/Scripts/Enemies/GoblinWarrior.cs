@@ -22,7 +22,7 @@ public class GoblinWarrior : Enemy
         
         base.Update();
 
-        if (isKnockedDown || isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
+        if (isRagdoll || isKnockedDown || isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
             if (navAgent.enabled) navAgent.isStopped = true;
             return;
         }
@@ -36,7 +36,10 @@ public class GoblinWarrior : Enemy
             animator.SetBool("Returning", true);
         } else {
             animator.SetBool("Returning", false);
-        }       
+        }
+
+        enemyController.useRootMotion = isAttacking;       
+        enemyController.useRootMotionRotation = isAttacking;       
     }
 
 
@@ -48,7 +51,7 @@ public class GoblinWarrior : Enemy
     }
 
     protected override void FaceTarget (bool instant = false) {
-        if (isAttacking)
+        if (isAttacking || isKnockedDown || isRagdoll)
             return;
 
         if (instant) {
@@ -78,6 +81,7 @@ public class GoblinWarrior : Enemy
     protected override void ReturnToPosition () {
         base.ReturnToPosition();
         navAgent.destination = initialPos;
+        navAgent.isStopped = false;
     }
 
     protected override void Idle () {
