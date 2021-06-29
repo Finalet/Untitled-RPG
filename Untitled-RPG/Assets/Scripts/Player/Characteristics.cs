@@ -8,7 +8,8 @@ public class Characteristics : MonoBehaviour
 
     public static Characteristics instance;
 
-    public bool canGetHit;
+    public bool immuneToDamage;
+    public bool immuneToInterrupt;
     
     public string playerName;
     [Header("Main")]
@@ -63,8 +64,6 @@ public class Characteristics : MonoBehaviour
     }
 
     void Start() {
-        canGetHit = true;
-        
         health = maxHealth;
         stamina = maxStamina;
         
@@ -253,18 +252,14 @@ public class Characteristics : MonoBehaviour
 #region Get hit overloads 
 
     public void GetHit (int damage, string enemyName, HitType hitType = HitType.Normal, float cameraShakeFrequency = 0, float cameraShakeAmplitude = 0) {
-        if (!canGetHit)
-            return;
-
-
         if (hitType == HitType.Normal) {
             PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHitUpperBody"), 0);
-        } else if (hitType == HitType.Interrupt) {
+        } else if (hitType == HitType.Interrupt && !immuneToInterrupt) {
             PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
             PlayerControlls.instance.InterruptCasting();
         }
 
-        int actualDamage = Mathf.RoundToInt( damage * defenseCoeff() ); 
+        int actualDamage = immuneToDamage ? 0 : Mathf.RoundToInt( damage * defenseCoeff() ); 
         health -= actualDamage;
         DisplayDamageNumber(actualDamage);
         GetComponent<PlayerAudioController>().PlayGetHitSound();

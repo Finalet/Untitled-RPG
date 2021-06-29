@@ -25933,6 +25933,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1295176283}
   - {fileID: 2147419979}
   m_Father: {fileID: 3453714230835295221}
   m_RootOrder: 3
@@ -28421,6 +28422,93 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1292891587}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1295176282
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1165741977}
+    m_Modifications:
+    - target: {fileID: 1766505328427174222, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_Name
+      value: Charge
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d, type: 3}
+--- !u!4 &1295176283 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8832684922982350313, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1295176282}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1295176284 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6672648285717666905, guid: 66a1ac100cb3bbd429ed4ebc5cf3cb5d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1295176282}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a67dae127eac8494aa3f118a438c585d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1314021574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46165,7 +46253,7 @@ PrefabInstance:
     - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8832684922982350313, guid: eebbf97f54731f44c90c8bb76839ad9d,
         type: 3}
@@ -55085,7 +55173,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc17630ca8887814bb8deecee1fd376c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canGetHit: 0
+  immuneToDamage: 0
+  immuneToInterrupt: 0
   playerName: Georgio the Gay
   maxHealth: 0
   healthFromEquip: 0
@@ -128832,6 +128921,7 @@ MonoBehaviour:
   - {fileID: 1505111560}
   - {fileID: 934648429}
   - {fileID: 221089586}
+  - {fileID: 1295176284}
   - {fileID: 2147419980}
   - {fileID: 700851100}
   consumables:
@@ -128889,6 +128979,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: faacd2d63ab42824090ad601c1f3c920, type: 2}
   - {fileID: 11400000, guid: 16a02f92c2877514c88cb85e18385e04, type: 2}
   - {fileID: 11400000, guid: 91eefe32be9f66e4ba7f16ed33372ce6, type: 2}
+  - {fileID: 11400000, guid: b48462be06ad18545a4d54dd4a371c86, type: 2}
   - {fileID: 11400000, guid: 9cce4d83c5deee749b3e0ee9d91634ea, type: 2}
   consumablesCoolingDown: []
 --- !u!114 &8716438737783131324

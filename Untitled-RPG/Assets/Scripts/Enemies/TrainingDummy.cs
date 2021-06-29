@@ -53,7 +53,7 @@ public class TrainingDummy : StaticEnemy
         RunRecurringEffects();
     }
 
-    public override void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
+    public override void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
         if (isDead || !canGetHit)
             return;
         

@@ -103,6 +103,12 @@ public class SkillsDatabase : EditorWindow
             EditorGUILayout.Space(5, false);
         }
 
+        EditorGUI.indentLevel = 0;
+        EditorGUILayout.Space(10);
+        if (GUILayout.Button("Sort all by ID", GUILayout.Width(200))) {
+            ah.SortAllByID();
+        }
+
         EditorGUILayout.EndScrollView();
 
         if (selectedSkill != null) {

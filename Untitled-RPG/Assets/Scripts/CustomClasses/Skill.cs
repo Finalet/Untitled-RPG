@@ -101,9 +101,9 @@ public abstract class Skill : MonoBehaviour
 
     void UnsheatheWeapons() {
         if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
-                WeaponsController.instance.InstantUnsheathe();
+            WeaponsController.instance.InstantUnsheathe();
         if (bowOutRequired && !WeaponsController.instance.isBowOut)
-                WeaponsController.instance.InstantUnsheatheBow();
+            WeaponsController.instance.InstantUnsheatheBow();
     }
 
     protected virtual void LocalUse () {

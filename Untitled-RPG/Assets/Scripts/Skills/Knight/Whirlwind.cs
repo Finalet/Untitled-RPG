@@ -55,7 +55,8 @@ public class Whirlwind : Skill
 
         PlaySound(loop);
 
-        Characteristics.instance.canGetHit = false;
+        Characteristics.instance.immuneToDamage = true;
+        Characteristics.instance.immuneToInterrupt = true;
         
         float timer = duration;
         float hitTimer = 0;
@@ -84,7 +85,8 @@ public class Whirlwind : Skill
             animator.CrossFade("Attacks.Knight.Whirlwind_end Dual swords", 0.25f);
 
         playerControlls.forceRigidbodyMovement = false;
-        Characteristics.instance.canGetHit = true;
+        Characteristics.instance.immuneToDamage = false;
+        Characteristics.instance.immuneToInterrupt = false;
         Combat.instanace.blockSkills = false;
 
         audioSource.Stop();

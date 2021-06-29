@@ -25,7 +25,7 @@ public class EnemyAlarmNetwork : MonoBehaviour
         // print("Alarm triggered from " + gameObject.name);
 
         foreach (Collider col in collidersAround){
-            if (col.gameObject != gameObject) {
+            if (col != null && col.gameObject != gameObject) {
                 EnemyAlarmNetwork eam = col.gameObject.GetComponentInParent<EnemyAlarmNetwork>();
                 if (eam != null) {
                     yield return new WaitForSeconds(Random.Range(0.7f * alarmDelay, 1.3f * alarmDelay));

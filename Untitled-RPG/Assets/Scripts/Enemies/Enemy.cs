@@ -245,7 +245,7 @@ public abstract class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public virtual void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 ()) {
+    public virtual void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
         if (isDead || !canGetHit)
             return;
         
@@ -266,7 +266,7 @@ public abstract class Enemy : MonoBehaviour
             animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
             animator.CrossFade("Attacks.Empty", 0.1f);
         } else if (hitType == HitType.Kickback) {
-            KickBack();
+            KickBack(kickBackStrength);
         } else if (hitType == HitType.Knockdown) {
             KnockedDown();
         }
@@ -315,14 +315,14 @@ public abstract class Enemy : MonoBehaviour
         timeKnockedDown = Time.time;
         knockDownDuration *= 0.8f + Random.value * 0.4f;
     }
-    protected virtual void KickBack () {
+    protected virtual void KickBack (float kickBackStrength = 50) {
         //rotate to face the player so the enemy would fly away from the player
         StartCoroutine(InstantFaceTarget());
         timeKnockedDown = Time.time;
         animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
         gettingUp = false;
-        ragdollController.EnableRagdoll(-transform.forward * 50 + Vector3.up*2);
+        ragdollController.EnableRagdoll(-transform.forward * kickBackStrength + Vector3.up*2);
         knockDownDuration *= 0.8f + Random.value * 0.4f;
     }
     protected virtual void GetUpFromKnockDown () {
