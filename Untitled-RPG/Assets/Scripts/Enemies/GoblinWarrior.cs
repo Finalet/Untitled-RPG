@@ -37,9 +37,6 @@ public class GoblinWarrior : Enemy
         } else {
             animator.SetBool("Returning", false);
         }
-
-        enemyController.useRootMotion = isAttacking;       
-        enemyController.useRootMotionRotation = isAttacking;       
     }
 
 

@@ -37,11 +37,12 @@ public class ArrowExplosive : Arrow
         DOTween.To(()=> explosionCollider.radius, x=> explosionCollider.radius = x, 3.2f, 0.2f).SetEase(Ease.OutSine);
         exploded = true;
 
+        List<RagdollController> ragdolledEnemies = new List<RagdollController>();
         foreach (Collider col in Physics.OverlapSphere(transform.position, 3f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide)){
             RagdollController rag = col.GetComponentInParent<RagdollController>();
-            if (rag != null) {
-                rag.EnableExplosionRagdoll(3f, 50f, transform.position, 3);
-                break; //break so it does it only once, and not for each bodypart collider;
+            if (rag != null && !ragdolledEnemies.Contains(rag)) {
+                rag.EnableExplosionRagdoll(3f, 50f, transform.position, 0);
+                ragdolledEnemies.Add(rag);
             }
         }
 

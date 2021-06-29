@@ -228,7 +228,7 @@ public class RagdollController : MonoBehaviour
 				state=RagdollState.animated;
 				return;
 			}
-		} else if (state == RagdollState.ragdolled) { //when ragdolling, move the ragdoll and root to each other.
+		} else if (state == RagdollState.ragdolled) { //when ragdolling, move the ragdoll and root to each other.			
 			deltaPosWhenRagdoll = transform.position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
 
 			transform.position -= deltaPosWhenRagdoll;

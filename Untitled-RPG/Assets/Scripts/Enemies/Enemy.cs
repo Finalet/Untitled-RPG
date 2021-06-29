@@ -120,7 +120,6 @@ public abstract class Enemy : MonoBehaviour
         AttackCoolDown();
 
         distanceToPlayer = fieldOfView.distanceToTarget;
-
     
         CheckAgr();
     
@@ -134,6 +133,9 @@ public abstract class Enemy : MonoBehaviour
         AI();
         RunRecurringEffects();
         RunKnockDowns();
+
+        enemyController.useRootMotion = isAttacking;       
+        enemyController.useRootMotionRotation = isAttacking;       
     }
 
     protected virtual void AI () {
@@ -362,7 +364,7 @@ public abstract class Enemy : MonoBehaviour
         if (distanceToPlayer <= 25) {
             healthBar.transform.GetChild(0).localScale = new Vector3((float)currentHealth/maxHealth, healthBar.transform.GetChild(0).transform.localScale.y, healthBar.transform.GetChild(0).transform.localScale.z);
             healthBar.transform.LookAt (healthBar.transform.position + PlayerControlls.instance.playerCamera.transform.rotation * Vector3.back, PlayerControlls.instance.playerCamera.transform.rotation * Vector3.up);
-            healthBar.transform.position = animator.GetBoneTransform(HumanBodyBones.Head).position + Vector3.up * 0.5f;
+            if (animator.GetBoneTransform(HumanBodyBones.Head) != null) healthBar.transform.position = animator.GetBoneTransform(HumanBodyBones.Head).position + Vector3.up * 0.5f;
             healthBar.SetActive(true);
         } else {
             healthBar.SetActive(false);
