@@ -19,6 +19,7 @@ public abstract class Skill : MonoBehaviour
     public float coolDown;
     public float coolDownTimer;
     [DisplayWithoutEdit] public bool isCoolingDown;
+    [Space]
     public bool weaponOutRequired;
     public bool bowOutRequired;
 

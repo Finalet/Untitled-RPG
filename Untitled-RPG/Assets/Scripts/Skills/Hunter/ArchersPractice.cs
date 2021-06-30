@@ -27,6 +27,6 @@ public class ArchersPractice : Skill
 
     public override string getDescription()
     {
-        return $"Recall your archer's knowledge to increase ranged attack and attack speed by {buff.rangedAttackBuff*100}% for {buff.duration} seconds.";
+        return $"Recall your archer's knowledge to increase ranged attack and attack speed by {buff.rangedAttackBuff*100}% for {Mathf.RoundToInt(buff.duration/60)} minutes.";
     }
 }

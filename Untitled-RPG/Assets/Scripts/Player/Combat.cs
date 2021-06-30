@@ -197,6 +197,10 @@ public class Combat : MonoBehaviour
                 else if (skillID.floatParameter == 2)
                     skill.GetComponent<RainOfArrows>().Shoot(true);
                 break;
+            case 24: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<Enough>().PushAway();
+                break;
         }
     }
 

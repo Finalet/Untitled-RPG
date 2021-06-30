@@ -22,6 +22,7 @@ public class ArrowExplosive : Arrow
     }
 
     protected override void Hit (Enemy en) {
+        print(en);
         if (!enemiesHit.Contains(en)) {
             en.GetHit(damageInfo, skillName, false, true, HitType.Knockdown);
             enemiesHit.Add(en);
@@ -58,7 +59,7 @@ public class ArrowExplosive : Arrow
         Enemy en = other.transform.GetComponentInParent<Enemy>();
         if (en == null) 
             return;
-        
+
         Hit(en);
     }
 }
