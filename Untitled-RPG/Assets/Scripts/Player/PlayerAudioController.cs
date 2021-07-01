@@ -26,6 +26,7 @@ public class PlayerAudioController : MonoBehaviour
     public AudioClip LootPickup;
     public AudioClip LootGoldPickup;
     [Header("Other sounds")]
+    public AudioClip sprint;
     public AudioClip drink;
     public AudioClip blacksmithHammer;
 
@@ -119,18 +120,28 @@ public class PlayerAudioController : MonoBehaviour
     public void PlayJumpRollSound () {
         int playID = Random.Range(0, jumpingRollingGunts.Length);
         audioSource.clip = jumpingRollingGunts[playID];
+        audioSource.time = 0;
+        audioSource.pitch = 1;
         audioSource.Play();
     }
 
     public void PlayGetHitSound () {
         int playID = Random.Range(0, getHit.Length);
         audioSource.clip = getHit[playID];
+        audioSource.time = 0;
+        audioSource.pitch = 1;
         audioSource.Play();
     }
 
-    public void PlayPlayerSound (AudioClip sound){
-        audioSource.clip = sound;
-        audioSource.Play();
+    public void PlayPlayerSound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {
+        audioSource.clip = clip;
+        audioSource.time = timeOffest;
+        audioSource.pitch = pitch;
+        audioSource.volume = volume;
+        if (delay == 0)
+            audioSource.Play();
+        else
+            audioSource.PlayDelayed(delay);
     }
     public void PlayPlayerAnimationSound (AnimationEvent animEvent){
         if (animEvent.intParameter == 0)

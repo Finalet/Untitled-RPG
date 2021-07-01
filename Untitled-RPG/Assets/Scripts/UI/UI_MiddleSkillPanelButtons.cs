@@ -13,6 +13,11 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     public Skill overrideSkill;
     public bool overrideLMB;
 
+    public override void ValidateSkillSlot()
+    {
+        containsUnavailableSkill = false;
+    }
+
     protected override void Update() {
         if (PeaceCanvas.instance.isGamePaused)
             return;

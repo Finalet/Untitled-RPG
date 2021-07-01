@@ -353,10 +353,13 @@ public class PlayerControlls : MonoBehaviour
         if (disableControl)
             isSprinting = false;
 
-        if (isSprinting && !sprintTrails.isPlaying)
+        if (isSprinting && !sprintTrails.isPlaying) {
+            PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.sprint, 0.05f, 1.7f);
             sprintTrails.Play();
-        else if (!isSprinting && sprintTrails.isPlaying) 
+        } else if (!isSprinting && sprintTrails.isPlaying)  {
             sprintTrails.Stop();
+        }
+        
     }
     public void SprintOff () {
         isSprinting = false;

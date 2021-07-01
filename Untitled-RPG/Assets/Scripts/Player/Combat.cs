@@ -201,6 +201,10 @@ public class Combat : MonoBehaviour
                 if (skillID.floatParameter == 0) 
                     skill.GetComponent<Enough>().PushAway();
                 break;
+            case 101: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<CaptainThrow>().ThrowShield();
+                break; 
         }
     }
 

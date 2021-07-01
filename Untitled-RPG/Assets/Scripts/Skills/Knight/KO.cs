@@ -31,8 +31,10 @@ public class KO : Skill
             animator.CrossFade("Attacks.Knight.KO Two handed", 0.25f);
         else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) 
             animator.CrossFade("Attacks.Knight.KO Dual swords", 0.25f);
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.OneHandedPlusShield) 
+            animator.CrossFade("Attacks.Knight.KO OneHanded", 0.25f);
         else 
-            animator.CrossFade("Attacks.Knight.KO Dual swords", 0.25f);
+            animator.CrossFade("Attacks.Knight.KO OneHanded", 0.25f);
     }
     void PlaySounds() {
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded) {
@@ -40,9 +42,10 @@ public class KO : Skill
         } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded) {
             Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.y);
             Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.y);
+        } else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.OneHandedPlusShield) {
+            Invoke("PlaySoundDualSwords", 0.25f * characteristics.attackSpeed.y);
         } else {
-            Invoke("PlaySoundDualSwords", 0.15f * characteristics.attackSpeed.y);
-            Invoke("PlaySoundDualSwords", 0.6f * characteristics.attackSpeed.y);
+            Invoke("PlaySoundDualSwords", 0.25f * characteristics.attackSpeed.y);
         }
     }
     

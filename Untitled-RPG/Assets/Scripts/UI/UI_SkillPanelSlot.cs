@@ -24,14 +24,9 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         base.Start();
     }
 
-    public void ValidateSkillSlot() {
+    public virtual void ValidateSkillSlot() {
         if (skillInSlot == null)
             return;
-
-        if (skillInSlot.skillTree == SkillTree.Independent){
-            containsUnavailableSkill = false;
-            return;
-        }
 
         bool valid = false;
         for (int i = 0; i < Combat.instanace.currentPickedSkills.Count; i++){ //for each picked skill

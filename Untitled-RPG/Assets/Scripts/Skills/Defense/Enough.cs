@@ -31,8 +31,8 @@ public class Enough : Skill
         foreach (Enemy en in enemiesInRadius) {
             if (en.TryGetComponent(out RagdollController ragdoll)) {
                 ragdoll.EnableRagdoll(4, (en.transform.position - transform.position).normalized * strength);
-            } else {
-                en.GetComponent<Rigidbody>().AddForce((en.transform.position - transform.position).normalized * strength, ForceMode.VelocityChange);
+            } else if (en.TryGetComponent(out Rigidbody rb)) {
+                rb.AddForce((en.transform.position - transform.position).normalized * strength, ForceMode.VelocityChange);
             }
         }
     }

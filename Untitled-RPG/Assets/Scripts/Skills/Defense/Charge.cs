@@ -9,6 +9,7 @@ public class Charge : Skill
     public float duraiton;
     public GameObject VFX;
 
+    public ParticleSystem sprintingTrails;
     public ParticleSystem lastParticles;
     public AudioClip soundFX;
     
@@ -25,15 +26,21 @@ public class Charge : Skill
 
     IEnumerator Using () {
         animator.CrossFade("Attacks.Defense.Charge", 0.4f);
-        enemiesHit.Clear();
         PlaySound(soundFX, 0, 1, 0, 0.5f);
+        PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.sprint, 0.05f, 1.7f);
+        
+        enemiesHit.Clear();
+        
         Combat.instanace.blockSkills = true;
         characteristics.immuneToDamage = true;
         characteristics.immuneToInterrupt = true;
         playerControlls.isAttacking = true;
         charging = true;
-        VFX.SetActive(true);
         hitCollider.enabled = true;
+        playerControlls.characterController.speedMultiplier = 10;
+        sprintingTrails.Play();
+
+        VFX.SetActive(true);
         Material vfxMat = VFX.transform.GetChild(0).GetComponent<MeshRenderer>().material;
         vfxMat.SetFloat("Progress", 0);
         vfxMat.DOFloat(1, "Progress", 2);
@@ -46,8 +53,12 @@ public class Charge : Skill
             }
             yield return null;
         }
+        playerControlls.characterController.speedMultiplier = 1;
+        
         vfxMat.DOFloat(0, "Progress", 0.5f);
         animator.CrossFade("Attacks.Defense.Empty", 0.4f);
+        
+        sprintingTrails.Stop();
         characteristics.immuneToDamage = false;
         characteristics.immuneToInterrupt = false;
         charging = false;
@@ -81,6 +92,7 @@ public class Charge : Skill
 
     public override string getDescription()
     {
-        return $"Charge through enemies for {duraiton} seconds, dealing {baseDamagePercentage} {damageType} damage.\n\nYou cannot recieve damage while charging. Shield is required.";
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        return $"Charge through enemies for {duraiton} seconds, dealing {dmg.damage} {dmg.damageType} damage.\n\nYou cannot recieve damage while charging. Shield is required.";
     }
 }

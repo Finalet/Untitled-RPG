@@ -19,6 +19,15 @@ public static class CalculateDamage
     static float baseCritChance = 0.1f;
     static float baseCritMultiplier = 2;
 
+    public static DamageInfo damageInfo(float rawDamage) {
+        return damageInfo(rawDamage, baseCritChance);
+    }
+    public static DamageInfo damageInfo(float rawDamage, float critChance, float damageVariation = 0.15f) {
+        bool isCritHit = isCrit(critChance);
+        int damageBeforeCrit = Mathf.RoundToInt(Random.Range(rawDamage * (1-damageVariation), rawDamage * (1+damageVariation)));
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * baseCritMultiplier) : Mathf.RoundToInt(damageBeforeCrit), DamageType.Raw, isCritHit);
+    }
+
     public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage) {
         return damageInfo(damageType, baseDamagePercentage, baseCritChance);
     }
@@ -39,6 +48,9 @@ public static class CalculateDamage
                 break;
             case DamageType.NoDamage:
                 skillTreeAdjustedDamage = 0;
+                break;
+            case DamageType.Raw:
+                skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage);
                 break;
             default: 
                 Debug.LogError("Fuck you this can never happen");

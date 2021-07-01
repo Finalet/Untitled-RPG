@@ -17,9 +17,10 @@ public class Rage : Skill
     IEnumerator Using () {
         animator.CrossFade("Attacks.Knight.Rage", 0.25f);
         PlaySound(audioSource.clip, 0, characteristics.attackSpeed.x);
+        Combat.instanace.blockSkills = true;
         yield return new WaitForSeconds(0.33f * PlayerControlls.instance.GetComponent<Characteristics>().attackSpeed.y);
         transform.GetChild(0).GetComponent<ParticleSystem>().Play();
-
+        Combat.instanace.blockSkills = false;
         playerControlls.isAttacking = false;
         characteristics.AddBuff(buff);
     }

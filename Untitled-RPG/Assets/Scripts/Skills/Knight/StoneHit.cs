@@ -39,8 +39,10 @@ public class StoneHit : Skill
             animator.CrossFade("Attacks.Knight.StoneHit Two handed", 0.25f);
         else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.DualOneHanded)
             animator.CrossFade("Attacks.Knight.StoneHit Dual swords", 0.25f);
+        else if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.OneHandedPlusShield)
+            animator.CrossFade("Attacks.Knight.StoneHit OneHanded", 0.25f);
         else 
-            animator.CrossFade("Attacks.Knight.StoneHit Dual swords", 0.25f);
+            animator.CrossFade("Attacks.Knight.StoneHit OneHanded", 0.25f);
 
         PlaySound(first, 0f, characteristics.attackSpeed.x, 0.2f);
         while(!yes) {
