@@ -8,8 +8,8 @@ public class Characteristics : MonoBehaviour
 
     public static Characteristics instance;
 
-    public bool immuneToDamage;
-    public bool immuneToInterrupt;
+    public bool immuneToDamage; int immuneToDamageInt;
+    public bool immuneToInterrupt; int immuneToInterruptInt;
     
     public string playerName;
     [Header("Main")]
@@ -88,7 +88,7 @@ public class Characteristics : MonoBehaviour
         agility = Mathf.RoundToInt(agilityFromEquip + agilityFromBuff);
         intellect = Mathf.RoundToInt(intellectFromEquip + intellectFromBuff);
 
-        maxHealth = 10000 + (strength / statsRatio) + healthFromEquip + healthFromBuff;
+        maxHealth = 5000 + (strength / statsRatio) + healthFromEquip + healthFromBuff;
         maxStamina = 0 + ((agility + intellect) / statsRatio) + staminaFromEquip + staminaFromBuff;
 
         health = Mathf.Clamp(health, 0, maxHealth);
@@ -164,6 +164,10 @@ public class Characteristics : MonoBehaviour
         }
     }
     
+    void DisplayDamageNumber(string text) {
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
+        ddText.GetComponent<ddText>().Init(text);
+    }
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
         ddText.GetComponent<ddText>().Init(new DamageInfo(damage, DamageType.Enemy, false));
@@ -224,8 +228,14 @@ public class Characteristics : MonoBehaviour
 
             walkSpeedBuff *= (1+activeBuffs[i].walkSpeedBuff);
 
-            skillDistanceIncrease +=activeBuffs[i].skillDistanceBuff;
+            skillDistanceIncrease += activeBuffs[i].skillDistanceBuff;
+
+            immuneToDamageInt += activeBuffs[i].immuneToDamage ? 1 : 0;
+            immuneToInterruptInt += activeBuffs[i].immuneToInterrupt ? 1 : 0;
         }
+
+        immuneToDamage = immuneToDamageInt > 0 ? true : false;
+        immuneToInterrupt = immuneToInterruptInt > 0 ? true : false;
     }
     void ResetBuffStats() {
         healthFromBuff = 0;
@@ -247,6 +257,9 @@ public class Characteristics : MonoBehaviour
         walkSpeedBuff = 1;
 
         skillDistanceIncrease = 0;
+
+        immuneToDamageInt = 0;
+        immuneToInterruptInt = 0;
     }
 
 #region Get hit overloads 
@@ -254,14 +267,18 @@ public class Characteristics : MonoBehaviour
     public void GetHit (int damage, string enemyName, HitType hitType = HitType.Normal, float cameraShakeFrequency = 0, float cameraShakeAmplitude = 0) {
         if (hitType == HitType.Normal) {
             PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHitUpperBody"), 0);
-        } else if (hitType == HitType.Interrupt && !immuneToInterrupt) {
-            PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
-            PlayerControlls.instance.InterruptCasting();
+        } else if (hitType == HitType.Interrupt) {
+            if (!immuneToInterrupt) {
+                PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
+                PlayerControlls.instance.InterruptCasting();
+            } else {
+                PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHitUpperBody"), 0);
+            }
         }
 
         int actualDamage = immuneToDamage ? 0 : Mathf.RoundToInt( damage * defenseCoeff() ); 
         health -= actualDamage;
-        DisplayDamageNumber(actualDamage);
+        if (immuneToDamage) DisplayDamageNumber("Invincible"); else DisplayDamageNumber(actualDamage);
         GetComponent<PlayerAudioController>().PlayGetHitSound();
 
         if (cameraShakeFrequency != 0 && cameraShakeAmplitude != 0)

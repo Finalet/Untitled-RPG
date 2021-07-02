@@ -109,6 +109,12 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (buff.skillDistanceBuff != 0) stats += $"Skill distance: <color={color}>+{buff.skillDistanceBuff}</color>\n";
 
+        if (buff.immuneToDamage || buff.immuneToInterrupt)
+            stats += addSpace();
+
+        if (buff.immuneToDamage) stats += $"<color={color}>Immune to damage.</color>\n";
+        if (buff.immuneToInterrupt) stats += $"<color={color}>Immune to interruptions.</color>\n";
+
         return stats;
     }
 

@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Defender : Skill
+public class Invincibility : Skill
 {
     [Header("Custom Vars")]
     public Buff buff;
     
+    public ParticleSystem ps;
+
     protected override void CustomUse() {
         StartCoroutine(Using());
 
@@ -18,8 +20,12 @@ public class Defender : Skill
         animator.CrossFade("Attacks.Defense.Defender / Invincibility", 0.25f);
         PlaySound(audioSource.clip, 0, characteristics.attackSpeed.x);
         Combat.instanace.blockSkills = true;
+        var main = ps.main;
+        main.duration = buff.duration;
+        main.startLifetime = buff.duration;
         yield return new WaitForSeconds(0.5f * PlayerControlls.instance.GetComponent<Characteristics>().attackSpeed.y);
-        transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+        ps.Play();
+        ps.transform.SetParent(null);
         yield return new WaitForSeconds(0.7f * PlayerControlls.instance.GetComponent<Characteristics>().attackSpeed.y);
         Combat.instanace.blockSkills = false;
         playerControlls.isAttacking = false;
@@ -27,6 +33,26 @@ public class Defender : Skill
     }
 
     public override string getDescription() {
-        return $"Increase your defense by {buff.defenseBuff*100}% for {Mathf.RoundToInt(buff.duration/60)} minutes.";
+        return $"Become completely invincible for {Mathf.RoundToInt(buff.duration)} seconds.\n\nShield is required.";
+    }
+
+    void FixedUpdate() {
+        if (ps.transform.parent != transform) {
+            ps.transform.position = transform.position + Vector3.up;
+            ps.transform.rotation = Quaternion.identity;
+        }
+    }
+
+    public override bool skillActive()
+    {
+        if (WeaponsController.instance.leftHandStatus != SingleHandStatus.Shield)
+            return false;
+        return base.skillActive();
+    }
+
+    public override void OnBuffRemove()
+    {
+        ps.Stop();
+        ps.transform.SetParent(transform);
     }
 }

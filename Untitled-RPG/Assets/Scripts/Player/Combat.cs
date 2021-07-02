@@ -198,8 +198,10 @@ public class Combat : MonoBehaviour
                     skill.GetComponent<RainOfArrows>().Shoot(true);
                 break;
             case 24: 
-                if (skillID.floatParameter == 0) 
-                    skill.GetComponent<Enough>().PushAway();
+                skill.GetComponent<Enough>().PushAway();                    
+                break;
+            case 26: 
+                skill.GetComponent<ShieldSlam>().Hit(skillID.floatParameter);
                 break;
             case 101: 
                 if (skillID.floatParameter == 0) 

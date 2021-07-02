@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4498921041212399075
+--- !u!1 &4581407645548786828
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5880324283842747018}
-  - component: {fileID: 6668483458788628488}
-  - component: {fileID: 2529501033309184114}
+  - component: {fileID: 9157128744632769651}
+  - component: {fileID: 4520926280405866736}
+  - component: {fileID: 2152619713389288117}
+  - component: {fileID: 6745082559703645916}
   m_Layer: 10
-  m_Name: CaptainThrow
+  m_Name: ShieldSlam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5880324283842747018
+--- !u!4 &9157128744632769651
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4498921041212399075}
+  m_GameObject: {fileID: 4581407645548786828}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,27 +33,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6668483458788628488
+--- !u!65 &4520926280405866736
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4581407645548786828}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2820146, y: 1.7563027, z: 1.0173562}
+  m_Center: {x: -0.14100683, y: 0.8732138, z: 0.8175756}
+--- !u!114 &2152619713389288117
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4498921041212399075}
+  m_GameObject: {fileID: 4581407645548786828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d27858696f5e6b459977b532a515e35, type: 3}
+  m_Script: {fileID: 11500000, guid: a259b8d4cee16bd4982e3936c1b63d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 101
-  skillName: Captain Throw
-  icon: {fileID: 21300000, guid: 2dc8f01627fd11c4eac8db63df61d5a9, type: 3}
-  skillTree: 7
+  ID: 26
+  skillName: Shield Slam
+  icon: {fileID: 21300000, guid: 81a2b37f9306b6543907f7df59ee3498, type: 3}
+  skillTree: 5
   skillType: 0
   damageType: 0
   staminaRequired: 0
-  baseDamagePercentage: 150
-  coolDown: 30
+  baseDamagePercentage: 100
+  coolDown: 10
   coolDownTimer: 0
   isCoolingDown: 0
   weaponOutRequired: 1
@@ -63,17 +77,18 @@ MonoBehaviour:
   needToPickArea: 0
   areaPickerPrefab: {fileID: 0}
   areaPickerSize: 0
-  maxDistance: 10
-  strength: 30
-  shootSound: {fileID: 8300000, guid: 56361a190aa1d4c4eb11825ef785710c, type: 3}
-  hitSound: {fileID: 8300000, guid: 7c53a1f5ae3a2c344913ba86348f20f3, type: 3}
---- !u!82 &2529501033309184114
+  wooshes:
+  - {fileID: 8300000, guid: 4471df629d35a1046b1ff415dcf5ce79, type: 3}
+  - {fileID: 8300000, guid: b6b0c022ffb2ccd4bb043f43ba2435ff, type: 3}
+  d1: 0
+  d2: 0
+--- !u!82 &6745082559703645916
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4498921041212399075}
+  m_GameObject: {fileID: 4581407645548786828}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -6621450033256751156, guid: 876c84e2c7654764f9483b4add6c8fe5,

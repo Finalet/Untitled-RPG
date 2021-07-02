@@ -78,7 +78,7 @@ public class RagdollController : MonoBehaviour
 					ragdolledHipPosition=anim.GetBoneTransform(HumanBodyBones.Hips).position;
 						
 					//Initiate the get up animation
-					//anim.CrossFade("GetHit.GetUp", 0.1f);
+					anim.CrossFade("GetHit.GetUp", 0.1f);
 				} //if (state==RagdollState.ragdolled)
 			}	//if value==false	
 		} //set

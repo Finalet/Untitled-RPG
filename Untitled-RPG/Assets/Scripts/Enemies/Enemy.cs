@@ -169,7 +169,7 @@ public abstract class Enemy : MonoBehaviour
             ApproachTarget();
         } else if (currentState == EnemyState.Attacking) {
             TryAttackTarget();
-            FaceTarget();
+            TryFaceTarget();
         } else if (currentState == EnemyState.Returning) {
             ReturnToPosition();
         }
@@ -191,7 +191,13 @@ public abstract class Enemy : MonoBehaviour
         AttackTarget();
     }
     protected abstract void AttackTarget();
-    protected abstract void FaceTarget(bool instant = false);
+    protected virtual void TryFaceTarget(bool instant = false) {
+        if (isKnockedDown || isRagdoll) 
+            return;
+        
+        FaceTarget(instant);
+    }
+    protected abstract void FaceTarget (bool instant = false);
     protected virtual void ReturnToPosition() {
         if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
@@ -309,26 +315,27 @@ public abstract class Enemy : MonoBehaviour
     }
     
     protected void KnockedDown () {
-        animator.CrossFade("GetHit.KnockDown", 0.1f);
         isKnockedDown = true;
         gettingUp = false;
         timeKnockedDown = Time.time;
         knockDownDuration *= 0.8f + Random.value * 0.4f;
+        if (ragdollController != null) ragdollController.EnableRagdoll(-transform.forward * 5);
+        else animator.CrossFade("GetHit.KnockDown", 0.1f);
     }
     protected virtual void KickBack (float kickBackStrength = 50) {
         //rotate to face the player so the enemy would fly away from the player
         StartCoroutine(InstantFaceTarget());
         timeKnockedDown = Time.time;
-        animator.CrossFade("GetHit.KickBack", 0.1f);
         isKnockedDown = true;
         gettingUp = false;
-        ragdollController.EnableRagdoll(-transform.forward * kickBackStrength + Vector3.up*2);
+        if (ragdollController != null) ragdollController.EnableRagdoll(-transform.forward * kickBackStrength + Vector3.up*2);
+        else animator.CrossFade("GetHit.KickBack", 0.1f);
         knockDownDuration *= 0.8f + Random.value * 0.4f;
     }
     protected virtual void GetUpFromKnockDown () {
         gettingUp = true;
-        ragdollController.StopRagdoll();
-        animator.CrossFade("GetHit.GetUp", 0.1f);
+        if (ragdollController != null) ragdollController.StopRagdoll();
+        else animator.CrossFade("GetHit.GetUp", 0.1f);
     }
 
     float timeKnockedDown;

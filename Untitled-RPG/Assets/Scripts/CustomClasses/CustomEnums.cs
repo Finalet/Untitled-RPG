@@ -66,9 +66,12 @@ public class Buff {
     [Space]
     public int skillDistanceBuff;
     [Space]
+    public bool immuneToDamage;
+    public bool immuneToInterrupt;
+    [Space]
     public Skill associatedSkill;
 
-    public Buff(string name, string description, Sprite icon, float duration, int healthBuff, int staminaBuff, int strengthBuff, int agilityBuff, int intellectBuff, float meleeAttackBuff, float rangedAttackBuff, float magicPowerBuff, float healingPowerBuff, float defenseBuff, float castingSpeedBuff, float attackSpeedBuff, float walkSpeedBuff, int skillDistanceBuff, Skill associatedSkill)
+    public Buff(string name, string description, Sprite icon, float duration, int healthBuff, int staminaBuff, int strengthBuff, int agilityBuff, int intellectBuff, float meleeAttackBuff, float rangedAttackBuff, float magicPowerBuff, float healingPowerBuff, float defenseBuff, float castingSpeedBuff, float attackSpeedBuff, float walkSpeedBuff, int skillDistanceBuff, bool immuneToDamage, bool immuneToInterrupt, Skill associatedSkill)
     {
         this.name = name;
         this.description = description;
@@ -88,6 +91,8 @@ public class Buff {
         this.attackSpeedBuff = attackSpeedBuff;
         this.walkSpeedBuff = walkSpeedBuff;
         this.skillDistanceBuff = skillDistanceBuff;
+        this.immuneToDamage = immuneToDamage;
+        this.immuneToInterrupt = immuneToInterrupt;
         this.associatedSkill = associatedSkill;
     }
 }

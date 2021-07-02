@@ -13,6 +13,31 @@ public class ddText : MonoBehaviour
     Color orange;
     Color red;
 
+    public void Init (string text, Color color = new Color()) {
+        int x = Random.value < 0.5f ? 1 : -1;
+
+        Vector3 dir = (PlayerControlls.instance.transform.right * x  + Vector3.up) * Random.Range(speed*0.5f, speed*1.3f) * 1.5f;
+        dir = Vector3.ClampMagnitude(dir, 10);
+        GetComponent<Rigidbody>().AddForce(dir, ForceMode.Impulse);
+
+        TextMeshPro tmp = transform.GetChild(0).GetComponent<TextMeshPro>();
+
+        tmp.text = text;
+        tmp.color = color == new Color() ? Color.white : color;
+
+        transform.localScale = Vector3.zero;
+
+        Color colorAlphaZero = tmp.color;
+        colorAlphaZero.a = 0;
+
+        Sequence mySequence = DOTween.Sequence()
+            .Append( transform.DOScale(1, lifeTime/4) )
+            .AppendInterval(lifeTime - lifeTime/2)
+            .Append( tmp.DOColor(colorAlphaZero, lifeTime/4) );
+
+        Destroy(gameObject, mySequence.Duration());
+    }
+
     public void Init (DamageInfo damageInfo) {
         int x = Random.value < 0.5f ? 1 : -1;
 
