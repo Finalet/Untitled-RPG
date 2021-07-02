@@ -11,9 +11,6 @@ public enum InterractionIcons {Bag, Chest, Coins, Craft, HandPickup, HandShake,H
 
 public class PeaceCanvas : MonoBehaviour
 {
-    public delegate void SaveLoadSlots();
-    public static event SaveLoadSlots saveGame; 
-
     public static PeaceCanvas instance;  
 
     [Space]
@@ -304,10 +301,6 @@ public class PeaceCanvas : MonoBehaviour
         statsLabel.text += "\n";
         statsLabel.text += $"Casting speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.castingSpeed.y*1000f)/10f}%</color>\n";
         statsLabel.text += $"Attack speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.attackSpeed.y*1000f)/10f}%</color>\n";
-    }
-
-    public void SaveButton() {
-        saveGame();
     }
 
     public void ShowKeySuggestion (string key, string action) {

@@ -11,6 +11,8 @@ public class BigGoblin : Enemy
     public Transform boulderSpawnPos;
     bool forceFaceTarget;
 
+    public CapsuleCollider[] collidersToDisableWhenAttacking;
+
     protected override void Start()
     {
         base.Start();
@@ -113,6 +115,9 @@ public class BigGoblin : Enemy
     IEnumerator YeetBoulder () {
         immuneToInterrupt = true;
         immuneToKnockDown = true;
+        for (int i = 0; i < collidersToDisableWhenAttacking.Length; i++) {
+            collidersToDisableWhenAttacking[i].enabled = false;
+        }
         while(!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).IsName("Throw Stone")) {
             yield return null;
         }
@@ -131,9 +136,10 @@ public class BigGoblin : Enemy
         Quaternion randRot = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
         GameObject go = Instantiate(projectile, boulderSpawnPos);
         go.SetActive(true);
-        go.GetComponent<EnemyProjectile>().baseDamage = Mathf.RoundToInt(baseDamage*1.5f);
-        go.GetComponent<EnemyProjectile>().hitType = hitType;
-        go.GetComponent<EnemyProjectile>().enemyName = enemyName;
+        EnemyProjectile enProjectile = go.GetComponent<EnemyProjectile>();
+        enProjectile.baseDamage = Mathf.RoundToInt(baseDamage*1.5f);
+        enProjectile.hitType = hitType;
+        enProjectile.enemyName = enemyName;
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.3f) {
             if (isDead) {
                 Destroy(go);
@@ -151,13 +157,18 @@ public class BigGoblin : Enemy
             }
             yield return null;
         }
-        Vector3 dir = PlayerControlls.instance.transform.position + Vector3.up * 2.5f + PlayerControlls.instance.rb.velocity/0.8f - transform.position;
+        Vector3 dir = PlayerControlls.instance.transform.position + Vector3.up * 2.5f + PlayerControlls.instance.rb.velocity/0.8f -PlayerControlls.instance.transform.right - transform.position;
+        
         go.transform.parent = null;
         go.GetComponent<Rigidbody>().isKinematic = false;
         dir = Vector3.ClampMagnitude(dir, 15);
         go.GetComponent<Rigidbody>().AddForce(dir, ForceMode.Impulse);
-        go.GetComponent<EnemyProjectile>().shot = true;
+        enProjectile.shot = true;
         forceFaceTarget = false;
+
+        for (int i = 0; i < collidersToDisableWhenAttacking.Length; i++) {
+            collidersToDisableWhenAttacking[i].enabled = true;
+        }
 
         immuneToInterrupt = false;
         immuneToKnockDown = false;

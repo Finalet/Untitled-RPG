@@ -21,10 +21,10 @@ public class UI_CraftingResourceSlot : UI_InventorySlot, IDropHandler, IDragHand
     protected override void Start () {
         //do nothing
     }
-    public override void Save () {
+    public override void SaveSlot () {
         //do nothing
     }
-    public override void Load () {
+    public override void LoadSlot () {
         //do nothing
     }
     public override void OnBeginDrag (PointerEventData pointerData) {

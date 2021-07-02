@@ -19,16 +19,16 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     public Image cooldownImage;
     public TextMeshProUGUI cooldownTimerText;
 
-    protected string savefilePath; 
+    protected virtual string savefilePath() {
+        return "saves/inventorySlots.txt"; ;
+    }
 
-    protected virtual void Awake() {
-        savefilePath = "saves/inventorySlots.txt";
+    protected void SetSlotID (){
         if (slotID == -1) slotID = System.Convert.ToInt16(name.Substring(name.IndexOf('(') + 1, 2)); //only works for slots after 10, first 10 needs to be assigned manually
     }
 
     protected virtual void Start() {
-        Load();
-        PeaceCanvas.saveGame += Save;
+        SetSlotID();
     }
 
     protected virtual void Update () {
@@ -157,25 +157,27 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         }
     }
 
-    public virtual void Save () {
+    public virtual void SaveSlot () {
         if (itemInSlot != null) { //Saving item
             BasicSave(1, (short)itemInSlot.ID, (byte)itemAmount);
         } else { //Slot is empty
             BasicSave(0, 0, 0);
         }
     }
-    public virtual void Load () {
-        byte type = ES3.Load<byte>($"slot_{slotID}_type", savefilePath, 0);
+    public virtual void LoadSlot () {
+        SetSlotID();
+
+        byte type = ES3.Load<byte>($"slot_{slotID}_type", savefilePath(), 0);
         LoadItem(type); 
     }
-    public virtual void Load (byte preloadedType) {
+    public virtual void LoadSlot (byte preloadedType) {
         LoadItem(preloadedType);  
     }
 
     protected void BasicSave (byte type, short ID, byte amount) {
-        ES3.Save<byte>($"slot_{slotID}_type", type, savefilePath);
-        ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath);
-        ES3.Save<byte>($"slot_{slotID}_itemAmount", amount, savefilePath);
+        ES3.Save<byte>($"slot_{slotID}_type", type, savefilePath());
+        ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath());
+        ES3.Save<byte>($"slot_{slotID}_itemAmount", amount, savefilePath());
     }
     void LoadItem(byte type) {
         if (type == 0) { //Empty slot
@@ -183,8 +185,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
             return;
         }
         //Add item
-        short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath, 0);
-        byte amount = ES3.Load<byte>($"slot_{slotID}_itemAmount", savefilePath, 0);
+        short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath(), 0);
+        byte amount = ES3.Load<byte>($"slot_{slotID}_itemAmount", savefilePath(), 0);
         AddItem(AssetHolder.instance.getItem(ID), amount, null);
     }
 

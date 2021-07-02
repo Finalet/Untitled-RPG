@@ -6,7 +6,7 @@ using TMPro;
 
 public struct ItemAmountPair {public Item item1; public int amount1;}
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoBehaviour, ISavable
 {
     public static InventoryManager instance;
 
@@ -16,28 +16,26 @@ public class InventoryManager : MonoBehaviour
     public Dropdown sortDropDown;
     [Space]
     public GameObject slots;
+    public GameObject quickAccessSlots;
     UI_InventorySlot[] allSlots;
+    UI_QuickAccessSlot[] allQuickAccessSlots;
 
     //DEBUG 
     int itemAmountToAdd = 1;
     Item itemToAdd;
     
-    protected string savefilePath = "saves/currency.txt";
+    string savefilePath = "saves/currency.txt";
 
-    public InventoryManager () {
-        if (instance == null)
-            instance = this;
-    }
-
-    public void Init() {
+    void Awake() {
         if (instance == null)
             instance = this;
         
-        PeaceCanvas.saveGame += Save;
-
-        Load();
-
         allSlots = slots.GetComponentsInChildren<UI_InventorySlot>();
+        allQuickAccessSlots = quickAccessSlots.GetComponentsInChildren<UI_QuickAccessSlot>();
+    }
+
+    void Start() {
+        SaveManager.instance.saveObjects.Add(this);
     }
 
     void Update() {
@@ -46,14 +44,6 @@ public class InventoryManager : MonoBehaviour
 
         currentGoldLabel.text = currentGold.ToString();
         currentGoldLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentGoldLabel.GetComponent<TextMeshProUGUI>().textBounds.size.x, 20);
-    }
-
-    void Save () {
-        ES3.Save<int>("currentGold", currentGold, savefilePath);
-    }
-    void Load () {
-        if (ES3.FileExists(savefilePath))
-            currentGold = ES3.Load<int>("currentGold", savefilePath);
     }
 
     public void AddItemToInventory (Item item, int amount, UI_InventorySlot slotToExclude = null) {
@@ -167,4 +157,34 @@ public class InventoryManager : MonoBehaviour
 
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
+#region  ISavable
+
+    public LoadPriority loadPriority {
+        get {
+            return LoadPriority.First;
+        }
+    }
+
+    public void Save () {
+        ES3.Save<int>("currentGold", currentGold, savefilePath);
+
+        for (int i = 0; i < allSlots.Length; i++)
+            allSlots[i].SaveSlot();
+
+        for (int i = 0; i < allQuickAccessSlots.Length; i++)
+            allQuickAccessSlots[i].SaveSlot();
+    }
+    public void Load () {
+        if (ES3.FileExists(savefilePath))
+            currentGold = ES3.Load<int>("currentGold", savefilePath);
+        
+        for (int i = 0; i < allSlots.Length; i++)
+            allSlots[i].LoadSlot();
+        
+        for (int i = 0; i < allQuickAccessSlots.Length; i++)
+            allQuickAccessSlots[i].LoadSlot();
+    }
+
+#endregion
+
 }

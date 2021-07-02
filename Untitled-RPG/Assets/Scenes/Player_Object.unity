@@ -4350,7 +4350,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1428827158976513320}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
         m_MethodName: SetMouseSensitivity
         m_Mode: 1
@@ -10037,7 +10037,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1428827158976513320}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
         m_MethodName: SetInvertY
         m_Mode: 1
@@ -15524,7 +15524,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1428827158976513320}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
         m_MethodName: SetDisplayHelmetSlot
         m_Mode: 1
@@ -20370,7 +20370,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1428827158976513320}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
         m_MethodName: SetDisplayCapeSlot
         m_Mode: 1
@@ -22536,7 +22536,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1428827158976513320}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
         m_MethodName: SetDisplayHelmet
         m_Mode: 1
@@ -23977,7 +23977,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1428827158976513320}
+      objectReference: {fileID: 0}
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
@@ -27666,7 +27666,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1428827158976513319}
+      objectReference: {fileID: 8716438737783131325}
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -27675,12 +27675,12 @@ PrefabInstance:
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SaveButton
+      value: SaveGame
       objectReference: {fileID: 0}
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PeaceCanvas, Assembly-CSharp
+      value: SaveManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
@@ -29212,7 +29212,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1342433677}
   - component: {fileID: 1342433679}
-  - component: {fileID: 1342433678}
   m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
@@ -29245,22 +29244,6 @@ RectTransform:
   m_AnchoredPosition: {x: -100, y: 50}
   m_SizeDelta: {x: 720, y: 600}
   m_Pivot: {x: 1, y: 0.5}
---- !u!114 &1342433678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1342433676}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e6f35c1d86d63a47ae71bd2aea81099, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentGold: 0
-  currentGoldLabel: {fileID: 1205836453}
-  sortDropDown: {fileID: 1091124127}
-  slots: {fileID: 1504900123}
 --- !u!222 &1342433679
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -45212,7 +45195,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1428827158976513320}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
         m_MethodName: SetDisplayCape
         m_Mode: 1
@@ -46720,7 +46703,6 @@ GameObject:
   - component: {fileID: 1428827158976513316}
   - component: {fileID: 1428827158976513317}
   - component: {fileID: 1428827158976513319}
-  - component: {fileID: 1428827158976513320}
   - component: {fileID: 1428827158976513321}
   - component: {fileID: 1428827158976513323}
   - component: {fileID: 1428827158976513322}
@@ -46776,29 +46758,6 @@ MonoBehaviour:
   debugChatText: {fileID: 2317584040770170263}
   maxChatLines: 17
   DebugTooManyItems: {fileID: 1255696018}
---- !u!114 &1428827158976513320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428827158976513318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 614e3b51e4d9cb845a452c4da9bed2bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mouseSensitivity: 0
-  invertY: 0
-  displayHelmet: 1
-  displayCape: 1
-  mouseSensitivitySlider: {fileID: 215772844}
-  mouseSensitivityText: {fileID: 1573488832}
-  invertYToggle: {fileID: 436539175}
-  displayHelmetToggle: {fileID: 1052230594}
-  displayHelmetToggleInSlot: {fileID: 687977205}
-  displayCapeToggle: {fileID: 2074155567}
-  displayCapeToggleInSlot: {fileID: 920713319}
 --- !u!114 &1428827158976513321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55506,7 +55465,7 @@ MonoBehaviour:
   enemiesInBattle: []
   maxSkillPoints: 10
   availableSkillPoints: 0
-  currentSkillTrees: 0000000001000000
+  currentSkillTrees: 
   learnedSkills: []
   currentPickedSkills: []
   currentSkillsFromEquipment: []
@@ -55679,7 +55638,6 @@ GameObject:
   - component: {fileID: 4675846284446074575}
   - component: {fileID: 4675846284446074568}
   - component: {fileID: 4675846284446074571}
-  - component: {fileID: 4675846284446074613}
   - component: {fileID: 106101159140331785}
   - component: {fileID: 7240333224357428003}
   - component: {fileID: 4675846284446074615}
@@ -55688,6 +55646,8 @@ GameObject:
   - component: {fileID: 4675846284446074612}
   - component: {fileID: 4675846284446074621}
   - component: {fileID: 4675846284446074622}
+  - component: {fileID: 4675846284446074613}
+  - component: {fileID: 4675846284446074614}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -55885,6 +55845,23 @@ MonoBehaviour:
     immuneToInterrupt: 0
     associatedSkill: {fileID: 0}
   capeBoneTail: {fileID: 6526474379051252896}
+--- !u!114 &4675846284446074614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4675846284446074611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e6f35c1d86d63a47ae71bd2aea81099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGold: 0
+  currentGoldLabel: {fileID: 1205836453}
+  sortDropDown: {fileID: 1091124127}
+  slots: {fileID: 1504900123}
+  quickAccessSlots: {fileID: 1106094985}
 --- !u!208 &4675846284446074615
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -129399,6 +129376,8 @@ GameObject:
   - component: {fileID: 8716438737783131322}
   - component: {fileID: 8716438737783131323}
   - component: {fileID: 8716438737783131324}
+  - component: {fileID: 8716438737783131326}
+  - component: {fileID: 8716438737783131325}
   m_Layer: 0
   m_Name: AssetHolder
   m_TagString: Untagged
@@ -129559,6 +129538,41 @@ MonoBehaviour:
   damageChat: 282
   tooManyItems: 283
   hideUI: 284
+--- !u!114 &8716438737783131325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8716438737783131321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c85ae924559f0f4e942506f0a12b314, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8716438737783131326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8716438737783131321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614e3b51e4d9cb845a452c4da9bed2bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 0
+  invertY: 0
+  displayHelmet: 1
+  displayCape: 1
+  mouseSensitivitySlider: {fileID: 215772844}
+  mouseSensitivityText: {fileID: 1573488832}
+  invertYToggle: {fileID: 436539175}
+  displayHelmetToggle: {fileID: 1052230594}
+  displayHelmetToggleInSlot: {fileID: 687977205}
+  displayCapeToggle: {fileID: 2074155567}
+  displayCapeToggleInSlot: {fileID: 920713319}
 --- !u!222 &8780106765842982570
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -129950,7 +129964,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1342433678}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryManager, Assembly-CSharp
         m_MethodName: Sort
         m_Mode: 1

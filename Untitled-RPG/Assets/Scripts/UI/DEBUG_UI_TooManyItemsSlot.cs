@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public class DEBUG_UI_TooManyItemsSlot : UI_InventorySlot, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
-    protected override void Awake() {}
     protected override void Start() {}
 
     public override void UseItem()

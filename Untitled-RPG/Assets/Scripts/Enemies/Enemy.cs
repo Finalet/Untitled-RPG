@@ -134,8 +134,8 @@ public abstract class Enemy : MonoBehaviour
         RunRecurringEffects();
         RunKnockDowns();
 
-        enemyController.useRootMotion = isAttacking;       
-        enemyController.useRootMotionRotation = isAttacking;       
+        enemyController.useRootMotion = isAttacking || isGettingInterrupted;       
+        enemyController.useRootMotionRotation = isAttacking || isGettingInterrupted;       
     }
 
     protected virtual void AI () {

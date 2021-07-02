@@ -15,6 +15,10 @@ public class UI_QuickAccessSlot : UI_InventorySlot
     public Sprite notSelectedFrame;
     public Sprite selectedFrame;
 
+    protected override string savefilePath() {
+        return "saves/quickAccessSlots.txt";
+    }
+
     protected override void Update() {
         base.Update();
 
@@ -59,12 +63,11 @@ public class UI_QuickAccessSlot : UI_InventorySlot
         pairedSlot.itemAmount = itemAmount;
     }
 
-    protected override void Awake() {
+    void Awake() {
         if (!isParentSlot)
             return;
 
-        savefilePath = "saves/quickAccessSlots.txt";
-        if (slotID == -1) slotID = System.Convert.ToInt16(name.Substring(name.IndexOf('(') + 1, 2)); //only works for slots after 10, first 10 needs to be assigned manually
+        SetSlotID();
     }
 
     protected override void Start()

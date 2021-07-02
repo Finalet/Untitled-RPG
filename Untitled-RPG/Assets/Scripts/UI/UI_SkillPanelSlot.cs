@@ -16,12 +16,8 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     [Space]
     public KeyCode assignedKey; 
 
-
-    protected override void Awake() {
-        savefilePath = "saves/skillPanelSlots.txt";
-    }
-    protected override void Start() {
-        base.Start();
+    protected override string savefilePath(){
+        return "saves/skillPanelSlots.txt";
     }
 
     public virtual void ValidateSkillSlot() {
@@ -118,21 +114,21 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
             keyText.text = KeyCodeDictionary.keys[assignedKey];
     }
 
-    public override void Save() {
+    public override void SaveSlot() {
         if (skillInSlot != null) { //Saving skill
             BasicSave(2, (short)skillInSlot.ID, 0);
             return;
         }
-        base.Save(); //Saving item or empty
+        base.SaveSlot(); //Saving item or empty
     }
-    public override void Load() {
-        byte type = ES3.Load<byte>($"slot_{slotID}_type", savefilePath, 0);
+    public override void LoadSlot() {
+        byte type = ES3.Load<byte>($"slot_{slotID}_type", savefilePath(), 0);
         if (type == 2) { //Load skill
-            short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath, 0);
+            short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath(), 0);
             AddSkill(AssetHolder.instance.getSkill(ID), null);
             return;
         }
-        base.Load(type);
+        base.LoadSlot(type);
     }
 
     public void AddSkill (Skill skill, UI_SkillPanelSlot initialSlot) {

@@ -10,30 +10,21 @@ public class UI_EquipmentSlot : UI_InventorySlot
     [Header("Equipment slot")]
     public EquipmentSlotType equipmentSlotType;
 
-    protected override void Awake()
-    {
-        savefilePath = "saves/equipmentSlots.txt";
-    }
+    protected override string savefilePath() {
+        return "saves/equipmentSlots.txt";
+    } 
 
-    protected override void Start()
-    {
-        //Load() Not loading anything because already loaded when game launched from the EquipmentManager.
-        PeaceCanvas.saveGame += Save;
-    }
-
-    public override void Save (){
+    public override void SaveSlot (){
         short ID;
         if (itemInSlot != null)
             ID = (short)itemInSlot.ID;
         else
             ID = -1; //Slot is empty
 
-        ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath);
+        ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath());
     }
-    public override void Load () {
-        savefilePath = "saves/equipmentSlots.txt";
-
-        short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath, -1);
+    public override void LoadSlot () {
+        short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath(), -1);
 
         if (ID < 0) {
             ClearSlot();

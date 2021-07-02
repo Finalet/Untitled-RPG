@@ -4,7 +4,7 @@ using UnityEngine;
 using BattleDrakeStudios.ModularCharacters;
 using FIMSpace.FTail;
 
-public class EquipmentManager : MonoBehaviour
+public class EquipmentManager : MonoBehaviour, ISavable
 {
     public static EquipmentManager instance; 
 
@@ -50,13 +50,14 @@ public class EquipmentManager : MonoBehaviour
     void Awake() {
         if (instance == null)
             instance = this;
-
-        InventoryManager.instance.Init();
+        
+        modularCharacterManager = GetComponent<ModularCharacterManager>();
     }
 
     void Start() {
+        SaveManager.instance.saveObjects.Add(this);
+
         characteristics = Characteristics.instance;
-        modularCharacterManager = GetComponent<ModularCharacterManager>();
         TwohandedStaffSlot = WeaponsController.instance.twohandedStaffSlot;
         TwohandedSwordSlot = WeaponsController.instance.twohandedSwordSlot;
         BowSlot = WeaponsController.instance.bowSlot;
@@ -66,22 +67,21 @@ public class EquipmentManager : MonoBehaviour
         LeftHandTrans = WeaponsController.instance.LeftHandTrans;
         RightHandTrans = WeaponsController.instance.RightHandTrans;
         LeftHandShieldTrans = WeaponsController.instance.LeftHandShieldTrans;
-        LoadEquip();
     }
 
     void LoadEquip(){
-        helmet.Load();
-        chest.Load();
-        gloves.Load();
-        pants.Load();
-        boots.Load();
-        back.Load();
-        necklace.Load();
-        ring.Load();
-        secondRing.Load();
-        mainHand.Load();
-        secondaryHand.Load();
-        bow.Load();
+        helmet.LoadSlot();
+        chest.LoadSlot();
+        gloves.LoadSlot();
+        pants.LoadSlot();
+        boots.LoadSlot();
+        back.LoadSlot();
+        necklace.LoadSlot();
+        ring.LoadSlot();
+        secondRing.LoadSlot();
+        mainHand.LoadSlot();
+        secondaryHand.LoadSlot();
+        bow.LoadSlot();
 
         AddAllStats();
         Characteristics.instance.StatsCalculations();
@@ -438,4 +438,32 @@ public class EquipmentManager : MonoBehaviour
             case ItemRarity.Relic: relic++; break;
         }
     }
+
+#region  ISavable
+
+    public LoadPriority loadPriority {
+        get {
+            return LoadPriority.First;
+        }
+    }
+
+    public void Save () {
+        helmet.SaveSlot();
+        chest.SaveSlot();
+        gloves.SaveSlot();
+        pants.SaveSlot();
+        boots.SaveSlot();
+        back.SaveSlot();
+        necklace.SaveSlot();
+        ring.SaveSlot();
+        secondRing.SaveSlot();
+        mainHand.SaveSlot();
+        secondaryHand.SaveSlot();
+        bow.SaveSlot();
+    }
+    public void Load () {
+        LoadEquip();
+    }
+
+#endregion
 }

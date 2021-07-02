@@ -8,7 +8,11 @@ public class UI_StoreSellSlot : UI_InventorySlot, IDropHandler, IDragHandler, IB
     protected override void Start () {
         //do nothing
     }
-    public override void Save () {
+    public override void SaveSlot () {
+        //do nothing
+    }
+    public override void LoadSlot()
+    {
         //do nothing
     }
 

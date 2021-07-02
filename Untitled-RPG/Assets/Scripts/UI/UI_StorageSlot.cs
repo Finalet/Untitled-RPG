@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class UI_StorageSlot : UI_InventorySlot
 {
-    protected override void Awake() {
-        savefilePath = "saves/storageSlots.txt";
-        if (slotID == -1) slotID = System.Convert.ToInt16(name.Substring(name.IndexOf('(') + 1, 2)); //only works for slots after 10, first 10 needs to be assigned manually
+    protected override string savefilePath() {
+        return "saves/storageSlots.txt";
+    }
+
+    void Awake() {
+        SetSlotID();
     }
 
     public override void UseItem () {
