@@ -18,7 +18,6 @@ public class CraftingWindowUI : MonoBehaviour
     public TextMeshProUGUI itemRarityLabel;
     public TextMeshProUGUI itemDescriptionLabel;
     public Button craftButton;
-    public Button cancelButton;
     public Button quantityUpButton;
     public Button quantityDownButton;
     public TMP_InputField quanitityInputField;
@@ -33,12 +32,21 @@ public class CraftingWindowUI : MonoBehaviour
             itemUI.Init();
         }
         Destroy(storeItemTemplate);
-        craftButton.onClick.AddListener(delegate{ownerNPC.CraftItem();});
-        cancelButton.onClick.AddListener(delegate{ownerNPC.CancelCraft();});
+        craftButton.onClick.AddListener(delegate{CraftButton();});
         quantityUpButton.onClick.AddListener(delegate{QuantityUp();});
         quantityDownButton.onClick.AddListener(delegate{QuantityDown();});
         quanitityInputField.onValueChanged.AddListener(delegate{UpdateQuantityFronInput();});
         quanitityInputField.text = ownerNPC.craftQuanitity.ToString();
+    }
+
+    void CraftButton () {
+        if (!ownerNPC.isCrafting) {
+            craftButton.GetComponentInChildren<TextMeshProUGUI>().text = "Cancel";
+            ownerNPC.CraftItem();
+        } else {
+            craftButton.GetComponentInChildren<TextMeshProUGUI>().text = "Craft";
+            ownerNPC.CancelCraft();
+        }
     }
 
     public void DisplaySelectedItem () {

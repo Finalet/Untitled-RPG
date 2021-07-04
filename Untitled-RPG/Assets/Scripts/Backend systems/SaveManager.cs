@@ -18,7 +18,6 @@ public class SaveManager : MonoBehaviour
 
         foreach (ISavable s in saveObjects) {
             s.Load();
-            print($"Loaded {s}");
         }
     }
 

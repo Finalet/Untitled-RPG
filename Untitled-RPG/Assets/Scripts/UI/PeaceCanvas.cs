@@ -28,6 +28,7 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject EquipmentSlots;
     public GameObject PauseMenu;
     public GameObject storageWindow;
+    public GameObject settingsView;
     public TextMeshProUGUI statsLabel;
     public TextMeshProUGUI nameLabel;
 
@@ -75,7 +76,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void Update() {
-        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null)
+        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null || settingsView.activeInHierarchy)
             anyPanelOpen = true;
         else   
             anyPanelOpen = false;
@@ -153,6 +154,10 @@ public class PeaceCanvas : MonoBehaviour
         SkillsPanel.SetActive(false);
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.SkillsPanelClose);
     }
+    public void CloseSettings () {
+        SettingsManager.instance.SaveSettings();
+        settingsView.SetActive(false);
+    }
 
     void EscapeButton () {
         if (anyPanelOpen) { //hide all panels
@@ -160,6 +165,7 @@ public class PeaceCanvas : MonoBehaviour
             if (Inventory.activeInHierarchy) CloseInventory();
             if (currentInterractingNPC != null)
                 currentInterractingNPC.StopInterract();
+            if (settingsView.activeInHierarchy) CloseSettings();
         } else { //toggle pause
             TogglePause();
         }

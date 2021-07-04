@@ -24,12 +24,10 @@ public class SettingsManager : MonoBehaviour
     public Toggle displayCapeToggle;
     public Toggle displayCapeToggleInSlot;
 
-    void Awake() {
-        if (instance == null)
-            instance = this;
-        else 
-            Debug.LogError("There are two instances of SettingsManager. Make sure there is only one");
+    public SettingsManager() {
+        instance = this;
     }
+
     void Start() {
         LoadSettings();
         UpdateSettingsUI();
@@ -52,33 +50,45 @@ public class SettingsManager : MonoBehaviour
     public void SetMouseSensitivity() {
         mouseSensitivity = mouseSensitivitySlider.value;
         mouseSensitivityText.text = mouseSensitivity.ToString();
+    
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
     public void SetInvertY () {
         invertY = invertYToggle.isOn;
+    
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
     public void SetDisplayHelmet () {
         displayHelmet = displayHelmetToggle.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayHelmet();
         if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         UpdateSettingsUI();
+
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
     public void SetDisplayCape () {
         displayCape = displayCapeToggle.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayCape();
         if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         UpdateSettingsUI();
+
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
     public void SetDisplayHelmetSlot () {
         displayHelmet = displayHelmetToggleInSlot.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayHelmet();
         if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         UpdateSettingsUI();
+
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
     public void SetDisplayCapeSlot () {
         displayCape = displayCapeToggleInSlot.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayCape();
         if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         UpdateSettingsUI();
+
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 
     void UpdateSettingsUI () {

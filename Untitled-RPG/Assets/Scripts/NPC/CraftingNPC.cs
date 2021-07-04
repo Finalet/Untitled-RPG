@@ -22,6 +22,7 @@ public class CraftingNPC : NPC
 
     float craftingTime = 2;
     bool craftCanceled;
+    [System.NonSerialized] public bool isCrafting;
 
     CraftingWindowUI instanciatedCraftingWindow;
 
@@ -99,20 +100,20 @@ public class CraftingNPC : NPC
         audioSource.clip = startCraftSound;
         audioSource.Play();
         float startedTime = Time.time;
+        isCrafting = true;
         while (Time.time - startedTime < finalCraftingTime){
             if (craftCanceled){
                 craftCanceled = false;
                 PlayerControlls.instance.ExitGeneralAnimation();
-                instanciatedCraftingWindow.cancelButton.interactable = false;
                 CanvasScript.instance.DisplayProgressBar(false, 1, true);
                 audioSource.Stop();
+                isCrafting = false;
                 yield break;
             }
             CanvasScript.instance.DisplayProgressBar(false, (Time.time - startedTime) / finalCraftingTime, in craftCanceled);
-            instanciatedCraftingWindow.cancelButton.interactable = true;
             yield return null;
         }
-        instanciatedCraftingWindow.cancelButton.interactable = false;
+        isCrafting = false;
         PlayerControlls.instance.ExitGeneralAnimation();
         CanvasScript.instance.DisplayProgressBar(false, 1, true);
         if (spawnedCraftingHammer != null)
