@@ -17,6 +17,7 @@ public class Chest : Container
 
     [Header("Sounds")]
     public AudioClip openChest;
+    public AudioClip closeChest;
     AudioSource audioSource;
 
     bool playerInTrigger;
@@ -83,13 +84,13 @@ public class Chest : Container
         lid.transform.DOLocalRotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic).SetDelay(1);
         
         audioSource.clip = openChest;
-        audioSource.Play();
+        audioSource.PlayDelayed(1.5f);
     }
 
     protected override void CloseAnimation() {
         lid.transform.DOLocalRotate(new Vector3(0, 0, 0), 1).SetEase(Ease.InOutElastic);
         
-        audioSource.clip = openChest;
+        audioSource.clip = closeChest;
         audioSource.Play();
     }
 }

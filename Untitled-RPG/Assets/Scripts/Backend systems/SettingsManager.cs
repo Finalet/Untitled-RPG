@@ -81,16 +81,18 @@ public class SettingsManager : MonoBehaviour, ISavable
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayHelmet();
         if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         UpdateSettingsUI();
-
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+
+        ES3.Save<bool>("displayHelmet", displayHelmet, savefilePath);
     }
     public void SetDisplayCapeSlot () {
         displayCape = displayCapeToggleInSlot.isOn;
         if (EquipmentManager.instance != null) EquipmentManager.instance.CheckDisplayCape();
         if (UIAudioManager.instance != null) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         UpdateSettingsUI();
-
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+        
+        ES3.Save<bool>("displayCape", displayCape, savefilePath);
     }
 
     public void UpdateSettingsUI () {

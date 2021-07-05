@@ -28,5 +28,6 @@ public class StorageNPC : NPC
 
     public void AddItemToStorage (Item item, int amount) {
         PeaceCanvas.instance.storageWindow.GetComponent<StorageWindowUI>().AddItemToStorage(item, amount);
+        PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.LootPickup);
     }
 }

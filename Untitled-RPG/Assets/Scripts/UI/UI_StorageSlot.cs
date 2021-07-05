@@ -26,5 +26,7 @@ public class UI_StorageSlot : UI_InventorySlot
         itemAmount -= amount;
         if (itemAmount == 0)
             ClearSlot();
+        
+        PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.LootPickup);
     }
 }

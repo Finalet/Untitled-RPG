@@ -20,10 +20,12 @@ public class UIAudioManager : MonoBehaviour
     public AudioClip GrabItem;
     public AudioClip DropItem;
     public AudioClip EquipArmor;
+    public AudioClip EquipJewlery;
     public AudioClip EquipWeapon;
     public AudioClip EquipBow;
     public AudioClip EquipShield;
     public AudioClip UnequipArmor;
+    public AudioClip UnequipJewlery;
     public AudioClip UnequipWeapon;
     public AudioClip UnequipBow;
     public AudioClip UnequipShield;

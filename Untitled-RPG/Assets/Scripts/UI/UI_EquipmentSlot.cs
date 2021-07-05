@@ -11,12 +11,11 @@ public class UI_EquipmentSlot : UI_InventorySlot
     public EquipmentSlotType equipmentSlotType;
     Image equipmentIcon;
 
-    Color baseColor;
+    Color baseColor = new Color(1,1,1, 220f/255f);
     Color transparentColor = new Color(0,0,0,0);
 
      void Awake() {
         equipmentIcon = GetComponent<Image>();
-        baseColor = equipmentIcon.color;
     }
 
     protected override string savefilePath() {
@@ -30,10 +29,10 @@ public class UI_EquipmentSlot : UI_InventorySlot
         else
             ID = -1; //Slot is empty
 
-        ES3.Save<short>($"slot_{slotID}_itemID", ID, savefilePath());
+        ES3.Save<short>($"{slotID}_ID", ID, savefilePath());
     }
     public override void LoadSlot () {
-        short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath(), -1);
+        short ID = ES3.Load<short>($"{slotID}_ID", savefilePath(), -1);
 
         if (ID < 0) {
             ClearSlot();
@@ -87,7 +86,11 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
 
         if (item is Armor) {
-            UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipArmor);
+            Armor a = (Armor)item;
+            if (a.armorType == ArmorType.Necklace || a.armorType == ArmorType.Ring)
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipJewlery);
+            else 
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipArmor);
         }
         else if (item is Weapon) {
             Weapon w = (Weapon)item;
@@ -250,7 +253,11 @@ public class UI_EquipmentSlot : UI_InventorySlot
             if (equipmentSlotType != EquipmentSlotType.Necklace && equipmentSlotType != EquipmentSlotType.Ring)
                 EquipmentManager.instance.UnequipArmorVisual((Armor)itemInSlot);
             
-            UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipArmor);
+            Armor a = (Armor)itemInSlot;
+            if (a.armorType == ArmorType.Necklace || a.armorType == ArmorType.Ring)
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipJewlery);
+            else 
+                UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipArmor);
         }
         if (itemInSlot is Equipment) {
             Equipment eq = (Equipment)itemInSlot;
@@ -261,7 +268,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
         }
 
         if (equipmentIcon == null) equipmentIcon = GetComponent<Image>();
-        if (baseColor == transparentColor) baseColor = equipmentIcon.color;
         equipmentIcon.color = baseColor;
 
         base.ClearSlot();
