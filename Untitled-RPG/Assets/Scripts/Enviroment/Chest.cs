@@ -5,15 +5,9 @@ using DG.Tweening;
 
 public enum ChestQuality {Regular, Silver, Gold}
 
-public class Chest : MonoBehaviour
+public class Chest : Container
 {
-    public Loot[] lootInside;
-    public int goldAmountInside;
-    [Space]
-    public bool isLocked;
-    public bool isOpened;
-
-    [Space]
+    [Header("Chest")]
     public ChestQuality chestQuality;
     public GameObject regularMesh;
     public GameObject silverMesh;
@@ -24,6 +18,8 @@ public class Chest : MonoBehaviour
     [Header("Sounds")]
     public AudioClip openChest;
     AudioSource audioSource;
+
+    bool playerInTrigger;
 
     void Awake() {
         UpdateMesh();
@@ -63,45 +59,37 @@ public class Chest : MonoBehaviour
         }
     }
 
+    void Update() {
+        if (playerInTrigger && Input.GetKeyDown(KeybindsManager.instance.interact))
+            TryOpenContainer(1.5f);
+    }
+
     void OnTriggerStay(Collider other) {
-        if (isOpened)
-            return;
-            
         if (other.CompareTag("Player")) {
             PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], InterractionIcons.Chest);
-            
-            if (Input.GetKeyDown(KeybindsManager.instance.interact) && !isLocked) {
-                OpenChest();
-                PeaceCanvas.instance.HideKeySuggestion();
-            }
-            
+            playerInTrigger = true; //Doing this because OnTriggerStay is not called every frame
         }
     }
 
-    void OnTriggerExit(Collider other) {
-        if (isOpened)
-            return;
-
-        if (other.CompareTag("Player"))
+    void OnTriggerExit(Collider other) {        
+        if (other.CompareTag("Player")) {
             PeaceCanvas.instance.HideKeySuggestion();
+            playerInTrigger = false;
+        }
     }
 
-    void OpenChest() {
+    protected override void OpenAnimation() {
         PlayerControlls.instance.PlayGeneralAnimation(0);
         lid.transform.DOLocalRotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic).SetDelay(1);
-        Invoke("DropItems", 1.5f);
-        isOpened = true;
-
+        
         audioSource.clip = openChest;
         audioSource.Play();
     }
 
-    void DropItems () {
-        for (int i = 0; i < lootInside.Length; i++) {
-            if (Random.value < lootInside[i].dropProbability)
-                AssetHolder.instance.DropItem(lootInside[i].lootItem, lootInside[i].lootItemAmount, transform.position + Vector3.up*0.3f);
-        }
-        if (goldAmountInside > 0)
-            AssetHolder.instance.DropGold(goldAmountInside, transform.position + Vector3.up * 0.3f);
+    protected override void CloseAnimation() {
+        lid.transform.DOLocalRotate(new Vector3(0, 0, 0), 1).SetEase(Ease.InOutElastic);
+        
+        audioSource.clip = openChest;
+        audioSource.Play();
     }
 }

@@ -199,7 +199,7 @@ public class Combat : MonoBehaviour, ISavable
         ES3.Save<List<int>>("currentPickedSkillsIDs", skillIDs, savefilePath);
 
         //Save skill slots
-        for (int i = 0; i < allSkillSlots.Length; i++){ //validate each skill slot
+        for (int i = 0; i < allSkillSlots.Length; i++){ 
             allSkillSlots[i].SaveSlot();
         }
     }
@@ -222,7 +222,7 @@ public class Combat : MonoBehaviour, ISavable
             currentPickedSkills.Add(AssetHolder.instance.getSkill(ID));
 
         //Load all skill slots 
-        for (int i = 0; i < allSkillSlots.Length; i++){ //validate each skill slot
+        for (int i = 0; i < allSkillSlots.Length; i++){
             allSkillSlots[i].LoadSlot();
         }
     }

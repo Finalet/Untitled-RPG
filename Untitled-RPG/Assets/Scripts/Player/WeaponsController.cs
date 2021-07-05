@@ -228,24 +228,24 @@ public class WeaponsController : MonoBehaviour
     public void EnableTrails() {
         if (LeftHandEquipObj != null) {
             Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
-            if (w.weaponCategory == WeaponCategory.Sword)
+            if (w.weaponCategory == WeaponCategory.Sword || w.weaponCategory == WeaponCategory.Axe)
                 LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
         }
         if (RightHandEquipObj != null) {
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponCategory == WeaponCategory.Sword)            
+            if (w.weaponCategory == WeaponCategory.Sword || w.weaponCategory == WeaponCategory.Axe)            
                 RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Play();
         }
     }
     public void DisableTrails() {
         if (LeftHandEquipObj != null){
             Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
-            if (w.weaponCategory == WeaponCategory.Sword)
+            if (w.weaponCategory == WeaponCategory.Sword || w.weaponCategory == WeaponCategory.Axe)
                 LeftHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
         }
         if (RightHandEquipObj != null){
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponCategory == WeaponCategory.Sword)
+            if (w.weaponCategory == WeaponCategory.Sword || w.weaponCategory == WeaponCategory.Axe)
                 RightHandEquipObj.GetComponentInChildren<ParticleSystem>().Stop();
         }
     }

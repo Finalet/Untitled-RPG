@@ -32,9 +32,10 @@ public class PeaceCanvas : MonoBehaviour
     public TextMeshProUGUI statsLabel;
     public TextMeshProUGUI nameLabel;
 
-    [Header("Button suggestion")]
+    [Header("Interractions")]
     public GameObject buttonSuggestionUI;
     public NPC currentInterractingNPC;
+    public Container currentInterractingContainer;
 
     [Space]
     public GameObject dragObject;
@@ -78,7 +79,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void Update() {
-        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null || settingsView.activeInHierarchy)
+        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null || settingsView.activeInHierarchy || currentInterractingContainer != null)
             anyPanelOpen = true;
         else   
             anyPanelOpen = false;
@@ -166,9 +167,9 @@ public class PeaceCanvas : MonoBehaviour
         if (anyPanelOpen) { //hide all panels
             if (SkillsPanel.activeInHierarchy) CloseSkillsPanel();
             if (Inventory.activeInHierarchy) CloseInventory();
-            if (currentInterractingNPC != null)
-                currentInterractingNPC.StopInterract();
+            if (currentInterractingNPC != null) currentInterractingNPC.StopInterract();
             if (settingsView.activeInHierarchy) CloseSettings();
+            if (currentInterractingContainer != null) currentInterractingContainer.CloseContainer();
         } else { //toggle pause
             TogglePause();
         }

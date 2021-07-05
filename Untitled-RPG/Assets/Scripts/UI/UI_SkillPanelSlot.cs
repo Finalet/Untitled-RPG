@@ -122,9 +122,9 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         base.SaveSlot(); //Saving item or empty
     }
     public override void LoadSlot() {
-        byte type = ES3.Load<byte>($"slot_{slotID}_type", savefilePath(), 0);
+        byte type = ES3.Load<byte>($"{slotID}_t", savefilePath(), 0);
         if (type == 2) { //Load skill
-            short ID = ES3.Load<short>($"slot_{slotID}_itemID", savefilePath(), 0);
+            short ID = ES3.Load<short>($"{slotID}_ID", savefilePath(), 0);
             AddSkill(AssetHolder.instance.getSkill(ID), null);
             return;
         }
