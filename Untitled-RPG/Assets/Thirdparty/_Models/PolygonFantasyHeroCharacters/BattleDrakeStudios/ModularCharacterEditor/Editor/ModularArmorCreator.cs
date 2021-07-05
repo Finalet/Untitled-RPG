@@ -46,8 +46,8 @@ namespace BattleDrakeStudios.ModularCharacters {
         [MenuItem("Window/BattleDrakeStudios/ModularCharacter/ArmorCreator")]
         public static void ShowWindow() {
             EditorWindow newWindow = GetWindow<ModularArmorCreator>("Modular Armor Creator");
-            newWindow.minSize = new Vector2(600, 425);
-            newWindow.maxSize = new Vector2(600, 425);
+            newWindow.minSize = new Vector2(866, 681);
+            newWindow.maxSize = new Vector2(866, 681);
             newWindow.Show();
         }
 
@@ -90,12 +90,12 @@ namespace BattleDrakeStudios.ModularCharacters {
 
         private void SetupRectAreas() {
             windowPadding = new Vector2(4, 4);
-            previewRect = new Rect(0, 0, 256, 256);
-            bodyOptionsRect = new Rect(0, 256, 256, 125);
-            armorOptionsRect = new Rect(256, 0, 340, 200);
-            colorOptionsRect = new Rect(256, 200, 340, 150);
-            armorNameRect = new Rect(256, 350, 340, 25);
-            saveButtonRect = new Rect(0, 375, 597, 50);
+            previewRect = new Rect(0, 0, 512, 512);
+            bodyOptionsRect = new Rect(0, 512, 340, 125);
+            armorOptionsRect = new Rect(512, 0, 350, 200);
+            colorOptionsRect = new Rect(512, 200, 350, 150);
+            armorNameRect = new Rect(512, 350, 350, 25);
+            saveButtonRect = new Rect(512, 375, 350, 50);
         }
 
         private void SetupParts() {

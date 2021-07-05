@@ -8,22 +8,39 @@ public class DEBUG_TooManyItems : MonoBehaviour
     public GameObject slotPrefab;
     public InputField goldAmounInputField;
 
-    public Transform grid;
+    public Transform allGrid;
+    public Transform weaponsGrid;
+    public Transform armorGrid;
+    public Transform skillbooksGrid;
+    public Transform consumablesGrid;
 
-    void OnEnable() {
+    void Start() {
         transform.SetAsLastSibling();
 
-        if (grid.childCount != 0)
-            return;
-
         List<Item> allItems = new List<Item>();
-        allItems.AddRange(AssetHolder.instance.consumables);
         allItems.AddRange(AssetHolder.instance.weapons);
         allItems.AddRange(AssetHolder.instance.armor);
         allItems.AddRange(AssetHolder.instance.skillbooks);
+        allItems.AddRange(AssetHolder.instance.consumables);
 
         foreach (Item item in allItems) {
-            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, grid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, allGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            slot.AddItem(item, 1, null);
+        }
+        foreach (Item item in AssetHolder.instance.weapons) {
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, weaponsGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            slot.AddItem(item, 1, null);
+        }
+        foreach (Item item in AssetHolder.instance.armor) {
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, armorGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            slot.AddItem(item, 1, null);
+        }
+        foreach (Item item in AssetHolder.instance.skillbooks) {
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, skillbooksGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            slot.AddItem(item, 1, null);
+        }
+        foreach (Item item in AssetHolder.instance.consumables) {
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, consumablesGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
             slot.AddItem(item, 1, null);
         }
     }

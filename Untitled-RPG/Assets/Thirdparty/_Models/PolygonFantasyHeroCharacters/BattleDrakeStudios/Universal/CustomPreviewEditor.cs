@@ -107,7 +107,7 @@ namespace BattleDrakeStudios.Utilities {
 
                 _previewUtil.camera.transform.position = Vector2.zero;
 
-                _previewUtil.camera.transform.position = _previewUtil.camera.transform.forward * -6f;
+                _previewUtil.camera.transform.position = _previewUtil.camera.transform.forward * -4f;
 
                 _previewUtil.cameraFieldOfView = _previewUtil.cameraFieldOfView + _scrollDelta;
                 _scrollDelta = 0;

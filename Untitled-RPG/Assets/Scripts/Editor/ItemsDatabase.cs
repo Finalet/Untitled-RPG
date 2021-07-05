@@ -13,6 +13,7 @@ public class ItemsDatabase : EditorWindow
 
     bool showAllWeapons;
     bool showSwords;
+    bool showAxes;
     bool showStaffs;
     bool showBows;
     bool showShields;
@@ -107,6 +108,11 @@ public class ItemsDatabase : EditorWindow
                 }
                 changingSelectedItemName = !changingSelectedItemName;
             }
+            if (changingSelectedItemName && (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)){
+                string assetPath =  AssetDatabase.GetAssetPath(selectedItem.GetInstanceID());
+                AssetDatabase.RenameAsset(assetPath, selectedItem.name);
+                changingSelectedItemName = false;
+            }
             
             EditorGUILayout.EndHorizontal();
 
@@ -148,8 +154,10 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.LabelField(item.itemBasePrice.ToString(), GUILayout.Width(100 + EditorGUI.indentLevel * 8));
             DrawAdditionalFields(item);
             EditorGUI.BeginDisabledGroup(true); EditorGUILayout.ObjectField("", item, typeof(Item), false, GUILayout.Width(100)); EditorGUI.EndDisabledGroup();
-            if (GUILayout.Button("Open", GUILayout.Width(70)))
+            if (GUILayout.Button("Open", GUILayout.Width(70))) {
                 selectedItem = item;
+                GUI.FocusControl(null);
+            }
             if (GUILayout.Button("-", GUILayout.Width(15))){
                 DeleteItem(list, item);
                 return;
@@ -264,6 +272,7 @@ public class ItemsDatabase : EditorWindow
         List<Item> Staffs = new List<Item>();
         List<Item> Bows = new List<Item>();
         List<Item> Shields = new List<Item>();
+        List<Item> Axes = new List<Item>();
 
         Weapon w;
         foreach (Item item in ah.weapons){
@@ -281,6 +290,9 @@ public class ItemsDatabase : EditorWindow
                 case WeaponCategory.Shield:
                     Shields.Add(w);
                     break;
+                case WeaponCategory.Axe:
+                    Axes.Add(w);
+                    break;
             }
         }
 
@@ -297,6 +309,11 @@ public class ItemsDatabase : EditorWindow
         showSwords = EditorGUILayout.Foldout(showSwords, "Swords");
         if (showSwords) {
             DrawList(Swords, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showAxes = EditorGUILayout.Foldout(showAxes, "Axes");
+        if (showAxes) {
+            DrawList(Axes, true);
         }
         EditorGUI.indentLevel = 1;
         showStaffs = EditorGUILayout.Foldout(showStaffs, "Staffs");
@@ -359,7 +376,7 @@ public class ItemsDatabase : EditorWindow
             selectedItem = w;
         } else if (list == ah.armor) {
             Armor a = ScriptableObject.CreateInstance<Armor>();
-            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Armor/New Armor.asset");
+            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Armor/AR_New Armor.asset");
             AssetDatabase.CreateAsset(a, name);
             a.ID = list[list.Count-1].ID + 1;
             a.itemName = "New Armor";
@@ -386,7 +403,7 @@ public class ItemsDatabase : EditorWindow
             if (list != ah.armor && list[0] is Armor) {
                 Armor existingArmor = (Armor)list[0];
                 Armor a = ScriptableObject.CreateInstance<Armor>();
-                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Armor/New {existingArmor.armorType}.asset");
+                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Armor/AR_New {existingArmor.armorType}.asset");
                 AssetDatabase.CreateAsset(a, name);
                 a.ID = list[list.Count-1].ID + 1;
                 a.itemName = $"New {existingArmor.armorType}";
@@ -399,7 +416,7 @@ public class ItemsDatabase : EditorWindow
             if (list != ah.weapons && list[0] is Weapon) {
                 Weapon existingWeapon = (Weapon)list[0];
                 Weapon w = ScriptableObject.CreateInstance<Weapon>();
-                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Weapons/New {existingWeapon.weaponCategory}.asset");
+                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Weapons/WP_New {existingWeapon.weaponCategory}.asset");
                 AssetDatabase.CreateAsset(w, name);
                 w.ID = list[list.Count-1].ID + 1;
                 w.itemName = $"New {existingWeapon.weaponCategory}";
@@ -408,6 +425,8 @@ public class ItemsDatabase : EditorWindow
                 selectedItem = w;
             }
         }
+
+        ah.SortAllByID();
     }
 
     void DeleteItem (List<Item> list, Item itemToDelete) {

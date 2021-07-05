@@ -71,7 +71,7 @@ public static class UI_General
                     hand = "One handed";
                     break;
                 case WeaponHand.TwoHanded:
-                    hand = "One handed";
+                    hand = "Two handed";
                     break;
                 case WeaponHand.BowHand:
                     hand = "";

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingsManager : MonoBehaviour
+public class SettingsManager : MonoBehaviour, ISavable
 {
     public static SettingsManager instance;
 
@@ -24,13 +24,13 @@ public class SettingsManager : MonoBehaviour
     public Toggle displayCapeToggle;
     public Toggle displayCapeToggleInSlot;
 
-    public SettingsManager() {
-        instance = this;
-    }
-
     void Start() {
         LoadSettings();
         UpdateSettingsUI();
+    }
+
+    public SettingsManager() {
+        instance = this;
     }
 
     public void SaveSettings () {
@@ -38,6 +38,8 @@ public class SettingsManager : MonoBehaviour
         ES3.Save<bool>("invertY", invertY, savefilePath);
         ES3.Save<bool>("displayHelmet", displayHelmet, savefilePath);
         ES3.Save<bool>("displayCape", displayCape, savefilePath);
+        
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 
     public void LoadSettings () {
@@ -91,7 +93,7 @@ public class SettingsManager : MonoBehaviour
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 
-    void UpdateSettingsUI () {
+    public void UpdateSettingsUI () {
         mouseSensitivitySlider.value = mouseSensitivity;
         mouseSensitivityText.text = mouseSensitivity.ToString();
         invertYToggle.isOn = invertY;
@@ -101,4 +103,22 @@ public class SettingsManager : MonoBehaviour
         if (displayHelmetToggleInSlot != null) displayHelmetToggleInSlot.isOn = displayHelmet;
         if (displayCapeToggleInSlot != null) displayCapeToggleInSlot.isOn = displayCape;
     }
+
+#region ISavable
+    //We add it to savables list from PeaceCanvas, because this object is disabled
+    public LoadPriority loadPriority {
+        get {
+            return LoadPriority.Last;
+        }
+    }
+
+    public void Save(){
+        //Don't do anything on general game save since we save settings manually when closing the settings window
+    }
+    public void Load() {
+        LoadSettings();
+        UpdateSettingsUI();
+    }
+
+#endregion
 }

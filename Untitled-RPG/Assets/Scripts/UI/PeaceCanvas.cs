@@ -73,6 +73,8 @@ public class PeaceCanvas : MonoBehaviour
 
     void Start() {
         nameLabel.text = Characteristics.instance.playerName;
+
+        SaveManager.instance.saveObjects.Add(settingsView.GetComponent<SettingsManager>());
     }
 
     void Update() {
@@ -101,7 +103,8 @@ public class PeaceCanvas : MonoBehaviour
 
         if (Input.GetKeyDown(KeybindsManager.instance.damageChat)) {
             DebugChatPanel.SetActive(!DebugChatPanel.activeInHierarchy);
-        } else if (Input.GetKeyDown(KeybindsManager.instance.tooManyItems) && Inventory.activeInHierarchy) {
+        } else if (Input.GetKeyDown(KeybindsManager.instance.tooManyItems)) {
+            if (!Inventory.activeInHierarchy) OpenInventory();
             DebugTooManyItems.SetActive(!DebugTooManyItems.activeInHierarchy);
         } else if (Input.GetKeyDown(KeybindsManager.instance.hideUI)) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);

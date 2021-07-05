@@ -9,6 +9,15 @@ public class UI_EquipmentSlot : UI_InventorySlot
 {
     [Header("Equipment slot")]
     public EquipmentSlotType equipmentSlotType;
+    Image equipmentIcon;
+
+    Color baseColor;
+    Color transparentColor = new Color(0,0,0,0);
+
+     void Awake() {
+        equipmentIcon = GetComponent<Image>();
+        baseColor = equipmentIcon.color;
+    }
 
     protected override string savefilePath() {
         return "saves/equipmentSlots.txt";
@@ -55,6 +64,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
     protected override void DisplayItem() {
         slotIcon.sprite = itemInSlot.itemIcon;
         slotIcon.color = Color.white;
+        equipmentIcon.color = transparentColor;
     }
 
     void SharedAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -189,8 +199,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
             return;
         }
 
-        EquipmentManager.instance.EquipArmorVisual(ar);
         SharedAdd(item, amount, initialSlot);
+        EquipmentManager.instance.EquipArmorVisual(ar);
     }
 
     void NecklaceAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -249,6 +259,10 @@ public class UI_EquipmentSlot : UI_InventorySlot
                 Combat.instanace.ValidateSkillSlots();
             }
         }
+
+        if (equipmentIcon == null) equipmentIcon = GetComponent<Image>();
+        if (baseColor == transparentColor) baseColor = equipmentIcon.color;
+        equipmentIcon.color = baseColor;
 
         base.ClearSlot();
     }
