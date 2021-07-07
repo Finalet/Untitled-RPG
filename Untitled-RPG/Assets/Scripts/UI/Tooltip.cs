@@ -152,6 +152,8 @@ public class Tooltip : MonoBehaviour
         } else if (item is Skillbook) {
             Skillbook sb = (Skillbook)item;
             stats = Combat.instanace.learnedSkills.Contains(AssetHolder.instance.getSkill(sb.learnedSkill.ID)) ? "<color=red>You already know this skill" : "";
+        } else if (item is Resource) {
+            // do nothing;
         } else {
             stats = "NOT IMPLEMENTED";
         }

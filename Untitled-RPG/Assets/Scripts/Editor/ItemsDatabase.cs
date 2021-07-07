@@ -10,6 +10,7 @@ public class ItemsDatabase : EditorWindow
     bool showArmor;
     bool showSkillbooks;
     bool showConsumables;
+    bool showResources;
 
     bool showAllWeapons;
     bool showSwords;
@@ -28,6 +29,11 @@ public class ItemsDatabase : EditorWindow
     bool showNecklaces;
     bool showRings;
 
+    bool showAllResources;
+    bool showCraftingResources;
+    bool showQuestItems;
+    bool showMisc;
+
     Vector2 scrollPos;
     Vector2 scrollPosSelection;
     Item selectedItem;
@@ -43,11 +49,11 @@ public class ItemsDatabase : EditorWindow
 
     public void OnGUI()
     {
-        if (GameObject.Find("AssetHolder") == null) {
+        if (GameObject.Find("Managers") == null) {
             EditorGUILayout.LabelField("Asset Holder not found in the scene.");
             return;
         }
-        AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
+        AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         
         EditorGUILayout.BeginHorizontal();
 
@@ -81,6 +87,13 @@ public class ItemsDatabase : EditorWindow
         showConsumables = EditorGUILayout.Foldout(showConsumables, "Consumable");
         if (showConsumables) {
             DrawList(ah.consumables);
+            EditorGUILayout.Space(5, false);
+        }
+
+        EditorGUI.indentLevel = 0;
+        showResources = EditorGUILayout.Foldout(showResources, "Resources");
+        if (showResources) {
+            DrawResourcesList(ah);
             EditorGUILayout.Space(5, false);
         }
         
@@ -332,8 +345,55 @@ public class ItemsDatabase : EditorWindow
         }
     }
 
+    void DrawResourcesList (AssetHolder ah) {
+        List<Item> CraftingResources = new List<Item>();
+        List<Item> QuestItems = new List<Item>();
+        List<Item> Misc = new List<Item>();
+
+        Resource r;
+        foreach (Item item in ah.resources){
+            r = (Resource)item;
+            switch (r.resourceType) {
+                case ResourceType.CraftingResource:
+                    CraftingResources.Add(r);
+                    break;
+                case ResourceType.QuestItem:
+                    QuestItems.Add(r);
+                    break;
+                case ResourceType.Misc:
+                    Misc.Add(r);
+                    break;
+            }
+        }
+
+        EditorGUI.indentLevel = 2;
+        DrawTitles(ah.resources);
+        
+        EditorGUI.indentLevel = 1;
+        showAllResources = EditorGUILayout.Foldout(showAllResources, "All resources");
+        if(showAllResources) {
+            DrawList(ah.resources, true);
+        }
+
+        EditorGUI.indentLevel = 1;
+        showCraftingResources = EditorGUILayout.Foldout(showCraftingResources, "Crafting resources");
+        if (showCraftingResources) {
+            DrawList(CraftingResources, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showQuestItems = EditorGUILayout.Foldout(showQuestItems, "Quest items");
+        if (showQuestItems) {
+            DrawList(QuestItems, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showMisc = EditorGUILayout.Foldout(showMisc, "Misc");
+        if (showMisc) {
+            DrawList(Misc, true);
+        }
+    }
+
     void DrawAdditionalFieldsTitles (List<Item> list) {
-        AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
+        AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         
         if (list[0] is Weapon) {
             EditorGUILayout.LabelField("Category", EditorStyles.boldLabel, GUILayout.Width(100));
@@ -344,6 +404,8 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.LabelField("Skill tree", EditorStyles.boldLabel, GUILayout.Width(150));
         } else if (list[0] is Consumable) {
             EditorGUILayout.LabelField("Consumable type", EditorStyles.boldLabel, GUILayout.Width(150));
+        } else if (list[0] is Resource) {
+            EditorGUILayout.LabelField("Resource type", EditorStyles.boldLabel, GUILayout.Width(150));
         }
     }
     void DrawAdditionalFields (Item item) {
@@ -360,11 +422,14 @@ public class ItemsDatabase : EditorWindow
         } else if (item is Skillbook) {
             Skillbook s = (Skillbook)item;
             EditorGUILayout.LabelField(s.learnedSkill != null ? s.learnedSkill.skillTree.ToString() : "No skills assigned", GUILayout.Width(150));
+        } else if (item is Resource) {
+            Resource r = (Resource)item;
+            EditorGUILayout.LabelField(r.resourceType.ToString(), GUILayout.Width(150));
         }
     }
 
     void AddNewItem (List<Item> list) {
-        AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
+        AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         
         if (list == ah.weapons) {
             Weapon w = ScriptableObject.CreateInstance<Weapon>();
@@ -384,7 +449,7 @@ public class ItemsDatabase : EditorWindow
             selectedItem = a;
         } else if (list == ah.skillbooks) {
             Skillbook s = ScriptableObject.CreateInstance<Skillbook>();
-            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Skillbooks/New Skillbook.asset");
+            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Skillbooks/SB_New Skillbook.asset");
             AssetDatabase.CreateAsset(s, name);
             s.ID = list[list.Count-1].ID + 1;
             s.itemName = "New Skillbook";
@@ -392,12 +457,20 @@ public class ItemsDatabase : EditorWindow
             selectedItem = s;
         } else if (list == ah.consumables) {
             Consumable c = ScriptableObject.CreateInstance<Consumable>();
-            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Consumables/New Consumable.asset");
+            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Consumables/CM_New Consumable.asset");
             AssetDatabase.CreateAsset(c, name);
             c.ID = list[list.Count-1].ID + 1;
             c.itemName = "New Consumable";
             ah.consumables.Add(c);
             selectedItem = c;
+        } else if (list == ah.resources) {
+            Resource r = ScriptableObject.CreateInstance<Resource>();
+            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Resources/RE_New Resource.asset");
+            AssetDatabase.CreateAsset(r, name);
+            r.ID = list[list.Count-1].ID + 1;
+            r.itemName = "New Resource";
+            ah.resources.Add(r);
+            selectedItem = r;
         } else {
             //-------------Different types of Armor-------------//
             if (list != ah.armor && list[0] is Armor) {
@@ -424,13 +497,26 @@ public class ItemsDatabase : EditorWindow
                 ah.weapons.Add(w);
                 selectedItem = w;
             }
+
+            //-------------Different types of Resources-------------//
+            if (list != ah.resources && list[0] is Resource) {
+                Resource existingResource = (Resource)list[0];
+                Resource r = ScriptableObject.CreateInstance<Resource>();
+                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Weapons/RE_New {existingResource.resourceType}.asset");
+                AssetDatabase.CreateAsset(r, name);
+                r.ID = list[list.Count-1].ID + 1;
+                r.itemName = $"New {existingResource.resourceType}";
+                r.resourceType = existingResource.resourceType;
+                ah.resources.Add(r);
+                selectedItem = r;
+            }
         }
 
         ah.SortAllByID();
     }
 
     void DeleteItem (List<Item> list, Item itemToDelete) {
-        AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
+        AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         
         if (EditorUtility.DisplayDialog($"Delete {itemToDelete.name}?", $"Are you sure you want to delete {itemToDelete.name}? This action is irreversable.", "Delete", "Cancel")) {          
             string folder = "";
@@ -447,11 +533,26 @@ public class ItemsDatabase : EditorWindow
             } else if (list == ah.consumables) {
                 folder = "Consumables";
                 ah.consumables.Remove(itemToDelete);
+            } else if (list == ah.resources) {
+                folder = "Resources";
+                ah.resources.Remove(itemToDelete);
             } else {
                 //-------------Different types of Armor-------------//
                 if (list != ah.armor && list[0] is Armor) {
                     folder = "Armor";
                     ah.armor.Remove(itemToDelete);
+                }
+
+                //-------------Different types of Weapons-------------//
+                if (list != ah.weapons && list[0] is Weapon) {
+                    folder = "Weapons";
+                    ah.weapons.Remove(itemToDelete);
+                }
+
+                //-------------Different types of Resources-------------//
+                if (list != ah.resources && list[0] is Resource) {
+                    folder = "Resources";
+                    ah.resources.Remove(itemToDelete);
                 }
             }
             AssetDatabase.DeleteAsset($"Assets/Items/{folder}/{itemToDelete.name}.asset");

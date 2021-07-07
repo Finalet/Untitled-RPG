@@ -60,7 +60,7 @@ public class CaptainThrow : Skill
     float damage () {
         Weapon equipedShield = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
         if (equipedShield == null) return 0;
-        return equipedShield.Defense * 1.5f;
+        return equipedShield.Defense * 2f;
     }
 
     public override string getDescription()

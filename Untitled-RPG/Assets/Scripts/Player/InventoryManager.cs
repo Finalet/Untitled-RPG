@@ -17,14 +17,13 @@ public class InventoryManager : MonoBehaviour, ISavable
     [Space]
     public GameObject slots;
     public GameObject quickAccessSlots;
+
     UI_InventorySlot[] allSlots;
     UI_QuickAccessSlot[] allQuickAccessSlots;
 
-    //DEBUG 
-    int itemAmountToAdd = 1;
-    Item itemToAdd;
-    
     string savefilePath = "saves/currency.txt";
+    float lootPickupDelay = 0.5f;
+    float lootPickupTime;
 
     void Awake() {
         if (instance == null)
@@ -39,9 +38,6 @@ public class InventoryManager : MonoBehaviour, ISavable
     }
 
     void Update() {
-        if (itemToAdd is Equipment)
-            itemAmountToAdd = 1;
-
         currentGoldLabel.text = currentGold.ToString();
         currentGoldLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentGoldLabel.GetComponent<TextMeshProUGUI>().textBounds.size.x, 20);
     }
@@ -156,6 +152,28 @@ public class InventoryManager : MonoBehaviour, ISavable
         }
 
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
+    }
+
+    public void PickupLoot (LootItem itemToPickup) {
+        if (Time.time - lootPickupTime < lootPickupDelay)
+            return;
+
+        if (itemToPickup.item != null) {
+            if (getNumberOfEmptySlots() == 0) {
+                CanvasScript.instance.DisplayWarning("Inventory is full");
+                return;
+            }
+            AddItemToInventory(itemToPickup.item, itemToPickup.itemAmount, null);
+            PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.LootPickup);
+        } else {
+            AddGold(itemToPickup.itemAmount);
+            PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.LootGoldPickup);
+        }
+        PlayerControlls.instance.PlayGeneralAnimation(1);
+        LootNotificationManager.instance.ShowLootNotification(itemToPickup);
+        PeaceCanvas.instance.HideKeySuggestion();
+        Destroy(itemToPickup.gameObject);
+        lootPickupTime = Time.time;
     }
 #region  ISavable
 

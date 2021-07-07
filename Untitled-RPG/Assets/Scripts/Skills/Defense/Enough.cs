@@ -13,13 +13,11 @@ public class Enough : Skill
     List<Enemy> enemiesInRadius = new List<Enemy>();
     protected override void CustomUse() {
         animator.CrossFade("Attacks.Defense.Enough start", 0.25f);
-        PlaySound(sfx, 0, 0.7f * PlayerControlls.instance.GetComponent<Characteristics>().attackSpeed.y);
+        PlaySound(sfx, 0, 0.7f * characteristics.attackSpeed.y);
+        Invoke("PushAway", 0.5f * characteristics.attackSpeed.y);
     }
 
     public void PushAway () {
-        if (!isCoolingDown) //cause currently it shares animation with other buff which trigger animation event
-            return;
-
         vfx.Play();
 
         enemiesInRadius.Clear();

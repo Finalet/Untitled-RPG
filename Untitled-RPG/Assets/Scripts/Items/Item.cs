@@ -17,7 +17,7 @@ public abstract class Item : ScriptableObject
     public bool isStackable;
     public int maxStackAmount = 100;
     public Sprite itemIcon;
-    public GameObject itemPrefab;
+    public GameObject lootPrefab;
     
     [Header("Crafting")]
     public bool isCraftable;

@@ -13,6 +13,7 @@ public class RagdollController : MonoBehaviour
 
     Rigidbody rb;
 	Vector3 deltaPosWhenRagdoll;
+	[System.NonSerialized] public bool blockStopRagdoll;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -38,6 +39,9 @@ public class RagdollController : MonoBehaviour
 
 
     public void StopRagdoll () {
+		if (blockStopRagdoll)
+			return;
+
         ragdolled = false;
     }
 

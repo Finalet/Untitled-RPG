@@ -6,9 +6,10 @@ using UnityEngine.AI;
 public enum EnemyState {Idle, Approaching, Attacking, Returning};
  
 [System.Serializable] public struct Loot {
-    public Item lootItem;
-    public int lootItemAmount;
-    [Range(0,1)] public float dropProbability;
+    public Item item;
+    public int amount;
+    [Range(0,1)] public float probability;
+    [Range(0,1)] public float amountVariability;
 }
 
 [RequireComponent(typeof (FieldOfView))]
@@ -226,17 +227,22 @@ public abstract class Enemy : MonoBehaviour
         StartCoroutine(die());
         DropLoot();
         if (navAgent != null && navAgent.enabled) navAgent.enabled = false;
-        if (ragdollController != null) ragdollController.EnableRagdoll();
+        if (ragdollController != null) {
+            ragdollController.EnableRagdoll();
+            ragdollController.blockStopRagdoll = true;  
+        }
     }
 
     protected virtual void DropLoot () {
         for (int i = 0; i < itemsLoot.Length; i++) {
-            if (Random.value < itemsLoot[i].dropProbability) {
-                AssetHolder.instance.DropItem(itemsLoot[i].lootItem, itemsLoot[i].lootItemAmount, transform.position);
+            if (Random.value < itemsLoot[i].probability) {
+                float dropAmount = Random.Range(itemsLoot[i].amount * (1-itemsLoot[i].amountVariability), itemsLoot[i].amount * (1+itemsLoot[i].amountVariability));
+                if (dropAmount <= 0) continue;
+                LootManager.instance.DropItem(itemsLoot[i].item, Mathf.RoundToInt(dropAmount), transform.position);
             }
         }
         if (goldLootAmount > 0) {
-            AssetHolder.instance.DropGold(goldLootAmount, transform.position);
+            LootManager.instance.DropGold(goldLootAmount, transform.position);
         }
     }
 

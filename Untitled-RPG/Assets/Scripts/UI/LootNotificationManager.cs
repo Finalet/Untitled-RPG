@@ -23,7 +23,7 @@ public class LootNotificationManager : MonoBehaviour
     }
 
     public void ShowLootNotification (LootItem lootItem) {
-        if (lootItem.isGold)
+        if (lootItem.item == null)
             return;
 
         GameObject go = Instantiate(lootNotificationUIPrefab, transform);

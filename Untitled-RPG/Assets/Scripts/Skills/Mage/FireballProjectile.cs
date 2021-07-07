@@ -74,6 +74,9 @@ public class FireballProjectile : MonoBehaviour
     }
 
     void Explode () {
+        if (explosionExpand)
+            return;
+
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f, 0.1f, transform.position);
         explostionSparks.Play();
         GetComponent<AudioSource>().Play(); 

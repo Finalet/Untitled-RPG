@@ -9,19 +9,13 @@ public class Hardening : Skill
     public Buff buff;
     
     protected override void CustomUse() {
-        StartCoroutine(Using());
-
         buff.icon = icon;
         buff.associatedSkill = this;
         buff.healthBuff = characteristics.maxHealth;
-    }
 
-    IEnumerator Using () {
-        animator.CrossFade("Attacks.Defense.Hardening start", 0.25f);
-        yield return new WaitForSeconds(0.33f * (PlayerControlls.instance.GetComponent<Characteristics>().attackSpeed.y));
-        audioSource.Play();
         VFX.Play();
-
+        animator.CrossFade("Attacks.Defense.Hardening", 0.25f);
+        audioSource.Play();
         playerControlls.isAttacking = false;
         characteristics.AddBuff(buff);
     }

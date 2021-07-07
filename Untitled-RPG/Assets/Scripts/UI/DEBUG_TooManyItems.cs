@@ -13,6 +13,7 @@ public class DEBUG_TooManyItems : MonoBehaviour
     public Transform armorGrid;
     public Transform skillbooksGrid;
     public Transform consumablesGrid;
+    public Transform resourcesGrid;
 
     void Start() {
         transform.SetAsLastSibling();
@@ -22,6 +23,7 @@ public class DEBUG_TooManyItems : MonoBehaviour
         allItems.AddRange(AssetHolder.instance.armor);
         allItems.AddRange(AssetHolder.instance.skillbooks);
         allItems.AddRange(AssetHolder.instance.consumables);
+        allItems.AddRange(AssetHolder.instance.resources);
 
         foreach (Item item in allItems) {
             DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, allGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
@@ -43,6 +45,10 @@ public class DEBUG_TooManyItems : MonoBehaviour
             DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, consumablesGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
             slot.AddItem(item, 1, null);
         }
+        foreach (Item item in AssetHolder.instance.resources) {
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, resourcesGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            slot.AddItem(item, 1, null);
+        }
     }
 
     void Update() {
@@ -55,22 +61,11 @@ public class DEBUG_TooManyItems : MonoBehaviour
         goldAmounInputField.text = "";
     }
 
-    public void AutoFillInventory () {
-        foreach (Item item in AssetHolder.instance.weapons)
-            InventoryManager.instance.AddItemToInventory(item, 1, null);
-        
-        foreach (Item item in AssetHolder.instance.armor)
-            InventoryManager.instance.AddItemToInventory(item, 1, null);
-        
-        foreach (Item item in AssetHolder.instance.consumables)
-            InventoryManager.instance.AddItemToInventory(item, 50, null);
-        
+    public void LearnAllSkills () {
         foreach (Skill skill in AssetHolder.instance.Skills){
             if (skill.skillTree == SkillTree.Independent)
                 continue;
             Combat.instanace.LearnSkill(skill);
         }
-
-        InventoryManager.instance.AddGold(50000);
     }
 }

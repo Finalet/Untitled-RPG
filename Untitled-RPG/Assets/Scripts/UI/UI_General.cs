@@ -86,6 +86,13 @@ public static class UI_General
             return w.armorType.ToString();
         } else if (item is Skillbook) {
             return "Skillbook";
+        } else if (item is Resource) {
+            Resource r = (Resource)item;
+            switch (r.resourceType) {
+                case ResourceType.CraftingResource: return "Crafting resource";
+                case ResourceType.QuestItem: return "Quest item";
+                case ResourceType.Misc: return "Misc";
+            }
         }
         return $"NOT IMPLEMENTED";
     }

@@ -27,11 +27,11 @@ public class SkillsDatabase : EditorWindow
     }
 
     public void OnGUI() {
-        if (GameObject.Find("AssetHolder") == null) {
+        if (GameObject.Find("Managers") == null) {
             EditorGUILayout.LabelField("Asset Holder not found in the scene.");
             return;
         }
-        AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
+        AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
 
         EditorGUILayout.BeginHorizontal();
         
@@ -125,12 +125,12 @@ public class SkillsDatabase : EditorWindow
     }
 
     void DrawSkills () {
-        AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
+        AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         DrawList(new List<Skill>(ah.Skills));
     }
 
     void DrawSkills (SkillTree skillTree) {
-        AssetHolder ah = GameObject.Find("AssetHolder").GetComponent<AssetHolder>();
+        AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         List<Skill> skillsToDraw = new List<Skill>();
         
         foreach (Skill skill in ah.Skills) {
