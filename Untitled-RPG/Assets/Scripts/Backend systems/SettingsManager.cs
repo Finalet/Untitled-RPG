@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SettingsManager : MonoBehaviour, ISavable
 {
@@ -17,7 +18,7 @@ public class SettingsManager : MonoBehaviour, ISavable
 
     [Space]
     public Slider mouseSensitivitySlider;
-    public Text mouseSensitivityText;
+    public TextMeshProUGUI mouseSensitivityValue;
     public Toggle invertYToggle;
     public Toggle displayHelmetToggle;
     public Toggle displayHelmetToggleInSlot;
@@ -51,7 +52,7 @@ public class SettingsManager : MonoBehaviour, ISavable
 
     public void SetMouseSensitivity() {
         mouseSensitivity = mouseSensitivitySlider.value;
-        mouseSensitivityText.text = mouseSensitivity.ToString();
+        mouseSensitivityValue.text = mouseSensitivity.ToString();
     
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
@@ -97,7 +98,7 @@ public class SettingsManager : MonoBehaviour, ISavable
 
     public void UpdateSettingsUI () {
         mouseSensitivitySlider.value = mouseSensitivity;
-        mouseSensitivityText.text = mouseSensitivity.ToString();
+        mouseSensitivityValue.text = mouseSensitivity.ToString();
         invertYToggle.isOn = invertY;
         displayHelmetToggle.isOn = displayHelmet;
         displayCapeToggle.isOn = displayCape;

@@ -170,9 +170,9 @@ public class Characteristics : MonoBehaviour
         }
     }
     
-    void DisplayDamageNumber(string text) {
+    void DisplayDamageNumber(string text, DamageTextColor dtc = DamageTextColor.Regular) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
-        ddText.GetComponent<ddText>().Init(text);
+        ddText.GetComponent<ddText>().Init(text, dtc);
     }
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
@@ -180,11 +180,11 @@ public class Characteristics : MonoBehaviour
     }
     void DisplayHealNumber(int healAmount) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 2f, Quaternion.identity);
-        ddText.GetComponent<ddText>().Init(healAmount);
+        ddText.GetComponent<ddText>().Init(healAmount, DamageTextColor.Green);
     }
     void DisplayStaminaNumber(int staminaAmount) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 2f, Quaternion.identity);
-        ddText.GetComponent<ddText>().Init(staminaAmount, true);
+        ddText.GetComponent<ddText>().Init(staminaAmount, DamageTextColor.Cyan);
     }
 
     public void UseOrRestoreStamina (int amount) {
@@ -303,10 +303,10 @@ public class Characteristics : MonoBehaviour
         int actualDamage = immuneToDamage || blocked ? 0 : Mathf.RoundToInt( damage * defenseCoeff() ); 
         health -= actualDamage;
         if (blocked) {
-            DisplayDamageNumber("Blocked");
+            DisplayDamageNumber("Blocked", DamageTextColor.White);
             PlayerAudioController.instance.PlayGetHitSound(GetHitType.Block);
         } else if (immuneToDamage) {
-            DisplayDamageNumber("Invincible");
+            DisplayDamageNumber("Invincible", DamageTextColor.LightBlue);
             PlayerAudioController.instance.PlayGetHitSound(GetHitType.Invincibility);
         } else {
             DisplayDamageNumber(actualDamage);

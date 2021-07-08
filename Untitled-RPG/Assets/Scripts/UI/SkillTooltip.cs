@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SkillTooltip : MonoBehaviour
 {
     public Skill focusSkill;
     [Space]
     public Image skillIcon;
-    public Text skillName;
-    public Text skillTree;
-    public Text skillDescription;
-    public Text skillStats;
+    public TextMeshProUGUI skillName;
+    public TextMeshProUGUI skillTree;
+    public TextMeshProUGUI skillDescription;
+    public TextMeshProUGUI skillStats;
 
     void Update() {
         if (!PeaceCanvas.instance.anyPanelOpen)

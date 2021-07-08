@@ -68,10 +68,10 @@ public static class UI_General
             string hand ="";
             switch (w.weaponHand) {
                 case WeaponHand.OneHanded:
-                    hand = "One handed";
+                    hand = "One handed ";
                     break;
                 case WeaponHand.TwoHanded:
-                    hand = "Two handed";
+                    hand = "Two handed ";
                     break;
                 case WeaponHand.BowHand:
                     hand = "";
@@ -80,7 +80,7 @@ public static class UI_General
                     hand = "";
                     break;
             }
-            return $"{hand} {w.weaponCategory}";
+            return $"{hand}{w.weaponCategory}";
         } else if (item is Armor) {
             Armor w = (Armor)item;
             return w.armorType.ToString();
