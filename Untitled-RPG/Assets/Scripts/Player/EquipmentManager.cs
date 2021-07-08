@@ -40,6 +40,11 @@ public class EquipmentManager : MonoBehaviour, ISavable
     public Buff epicSetBuff;
     public Buff legendarySetBuff;
     public Buff relicSetBuff;
+    [Header("Weapons buffs")]
+    public Buff shieldBuff;
+    public Buff dualHandsBuff;
+    public Buff TwoHandedSwordBuff;
+    public Buff TwoHandedStaffBuff;
 
     [Header("Misc")]
     public TailAnimator2 capeBoneTail;
@@ -110,7 +115,7 @@ public class EquipmentManager : MonoBehaviour, ISavable
         if (secondRing.itemInSlot != null) AddStats((Equipment)secondRing.itemInSlot);
         //ADD ALL OTHER ITEMS
 
-        CalculateSetRarityBuffs();
+        CalculateEquipmentBuffs();
     }
 
     void AddStats (Equipment item) {
@@ -130,6 +135,9 @@ public class EquipmentManager : MonoBehaviour, ISavable
 
         characteristics.attackSpeedFromEquip.y *= (1+item.attackSpeed); 
         characteristics.castingSpeedFromEquip.y *= (1+item.castingTime);
+
+        characteristics.critChanceFromEquip += item.critChance;
+        characteristics.blockChanceFromEquip += item.blockChance;
     }
 
     void ResetStats () {
@@ -146,6 +154,9 @@ public class EquipmentManager : MonoBehaviour, ISavable
 
         characteristics.attackSpeedFromEquip = Vector2.one;
         characteristics.castingSpeedFromEquip = Vector2.one;
+
+        characteristics.critChanceFromEquip = 0;
+        characteristics.blockChanceFromEquip = 0;
     }
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
@@ -405,7 +416,7 @@ public class EquipmentManager : MonoBehaviour, ISavable
         return equiped;
     }
 
-    void CalculateSetRarityBuffs (){
+    void CalculateEquipmentBuffs (){
         int numberOfCommonArmor = 0;
         int numberOfUncommonArmor = 0;
         int numberOfRareArmor = 0;

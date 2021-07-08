@@ -311,6 +311,9 @@ public class PeaceCanvas : MonoBehaviour
         statsLabel.text += "\n";
         statsLabel.text += $"Casting speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.castingSpeed.y*1000f)/10f}%</color>\n";
         statsLabel.text += $"Attack speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.attackSpeed.y*1000f)/10f}%</color>\n";
+        statsLabel.text += "\n";
+        statsLabel.text += $"Critical chance: <color={highlightColor}>{Mathf.Round(Characteristics.instance.critChance*1000f)/10f}%</color>\n";
+        statsLabel.text += $"Block chance: <color={highlightColor}>{Mathf.Round(Characteristics.instance.blockChance*1000f)/10f}%</color>\n";
     }
 
     public void ShowKeySuggestion (string key, string action) {

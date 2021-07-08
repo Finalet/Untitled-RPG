@@ -23,6 +23,9 @@ public class Equipment : Item
     [Header("Thirdary Stats")]
     public float castingTime;
     public float attackSpeed;
+    [Header("Misc")]
+    public float critChance;
+    public float blockChance;
     [Space]
     public Skill grantedSkill;
 
@@ -47,14 +50,16 @@ public class Equipment : Item
         float healthStaminaValue = 5;
         float statsValue = 50;
         float speedStatsValue = -100000;
-        float grantedSkillValue = 10000;
-        float rarityValue = 3000;
+        float critBlockValue = 100000;
+        float grantedSkillValue = 5000;
+        float rarityValue = 2000;
 
         float value = 0;
         value += attacksValue * (MeleeAttack + RangedAttack + MagicPower + HealingPower + Defense);
         value += healthStaminaValue * (Health + Stamina);
         value += statsValue * (strength + agility + intellect);
         value += speedStatsValue * (castingTime + attackSpeed);
+        value += critBlockValue  * (critChance + blockChance);
         value += grantedSkill == null ? 0 : grantedSkillValue;
         value += rarityValue * (int)itemRarity;
         

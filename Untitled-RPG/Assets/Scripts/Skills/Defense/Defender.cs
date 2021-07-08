@@ -27,6 +27,6 @@ public class Defender : Skill
     }
 
     public override string getDescription() {
-        return $"Increase your defense by {buff.defenseBuff*100}% for {Mathf.RoundToInt(buff.duration/60)} minutes.";
+        return $"Increase your defense and block chance by {buff.defenseBuff*100}% for {Mathf.RoundToInt(buff.duration/60)} minutes.\n\nBlocking requires a shield.";
     }
 }

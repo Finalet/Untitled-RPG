@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum GroundType {Grass, Stone};
+public enum GetHitType {Hit, Block, Invincibility};
 
 public class PlayerAudioController : MonoBehaviour
 {
@@ -18,10 +19,12 @@ public class PlayerAudioController : MonoBehaviour
     [Header("Footsteps")]
     public AudioClip[] walkFootstepsGrass;
     public AudioClip[] runFootstepsGrass;
-
-    [Header("Voices")]
+    [Space]
     public AudioClip[] jumpingRollingGunts;
+    [Header("GetHit")]
     public AudioClip[] getHit;
+    public AudioClip[] blockSounds;
+    public AudioClip[] invincibilitySounds;
     [Header("Loot")]
     public AudioClip LootPickup;
     public AudioClip LootGoldPickup;
@@ -118,19 +121,24 @@ public class PlayerAudioController : MonoBehaviour
     }
 
     public void PlayJumpRollSound () {
-        int playID = Random.Range(0, jumpingRollingGunts.Length);
-        audioSource.clip = jumpingRollingGunts[playID];
+        audioSource.clip = jumpingRollingGunts[Random.Range(0, jumpingRollingGunts.Length)];
         audioSource.time = 0;
         audioSource.pitch = 1;
         audioSource.Play();
     }
 
-    public void PlayGetHitSound () {
-        int playID = Random.Range(0, getHit.Length);
-        audioSource.clip = getHit[playID];
+    public void PlayGetHitSound (GetHitType getHitType) {
         audioSource.time = 0;
         audioSource.pitch = 1;
-        audioSource.Play();
+        switch (getHitType) {
+            case GetHitType.Hit: audioSource.clip = getHit[Random.Range(0, getHit.Length)];
+                audioSource.Play();
+                break;
+            case GetHitType.Block: audioSource.PlayOneShot(blockSounds[Random.Range(0, blockSounds.Length)]);
+                break;
+            case GetHitType.Invincibility: audioSource.PlayOneShot(invincibilitySounds[Random.Range(0, invincibilitySounds.Length)]);
+                break;
+        }
     }
 
     public void PlayPlayerSound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {

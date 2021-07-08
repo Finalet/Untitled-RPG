@@ -33,7 +33,7 @@ public class Invincibility : Skill
     }
 
     public override string getDescription() {
-        return $"Become completely invincible for {Mathf.RoundToInt(buff.duration)} seconds.\n\nShield is required.";
+        return $"Become completely invincible for {Mathf.RoundToInt(buff.duration)} seconds.";
     }
 
     void FixedUpdate() {
@@ -41,13 +41,6 @@ public class Invincibility : Skill
             ps.transform.position = transform.position + Vector3.up;
             ps.transform.rotation = Quaternion.identity;
         }
-    }
-
-    public override bool skillActive()
-    {
-        if (WeaponsController.instance.leftHandStatus != SingleHandStatus.Shield)
-            return false;
-        return base.skillActive();
     }
 
     public override void OnBuffRemove()

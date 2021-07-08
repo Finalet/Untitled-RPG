@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable] public struct BuffAndIcon {public Buff buff1; [System.NonSerialized] public BuffIcon icon1;}
+
 public class Characteristics : MonoBehaviour
 {
 
@@ -29,10 +31,14 @@ public class Characteristics : MonoBehaviour
     public int defense; public int defenseFromEquip;
     
     [Header("Speeds")]
-    [Tooltip("X - Casting speed percentage (i.e. 1.1f), Y - Casting speed inverted (i.e. 0.9f)")]
+    //X - Casting speed percentage (i.e. 1.1f), Y - Casting speed inverted (i.e. 0.9f)
     public Vector2 castingSpeed; public Vector2 castingSpeedFromEquip; //x = 1.1; y = 0.9;
-    [Tooltip("X - Attack speed percentage (i.e. 1.0f), Y - Attack speed inverted (i.e. 0.909f)")]
+    //X - Attack speed percentage (i.e. 1.0f), Y - Attack speed inverted (i.e. 0.909f)
     public Vector2 attackSpeed; public Vector2 attackSpeedFromEquip; //x = 1.1; y = 0.9;
+    [Header("Misc")]
+    public float critChance; public float critChanceFromEquip; public float critChanceFromBuff; float baseCritChance = 0.1f;
+    public float critMultiplier; float baseCritMultiplier = 2;
+    public float blockChance; public float blockChanceFromEquip; public float blockChanceFromBuff;
 
     [Header("Buffs")]
     public float meleeAttackBuff;
@@ -54,7 +60,7 @@ public class Characteristics : MonoBehaviour
 
     public GameObject buffIcon;
 
-    public List<Buff> activeBuffs = new List<Buff>();
+    public List<BuffAndIcon> activeBuffs = new List<BuffAndIcon>();
 
     void Awake() {
         if (instance == null)
@@ -67,12 +73,7 @@ public class Characteristics : MonoBehaviour
         health = maxHealth;
         stamina = maxStamina;
         
-        meleeAttackBuff = 1;
-        rangedAttackBuff = 1;
-        magicPowerBuff = 1;
-        healingPowerBuff = 1;
-        defenseBuff= 1;
-
+        ResetBuffStats();
         StatsCalculations();
     }
 
@@ -105,6 +106,11 @@ public class Characteristics : MonoBehaviour
 
         castingSpeed.x = 1 * castingSpeedFromEquip.x * (1+intellect*0.00005f) * castingSpeedBuff.x;
         castingSpeed.y = 1 * castingSpeedFromEquip.y * (1-intellect*0.00005f) * castingSpeedBuff.y;
+
+        critChance = baseCritChance + critChanceFromEquip + critChanceFromBuff;
+        critMultiplier = baseCritMultiplier;
+
+        blockChance = blockChanceFromEquip + blockChanceFromBuff;
     }
 
     float hpTimer = 1;
@@ -188,50 +194,60 @@ public class Characteristics : MonoBehaviour
     }
 
     public void AddBuff(Buff buff) {
-        if (activeBuffs.Contains(buff))
-            return;
+        for (int i = 0; i < activeBuffs.Count; i++)
+            if (activeBuffs[i].buff1 == buff) return;
 
-        activeBuffs.Add(buff);
-        BuffIcon icon = Instantiate(buffIcon, CanvasScript.instance.buffs.transform).GetComponent<BuffIcon>();
-        icon.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        icon.buff = buff;
+        BuffAndIcon bi;
+        bi.buff1 = buff;
+        bi.icon1 = Instantiate(buffIcon, CanvasScript.instance.buffs.transform).GetComponent<BuffIcon>();
+        bi.icon1.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        bi.icon1.buff = buff;
+
+        activeBuffs.Add(bi);
     }
 
     public void RemoveBuff(Buff buff) { 
-        if (activeBuffs.Contains(buff)) {
-            if (buff.associatedSkill != null) buff.associatedSkill.OnBuffRemove();
-            activeBuffs.Remove(buff);
+        for (int i = 0; i < activeBuffs.Count; i++) {
+            if (activeBuffs[i].buff1 == buff) {
+                if (buff.associatedSkill != null) buff.associatedSkill.OnBuffRemove();
+                Destroy(activeBuffs[i].icon1.gameObject);
+                activeBuffs.Remove(activeBuffs[i]);
+                break;
+            }
         }
     } 
 
     void CalculateBuffs() {
         ResetBuffStats();
         for (int i = 0; i < activeBuffs.Count; i++){
-            healthFromBuff += activeBuffs[i].healthBuff;
-            staminaFromBuff += activeBuffs[i].staminaBuff;
+            healthFromBuff += activeBuffs[i].buff1.healthBuff;
+            staminaFromBuff += activeBuffs[i].buff1.staminaBuff;
             
-            strengthFromBuff += activeBuffs[i].strengthBuff;
-            agilityFromBuff += activeBuffs[i].agilityBuff;
-            intellectFromBuff += activeBuffs[i].intellectBuff;
+            strengthFromBuff += activeBuffs[i].buff1.strengthBuff;
+            agilityFromBuff += activeBuffs[i].buff1.agilityBuff;
+            intellectFromBuff += activeBuffs[i].buff1.intellectBuff;
 
-            meleeAttackBuff *= 1 + activeBuffs[i].meleeAttackBuff;
-            rangedAttackBuff *= 1 + activeBuffs[i].rangedAttackBuff;
-            magicPowerBuff *= 1 + activeBuffs[i].magicPowerBuff;
-            healingPowerBuff *= 1 + activeBuffs[i].healingPowerBuff;
-            defenseBuff *= 1 + activeBuffs[i].defenseBuff;
+            meleeAttackBuff *= 1 + activeBuffs[i].buff1.meleeAttackBuff;
+            rangedAttackBuff *= 1 + activeBuffs[i].buff1.rangedAttackBuff;
+            magicPowerBuff *= 1 + activeBuffs[i].buff1.magicPowerBuff;
+            healingPowerBuff *= 1 + activeBuffs[i].buff1.healingPowerBuff;
+            defenseBuff *= 1 + activeBuffs[i].buff1.defenseBuff;
 
-            castingSpeedBuff.x *= (1-activeBuffs[i].castingSpeedBuff);
-            castingSpeedBuff.y *= (1+activeBuffs[i].castingSpeedBuff);
+            castingSpeedBuff.x *= (1-activeBuffs[i].buff1.castingSpeedBuff);
+            castingSpeedBuff.y *= (1+activeBuffs[i].buff1.castingSpeedBuff);
 
-            attackSpeedBuff.x *= (1-activeBuffs[i].attackSpeedBuff);
-            attackSpeedBuff.y *= (1+activeBuffs[i].attackSpeedBuff);
+            attackSpeedBuff.x *= (1-activeBuffs[i].buff1.attackSpeedBuff);
+            attackSpeedBuff.y *= (1+activeBuffs[i].buff1.attackSpeedBuff);
 
-            walkSpeedBuff *= (1+activeBuffs[i].walkSpeedBuff);
+            walkSpeedBuff *= (1+activeBuffs[i].buff1.walkSpeedBuff);
 
-            skillDistanceIncrease += activeBuffs[i].skillDistanceBuff;
+            skillDistanceIncrease += activeBuffs[i].buff1.skillDistanceBuff;
 
-            immuneToDamageInt += activeBuffs[i].immuneToDamage ? 1 : 0;
-            immuneToInterruptInt += activeBuffs[i].immuneToInterrupt ? 1 : 0;
+            immuneToDamageInt += activeBuffs[i].buff1.immuneToDamage ? 1 : 0;
+            immuneToInterruptInt += activeBuffs[i].buff1.immuneToInterrupt ? 1 : 0;
+
+            critChanceFromBuff += activeBuffs[i].buff1.critChanceBuff;
+            blockChanceFromBuff += activeBuffs[i].buff1.blockChanceBuff;
         }
 
         immuneToDamage = immuneToDamageInt > 0 ? true : false;
@@ -260,26 +276,43 @@ public class Characteristics : MonoBehaviour
 
         immuneToDamageInt = 0;
         immuneToInterruptInt = 0;
+
+        critChanceFromBuff = 0;
+        blockChanceFromBuff = 0;
     }
 
 #region Get hit overloads 
 
     public void GetHit (int damage, string enemyName, HitType hitType = HitType.Normal, float cameraShakeFrequency = 0, float cameraShakeAmplitude = 0) {
-        if (hitType == HitType.Normal) {
-            PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHitUpperBody"), 0);
+        bool blocked = Random.value < blockChance && WeaponsController.instance.leftHandStatus == SingleHandStatus.Shield;
+
+        if (blocked) {
+            PlayerControlls.instance.animator.CrossFade("LeftHandArm.Block", 0.1f);
+            WeaponsController.instance.InstantUnsheathe();
+        } else if (hitType == HitType.Normal && !immuneToDamage) {
+            PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f);
         } else if (hitType == HitType.Interrupt) {
             if (!immuneToInterrupt) {
-                PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHit"), 0);
+                PlayerControlls.instance.animator.CrossFade("GetHit.GetHit", 0.1f);
                 PlayerControlls.instance.InterruptCasting();
-            } else {
-                PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, PlayerControlls.instance.animator.GetLayerIndex("GetHitUpperBody"), 0);
+            } else if (!immuneToDamage) {
+                PlayerControlls.instance.animator.CrossFade("GetHitUpperBody.GetHit", 0.1f);
             }
         }
 
-        int actualDamage = immuneToDamage ? 0 : Mathf.RoundToInt( damage * defenseCoeff() ); 
+        int actualDamage = immuneToDamage || blocked ? 0 : Mathf.RoundToInt( damage * defenseCoeff() ); 
         health -= actualDamage;
-        if (immuneToDamage) DisplayDamageNumber("Invincible"); else DisplayDamageNumber(actualDamage);
-        GetComponent<PlayerAudioController>().PlayGetHitSound();
+        if (blocked) {
+            DisplayDamageNumber("Blocked");
+            PlayerAudioController.instance.PlayGetHitSound(GetHitType.Block);
+        } else if (immuneToDamage) {
+            DisplayDamageNumber("Invincible");
+            PlayerAudioController.instance.PlayGetHitSound(GetHitType.Invincibility);
+        } else {
+            DisplayDamageNumber(actualDamage);
+            PlayerAudioController.instance.PlayGetHitSound(GetHitType.Hit);
+        }
+
 
         if (cameraShakeFrequency != 0 && cameraShakeAmplitude != 0)
             PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);

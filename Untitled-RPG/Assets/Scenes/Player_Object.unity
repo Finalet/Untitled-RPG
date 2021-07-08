@@ -5802,6 +5802,7 @@ RectTransform:
   - {fileID: 4104578}
   - {fileID: 487818420}
   - {fileID: 1252696462}
+  - {fileID: 623037531}
   m_Father: {fileID: 308580191}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14928,6 +14929,96 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 622205684}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &623037530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 623037531}
+  - component: {fileID: 623037534}
+  - component: {fileID: 623037533}
+  - component: {fileID: 623037532}
+  m_Layer: 5
+  m_Name: Divider (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &623037531
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623037530}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 264326765}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -345}
+  m_SizeDelta: {x: 200, y: 3.125}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &623037532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623037530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 1
+  m_AspectRatio: 64
+--- !u!114 &623037533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623037530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.77567166, b: 0.5896226, a: 0.78431374}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: d60f0a18abd968f47b6ccaaf92005d3e, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &623037534
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623037530}
+  m_CullTransparentMesh: 1
 --- !u!1001 &631825340
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47357,6 +47448,23 @@ MonoBehaviour:
   getHit:
   - {fileID: 8300000, guid: 470d889c25408494e9773c6dd5474701, type: 3}
   - {fileID: 8300000, guid: 2ea1a824a90d0ee4e860342fb02d5fc7, type: 3}
+  - {fileID: 8300000, guid: 0cfdb69e49fd9a845a7030bc2b00fb03, type: 3}
+  blockSounds:
+  - {fileID: 8300000, guid: 5a04b8a13bdf47c4fbec206825c8a041, type: 3}
+  - {fileID: 8300000, guid: be4d3551a30be9a478ff458da496ae8d, type: 3}
+  - {fileID: 8300000, guid: 3c1486ff9c058134f8ddc8d4a702de91, type: 3}
+  - {fileID: 8300000, guid: 438090ceab563084fb0a3ad07088d0d1, type: 3}
+  - {fileID: 8300000, guid: 1eb8d6d05a04f414f8516538b214ef33, type: 3}
+  - {fileID: 8300000, guid: fb18f6514aaba2f4086c1ac84207757e, type: 3}
+  - {fileID: 8300000, guid: 28e5a38255d769140a9375c891ae0500, type: 3}
+  - {fileID: 8300000, guid: f080e14a554158e42aef8afa3f5b5648, type: 3}
+  - {fileID: 8300000, guid: 7c53a1f5ae3a2c344913ba86348f20f3, type: 3}
+  - {fileID: 8300000, guid: ebcfaef1ce244134799f546962a68bc0, type: 3}
+  invincibilitySounds:
+  - {fileID: 8300000, guid: ce3a8663b67359e48b2c75b1643eae8d, type: 3}
+  - {fileID: 8300000, guid: 55383c20793150a4c910bb4c3f8552fa, type: 3}
+  - {fileID: 8300000, guid: b8b004a7096d3a94a866f5bf96835cf3, type: 3}
+  - {fileID: 8300000, guid: acacd011533cb5f4ab142d98312f3722, type: 3}
   LootPickup: {fileID: 8300000, guid: f93d927881f4275439c48971484fae80, type: 3}
   LootGoldPickup: {fileID: 8300000, guid: 1d148c551070c6a4396b3654ff3dc7d1, type: 3}
   sprint: {fileID: 8300000, guid: 2852f5969de853141bef236f4fd545fb, type: 3}
@@ -56445,6 +56553,13 @@ MonoBehaviour:
   castingSpeedFromEquip: {x: 0, y: 0}
   attackSpeed: {x: 0, y: 0}
   attackSpeedFromEquip: {x: 0, y: 0}
+  critChance: 0
+  critChanceFromEquip: 0
+  critChanceFromBuff: 0
+  critMultiplier: 0
+  blockChance: 0
+  blockChanceFromEquip: 0
+  blockChanceFromBuff: 0
   meleeAttackBuff: 0
   rangedAttackBuff: 0
   magicPowerBuff: 0
@@ -56656,6 +56771,8 @@ MonoBehaviour:
     skillDistanceBuff: 0
     immuneToDamage: 0
     immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
     associatedSkill: {fileID: 0}
   uncommonSetBuff:
     name: Uncommon armor set
@@ -56678,6 +56795,8 @@ MonoBehaviour:
     skillDistanceBuff: 0
     immuneToDamage: 0
     immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
     associatedSkill: {fileID: 0}
   rareSetBuff:
     name: Rare armor set
@@ -56700,6 +56819,8 @@ MonoBehaviour:
     skillDistanceBuff: 0
     immuneToDamage: 0
     immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
     associatedSkill: {fileID: 0}
   epicSetBuff:
     name: Epic armor set
@@ -56722,6 +56843,8 @@ MonoBehaviour:
     skillDistanceBuff: 0
     immuneToDamage: 0
     immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
     associatedSkill: {fileID: 0}
   legendarySetBuff:
     name: Legendary armor set
@@ -56744,6 +56867,8 @@ MonoBehaviour:
     skillDistanceBuff: 0
     immuneToDamage: 0
     immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
     associatedSkill: {fileID: 0}
   relicSetBuff:
     name: Relic armor set
@@ -56766,6 +56891,104 @@ MonoBehaviour:
     skillDistanceBuff: 0
     immuneToDamage: 0
     immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
+    associatedSkill: {fileID: 0}
+  shieldBuff:
+    name: Shield
+    description: You are carrying a shield.
+    icon: {fileID: -1128779019250533025, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 0
+    staminaBuff: 0
+    strengthBuff: 0
+    agilityBuff: 0
+    intellectBuff: 0
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: 0
+    attackSpeedBuff: 0.05
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    immuneToDamage: 0
+    immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0.1
+    associatedSkill: {fileID: 0}
+  dualHandsBuff:
+    name: Dual Hands
+    description: 'You are wielding two weapons. '
+    icon: {fileID: 4728955915362503063, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 0
+    staminaBuff: 0
+    strengthBuff: 0
+    agilityBuff: 0
+    intellectBuff: 0
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: 0
+    attackSpeedBuff: -0.05
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    immuneToDamage: 0
+    immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
+    associatedSkill: {fileID: 0}
+  TwoHandedSwordBuff:
+    name: Two Handed Sword
+    description: You are carrying a two handed sword.
+    icon: {fileID: 3554774184861295641, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 0
+    staminaBuff: 0
+    strengthBuff: 0
+    agilityBuff: 0
+    intellectBuff: 0
+    meleeAttackBuff: 0.1
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: 0
+    attackSpeedBuff: 0
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    immuneToDamage: 0
+    immuneToInterrupt: 0
+    critChanceBuff: 0.05
+    blockChanceBuff: 0
+    associatedSkill: {fileID: 0}
+  TwoHandedStaffBuff:
+    name: Two Handed Staff
+    description: You are carrying a two handed staff.
+    icon: {fileID: -4297692240554959357, guid: bacb8f9fbaa261e4cb1c80eb376e8ca5, type: 3}
+    duration: 0
+    healthBuff: 0
+    staminaBuff: 0
+    strengthBuff: 0
+    agilityBuff: 0
+    intellectBuff: 0
+    meleeAttackBuff: 0
+    rangedAttackBuff: 0
+    magicPowerBuff: 0
+    healingPowerBuff: 0
+    defenseBuff: 0
+    castingSpeedBuff: -0.05
+    attackSpeedBuff: 0
+    walkSpeedBuff: 0
+    skillDistanceBuff: 0
+    immuneToDamage: 0
+    immuneToInterrupt: 0
+    critChanceBuff: 0
+    blockChanceBuff: 0
     associatedSkill: {fileID: 0}
   capeBoneTail: {fileID: 6526474379051252896}
 --- !u!114 &4675846284446074614
@@ -130621,12 +130844,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f060874663e1e4846834223accdd0ab1, type: 2}
   - {fileID: 11400000, guid: bd8d37d16898faf47bb70706120d760b, type: 2}
   - {fileID: 11400000, guid: 4e7ab8b5b3300774d818ba92b8d532cc, type: 2}
-  - {fileID: 11400000, guid: a758883d19a3e9c4f81cdb7d726bc615, type: 2}
-  - {fileID: 11400000, guid: 73be0439c8479ac4b9bc53cf8f34326e, type: 2}
   - {fileID: 11400000, guid: c6f7ee124ab1a1349bbe5def14b2afd1, type: 2}
+  - {fileID: 11400000, guid: 73be0439c8479ac4b9bc53cf8f34326e, type: 2}
+  - {fileID: 11400000, guid: a758883d19a3e9c4f81cdb7d726bc615, type: 2}
   - {fileID: 11400000, guid: 0d53cbf5a5f0ee74e844c28ab1575570, type: 2}
-  - {fileID: 11400000, guid: a696bad7a97862040ae81c8ea2596ab2, type: 2}
   - {fileID: 11400000, guid: f7d7ba8262849de4faa79241300a05e9, type: 2}
+  - {fileID: 11400000, guid: a696bad7a97862040ae81c8ea2596ab2, type: 2}
   - {fileID: 11400000, guid: 12df0968a5fd26a4abea50aadf66ff1f, type: 2}
   - {fileID: 11400000, guid: 91d76885dc4d3ca438c683526a4c7176, type: 2}
   armor:
@@ -130657,9 +130880,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c54fa735fff15684b96d6304cab52feb, type: 2}
   - {fileID: 11400000, guid: 475950cffe783574f844b45ff0cb170e, type: 2}
   - {fileID: 11400000, guid: 884df3e76808b674eb3de6e02a4eb19c, type: 2}
-  - {fileID: 11400000, guid: 5bca41c0cb861574cab139aa4ccf57c3, type: 2}
   - {fileID: 11400000, guid: a6520e5587bcb404aa1fab2a23822834, type: 2}
+  - {fileID: 11400000, guid: 5bca41c0cb861574cab139aa4ccf57c3, type: 2}
   - {fileID: 11400000, guid: 3ca2afa8f95580043b9e5356ad6a03bf, type: 2}
+  - {fileID: 11400000, guid: ca5622dd27faa2841a4483bb9d8ed7fc, type: 2}
+  - {fileID: 11400000, guid: 8b0e978f527003249965d0c7573ad7b9, type: 2}
   skillbooks:
   - {fileID: 11400000, guid: a29bc20b45db41548a7bf20bafc4288f, type: 2}
   - {fileID: 11400000, guid: c0920a75900958e4c87f3390be713ffe, type: 2}

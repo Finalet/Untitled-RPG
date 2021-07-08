@@ -140,14 +140,28 @@ public class Tooltip : MonoBehaviour
                 if (stats != "") stats += addSpace();
             }
             if (w.castingTime != 0) {
-                compareText = compare ? $"{getCompareString(w.castingTime, wCompare.castingTime, true)}" : "";
+                compareText = compare ? $"{getCompareString(w.castingTime, wCompare.castingTime, true, true)}" : "";
                 string plusSign = w.castingTime > 0 ? "+" : "";
                 stats += $"Casting time: <color={highlightColor}>{plusSign}{(100*w.castingTime).ToString()}%</color>{compareText}\n";
             }
             if (w.attackSpeed != 0) {
-                compareText = compare ? $"{getCompareString(w.attackSpeed, wCompare.attackSpeed, true)}" : "";
+                compareText = compare ? $"{getCompareString(w.attackSpeed, wCompare.attackSpeed, true, true)}" : "";
                 string plusSign = w.attackSpeed > 0 ? "+" : "";
                 stats += $"Attack speed: <color={highlightColor}>{plusSign}{(100*w.attackSpeed).ToString()}%</color>{compareText}\n";
+            }
+
+            if (w.critChance != 0 || w.blockChance != 0) {
+                if (stats != "") stats += addSpace();
+            }
+            if (w.critChance != 0) {
+                compareText = compare ? $"{getCompareString(w.critChance, wCompare.critChance, false, true)}" : "";
+                string plusSign = w.critChance > 0 ? "+" : "";
+                stats += $"Critical chance: <color={highlightColor}>{plusSign}{(100*w.critChance).ToString()}%</color>{compareText}\n";
+            }
+            if (w.blockChance != 0) {
+                compareText = compare ? $"{getCompareString(w.blockChance, wCompare.blockChance, false, true)}" : "";
+                string plusSign = w.blockChance > 0 ? "+" : "";
+                stats += $"Block chance: <color={highlightColor}>{plusSign}{(100*w.blockChance).ToString()}%</color>{compareText}\n";
             }
         } else if (item is Skillbook) {
             Skillbook sb = (Skillbook)item;
@@ -164,16 +178,15 @@ public class Tooltip : MonoBehaviour
         return "<size=8>\n</size>";
     }
 
-    string getCompareString (float first, float second, bool percentages = false) {
+    string getCompareString (float first, float second, bool reverseSign = false, bool percentages = false) {
         if (first == 0 || second == 0)
             return "";
-        float delta = first - second;
-
-        if (percentages){
-            delta*=100;
-            return delta > 0 ? $" <color=red>▼{Mathf.Abs(delta)}</color>" : delta < 0 ? $" <color=green>▲{Mathf.Abs(delta)}</color>" : "";
-        } else {
+        float delta = (first - second) * (percentages ? 100 : 1);
+        
+        if (!reverseSign) {
             return delta > 0 ? $" <color=green>▲{Mathf.Abs(delta)}</color>" : delta < 0 ? $" <color=red>▼{Mathf.Abs(delta)}</color>" : "";
-        } 
+        } else {
+            return delta > 0 ? $" <color=red>▼{Mathf.Abs(delta)}</color>" : delta < 0 ? $" <color=green>▲{Mathf.Abs(delta)}</color>" : "";
+        }
     }
 }

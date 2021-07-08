@@ -32,9 +32,9 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
     void Update() {
-        if (!Characteristics.instance.activeBuffs.Contains(buff)) {
-            Destroy(gameObject); //Not removing buff effects since they have already been removed, this is just for checking and removing the icons.
-        }
+        // if (!Characteristics.instance.activeBuffs.Contains(buff)) {
+        //     Destroy(gameObject); //Not removing buff effects since they have already been removed, this is just for checking and removing the icons.
+        // }
 
         if (!noTimer) {
             if (timer <= 0) {
@@ -48,7 +48,6 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void RemoveBuff () {
         Characteristics.instance.RemoveBuff(buff);
-        Destroy(gameObject);
     }
 
     void ShowTooltip(){
@@ -96,8 +95,8 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (buff.castingSpeedBuff != 0 || buff.attackSpeedBuff != 0)
             stats += addSpace();
 
-        if (buff.castingSpeedBuff != 0) stats += $"Casting speed: <color={color}>{buff.castingSpeedBuff*100}%</color>\n";
-        if (buff.attackSpeedBuff != 0) stats += $"Attack speed: <color={color}>{buff.attackSpeedBuff*100}%</color>\n";
+        if (buff.castingSpeedBuff != 0) stats += $"Casting speed: <color={color}>{(buff.castingSpeedBuff > 0 ? "+" : "")}{buff.castingSpeedBuff*100}%</color>\n";
+        if (buff.attackSpeedBuff != 0) stats += $"Attack speed: <color={color}>{(buff.attackSpeedBuff > 0 ? "+" : "")}{buff.attackSpeedBuff*100}%</color>\n";
 
         if (buff.walkSpeedBuff != 0)
             stats += addSpace();
@@ -114,6 +113,12 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (buff.immuneToDamage) stats += $"<color={color}>Immune to damage.</color>\n";
         if (buff.immuneToInterrupt) stats += $"<color={color}>Immune to interruptions.</color>\n";
+
+        if (buff.critChanceBuff != 0 || buff.blockChanceBuff != 00)
+            stats += addSpace();
+
+        if (buff.critChanceBuff != 0) stats += $"Critical chance: <color={color}>{(buff.critChanceBuff > 0 ? "+" : "")}{buff.critChanceBuff*100}%</color>\n";
+        if (buff.blockChanceBuff != 0) stats += $"Block chance: <color={color}>{(buff.blockChanceBuff > 0 ? "+" : "")}{buff.blockChanceBuff*100}%</color>\n";
 
         return stats;
     }
