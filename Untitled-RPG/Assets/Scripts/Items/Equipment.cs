@@ -46,17 +46,22 @@ public class Equipment : Item
 
     public override int getItemValue()
     {
-        float attacksValue = 10;
-        float healthStaminaValue = 5;
-        float statsValue = 50;
-        float speedStatsValue = -100000;
-        float critBlockValue = 100000;
-        float grantedSkillValue = 5000;
-        float rarityValue = 2000;
+        if (overridePrice)
+            return itemBasePrice;
+
+        float attacksValue = 20;
+        float defenseValue = 5;
+        float healthValue = 10;
+        float staminaValue = 70;
+        float statsValue = 100;
+        float speedStatsValue = -200000;
+        float critBlockValue = 200000;
+        float grantedSkillValue = 2500;
+        float rarityValue = 0;
 
         float value = 0;
-        value += attacksValue * (MeleeAttack + RangedAttack + MagicPower + HealingPower + Defense);
-        value += healthStaminaValue * (Health + Stamina);
+        value += attacksValue * (MeleeAttack + RangedAttack + MagicPower + HealingPower) + defenseValue * Defense;
+        value += healthValue * Health + staminaValue * Stamina;
         value += statsValue * (strength + agility + intellect);
         value += speedStatsValue * (castingTime + attackSpeed);
         value += critBlockValue  * (critChance + blockChance);

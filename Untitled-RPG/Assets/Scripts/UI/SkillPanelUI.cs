@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SkillPanelUI : MonoBehaviour
 {
@@ -9,8 +10,8 @@ public class SkillPanelUI : MonoBehaviour
     public GameObject SkillOnPanePrefab;
     public Transform LearnedSkillsScrollView;
     [Space]
-    public Text availableSkillPointsLabel;
-    public Text currentSkillTreesLabel;
+    public TextMeshProUGUI availableSkillPointsLabel;
+    public TextMeshProUGUI currentSkillTreesLabel;
     public Image[] pickedSkillsIcons;
     public Image[] equipmentSkillsIcons;
 
@@ -43,7 +44,7 @@ public class SkillPanelUI : MonoBehaviour
                 continue;
 
             RectTransform rt = Instantiate(SkillTreeTemplate, LearnedSkillsScrollView).GetComponent<RectTransform>();
-            rt.GetComponent<Text>().text = sk.skillTree.ToString();
+            rt.GetComponent<TextMeshProUGUI>().text = sk.skillTree.ToString();
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, generatedTrees.Count * (-rt.sizeDelta.y - 20));
             rt.gameObject.SetActive(true);
             switch (sk.skillTree) {

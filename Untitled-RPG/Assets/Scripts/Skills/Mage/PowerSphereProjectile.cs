@@ -21,6 +21,7 @@ public class PowerSphereProjectile : MonoBehaviour
     void Start() {
         mat.SetFloat("DisolveValue", 0);
         GetComponent<SphereCollider>().enabled = false;
+        gameObject.SetLayer(0, true);
     }
 
     void Update() {

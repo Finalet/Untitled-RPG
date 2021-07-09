@@ -51,7 +51,7 @@ public class Characteristics : MonoBehaviour
     public float walkSpeedBuff;
     public float skillDistanceIncrease;
 
-    int statsRatio = 2;
+    int statsRatio = 4;
     [Header("Stats regeneration")]
     public bool canRegenerateHealth; 
     public int HealthPointsPerSecond; 

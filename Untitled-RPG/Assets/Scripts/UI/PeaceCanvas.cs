@@ -29,8 +29,6 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject PauseMenu;
     public GameObject storageWindow;
     public GameObject settingsView;
-    public TextMeshProUGUI statsLabel;
-    public TextMeshProUGUI nameLabel;
 
     [Header("Interractions")]
     public GameObject buttonSuggestionUI;
@@ -73,8 +71,6 @@ public class PeaceCanvas : MonoBehaviour
     } 
 
     void Start() {
-        nameLabel.text = Characteristics.instance.playerName;
-
         SaveManager.instance.saveObjects.Add(settingsView.GetComponent<SettingsManager>());
     }
 
@@ -124,7 +120,6 @@ public class PeaceCanvas : MonoBehaviour
                 Cursor.visible = true;
                 PlayerControlls.instance.disableControl = true;
                 PlayerControlls.instance.cameraControl.stopInput = true;
-                UpdateStats();
             }
         }
     }
@@ -291,29 +286,6 @@ public class PeaceCanvas : MonoBehaviour
             CM_MenuCam.transform.position = pos; 
             yield return null;
         }
-    }
-
-    void UpdateStats() {
-        string highlightColor = "#" + ColorUtility.ToHtmlStringRGB(UI_General.secondaryHighlightTextColor);
-        statsLabel.text = "";
-        statsLabel.text += $"Max health: <color={highlightColor}>{Characteristics.instance.maxHealth}</color>\n";
-        statsLabel.text += $"Max stamina: <color={highlightColor}>{Characteristics.instance.maxStamina}</color>\n";
-        statsLabel.text += "\n";
-        statsLabel.text += $"Strength: <color={highlightColor}>{Characteristics.instance.strength}</color>\n";
-        statsLabel.text += $"Agility: <color={highlightColor}>{Characteristics.instance.agility}</color>\n";
-        statsLabel.text += $"Intellect: <color={highlightColor}>{Characteristics.instance.intellect}</color>\n";
-        statsLabel.text += "\n";
-        statsLabel.text += $"Melee attack: <color={highlightColor}>{Characteristics.instance.meleeAttack}</color>\n";
-        statsLabel.text += $"Ranged attack: <color={highlightColor}>{Characteristics.instance.rangedAttack}</color>\n";
-        statsLabel.text += $"Magic power: <color={highlightColor}>{Characteristics.instance.magicPower}</color>\n";
-        statsLabel.text += $"Healing power: <color={highlightColor}>{Characteristics.instance.healingPower}</color>\n";
-        statsLabel.text += $"Defense: <color={highlightColor}>{Characteristics.instance.defense}</color>\n";
-        statsLabel.text += "\n";
-        statsLabel.text += $"Casting speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.castingSpeed.y*1000f)/10f}%</color>\n";
-        statsLabel.text += $"Attack speed: <color={highlightColor}>{Mathf.Round(Characteristics.instance.attackSpeed.y*1000f)/10f}%</color>\n";
-        statsLabel.text += "\n";
-        statsLabel.text += $"Critical chance: <color={highlightColor}>{Mathf.Round(Characteristics.instance.critChance*1000f)/10f}%</color>\n";
-        statsLabel.text += $"Block chance: <color={highlightColor}>{Mathf.Round(Characteristics.instance.blockChance*1000f)/10f}%</color>\n";
     }
 
     public void ShowKeySuggestion (string key, string action) {

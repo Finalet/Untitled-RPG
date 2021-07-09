@@ -14,15 +14,19 @@ public class MainMenuController : MonoBehaviour
 
     public void LoadLevel (string levelName) {
         Vector3 playerPos;
+        Quaternion playerRot;
         switch (levelName) {
-            case "TheBay":
+            case "City":
                 playerPos = new Vector3(-240,2,240);
+                playerRot = Quaternion.Euler(0,-143,0);
                 break;
             case "Village":
                 playerPos = new Vector3(-60,-1.2f,100);
+                playerRot = Quaternion.identity;
                 break;
             default:
                 playerPos = new Vector3(0,1,0);
+                playerRot = Quaternion.identity;
                 break;
         }
         ScenesManagement.instance.LoadLevel(levelName, playerPos);

@@ -60,11 +60,7 @@ public static class CalculateDamage
     }
 
     static bool isCrit(float critChance) {
-        if (Random.value < critChance) {
-            return true;
-        } else {
-            return false;
-        }
+        return Random.value < critChance;
     }
 
     public static DamageInfo enemyDamageInfo (int baseDamage) {

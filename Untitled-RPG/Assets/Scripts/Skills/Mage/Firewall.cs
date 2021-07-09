@@ -49,10 +49,10 @@ public class Firewall : Skill
             spawnPos.y = hit.point.y + 0.7f;
         } 
 
-        GameObject fw = Instantiate(firewall, spawnPos, Quaternion.LookRotation(playerControlls.transform.forward, Vector3.up));
-        fw.GetComponent<FirewallWall>().duration = duration;
-        fw.GetComponent<FirewallWall>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
-        fw.SetActive(true);
+        FirewallWall fw = Instantiate(firewall, spawnPos, Quaternion.LookRotation(playerControlls.transform.forward, Vector3.up)).GetComponent<FirewallWall>();
+        fw.duration = duration;
+        fw.skill = this;
+        fw.gameObject.SetActive(true);
 
         DeleteEffects();
     }

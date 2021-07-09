@@ -13,11 +13,13 @@ public abstract class Item : ScriptableObject
     public string itemName;
     public string itemDesctription;
     public ItemRarity itemRarity;
-    public int itemBasePrice;
     public bool isStackable;
     public int maxStackAmount = 100;
     public Sprite itemIcon;
     public GameObject lootPrefab;
+    [Space]
+    public int itemBasePrice;
+    public bool overridePrice;
     
     [Header("Crafting")]
     public bool isCraftable;

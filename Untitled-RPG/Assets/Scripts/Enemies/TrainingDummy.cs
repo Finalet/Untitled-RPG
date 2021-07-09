@@ -14,7 +14,6 @@ public class TrainingDummy : StaticEnemy
     GameObject rotationObj;
     
     protected override void Start() {
-        animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         currentHealth = maxHealth;
 
@@ -62,7 +61,6 @@ public class TrainingDummy : StaticEnemy
         rotationX = direction.normalized.z * 30 * (1 + (float)damageInfo.damage/5000);
         rotationZ = -direction.normalized.x * 30 * (1 + (float)damageInfo.damage/5000);
 
-        currentHealth -= actualDamage;
         PlayHitParticles(); 
         PlayGetHitSounds();
         PlayStabSounds();

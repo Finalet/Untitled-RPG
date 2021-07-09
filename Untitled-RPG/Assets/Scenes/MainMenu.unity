@@ -148,8 +148,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74928812}
-  m_LocalRotation: {x: 0.1944372, y: -0.04559441, z: 0.009047905, w: 0.979813}
-  m_LocalPosition: {x: -535.4136, y: 91.4845, z: 266.25674}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 985744959}
@@ -1358,7 +1358,7 @@ PrefabInstance:
     - target: {fileID: 1611620794445924608, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
       propertyPath: m_Name
-      value: Island bay
+      value: City
       objectReference: {fileID: 0}
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
@@ -1428,7 +1428,7 @@ PrefabInstance:
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: TheBay
+      value: City
       objectReference: {fileID: 0}
     - target: {fileID: 1611620794445924610, guid: 4b982655d2292354b89bf5a309b56399,
         type: 3}
@@ -3245,10 +3245,12 @@ MonoBehaviour:
   GrabItem: {fileID: 8300000, guid: ec20c5ed3c286b741a5d5293314395cc, type: 3}
   DropItem: {fileID: 8300000, guid: 3ab2f00f45918dc41be01b4714b2c97c, type: 3}
   EquipArmor: {fileID: 8300000, guid: 4ec39f221f67ec348a06d555ff29bdfd, type: 3}
+  EquipJewlery: {fileID: 0}
   EquipWeapon: {fileID: 8300000, guid: 15c157c32ca26d3439d2f758c8322449, type: 3}
   EquipBow: {fileID: 8300000, guid: 9dd8cad58f16eab4b9cda6ab91c4af8f, type: 3}
   EquipShield: {fileID: 8300000, guid: 91d727e05c7ab4726949f30b9b893769, type: 3}
   UnequipArmor: {fileID: 8300000, guid: 17648037e38d28544bc5710b81c623fd, type: 3}
+  UnequipJewlery: {fileID: 0}
   UnequipWeapon: {fileID: 8300000, guid: 0273b5c54cdfe944790c0e2d15c0acb6, type: 3}
   UnequipBow: {fileID: 8300000, guid: d2fff76ca7fe08e4080208fb44fc456b, type: 3}
   UnequipShield: {fileID: 8300000, guid: 7f98a1c4b9bd24a0c8709565a65ec4c8, type: 3}
@@ -3442,6 +3444,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 28.290321
+      objectReference: {fileID: 0}
+    - target: {fileID: 3984703310803082694, guid: ab17ab6ba3e0407408d19db083a4ea94,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5578027084787774369, guid: ab17ab6ba3e0407408d19db083a4ea94,
         type: 3}

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FirewallWall : MonoBehaviour
 {
+    public Skill skill;
     public float duration;
-    public DamageInfo damageInfo;
 
     public Light light1;
     public Light light2;
@@ -38,7 +38,7 @@ public class FirewallWall : MonoBehaviour
             return;
         
         if (!enemiesHit.Contains(en)) {
-            en.GetHit(damageInfo, "Firewall", false, false, HitType.Interrupt);
+            en.GetHit(CalculateDamage.damageInfo(skill.damageType, skill.baseDamagePercentage), "Firewall", false, false, HitType.Interrupt);
             StartCoroutine(List(en));
         }
     }
