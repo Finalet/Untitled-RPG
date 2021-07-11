@@ -313,11 +313,25 @@ public class Characteristics : MonoBehaviour
             PlayerAudioController.instance.PlayGetHitSound(GetHitType.Hit);
         }
 
+        PrintHitInChat(actualDamage, enemyName, blocked, immuneToDamage);
 
         if (cameraShakeFrequency != 0 && cameraShakeAmplitude != 0)
             PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
 
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> was hit with <color=red>{actualDamage}</color> damage by <color=#80FFFF>{enemyName}</color>.");
+    }
+
+    void PrintHitInChat (int damage, string enemyName, bool blocked = false, bool immuneToDamage = false) {
+        string color = "#" + ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor);
+        if (blocked) 
+            PeaceCanvas.instance.DebugChat($"{getCurrentTime()} <color={color}>{Characteristics.instance.playerName}</color> <color=#def9ff>blocked</color> damage from <color=#80FFFF>{enemyName}</color>.");
+        else if (immuneToDamage)
+            PeaceCanvas.instance.DebugChat($"{getCurrentTime()} <color={color}>{Characteristics.instance.playerName}</color> was <color=#def9ff>invincible</color> from damage by <color=#80FFFF>{enemyName}</color>.");
+        else
+            PeaceCanvas.instance.DebugChat($"{getCurrentTime()} <color={color}>{Characteristics.instance.playerName}</color> was hit with <color=red>{damage}</color> damage by <color=#80FFFF>{enemyName}</color>.");
+    }
+
+    string getCurrentTime () {
+        return $"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}]";
     }
 
     float defenseCoeff () { //https://www.desmos.com/calculator/pjaj8kestx

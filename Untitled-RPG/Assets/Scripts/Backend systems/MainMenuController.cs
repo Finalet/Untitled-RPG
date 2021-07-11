@@ -17,8 +17,8 @@ public class MainMenuController : MonoBehaviour
         Quaternion playerRot;
         switch (levelName) {
             case "City":
-                playerPos = new Vector3(-240,2,240);
-                playerRot = Quaternion.Euler(0,-143,0);
+                playerPos = new Vector3(-256,10,-120);
+                playerRot = Quaternion.identity;
                 break;
             case "Village":
                 playerPos = new Vector3(-60,-1.2f,100);

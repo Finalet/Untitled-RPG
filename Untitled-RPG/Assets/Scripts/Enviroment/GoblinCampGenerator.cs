@@ -74,10 +74,26 @@ public class GoblinCampGenerator : MonoBehaviour
                 camp.campEnemies.Add(new CampEnemyInfo(wolf, enemy.transform.position, enemy.transform.rotation));
         }
         
-        camp.spawnedEnemies.AddRange(allEnemies);
-        
+        camp.enemies = camp.transform.Find("Enemies");
+        GameObject[] allChildren = new GameObject[camp.enemies.childCount];
+        for (int i = 0; i < allChildren.Length; i++)
+        {
+            allChildren[i] = camp.enemies.GetChild(i).gameObject;
+        }
+        camp.spawnedEnemies.AddRange(allChildren);
         DestroyImmediate(camp.GetComponent<GoblinCampGenerator>());
+
+        NavMeshSurface surface = camp.gameObject.AddComponent<NavMeshSurface>();
+        surface.collectObjects = CollectObjects.Volume;
+        surface.agentTypeID = -1372625422; // found by switching inspector to Debug mode;
+        surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
+        surface.layerMask = LayerMask.GetMask("Default", "StaticLevel", "Terrain");
+        surface.size = new Vector3(120, 40, 120);
+        surface.center = Vector3.up*2;
+        surface.BuildNavMesh();
+        
         ClearCurrentCamp();
+        DestroyImmediate(gameObject);
     }
 
     void ClearCurrentCamp (){
@@ -122,7 +138,7 @@ public class GoblinCampGenerator : MonoBehaviour
         List<int> usedInts = new List<int>();
         switch (campSize) {
             case CampSize.Small:
-                spawnedTower = PlaceObject(tower, allowedStructureLocations[getUniqueIndex(usedInts)], -getCampCenter(), true, Vector3.up);
+                spawnedTower = PlaceObject(tower, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
                 spawnedShortTent = PlaceObject(shortTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
                 spawnedRoundTent = PlaceObject(roundTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
                 spawnedTallTent = PlaceObject(tallTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), true, Vector3.up);
@@ -284,13 +300,13 @@ public class GoblinCampGenerator : MonoBehaviour
     float getCampRadius (float approximate = 0) {
         switch (campSize) {
             case CampSize.Small:
-                return 7 * Random.Range(1-approximate, 1+approximate);
+                return 9 * Random.Range(1-approximate, 1+approximate);
             case CampSize.Medium:
-                return 14 * Random.Range(1-approximate, 1+approximate);
+                return 18 * Random.Range(1-approximate, 1+approximate);
             case CampSize.Large:
-                return 21 * Random.Range(1-approximate, 1+approximate);
+                return 27 * Random.Range(1-approximate, 1+approximate);
             default:
-                return 7 * Random.Range(1-approximate, 1+approximate);
+                return 9 * Random.Range(1-approximate, 1+approximate);
         }
     }
 
