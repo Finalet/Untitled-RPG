@@ -55,6 +55,15 @@ For any support request, please drop me an email at jimmikaelkael@gmail.com
 Changelog
 -----------------------------------------------------------------------------
 
+3.3.1
+  - Added support for upcoming URP 10.0.0 (support view normals)
+
+3.3
+  - Added VR support to Standard Render Pipeline HBAO
+
+3.2.1
+  - Added assembly definitions for editor scripts
+
 3.2
   - Fixed colorbleeding white color bleed beyond max distance
   - Switched HBAO for URP to Post Process VolumeComponent

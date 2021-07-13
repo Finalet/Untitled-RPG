@@ -357,6 +357,7 @@ namespace HorizonBasedAmbientOcclusion.Universal
             {
                 if (material == null) material = CoreUtils.CreateEngineMaterial(shader);
 
+#if !URP_10_0_0_OR_NEWER
                 source = renderer.cameraColorTarget;
                 cameraData = renderingData.cameraData;
 
@@ -365,7 +366,27 @@ namespace HorizonBasedAmbientOcclusion.Universal
                 renderPassEvent = hbao.debugMode.value == HBAO.DebugMode.Disabled ?
                     RenderPassEvent.BeforeRenderingTransparents :
                     RenderPassEvent.AfterRenderingTransparents;
+#endif
             }
+
+#if URP_10_0_0_OR_NEWER
+            public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+            {
+                source = new RenderTargetIdentifier("_CameraColorTexture");
+                cameraData = renderingData.cameraData;
+
+                FetchVolumeComponent();
+
+                ConfigureInput(ScriptableRenderPassInput.Depth);
+                if (hbao.perPixelNormals.value == HBAO.PerPixelNormals.Camera)
+                    ConfigureInput(ScriptableRenderPassInput.Normal);
+
+                // Configures where the render pass should be injected.
+                renderPassEvent = hbao.debugMode.value == HBAO.DebugMode.Disabled ?
+                    RenderPassEvent.BeforeRenderingTransparents :
+                    RenderPassEvent.AfterRenderingTransparents;
+            }
+#endif
 
             // This method is called before executing the render pass.
             // It can be used to configure render targets and their clear state. Also to create temporary render target textures.

@@ -1,0 +1,178 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SkyboxMaterial
+  m_Shader: {fileID: 4800000, guid: a449307a7b4cccf45b5b0e8cc47be915, type: 3}
+  m_ShaderKeywords: CLOUDS CUBEMAP_CLOUD_FORMAT_RGBA GRADIENT_BACKGROUND MOON_ALPHA_BLEND
+    MOON_CUSTOM_TEXTURE NOISE_CLOUDS STAR_LAYER_2_CUSTOM_TEXTURE SUN SUN_ALPHA_BLEND
+    SUN_CUSTOM_TEXTURE SUN_SPRITE_SHEET
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _CloudCubemapDoubleTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudCubemapNormalDoubleTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudCubemapNormalTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudCubemapTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudNoiseTexture:
+        m_Texture: {fileID: 2800000, guid: af292929a7db62b4cbbd92d230807e66, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MoonTex:
+        m_Texture: {fileID: 2800000, guid: 80e3914c20d754b25bfe115c456436b7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarBasicCubemap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarLayer1DataTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarLayer1Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarLayer2DataTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarLayer2Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarLayer3DataTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarLayer3Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SunTex:
+        m_Texture: {fileID: 2800000, guid: c69b5193e4235cb4da3525d1c9c45bad, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _CloudCubemapDoubleLayerHeight: 0
+    - _CloudCubemapDoubleLayerRotationSpeed: 0.02
+    - _CloudCubemapHeight: 0
+    - _CloudCubemapNormalAmbientIntensity: 0.2
+    - _CloudCubemapNormalDoubleLayerHeight: 0
+    - _CloudCubemapNormalDoubleLayerRotationSpeed: 0.02
+    - _CloudCubemapNormalHeight: 0
+    - _CloudCubemapNormalRotationSpeed: 0.01
+    - _CloudCubemapRotationSpeed: 0.01
+    - _CloudDensity: 0.519
+    - _CloudDirection: 0.18
+    - _CloudFadeAmount: 1
+    - _CloudFadePosition: 0.978
+    - _CloudHeight: 0.7
+    - _CloudSpeed: 0.1
+    - _CloudTextureTiling: 0.55
+    - _DebugPointRadius: 0.03
+    - _DebugPointsCount: 0
+    - _GradientFadeBegin: -0.356
+    - _GradientFadeEnd: 0.45499998
+    - _GradientFadeMiddlePosition: 0.5
+    - _HorizonFogDensity: 0.12
+    - _HorizonFogLength: 0.1
+    - _HorizonScaleFactor: 0.7
+    - _MoonEdgeFade: 0.188
+    - _MoonHDRBoost: 1
+    - _MoonRadius: 0.134
+    - _MoonSpriteAnimationSpeed: 1
+    - _MoonSpriteItemCount: 1
+    - _StarBasicExponent: 1.2
+    - _StarBasicOpacity: 1
+    - _StarBasicTwinkleAmount: 0.75
+    - _StarBasicTwinkleSpeed: 5
+    - _StarFadeBegin: -0.114
+    - _StarFadeEnd: 0.937
+    - _StarLayer1Density: 0.01
+    - _StarLayer1EdgeFade: 0.2
+    - _StarLayer1HDRBoost: 1
+    - _StarLayer1MaxRadius: 0.007
+    - _StarLayer1RotationSpeed: 2
+    - _StarLayer1SpriteAnimationSpeed: 1
+    - _StarLayer1SpriteItemCount: 1
+    - _StarLayer1TwinkleAmount: 0.775
+    - _StarLayer1TwinkleSpeed: 2
+    - _StarLayer2Density: 0.01
+    - _StarLayer2EdgeFade: 0.2
+    - _StarLayer2HDRBoost: 1
+    - _StarLayer2MaxRadius: 0.014
+    - _StarLayer2RotationSpeed: 2
+    - _StarLayer2SpriteAnimationSpeed: 1
+    - _StarLayer2SpriteItemCount: 1
+    - _StarLayer2TwinkleAmount: 0.875
+    - _StarLayer2TwinkleSpeed: 3
+    - _StarLayer3Density: 0.01
+    - _StarLayer3EdgeFade: 0.2
+    - _StarLayer3HDRBoost: 1
+    - _StarLayer3MaxRadius: 0.01
+    - _StarLayer3RotationSpeed: 2
+    - _StarLayer3SpriteAnimationSpeed: 1
+    - _StarLayer3SpriteItemCount: 1
+    - _StarLayer3TwinkleAmount: 0.7
+    - _StarLayer3TwinkleSpeed: 1
+    - _SunEdgeFade: 0.0001
+    - _SunHDRBoost: 1
+    - _SunRadius: 0.232
+    - _SunSpriteAnimationSpeed: 15
+    - _SunSpriteItemCount: 64
+    m_Colors:
+    - _CloudColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudCubemapDoubleLayerTintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudCubemapNormalDoubleLitColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudCubemapNormalDoubleShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _CloudCubemapNormalLitColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudCubemapNormalShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _CloudCubemapNormalToLight: {r: 0, g: 1, b: 0, a: 0}
+    - _CloudCubemapTintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GradientSkyLowerColor: {r: 0.8897059, g: 0.9361055, b: 1, a: 1}
+    - _GradientSkyMiddleColor: {r: 0.83823526, g: 0.87951314, b: 1, a: 1}
+    - _GradientSkyUpperColor: {r: 0.23137257, g: 0.6666667, b: 1, a: 1}
+    - _HorizonFogColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MoonColor: {r: 0.99229205, g: 1, b: 0.44117647, a: 1}
+    - _MoonPosition: {r: 1, g: 0, b: 0, a: 0}
+    - _MoonSpriteDimensions: {r: 0, g: 0, b: 0, a: 0}
+    - _StarBasicTintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _StarLayer1Color: {r: 1, g: 1, b: 1, a: 1}
+    - _StarLayer1SpriteDimensions: {r: 0, g: 0, b: 0, a: 0}
+    - _StarLayer2Color: {r: 1, g: 0.5, b: 0.96, a: 1}
+    - _StarLayer2SpriteDimensions: {r: 0, g: 0, b: 0, a: 0}
+    - _StarLayer3Color: {r: 0.22, g: 1, b: 0.55, a: 1}
+    - _StarLayer3SpriteDimensions: {r: 0, g: 0, b: 0, a: 0}
+    - _SunColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SunPosition: {r: 0.8440528, g: 0.5362601, b: 0, a: 0}
+    - _SunSpriteDimensions: {r: 8, g: 8, b: 0, a: 0}

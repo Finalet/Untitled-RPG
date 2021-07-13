@@ -232,7 +232,11 @@ namespace HorizonBasedAmbientOcclusion.Universal
         public FloatParameter distanceFalloff = new FloatParameter(50f);
         [Tooltip("The type of per pixel normals to use.")]
         [AOSettings, Space(10)]
+#if URP_10_0_0_OR_NEWER
+        public PerPixelNormalsParameter perPixelNormals = new PerPixelNormalsParameter(PerPixelNormals.Camera);
+#else
         public PerPixelNormalsParameter perPixelNormals = new PerPixelNormalsParameter(PerPixelNormals.Reconstruct4Samples);
+#endif
         [Tooltip("This setting allow you to set the base color if the AO, the alpha channel value is unused.")]
         [AOSettings, Space(10)]
         public ColorParameter baseColor = new ColorParameter(Color.black);

@@ -4,6 +4,9 @@
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+#if VERSION_GREATER_EQUAL(10, 0)
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareNormalsTexture.hlsl"
+#endif
 
 inline float FetchRawDepth(float2 uv) {
     return SampleSceneDepth(uv * _TargetScale.xy);
@@ -34,22 +37,28 @@ inline float3 MinDiff(float3 P, float3 Pr, float3 Pl) {
 }
 
 inline float3 FetchViewNormals(float2 uv, float2 delta, float3 P) {
-    #if NORMALS_RECONSTRUCT4
+#if NORMALS_RECONSTRUCT4
     float3 Pr, Pl, Pt, Pb;
     Pr = FetchViewPos(uv + float2(delta.x, 0));
     Pl = FetchViewPos(uv + float2(-delta.x, 0));
     Pt = FetchViewPos(uv + float2(0, delta.y));
     Pb = FetchViewPos(uv + float2(0, -delta.y));
     float3 N = normalize(cross(MinDiff(P, Pr, Pl), MinDiff(P, Pt, Pb)));
-    #elif NORMALS_RECONSTRUCT2
+#elif NORMALS_RECONSTRUCT2
     float3 Pr, Pt;
     Pr = FetchViewPos(uv + float2(delta.x, 0));
     Pt = FetchViewPos(uv + float2(0, delta.y));
     float3 N = normalize(cross(Pt - P, P - Pr));
-    #else
-    float3 N = SAMPLE_TEXTURE2D_X(_CameraNormalsTexture, sampler_LinearClamp, uv * _TargetScale.xy).rgb * 2.0 - 1.0;
-    N = float3(N.x, -N.yz);
-    #endif
+#else
+#if VERSION_GREATER_EQUAL(10, 0)
+    //float3 N = SAMPLE_TEXTURE2D_X(_CameraNormalsTexture, sampler_LinearClamp, uv * _TargetScale.xy).rgb * 2.0 - 1.0;
+    float3 N = SampleSceneNormals(uv * _TargetScale.xy);
+#else
+    float3 N = float3(0, 0, 0);
+#endif
+    //N = float3(N.x, -N.yz);
+    N = float3(N.x, -N.y, N.z);
+#endif
     return N;
 }
 

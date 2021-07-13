@@ -26,7 +26,7 @@
     TEXTURE2D_X(_TempTex);
     TEXTURE2D_X(_DepthTex);
     TEXTURE2D_X(_NormalsTex);
-    TEXTURE2D_X(_CameraNormalsTexture);
+    //TEXTURE2D_X(_CameraNormalsTexture);
     TEXTURE2D(_NoiseTex);
     SAMPLER(sampler_LinearClamp);
     SAMPLER(sampler_PointRepeat);

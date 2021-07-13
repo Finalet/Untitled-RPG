@@ -79,7 +79,7 @@
     {
         float4 vertex : SV_POSITION;
         float2 uv : TEXCOORD0;
-        float2 uvStereo : TEXCOORD1;
+        //float2 uvStereo : TEXCOORD1;
         //#if STEREO_INSTANCING_ENABLED
         //uint stereoTargetEyeIndex : SV_RenderTargetArrayIndex;
         //#endif
@@ -101,7 +101,8 @@
         o.uv = o.uv * float2(1.0, -1.0) + float2(0.0, 1.0);
         #endif
 
-        o.uvStereo = TransformStereoScreenSpaceTex(o.uv, 1.0);
+        //o.uvStereo = TransformStereoScreenSpaceTex(o.uv, 1.0);
+        o.uv = TransformStereoScreenSpaceTex(o.uv, 1.0);
 
         return o;
     }
@@ -115,7 +116,8 @@
         // flip triangle upside down
         o.vertex.y = 1 - o.vertex.y;
 
-        o.uvStereo = TransformStereoScreenSpaceTex(o.uv, 1.0);
+        //o.uvStereo = TransformStereoScreenSpaceTex(o.uv, 1.0);
+        o.uv = TransformStereoScreenSpaceTex(o.uv, 1.0);
 
         return o;
     }
@@ -126,7 +128,8 @@
         o.vertex = float4(input.vertex.xy, 0.0, 1.0);
         o.uv = TransformTriangleVertexToUV(input.vertex.xy) * _UVTransform.xy + _UVTransform.zw;
 
-        o.uvStereo = TransformStereoScreenSpaceTex(o.uv, 1.0);
+        //o.uvStereo = TransformStereoScreenSpaceTex(o.uv, 1.0);
+        o.uv = TransformStereoScreenSpaceTex(o.uv, 1.0);
 
         //#if STEREO_INSTANCING_ENABLED
         //o.stereoTargetEyeIndex = (uint)_DepthSlice;

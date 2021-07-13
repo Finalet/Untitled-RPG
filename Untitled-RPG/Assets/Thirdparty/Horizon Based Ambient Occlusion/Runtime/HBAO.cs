@@ -1231,7 +1231,7 @@ namespace HorizonBasedAmbientOcclusion
                 if (XRSettings.stereoRenderingMode == XRSettings.StereoRenderingMode.MultiPass)
                     stereoRenderingMode = XRSettings.StereoRenderingMode.MultiPass;
 
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_STANDALONE || UNITY_EDITOR || UNITY_PS4
                 if (xrDesc.dimension == TextureDimension.Tex2DArray)
                     stereoRenderingMode = XRSettings.StereoRenderingMode.SinglePassInstanced;
 #endif
@@ -1242,7 +1242,7 @@ namespace HorizonBasedAmbientOcclusion
                 if (stereoRenderingMode == XRSettings.StereoRenderingMode.SinglePass)
                 {
                     numberOfEyes = 2;
-                    xrDesc.width /= 2;
+                    //xrDesc.width /= 2;
                     xrDesc.vrUsage = VRTextureUsage.None;
                 }
 
@@ -1543,7 +1543,7 @@ namespace HorizonBasedAmbientOcclusion
             float tanHalfFovY = Mathf.Tan(0.5f * hbaoCamera.fieldOfView * Mathf.Deg2Rad);
             float invFocalLenX = 1.0f / (1.0f / tanHalfFovY * (screenHeight / (float)screenWidth));
             float invFocalLenY = 1.0f / (1.0f / tanHalfFovY);
-            float maxRadInPixels = Mathf.Max(16, aoSettings.maxRadiusPixels * Mathf.Sqrt((screenWidth * screenHeight) / (1080.0f * 1920.0f)));
+            float maxRadInPixels = Mathf.Max(16, aoSettings.maxRadiusPixels * Mathf.Sqrt((screenWidth * numberOfEyes * screenHeight) / (1080.0f * 1920.0f)));
             maxRadInPixels /= (generalSettings.deinterleaving == Deinterleaving.x4 ? 4 : 1);
 
             var targetScale = generalSettings.deinterleaving == Deinterleaving.x4 ?

@@ -176,14 +176,14 @@ namespace HorizonBasedAmbientOcclusion.Universal
                             }
                         }
                         // warn about distance falloff greater than max distance
-                        else if (group.Key.GetType() == typeof(HBAO.AOSettings) && field.Name == "baseColor")
+                        /*else if (group.Key.GetType() == typeof(HBAO.AOSettings) && field.Name == "baseColor")
                         {
                             if (m_HBAO.perPixelNormals.overrideState && m_HBAO.GetAoPerPixelNormals() == HBAO.PerPixelNormals.Camera)
                             {
                                 GUILayout.Space(6.0f);
                                 EditorGUILayout.HelpBox("Currently Universal Render Pipeline does not generate camera normals, awaiting support...", MessageType.Warning);
                             }
-                        }
+                        }*/
                         else if (group.Key.GetType() == typeof(HBAO.TemporalFilterSettings) && field.Name == "temporalFilterEnabled")
                         {
                             GUILayout.Space(6.0f);

@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using Cinemachine;
 using DG.Tweening;
+using Funly.SkyStudio;
 
 public enum InterractionIcons {Bag, Chest, Coins, Craft, HandPickup, HandShake,HandPray}
 
@@ -57,6 +58,7 @@ public class PeaceCanvas : MonoBehaviour
 
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
+    public TextMeshProUGUI timeLabel;
 
     [Header("Debug")] 
     public GameObject DebugChatPanel;
@@ -122,6 +124,8 @@ public class PeaceCanvas : MonoBehaviour
                 PlayerControlls.instance.cameraControl.stopInput = true;
             }
         }
+
+        timeLabel.text = TimeOfDayController.instance ? TimeOfDayController.instance.TimeStringFromPercent() : "";
     }
 
     public void OpenSkillsPanel () {
