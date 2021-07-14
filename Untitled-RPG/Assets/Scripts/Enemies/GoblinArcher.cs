@@ -36,6 +36,8 @@ public class GoblinArcher : Enemy
             if (navAgent.enabled) navAgent.isStopped = true;
             return;
         }    
+        
+        animator.SetBool("Celebrating", currentState == EnemyState.Celebrating ? true : false);
     }
 
     protected override void FaceTarget (bool instant = false) {

@@ -17,6 +17,7 @@ public class PeaceCanvas : MonoBehaviour
     [Space]
     public bool isGamePaused;
     public bool anyPanelOpen;
+    [DisplayWithoutEdit] public bool forceAnyPanelOpen;
 
     [Space]
     public CinemachineVirtualCamera CM_MenuCam;
@@ -77,7 +78,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void Update() {
-        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null || settingsView.activeInHierarchy || currentInterractingContainer != null)
+        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null || settingsView.activeInHierarchy || currentInterractingContainer != null || Characteristics.instance.isDead || forceAnyPanelOpen)
             anyPanelOpen = true;
         else   
             anyPanelOpen = false;

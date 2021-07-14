@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class TrainingDummy : StaticEnemy
 {
-    float rotationX;
-    float rotationZ;
+    protected float rotationX;
+    protected float rotationZ;
     
-    float x;
-    float z;
+    protected float x;
+    protected float z;
     
-    Vector3 direction;
-    GameObject rotationObj;
+    protected Vector3 direction;
+    protected GameObject rotationObj;
     
     protected override void Start() {
         audioSource = GetComponent<AudioSource>();

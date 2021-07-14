@@ -39,7 +39,7 @@ public class HailstoneProjectile : MonoBehaviour
         if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (!enemiesHit.Contains(other.GetComponent<Enemy>())) {
+        if (!enemiesHit.Contains(en)) {
             en.GetHit(damageInfo, "Hailstone");
             enemiesHit.Add(en);
         }

@@ -27,16 +27,9 @@ public class GoblinWarrior : Enemy
             return;
         }
 
-        if (currentState == EnemyState.Approaching) {
-            animator.SetBool("Approaching", true);
-        } else {
-            animator.SetBool("Approaching", false);
-        }
-        if (currentState == EnemyState.Returning) {
-            animator.SetBool("Returning", true);
-        } else {
-            animator.SetBool("Returning", false);
-        }
+        animator.SetBool("Approaching", currentState == EnemyState.Approaching ? true : false);
+        animator.SetBool("Returning", currentState == EnemyState.Returning ? true : false);
+        animator.SetBool("Celebrating", currentState == EnemyState.Celebrating ? true : false);
     }
 
 

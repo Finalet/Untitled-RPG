@@ -285,7 +285,7 @@ namespace MalbersAnimations.HAP
             CM_cam.m_XAxis.Value = PlayerControlls.instance.CM_Camera.m_XAxis.Value; //Inherit camera rotation
             CM_cam.m_YAxis.Value = PlayerControlls.instance.CM_Camera.m_YAxis.Value;
             CM_cam.Priority = 2;
-            //Finale end
+            //Finale end 
 
             if (!Montura.InstantMount)                                                  //If is instant Mount play it      
             {

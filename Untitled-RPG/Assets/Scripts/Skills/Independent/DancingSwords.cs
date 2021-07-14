@@ -13,6 +13,7 @@ public class DancingSwords : Skill
     [Space]
     public float noiseSpeed = 1;
     public float noiseStrength = 0.1f;
+    public Buff buff;
     [Space]
     public AudioClip[] initialSounds;
     public AudioClip[] shootSounds;
@@ -63,6 +64,10 @@ public class DancingSwords : Skill
     }
 
     IEnumerator SpawnSwords() {
+        buff.duration = skillDuration;
+        buff.name = skillName;
+        buff.icon = icon;
+
         lerpValue = 5;
         spawnedSwords = new Transform[swordPositions.Length];
         baseSwordPositions = new Vector3[swordPositions.Length];
@@ -88,6 +93,7 @@ public class DancingSwords : Skill
         skillInAction = true;
         skillStartedTime = Time.time;
         lerpValue = 20;
+        characteristics.AddBuff(buff);
     }
     IEnumerator RespawnSword (int swordIndex) {
         float startTime = Time.time;

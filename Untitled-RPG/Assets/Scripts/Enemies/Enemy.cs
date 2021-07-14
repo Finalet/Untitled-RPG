@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyState {Idle, Approaching, Attacking, Returning};
+public enum EnemyState {Idle, Approaching, Attacking, Returning, Celebrating};
  
 [System.Serializable] public struct Loot {
     public Item item;
@@ -150,14 +150,10 @@ public abstract class Enemy : MonoBehaviour
             if (distanceToPlayer > attackRange) {
                 if(!isAttacking) currentState = EnemyState.Approaching;
             } else {
-                currentState = EnemyState.Attacking;
-            } 
-        } else {
-            if (Vector3.Distance(transform.position, initialPos) > navAgent.stoppingDistance) {
-                currentState = EnemyState.Returning;     
-            } else {
-                currentState = EnemyState.Idle;
+                currentState = Characteristics.instance.isDead ? EnemyState.Celebrating : EnemyState.Attacking;
             }
+        } else {
+            currentState = Vector3.Distance(transform.position, initialPos) > navAgent.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
         }
 
         if (delayingAgr)
@@ -173,6 +169,8 @@ public abstract class Enemy : MonoBehaviour
             TryFaceTarget();
         } else if (currentState == EnemyState.Returning) {
             ReturnToPosition();
+        } else if (currentState == EnemyState.Celebrating) {
+            Celebrate();
         }
     }
 
@@ -207,6 +205,7 @@ public abstract class Enemy : MonoBehaviour
         if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
     }
+    protected virtual void Celebrate() {}
     
     protected virtual void Health () {
         if (isDead)

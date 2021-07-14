@@ -109,7 +109,6 @@ public class PlayerControlls : MonoBehaviour
         } else if (isFlying && !disableControl) {
             FlyingAnimations();
         }
-        //UpdateRotation();
         Sprinting();
         SetAnimatorVarialbes();
         InputMagnitudeFunc();

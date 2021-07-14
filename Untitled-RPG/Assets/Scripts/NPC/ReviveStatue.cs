@@ -14,6 +14,10 @@ public class ReviveStatue : NPC
         audioSource = GetComponent<AudioSource>();
     }
 
+    void Start () {
+        ReviveManager.instance.reviveStatues.Add(this);
+    }
+
     protected override void RotateNameLable()
     {
         // do nothing

@@ -10,10 +10,12 @@ public class Characteristics : MonoBehaviour
 
     public static Characteristics instance;
 
+    public string playerName;
+    public bool isDead;
+    [Space]
     public bool immuneToDamage; int immuneToDamageInt;
     public bool immuneToInterrupt; int immuneToInterruptInt;
     
-    public string playerName;
     [Header("Main")]
     public int maxHealth; public int healthFromEquip; int healthFromBuff;
     public int maxStamina; public int staminaFromEquip; int staminaFromBuff;
@@ -281,9 +283,12 @@ public class Characteristics : MonoBehaviour
         blockChanceFromBuff = 0;
     }
 
-#region Get hit overloads 
+#region Getting Hit
 
     public void GetHit (int damage, string enemyName, HitType hitType = HitType.Normal, float cameraShakeFrequency = 0, float cameraShakeAmplitude = 0) {
+        if (isDead)
+            return;
+        
         bool blocked = Random.value < blockChance && WeaponsController.instance.leftHandStatus == SingleHandStatus.Shield;
 
         if (blocked) {
@@ -318,6 +323,27 @@ public class Characteristics : MonoBehaviour
         if (cameraShakeFrequency != 0 && cameraShakeAmplitude != 0)
             PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
 
+        if (health <= 0)
+            Die();
+    }
+
+    void Die() {
+        if (isDead)
+            return;
+
+        PlayerControlls.instance.animator.CrossFade("GetHit.Death", 0.25f);
+        PlayerControlls.instance.cameraControl.isAiming = false;
+        PlayerControlls.instance.cameraControl.isShortAiming = false;
+        ReviveManager.instance.ShowReviveWindow();
+        isDead = true;
+    }
+    public void Revive () {
+        if (!isDead)
+            return;
+
+        PlayerControlls.instance.animator.Play("GetHit.Empty");
+        health = maxHealth;
+        isDead = false;
     }
 
     void PrintHitInChat (int damage, string enemyName, bool blocked = false, bool immuneToDamage = false) {
@@ -339,8 +365,6 @@ public class Characteristics : MonoBehaviour
         return Mathf.Pow(g, defense + Mathf.Log(1, g));
     }
 
-#endregion
-
     public void GetHealed(int healAmount, string healingItem) {
         health += healAmount;
         DisplayHealNumber(healAmount);
@@ -352,3 +376,5 @@ public class Characteristics : MonoBehaviour
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> regenerated <color=green>{staminaAmount}</color> stamina from <color=#80FFFF>{staminaItem}</color>.");
     }
 }
+
+#endregion

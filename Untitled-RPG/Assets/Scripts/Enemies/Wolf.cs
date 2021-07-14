@@ -30,16 +30,8 @@ public class Wolf : Enemy
             return;
         }
 
-        if (currentState == EnemyState.Approaching) {
-            animator.SetBool("Approaching", true);
-        } else {
-            animator.SetBool("Approaching", false);
-        }
-        if (currentState == EnemyState.Returning) {
-            animator.SetBool("Returning", true);
-        } else {
-            animator.SetBool("Returning", false);
-        }   
+        animator.SetBool("Approaching", currentState == EnemyState.Approaching ? true : false);
+        animator.SetBool("Returning", currentState == EnemyState.Returning ? true : false);
 
         if (currentState == EnemyState.Idle && Time.realtimeSinceStartup - lastLookAround >= 5) {
             float x = Random.Range(0.0f, 1.0f);
