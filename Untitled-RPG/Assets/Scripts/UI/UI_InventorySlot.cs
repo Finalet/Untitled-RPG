@@ -99,6 +99,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
             itemInSlot.Use(this); //"this" to let the item clear the current a slot if item was equiped
         } else if (itemInSlot is Skillbook) {
             itemInSlot.Use();
+        } else if (itemInSlot is Resource) {
+            itemInSlot.Use();
         }
     }
 

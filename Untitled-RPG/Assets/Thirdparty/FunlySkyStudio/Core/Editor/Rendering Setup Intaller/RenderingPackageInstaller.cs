@@ -23,7 +23,7 @@ namespace Funly.SkyStudio {
         private const string kSkyStudioDisableImportFile = "Assets/SkyStudioDisableImport.txt";
         
         static RenderingPackageInstaller() {
-            Install();
+            //Install();
         }
 
         public static void Install() {

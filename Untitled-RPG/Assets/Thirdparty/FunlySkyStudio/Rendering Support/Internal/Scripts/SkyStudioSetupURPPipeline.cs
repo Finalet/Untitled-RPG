@@ -19,8 +19,9 @@ namespace Funly.SkyStudio
         
         void Start()
         {
-            GraphicsSettings.renderPipelineAsset = pipelineAsset;
-            QualitySettings.renderPipeline = pipelineAsset;
+            print("Sky Studio tried to install its own render pipiline, but Finale blocked it");
+            // GraphicsSettings.renderPipelineAsset = pipelineAsset;
+            // QualitySettings.renderPipeline = pipelineAsset;
         }
     }
 }

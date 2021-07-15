@@ -334,7 +334,7 @@ public class Characteristics : MonoBehaviour
         PlayerControlls.instance.animator.CrossFade("GetHit.Death", 0.25f);
         PlayerControlls.instance.cameraControl.isAiming = false;
         PlayerControlls.instance.cameraControl.isShortAiming = false;
-        ReviveManager.instance.ShowReviveWindow();
+        TeleportManager.instance.ShowReviveWindow();
         isDead = true;
     }
     public void Revive () {

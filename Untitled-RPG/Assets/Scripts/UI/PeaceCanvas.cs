@@ -83,6 +83,28 @@ public class PeaceCanvas : MonoBehaviour
         else   
             anyPanelOpen = false;
 
+        HandleInputs();
+
+        if (!isGamePaused) {
+            if (!anyPanelOpen) {
+                Cursor.visible = false;
+                PlayerControlls.instance.disableControl = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                if (!CanvasScript.instance.quickAccessMenuIsOpen) {
+                    PlayerControlls.instance.cameraControl.stopInput = false;
+                }
+            } else {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                PlayerControlls.instance.disableControl = true;
+                PlayerControlls.instance.cameraControl.stopInput = true;
+            }
+        }
+
+        timeLabel.text = TimeOfDayController.instance ? TimeOfDayController.instance.TimeStringFromPercent() : "";
+    }
+
+    void HandleInputs () {
         if (Input.GetKeyDown(KeybindsManager.instance.skills)) {
             if (!SkillsPanel.activeInHierarchy && currentInterractingNPC == null)
                 OpenSkillsPanel();
@@ -109,24 +131,6 @@ public class PeaceCanvas : MonoBehaviour
         } else if (Input.GetKeyDown(KeybindsManager.instance.hideUI)) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }
-
-        if (!isGamePaused) {
-            if (!anyPanelOpen) {
-                Cursor.visible = false;
-                PlayerControlls.instance.disableControl = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                if (!CanvasScript.instance.quickAccessMenuIsOpen) {
-                    PlayerControlls.instance.cameraControl.stopInput = false;
-                }
-            } else {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                PlayerControlls.instance.disableControl = true;
-                PlayerControlls.instance.cameraControl.stopInput = true;
-            }
-        }
-
-        timeLabel.text = TimeOfDayController.instance ? TimeOfDayController.instance.TimeStringFromPercent() : "";
     }
 
     public void OpenSkillsPanel () {

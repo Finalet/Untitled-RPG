@@ -91,7 +91,7 @@ public static class UI_General
             switch (r.resourceType) {
                 case ResourceType.CraftingResource: return "Crafting resource";
                 case ResourceType.QuestItem: return "Quest item";
-                case ResourceType.Misc: return "Misc";
+                case ResourceType.Misc: return "Miscellaneous";
             }
         }
         return $"NOT IMPLEMENTED";

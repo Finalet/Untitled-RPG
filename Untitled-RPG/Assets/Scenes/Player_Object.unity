@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 95dbca17e46856c4ebfe63a50504f729, type: 2}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5011442, g: 0.5910645, b: 0.8440062, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -60227,7 +60227,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4675846284446074611}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -591.3199, y: 9.968169, z: -134.60509}
+  m_LocalPosition: {x: -560, y: 10, z: -120}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6528463005166440449}
@@ -60442,7 +60442,6 @@ GameObject:
   - component: {fileID: 4675846284446074622}
   - component: {fileID: 4675846284446074613}
   - component: {fileID: 4675846284446074614}
-  - component: {fileID: 4675846284446074615}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -60765,222 +60764,6 @@ MonoBehaviour:
   sortDropDown: {fileID: 1091124127}
   slots: {fileID: 1504900123}
   quickAccessSlots: {fileID: 1106094985}
---- !u!114 &4675846284446074615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4675846284446074611}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80ced0ef3d825bf46baedd6a5bf7447a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Parent:
-    UseConstant: 1
-    ConstantValue: 1
-    Variable: {fileID: 0}
-  DismountType: 0
-  LayerPath: Layers/Mount v2
-  MountLayer: Mounted
-  LinkUpdate: 3
-  MountStored: {fileID: 0}
-  StartMounted:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  AlingMountTrigger:
-    UseConstant: 1
-    ConstantValue: 0.2
-    Variable: {fileID: 0}
-  debug: 0
-  CallAnimalA: {fileID: 0}
-  StopAnimalA: {fileID: 0}
-  RiderAudio: {fileID: 0}
-  CreateColliderMounted: 0
-  Col_radius: 0.225
-  Col_Trigger: 1
-  Col_height: 0.8
-  Col_Center: 1.2
-  OnFindMount:
-    m_PersistentCalls:
-      m_Calls: []
-  OnCanMount:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 9c5a83571f2ebf346b6e6fe49efddaa6, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.BoolVar, Assembly-CSharp
-        m_MethodName: SetValue
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: eca55a3f01c7eba4d9306cec134e7918, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnCanDismount:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: e44ea26080b5a4348908b0711d43b082, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.BoolVar, Assembly-CSharp
-        m_MethodName: SetValue
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: a152bd8dcf0ba4f46b2c000bd857a592, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  CanCallMount:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 3aef9340e54e43a4fa761e527cb230ac, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.BoolVar, Assembly-CSharp
-        m_MethodName: SetValue
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: 0e16f11981e702145af9c46dedfcd955, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnStartMounting:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 6ed281c2bd473cb498c896cd0466278c, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEndMounting:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 0611e7ab2a064c74d94f68af51e22016, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: ab5b4ae8463f75c41a855dfb99d733f6, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.BoolVar, Assembly-CSharp
-        m_MethodName: SetValue
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  OnStartDismounting:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 0611e7ab2a064c74d94f68af51e22016, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: 774c7acaf3bb1304fb314cd4bd618fcb, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, Assembly-CSharp
-        m_MethodName: Invoke
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 4675846284445915795}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: ab5b4ae8463f75c41a855dfb99d733f6, type: 2}
-        m_TargetAssemblyTypeName: MalbersAnimations.Scriptables.BoolVar, Assembly-CSharp
-        m_MethodName: SetValue
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEndDismounting:
-    m_PersistentCalls:
-      m_Calls: []
-  OnAlreadyMounted:
-    m_PersistentCalls:
-      m_Calls: []
-  DisableComponents:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  DisableList: []
-  animator: {fileID: 4675846284436600155}
-  Editor_Tabs1: 0
 --- !u!114 &4675846284446074617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134865,6 +134648,8 @@ MonoBehaviour:
   resources:
   - {fileID: 11400000, guid: bb310d68194c59043995d763197685aa, type: 2}
   - {fileID: 11400000, guid: 029e0d8f4ca12354fa9416b780e7f0a2, type: 2}
+  - {fileID: 11400000, guid: e47354288f0418548a5b1a7b14a6d7cf, type: 2}
+  - {fileID: 11400000, guid: 526e8e7aae075ce4e89abfd3642c3762, type: 2}
   consumablesCoolingDown: []
 --- !u!114 &8716438737783131324
 MonoBehaviour:
@@ -134887,6 +134672,7 @@ MonoBehaviour:
   quickAccessMenu: 9
   inventory: 105
   skills: 107
+  teleportationMenu: 109
   interact: 102
   damageChat: 282
   tooManyItems: 283
@@ -134955,11 +134741,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8716438737783131321}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db1582466712a904a9c8a6d9020e449c, type: 3}
+  m_Script: {fileID: 11500000, guid: b2166c015d1bc8f44a4be430df882fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   reviveWindow: {fileID: 3047388721330553670, guid: 3c8bec99b655fac458a501d5dba9ed49,
     type: 3}
+  teleportMenu: {fileID: 4114669569512092340, guid: 5cab2b07cef46e041b552a36393194a4,
+    type: 3}
+  portal: {fileID: 8551913144352028970, guid: 28c875d9a7d308c419e1da517dbc8f27, type: 3}
+  teleportationResource: {fileID: 11400000, guid: 526e8e7aae075ce4e89abfd3642c3762,
+    type: 2}
   reviveStatues: []
 --- !u!222 &8780106765842982570
 CanvasRenderer:

@@ -6,6 +6,7 @@ using DG.Tweening;
 public class ReviveStatue : NPC
 {
     [Header("Custom vars")]
+    public string teleportationLocationName;
     public GameObject reviveStatuePrefab;
 
     ReviveStatueWindowUI instanciatedWindow;
@@ -15,7 +16,7 @@ public class ReviveStatue : NPC
     }
 
     void Start () {
-        ReviveManager.instance.reviveStatues.Add(this);
+        TeleportManager.instance.reviveStatues.Add(this);
     }
 
     protected override void RotateNameLable()

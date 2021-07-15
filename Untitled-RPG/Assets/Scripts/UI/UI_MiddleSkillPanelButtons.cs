@@ -147,7 +147,6 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
             return;
         }
 
-        SingleHandStatus rhs = WeaponsController.instance.rightHandStatus;
         if (EquipmentManager.instance.mainHand.itemInSlot != null) {
             Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
             if (w.weaponCategory == WeaponCategory.Sword || w.weaponCategory == WeaponCategory.Axe)
@@ -160,6 +159,8 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
                 AddSkill(AssetHolder.instance.getSkill(0), null);
             else if (w.weaponCategory == WeaponCategory.Staff)
                 AddSkill(AssetHolder.instance.getSkill(8), null);
+            else 
+                ClearSlot();
         } else {
             ClearSlot();
         }

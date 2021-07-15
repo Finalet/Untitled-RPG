@@ -17,6 +17,7 @@ public class KeybindsManager : MonoBehaviour
     public KeyCode quickAccessMenu = KeyCode.Tab;
     public KeyCode inventory = KeyCode.I;
     public KeyCode skills = KeyCode.K;
+    public KeyCode teleportationMenu = KeyCode.M;
     public KeyCode interact = KeyCode.F;
     [Header("Misc")]
     public KeyCode damageChat = KeyCode.F1;
