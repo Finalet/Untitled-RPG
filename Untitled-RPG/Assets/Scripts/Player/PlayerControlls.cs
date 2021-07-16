@@ -10,7 +10,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     [Header("Movement")]
     public float baseWalkSpeed = 1;
-    float walkSpeed;
+    public float walkSpeed;
     public bool toggleRunning = false;
     public int staminaReqToRoll = 50;
 
@@ -25,7 +25,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
     public bool isAttacking;
     public bool isGettingHit;
     public bool isGrounded;
-    public bool isCastingSkill;
+    public bool isCasting;
     public bool isFlying;
     public bool isPickingArea;
     public bool isAimingSkill;
@@ -426,11 +426,11 @@ public class PlayerControlls : MonoBehaviour, ISavable
     }
     
     public void InterruptCasting () {
-        if (!isCastingSkill)
+        if (!isCasting)
             return;
         animator.CrossFade("Attacks.Empty", 0.15f);
         castInterrupted = true;
-        isCastingSkill = false;
+        isCasting = false;
     }
 
     void CheckIsAttacking () {
@@ -476,7 +476,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
     }
 
     public bool isDoingAnything () {
-        if (isCrouch || isJumping || isRolling || isMounted || isAttacking || isGettingHit || isCastingSkill || isFlying || isPickingArea || isAimingSkill)
+        if (isCrouch || isJumping || isRolling || isMounted || isAttacking || isGettingHit || isCasting || isFlying || isPickingArea || isAimingSkill)
             return true;
         else 
             return false;

@@ -9,6 +9,7 @@ public class CaptainThrowProjectile : MonoBehaviour
     public DamageInfo damageInfo;
     public Skill skill;
     public AudioClip hitSound;
+    public AudioClip catchSound;
     public Transform mesh;
 
     bool isReturning;
@@ -17,6 +18,8 @@ public class CaptainThrowProjectile : MonoBehaviour
     Vector3 right;
     Vector3 lookDir;
     AudioSource audioSource;
+
+    bool playedReturnSound;
 
     List<Enemy> enemiesHit = new List<Enemy>();
         
@@ -29,7 +32,7 @@ public class CaptainThrowProjectile : MonoBehaviour
         shootPoint = _shootPoint;
         strength = _strength;
         isThrown = true;
-        audioSource.clip = hitSound;
+        playedReturnSound = false;
     }
 
     void Update() {
@@ -45,6 +48,11 @@ public class CaptainThrowProjectile : MonoBehaviour
             if (Vector3.Distance(transform.position, returnTransform.position) <= 5f)
                 transform.rotation = Quaternion.Lerp(transform.rotation, returnTransform.rotation, Time.deltaTime * 7);
             transform.position = Vector3.MoveTowards(transform.position, returnTransform.position, Time.deltaTime * strength);
+
+            if (!playedReturnSound) {
+                playedReturnSound = true;
+                audioSource.PlayOneShot(catchSound);
+            }
         }
 
         if (Vector3.Distance(transform.position, shootPoint) < 0.1f)
@@ -68,7 +76,7 @@ public class CaptainThrowProjectile : MonoBehaviour
             return;
 
         audioSource.time = 0.2f;
-        audioSource.Play();
+        audioSource.PlayOneShot(hitSound);
 
         isReturning = true;
         Enemy en = other.GetComponentInParent<Enemy>();

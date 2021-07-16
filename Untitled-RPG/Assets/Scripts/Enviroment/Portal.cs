@@ -81,9 +81,9 @@ public class Portal : MonoBehaviour
         Transform teleportee = null;
         if (other.CompareTag("Player"))
             teleportee = PlayerControlls.instance.transform;
-        else if (other.GetComponentInParent<Enemy>()) {
-            teleportee = other.GetComponentInParent<Enemy>().transform;
-        }
+        // else if (other.GetComponentInParent<Enemy>()) { //CONSIDER ADDING TELEPORATION TO OTHER OBJECTS BESIDES THE PLAYER
+        //     teleportee = other.GetComponentInParent<Enemy>().transform;
+        // }
 
         if (teleportee == null || Time.time - TeleportManager.instance.lastTeleportedTime < TeleportManager.instance.teleportDelay) 
             return;

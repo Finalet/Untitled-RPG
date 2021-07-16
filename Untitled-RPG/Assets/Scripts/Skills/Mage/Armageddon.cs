@@ -76,12 +76,12 @@ public class Armageddon : Skill
                 Destroy(instanciatedCloud.gameObject, 5);
                 yield break;
             }
-            playerControlls.isCastingSkill = true;
+            playerControlls.isCasting = true;
             yield return null;
         }
         animator.CrossFade("Attacks.Mage.Armageddon_end", 0.25f);
         instanciatedCloud.Stop();
-        playerControlls.isCastingSkill = false;
+        playerControlls.isCasting = false;
         Destroy(instanciatedCloud.gameObject, 5);
     }
     

@@ -34,7 +34,7 @@ public class Slash : Skill
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
-        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill)
+        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCasting)
             return;
 
         StartCoroutine(StartUse());

@@ -22,6 +22,10 @@ public class TeleportManager : MonoBehaviour
 
     public List<ReviveStatue> reviveStatues = new List<ReviveStatue>();
 
+
+    [Space]
+    public AudioClip portalCastSound;
+
     [System.NonSerialized] public float lastTeleportedTime;
     [System.NonSerialized] public float teleportDelay = 2;
 
@@ -30,6 +34,13 @@ public class TeleportManager : MonoBehaviour
     }
     void Start() {
         reviveStatues.Sort((x, y) => x.teleportationLocationName.CompareTo(y.teleportationLocationName));
+    }
+    void Update() {
+        if (instanciatedTeleportMenu) {
+            if (Input.GetKeyDown(KeyCode.Escape)) {
+                CloseTeleportMenu();
+            }
+        }
     }
 
     public void ShowReviveWindow() {
@@ -103,11 +114,30 @@ public class TeleportManager : MonoBehaviour
         }
         StartCoroutine(openPortal(teleportPosition));        
     }
+    float portalCastTime = 2;
     IEnumerator openPortal (Vector3 teleportPosition) {
-        PlayerControlls.instance.PlayGeneralAnimation(2, true, 2);
+        PlayerControlls.instance.PlayGeneralAnimation(2, true, portalCastTime);
         CloseTeleportMenu();
-        CanvasScript.instance.DisplayProgressBar(2);
-        yield return new WaitForSeconds(2);
+        CanvasScript.instance.DisplayProgressBar(true);
+        
+        PlayerAudioController.instance.PlayPlayerSound(portalCastSound);
+        
+        float timeStarted = Time.time;
+        PlayerControlls.instance.isCasting = true;
+        while (Time.time - timeStarted < portalCastTime) {
+            if (PlayerControlls.instance.castInterrupted) {
+                PlayerControlls.instance.castInterrupted = false;
+                PlayerControlls.instance.ExitGeneralAnimation();
+                CanvasScript.instance.DisplayProgressBar(false, (Time.time - timeStarted) / portalCastTime, true);
+                PlayerAudioController.instance.StopPlayerSound();
+                yield break;
+            }
+            CanvasScript.instance.DisplayProgressBar(false, (Time.time - timeStarted) / portalCastTime);
+            yield return null;
+        }
+        PlayerAudioController.instance.StopPlayerSound();
+        PlayerControlls.instance.isCasting = false;
+        CanvasScript.instance.DisplayProgressBar(false, 1, true);
         if (instanciatedPortal){
             Destroy(instanciatedPortal.GetComponent<Portal>().returnPortal.gameObject);
             Destroy(instanciatedPortal);

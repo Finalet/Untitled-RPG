@@ -53,7 +53,7 @@ public abstract class Skill : MonoBehaviour
             CanvasScript.instance.DisplayWarning("Not enough stamina!");
             return;
         }
-        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
+        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCasting || playerControlls.isAttacking)
             return;
 
         StartCoroutine(StartUse());
@@ -78,11 +78,11 @@ public abstract class Skill : MonoBehaviour
     }
 
     protected virtual IEnumerator UseCoroutine (){
-        if (playerControlls.isCastingSkill || !playerControlls.isIdle)
+        if (playerControlls.isCasting || !playerControlls.isIdle)
             yield break;
 
         CastingAnim();
-        playerControlls.isCastingSkill = true;
+        playerControlls.isCasting = true;
         finishedCast = false;
         CanvasScript.instance.DisplayCastingBar(nomralizedCastingAnim);
 
@@ -96,7 +96,7 @@ public abstract class Skill : MonoBehaviour
             }
             yield return null;
         }
-        playerControlls.isCastingSkill = false;
+        playerControlls.isCasting = false;
         LocalUse();
     }
 

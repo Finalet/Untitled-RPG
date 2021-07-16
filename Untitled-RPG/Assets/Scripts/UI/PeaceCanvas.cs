@@ -59,7 +59,6 @@ public class PeaceCanvas : MonoBehaviour
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
     public TextMeshProUGUI timeLabel;
-    public Image blackout;
 
     [Header("Debug")] 
     public GameObject DebugChatPanel;
@@ -182,19 +181,21 @@ public class PeaceCanvas : MonoBehaviour
             TogglePause();
         }
     }
-
+    
+    float timeScalePrePause;
     public void TogglePause () {
         //return; //DISABLE PAUSE MENU WHILE WORKING ON THE GAME
 
         isGamePaused = !isGamePaused;
 
         if (isGamePaused) {
+            timeScalePrePause = Time.timeScale;
             Time.timeScale = 0;
             PauseMenu.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         } else {
-            Time.timeScale = 1;
+            Time.timeScale = timeScalePrePause;
             PauseMenu.SetActive(false);
         }
     }
@@ -341,10 +342,5 @@ public class PeaceCanvas : MonoBehaviour
     public void HideKeySuggestion (){
         if (buttonSuggestionUI.activeInHierarchy)
             buttonSuggestionUI.SetActive(false);
-    }
-
-    public void FadeBlackScreen (float duration = 0, float speed = 0.5f) {
-        blackout.DOFade(1, speed).timeScale = 1 / Time.timeScale;
-        blackout.DOFade(0, speed).SetDelay(speed + duration).timeScale = 1 / Time.timeScale;
     }
 }

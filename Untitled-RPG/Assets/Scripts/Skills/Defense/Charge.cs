@@ -26,7 +26,7 @@ public class Charge : Skill
 
     IEnumerator Using () {
         animator.CrossFade("Attacks.Defense.Charge", 0.4f);
-        PlaySound(soundFX, 0, 1, 0, 0.5f);
+        PlaySound(soundFX, 0, 1, 0, 1);
         PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.sprint, 0.05f, 1.7f);
         
         enemiesHit.Clear();
@@ -93,6 +93,6 @@ public class Charge : Skill
     public override string getDescription()
     {
         DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
-        return $"Charge through enemies for {duraiton} seconds, dealing {dmg.damage} {dmg.damageType} damage.\n\nYou cannot recieve damage while charging. Shield is required.";
+        return $"Charge through enemies for {duraiton} seconds, dealing {dmg.damage} {dmg.damageType} damage.\n\nSkill damage depends on your defense and you cannot recieve damage while charging.\n\nShield is required.";
     }
 }

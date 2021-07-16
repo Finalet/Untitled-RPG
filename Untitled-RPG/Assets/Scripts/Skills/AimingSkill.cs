@@ -9,21 +9,21 @@ public abstract class AimingSkill : Skill
     }
 
     public virtual void UseButtonDown() {
-        if (!skillActive() || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
+        if (!skillActive() || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCasting || playerControlls.isAttacking)
             return;
 
         StartAiming();
     }
 
     public virtual void UseButtonHold () {
-        if (!skillActive() || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
+        if (!skillActive() || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCasting || playerControlls.isAttacking)
             return;
         
         KeepAiming();
     }
 
     public virtual void UseButtonUp () {
-        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCastingSkill || playerControlls.isAttacking)
+        if (!skillActive() || isCoolingDown || playerControlls.isRolling || playerControlls.isGettingHit || playerControlls.isCasting || playerControlls.isAttacking)
             return;
         
         Shoot();

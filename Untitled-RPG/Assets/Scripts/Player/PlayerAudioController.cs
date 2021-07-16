@@ -151,6 +151,9 @@ public class PlayerAudioController : MonoBehaviour
         else
             audioSource.PlayDelayed(delay);
     }
+    public void StopPlayerSound(){
+        audioSource.Stop();
+    }
     public void PlayPlayerAnimationSound (AnimationEvent animEvent){
         if (animEvent.intParameter == 0)
             audioSource.clip = blacksmithHammer;

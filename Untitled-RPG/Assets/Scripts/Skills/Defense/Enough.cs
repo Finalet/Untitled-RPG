@@ -13,7 +13,7 @@ public class Enough : Skill
     List<Enemy> enemiesInRadius = new List<Enemy>();
     protected override void CustomUse() {
         animator.CrossFade("Attacks.Defense.Enough start", 0.25f);
-        PlaySound(sfx, 0, 0.7f * characteristics.attackSpeed.y);
+        PlaySound(sfx, 0, characteristics.attackSpeed.x);
         Invoke("PushAway", 0.5f * characteristics.attackSpeed.y);
     }
 

@@ -40,6 +40,9 @@ public static class CalculateDamage
             case DamageType.Ranged:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.rangedAttack);
                 break;
+            case DamageType.Defensive:
+                skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.defense);
+                break;
             case DamageType.Enemy:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f);
                 break;
@@ -64,7 +67,7 @@ public static class CalculateDamage
     }
 
     public static DamageInfo enemyDamageInfo (int baseDamage) {
-        return enemyDamageInfo(baseDamage, 0.15f); 
+        return enemyDamageInfo(baseDamage, 0); 
     }
     public static DamageInfo enemyDamageInfo (int baseDamage, float critChance = 0, float damageVariation = 0.15f) {
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(baseDamage * (1-damageVariation), baseDamage * (1+damageVariation)));

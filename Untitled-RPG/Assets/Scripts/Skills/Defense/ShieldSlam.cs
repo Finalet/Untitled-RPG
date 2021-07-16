@@ -6,13 +6,10 @@ public class ShieldSlam : Skill
 {
     List<Enemy> enemiesInTrigger = new List<Enemy>();
 
-    public AudioClip[] wooshes;
-
     protected override void CustomUse()
     {
         animator.CrossFade("Attacks.Defense.ShieldSlam start", 0.25f);
-        Invoke("PlayWooshSound", 0.35f * characteristics.attackSpeed.y);
-        Invoke("PlayWooshSound", 0.8f * characteristics.attackSpeed.y);
+        PlaySound(audioSource.clip, 0, characteristics.attackSpeed.x);
     }
 
     public void Hit (float hitNumber) {
@@ -37,17 +34,6 @@ public class ShieldSlam : Skill
         if (enemiesInTrigger.Contains(en)) enemiesInTrigger.Remove(en);
     }
 
-    int x;
-    void PlayWooshSound() {
-        if (x == 0) {
-            PlaySound(wooshes[0]);
-            x = 1;
-        } else if (x == 1) {
-            PlaySound(wooshes[1]);
-            x = 0;
-        }
-    }
-
     public override bool skillActive()
     {
         if (WeaponsController.instance.leftHandStatus != SingleHandStatus.Shield)
@@ -58,6 +44,6 @@ public class ShieldSlam : Skill
     public override string getDescription()
     {
         DamageInfo damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
-        return $"Use your shield to make two short hits in succession, dealing {damageInfo.damage} {damageInfo.damageType} damage each and knocking the target on the ground.\n\nShield is required.";
+        return $"Use your shield to make two short hits in succession, dealing {damageInfo.damage} {damageInfo.damageType} damage each and knocking the target on the ground. Damage dealt is dependant on your defense.\n\nShield is required.";
     }
 }

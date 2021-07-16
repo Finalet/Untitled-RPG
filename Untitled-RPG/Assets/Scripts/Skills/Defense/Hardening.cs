@@ -15,7 +15,7 @@ public class Hardening : Skill
 
         VFX.Play();
         animator.CrossFade("Attacks.Defense.Hardening", 0.25f);
-        audioSource.Play();
+        PlaySound(audioSource.clip, 0, characteristics.attackSpeed.x);
         playerControlls.isAttacking = false;
         characteristics.AddBuff(buff);
     }

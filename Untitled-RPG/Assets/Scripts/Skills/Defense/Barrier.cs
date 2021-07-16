@@ -11,7 +11,7 @@ public class Barrier : Skill
     public float duration;
 
     public Transform[] shields;
-    public AudioClip startSound;
+    public AudioClip sfx;
 
     float raiseSpeed = 0.5f;
 
@@ -21,12 +21,12 @@ public class Barrier : Skill
     }
 
     IEnumerator use () {
-        yield return new WaitForSeconds(0.56f * characteristics.attackSpeed.y);
+        PlaySound(sfx, 0, characteristics.attackSpeed.y);
+        yield return new WaitForSeconds(0.56f * characteristics.attackSpeed.x);
         barrier.transform.SetParent(null);
         barrier.SetActive(true);
         barrierMaterial.SetFloat("Progress", 0);
         barrierMaterial.DOFloat(1, "Progress", raiseSpeed);
-        PlaySound(startSound);
         for (int i = 0; i < shields.Length; i++) {
             shields[i].localScale = Vector3.zero;
             shields[i].DOScale(Vector3.one * 0.7f, raiseSpeed).SetEase(Ease.OutBack);

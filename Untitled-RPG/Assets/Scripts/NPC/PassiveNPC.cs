@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using ECM.Components;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -50,6 +51,8 @@ public class PassiveNPC : MonoBehaviour
 
     Animator animator;
     NavMeshAgent navAgent;
+    CharacterMovement charMovement;
+    Rigidbody rb;
     SittingSpot currentSittingSpot;
 
     void Awake() {
@@ -58,6 +61,9 @@ public class PassiveNPC : MonoBehaviour
         if (NPCType != PassiveNPCType.Static) {
             navAgent = GetComponent<NavMeshAgent>();
         }
+
+        charMovement = GetComponent<CharacterMovement>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Start() {
@@ -78,7 +84,9 @@ public class PassiveNPC : MonoBehaviour
             PatrollingAI();
             
         if(NPCType != PassiveNPCType.Static) {
-            navAgent.nextPosition = isSitting ? Vector3.Lerp(transform.position, currentSittingSpot.transform.position, Time.deltaTime * 7f) : navAgent.nextPosition;
+            transform.position = isSitting ? Vector3.Lerp(transform.position, currentSittingSpot.transform.position, Time.deltaTime * 7f) : transform.position;
+            charMovement.enabled = !isSitting;
+            rb.isKinematic = isSitting;
             CheckWhichFootIsUp();
         }
 
@@ -192,12 +200,6 @@ public class PassiveNPC : MonoBehaviour
                 obstacle.center = Vector3.up;
                 obstacle.height = 2;
                 obstacle.carving = true;
-            }
-            if (TryGetComponent(out NavMeshAgent agent)) {
-                UnityEditor.EditorApplication.delayCall+=()=>
-                {
-                    DestroyImmediate(agent);
-                };
             }
         } else if (NPCType == PassiveNPCType.Patrolling){
             if (!TryGetComponent(out NavMeshAgent agent)) {

@@ -10,6 +10,7 @@ public class CaptainThrow : Skill
     [Space]
     public AudioClip shootSound;
     public AudioClip hitSound;
+    public AudioClip catchSound;
 
     Vector3 throwPoint;
     Transform shootPosition;
@@ -28,10 +29,11 @@ public class CaptainThrow : Skill
 
         projectile = WeaponsController.instance.LeftHandEquipObj.GetComponent<CaptainThrowProjectile>();
         projectile.hitSound = hitSound;
+        projectile.catchSound = catchSound;
         projectile.returnTransform = shootPosition;
         projectile.skill = this;
         projectile.damageInfo = CalculateDamage.damageInfo(damage());
-        PlaySound(shootSound, 0, 1, characteristics.attackSpeed.y * 0.45f);
+        PlaySound(shootSound, 0, 1, characteristics.attackSpeed.x * 0.45f);
     }
 
     public void ThrowShield () {
