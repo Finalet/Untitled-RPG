@@ -15,7 +15,9 @@ public class ReviveStatue : NPC
         audioSource = GetComponent<AudioSource>();
     }
 
-    void Start () {
+    IEnumerator Start () {
+        while (!TeleportManager.instance)
+            yield return null;
         TeleportManager.instance.reviveStatues.Add(this);
     }
 

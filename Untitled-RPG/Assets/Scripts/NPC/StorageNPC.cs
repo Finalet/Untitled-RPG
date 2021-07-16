@@ -15,19 +15,10 @@ public class StorageNPC : NPC
     }
 
     void OpenStorageWindow() {
-        PeaceCanvas.instance.storageWindow.SetActive(true);
+        StorageManager.instance.OpenStorage();
     }
 
     void CloseStorageWindow (){
-        PeaceCanvas.instance.storageWindow.SetActive(false);
-    }
-
-    public int getNumberOfEmptySlots() {
-        return PeaceCanvas.instance.storageWindow.GetComponent<StorageWindowUI>().getNumberOfEmptySlots();
-    }
-
-    public void AddItemToStorage (Item item, int amount) {
-        PeaceCanvas.instance.storageWindow.GetComponent<StorageWindowUI>().AddItemToStorage(item, amount);
-        PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.LootPickup);
+        StorageManager.instance.CloseStorage();
     }
 }

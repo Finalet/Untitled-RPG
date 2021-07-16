@@ -29,7 +29,6 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject Inventory;
     public GameObject EquipmentSlots;
     public GameObject PauseMenu;
-    public GameObject storageWindow;
     public GameObject settingsView;
 
     [Header("Interractions")]
@@ -60,13 +59,13 @@ public class PeaceCanvas : MonoBehaviour
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
     public TextMeshProUGUI timeLabel;
+    public Image blackout;
 
     [Header("Debug")] 
     public GameObject DebugChatPanel;
     public TextMeshProUGUI debugChatText;
     public int maxChatLines;
     public GameObject DebugTooManyItems;
-    
 
     void Awake() {
         if (instance == null)
@@ -80,8 +79,8 @@ public class PeaceCanvas : MonoBehaviour
     void Update() {
         if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null || settingsView.activeInHierarchy || currentInterractingContainer != null || Characteristics.instance.isDead || forceAnyPanelOpen)
             anyPanelOpen = true;
-        else   
-            anyPanelOpen = false;
+        else if (anyPanelOpen)  
+            StartCoroutine(noOpenPanels());
 
         HandleInputs();
 
@@ -131,6 +130,11 @@ public class PeaceCanvas : MonoBehaviour
         } else if (Input.GetKeyDown(KeybindsManager.instance.hideUI)) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }
+    }
+
+    IEnumerator noOpenPanels () { //Doing this cause otherwise on every mouse click player would attack.
+        yield return new WaitForEndOfFrame();
+        anyPanelOpen = false;
     }
 
     public void OpenSkillsPanel () {
@@ -337,5 +341,10 @@ public class PeaceCanvas : MonoBehaviour
     public void HideKeySuggestion (){
         if (buttonSuggestionUI.activeInHierarchy)
             buttonSuggestionUI.SetActive(false);
+    }
+
+    public void FadeBlackScreen (float duration = 0, float speed = 0.5f) {
+        blackout.DOFade(1, speed).timeScale = 1 / Time.timeScale;
+        blackout.DOFade(0, speed).SetDelay(speed + duration).timeScale = 1 / Time.timeScale;
     }
 }

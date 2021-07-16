@@ -8,17 +8,19 @@ public class Portal : MonoBehaviour
     public VisualEffect vfx;
     public Transform insideVFX;
     public Vector3 teleportPosition;
-    [Range(0,1)] public float progress = 0;
+    [Range(0,1)] public float progress;
     [Range(0.5f, 3f)] public float radius = 1.4f;
     float portalOpenDuration = 10;
 
     [System.NonSerialized] public Portal returnPortal;
     public bool isReturnPortal;
 
+    public AudioSource audioSource;
+
     void OnValidate() {
         vfx.SetFloat("Progress", progress);
         vfx.SetFloat("Radius", radius);
-        insideVFX.localScale = Vector3.one * radius * 2 * progress;
+        insideVFX.localScale = insideVFXScale() * progress;
     }
 
     void Start(){
@@ -32,6 +34,9 @@ public class Portal : MonoBehaviour
         returnPortal.isReturnPortal = true;
     }
     IEnumerator open (float timeToOpen = 3) {
+        audioSource.Play();
+
+        progress = 0;
         transform.position += Vector3.up * (0.3f+radius);
         BoxCollider col = GetComponent<BoxCollider>();
         col.enabled = false;
@@ -41,25 +46,27 @@ public class Portal : MonoBehaviour
         DOTween.To(()=> progress, x=> progress = x, 1, timeToOpen);
         while (progress < 1) {
             vfx.SetFloat("Progress", progress);
-            insideVFX.localScale = Vector3.one * radius * 2 * progress;
+            insideVFX.localScale = insideVFXScale() * progress;
             yield return null;
         }
         col.enabled = true;
         vfx.SetFloat("Progress", 1);
-        insideVFX.localScale = Vector3.one * radius * 2;
+        insideVFX.localScale = insideVFXScale();
+
         yield return new WaitForSeconds(portalOpenDuration);
         StartCoroutine(close());
     }
     IEnumerator close (float timeToClose = 3) {
+
         BoxCollider col = GetComponent<BoxCollider>();
         col.enabled = false;
         
-        insideVFX.localScale = Vector3.one * radius * 2;
+        insideVFX.localScale = insideVFXScale();
 
         DOTween.To(()=> progress, x=> progress = x, 0, timeToClose);
         while (progress > 0) {
             vfx.SetFloat("Progress", progress);
-            insideVFX.localScale = Vector3.one * radius * progress;
+            insideVFX.localScale = insideVFXScale() * progress;
             yield return null;
         }
         vfx.SetFloat("Progress", 0);
@@ -86,5 +93,9 @@ public class Portal : MonoBehaviour
     void Teleport(Transform teleportee) {
         teleportee.position = teleportPosition;
         TeleportManager.instance.lastTeleportedTime = Time.time;
+    }
+
+    Vector3 insideVFXScale () {
+        return Vector3.one * radius * 2;
     }
 }

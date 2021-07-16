@@ -142,8 +142,9 @@ public class CanvasScript : MonoBehaviour
     }
     IEnumerator DisplayCastinBarIenum (float castEndNormalizedTime) {
         castingBar.SetActive(true);
-        castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = 0;
-        while (castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount != 1) {
+        Image bar = castingBar.transform.GetChild(0).GetComponent<Image>();
+        bar.fillAmount = 0;
+        while (bar.fillAmount != 1) {
             if (PlayerControlls.instance.castInterrupted) {
                 break;
             }
@@ -151,7 +152,7 @@ public class CanvasScript : MonoBehaviour
             if (cc.IsName("Empty"))
                 cc = PlayerControlls.instance.animator.GetNextAnimatorStateInfo(PlayerControlls.instance.animator.GetLayerIndex("Attacks")); 
 
-            castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = cc.normalizedTime % 1 / castEndNormalizedTime;
+            bar.fillAmount = cc.normalizedTime % 1 / castEndNormalizedTime;
             yield return null;
         }
         yield return new WaitForSeconds(0.25f);
@@ -166,6 +167,23 @@ public class CanvasScript : MonoBehaviour
         castingBar.transform.GetChild(0).GetComponent<Image>().fillAmount = progress;
         if (done)
             castingBar.SetActive(false);
+    }
+    public void DisplayProgressBar (float duration) {
+        StartCoroutine(DisplayAutomaricProgressBar(duration));
+    }
+
+    IEnumerator DisplayAutomaricProgressBar(float duration) {
+        castingBar.SetActive(true);
+        Image bar = castingBar.transform.GetChild(0).GetComponent<Image>();
+        bar.fillAmount = 0;
+        float startTime = Time.time; 
+        while (Time.time - startTime < duration) {
+            bar.fillAmount = (Time.time - startTime) / duration;
+            yield return null;
+        }
+        bar.fillAmount = 1;
+        yield return new WaitForSeconds(0.25f);
+        castingBar.SetActive(false);
     }
 
     public void PickAreaForSkill (Skill skill) {

@@ -6,34 +6,29 @@ public class SittingSpot : MonoBehaviour
 {
     public bool isTaken;
 
-    PlayerControlls playerControlls;
     bool playerNearby;
 
     float sitDelay = 2f;
     float sitTime;
 
-    void Start() {
-        playerControlls = PlayerControlls.instance;
-    }
-
     void Update() {
         if (!playerNearby || Time.time - sitTime < sitDelay)
             return;
 
-        if (!playerControlls.isSitting) {
+        if (!PlayerControlls.instance.isSitting) {
             if (isTaken)
                 return;
 
             PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Sit");
             if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
-                playerControlls.Sit(this);
+                PlayerControlls.instance.Sit(this);
                 PeaceCanvas.instance.HideKeySuggestion();
                 sitTime = Time.time;
             }
         } else {
             PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Get up");
             if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
-                playerControlls.Unsit(this);
+                PlayerControlls.instance.Unsit(this);
                 PeaceCanvas.instance.HideKeySuggestion();
                 sitTime = Time.time;
             }

@@ -870,7 +870,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8858552150399003714}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StorageWindowUI, Assembly-CSharp
         m_MethodName: Sort
         m_Mode: 1
@@ -4502,6 +4502,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c54b3ae4101710e409821c607b4ff61b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &181667819
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 181667822}
+  - component: {fileID: 181667821}
+  - component: {fileID: 181667820}
+  m_Layer: 5
+  m_Name: Blackout
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &181667820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181667819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &181667821
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181667819}
+  m_CullTransparentMesh: 1
+--- !u!224 &181667822
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181667819}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1428827158976513314}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 200}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &182491414
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51404,6 +51479,7 @@ RectTransform:
   - {fileID: 8780106765842982575}
   - {fileID: 2317584040140857931}
   - {fileID: 1255696019}
+  - {fileID: 181667822}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -51518,7 +51594,6 @@ MonoBehaviour:
   Inventory: {fileID: 1342433676}
   EquipmentSlots: {fileID: 837495450}
   PauseMenu: {fileID: 1282125607}
-  storageWindow: {fileID: 8780106765842982574}
   settingsView: {fileID: 914497035}
   buttonSuggestionUI: {fileID: 37628299}
   currentInterractingNPC: {fileID: 0}
@@ -51539,6 +51614,7 @@ MonoBehaviour:
   skillbookPreviewPanel: {fileID: 9114446124583556458, guid: e6ce9ba03b16e9f42b46aaa1a67c7450,
     type: 3}
   timeLabel: {fileID: 1813739643}
+  blackout: {fileID: 181667820}
   DebugChatPanel: {fileID: 2317584040140857930}
   debugChatText: {fileID: 2317584040770170263}
   maxChatLines: 17
@@ -60227,7 +60303,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4675846284446074611}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -560, y: 10, z: -120}
+  m_LocalPosition: {x: -637.64, y: 10.893, z: -115.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6528463005166440449}
@@ -60442,6 +60518,7 @@ GameObject:
   - component: {fileID: 4675846284446074622}
   - component: {fileID: 4675846284446074613}
   - component: {fileID: 4675846284446074614}
+  - component: {fileID: 4675846284446074615}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -60764,6 +60841,22 @@ MonoBehaviour:
   sortDropDown: {fileID: 1091124127}
   slots: {fileID: 1504900123}
   quickAccessSlots: {fileID: 1106094985}
+--- !u!114 &4675846284446074615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4675846284446074611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317030b92e384744680f4e3481461d22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storageWindow: {fileID: 8780106765842982574}
+  slots: {fileID: 3578022988828501443}
+  sortDropDown: {fileID: 836078040}
+  isStorageOpen: 0
 --- !u!114 &4675846284446074617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134770,7 +134863,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8780106765842982575}
   - component: {fileID: 8780106765842982570}
-  - component: {fileID: 8858552150399003714}
   m_Layer: 5
   m_Name: StorageWindow
   m_TagString: Untagged
@@ -134838,20 +134930,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -6, y: -6}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8858552150399003714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8780106765842982574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18e044a99d9bb7a4c9440ec8bf9c2c1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slots: {fileID: 3578022988828501443}
-  sortDropDown: {fileID: 836078040}
 --- !u!1 &8859864588158867063
 GameObject:
   m_ObjectHideFlags: 0

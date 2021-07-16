@@ -23,7 +23,7 @@ public class TeleportManager : MonoBehaviour
     public List<ReviveStatue> reviveStatues = new List<ReviveStatue>();
 
     [System.NonSerialized] public float lastTeleportedTime;
-    [System.NonSerialized] public float teleportDelay = 3;
+    [System.NonSerialized] public float teleportDelay = 2;
 
     void Awake() {
         instance = this;
@@ -71,9 +71,10 @@ public class TeleportManager : MonoBehaviour
         if (instanciatedTeleportMenu)
             return;
         
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.ReadBook);
+
         PeaceCanvas.instance.forceAnyPanelOpen = true;
         PeaceCanvas.instance.CloseInventory();
-        PeaceCanvas.instance.CloseSkillsPanel();
 
         instanciatedTeleportMenu = Instantiate(teleportMenu, PeaceCanvas.instance.transform);
         instanciatedTeleportMenu.transform.SetAsLastSibling();
@@ -96,11 +97,17 @@ public class TeleportManager : MonoBehaviour
     }
 
     void OpenPortal (Vector3 teleportPosition) {
-        if (InventoryManager.instance.getItemAmountInInventory(teleportationResource) < 1) {
+        if (InventoryManager.instance.getItemAmountInInventory(teleportationResource) < 2) {
             CanvasScript.instance.DisplayWarning($"{teleportationResource.itemName} is required");
             return;
         }
-        
+        StartCoroutine(openPortal(teleportPosition));        
+    }
+    IEnumerator openPortal (Vector3 teleportPosition) {
+        PlayerControlls.instance.PlayGeneralAnimation(2, true, 2);
+        CloseTeleportMenu();
+        CanvasScript.instance.DisplayProgressBar(2);
+        yield return new WaitForSeconds(2);
         if (instanciatedPortal){
             Destroy(instanciatedPortal.GetComponent<Portal>().returnPortal.gameObject);
             Destroy(instanciatedPortal);
@@ -110,7 +117,6 @@ public class TeleportManager : MonoBehaviour
 
         instanciatedPortal = Instantiate(portal, PlayerControlls.instance.transform.position + PlayerControlls.instance.transform.forward * 2, PlayerControlls.instance.transform.rotation);
         instanciatedPortal.GetComponent<Portal>().teleportPosition = teleportPosition;
-        CloseTeleportMenu();
     }
 
     void CloseTeleportMenu(){
@@ -118,6 +124,7 @@ public class TeleportManager : MonoBehaviour
             return;
         Destroy(instanciatedTeleportMenu);
         PeaceCanvas.instance.forceAnyPanelOpen = false;
+        UIAudioManager.instance.PlayUISound(UIAudioManager.instance.CloseBook);
     }
 
     public ReviveStatue getClosestStatue(Vector3 position) {

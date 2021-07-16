@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using ECM.Controllers;
 
-public class PlayerControlls : MonoBehaviour
+public class PlayerControlls : MonoBehaviour, ISavable
 {
     public static PlayerControlls instance;
 
@@ -96,6 +96,8 @@ public class PlayerControlls : MonoBehaviour
         CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
         cameraControl = playerCamera.GetComponent<CameraControll>();
         walkSpeed = baseWalkSpeed * Characteristics.instance.walkSpeedBuff;
+
+        SaveManager.instance.saveObjects.Add(this);
     }
 
     void Update()
@@ -481,6 +483,7 @@ public class PlayerControlls : MonoBehaviour
     }
 
     float timeSat;
+
     public void Sit (SittingSpot spot) {
         if (isDoingAnything() || Time.time-timeSat < 2)
             return;
@@ -507,4 +510,26 @@ public class PlayerControlls : MonoBehaviour
             }
         }
     }
+
+#region ISavable
+
+    string savePath = "saves/playerTrans.txt";
+
+    public LoadPriority loadPriority {
+        get {
+            return LoadPriority.Last;
+        }
+    }
+
+    public void Save()
+    {
+        ES3.Save<Vector3>("pos", transform.position, savePath);
+    }
+
+    public void Load()
+    {
+        transform.position = ES3.Load("pos", savePath, new Vector3(-560, 10, -120)); //default position at the City scene.
+    }
+
+#endregion
 }

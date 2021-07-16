@@ -118,6 +118,10 @@ namespace Funly.SkyStudio
       Debug.LogError("Your SkySystemController has an old or invalid prefab layout! Please run the upgrade tool in 'Windows -> Sky Studio -> Upgrade Sky System Controller'. Do not rename or modify any of the children in the SkySystemController hierarchy.");
     }
 
+    void Start() {
+      UpdateSkyForCurrentTime();
+    }
+
     void Update()
     {      
       if (!skyProfile)
@@ -270,6 +274,11 @@ namespace Funly.SkyStudio
 
     public void UpdateSkyForCurrentTime()
     {
+      if (ScenesManagement.instance) {
+        if(ScenesManagement.instance.isLoading)
+          return;
+      }
+      
       if (skyProfile == null)
       {
         return;
@@ -293,6 +302,7 @@ namespace Funly.SkyStudio
       {
         RenderSettings.skybox = skyProfile.skyboxMaterial;
       }
+      
 
       SynchronizeAllShaderKeywords();
 

@@ -70,21 +70,19 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
                 if (itemAmount == 0)
                     ClearSlot();
                 return;
-            } else if (PeaceCanvas.instance.currentInterractingNPC is StorageNPC) { //If its a storage NPC
-                StorageNPC npc = (StorageNPC)PeaceCanvas.instance.currentInterractingNPC;
-
-                if (npc.getNumberOfEmptySlots() == 0)
+            } else if (PeaceCanvas.instance.currentInterractingNPC is StorageNPC) {
+                if (StorageManager.instance.getNumberOfEmptySlots() == 0)
                     return;
-
-                int amount = UI_General.getClickAmount(itemAmount);
                 
-                npc.AddItemToStorage(itemInSlot, amount);
+                int amount = UI_General.getClickAmount(itemAmount);
+                    
+                StorageManager.instance.AddItemToStorage(itemInSlot, amount);
                 itemAmount -= amount;
                 if (itemAmount == 0)
                     ClearSlot();
                 return;
             }
-        }
+        } 
 
         if (itemInSlot is Consumable) {
             Consumable c = (Consumable)itemInSlot;
