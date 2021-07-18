@@ -104,6 +104,8 @@ public class DancingSwordProjectile : MonoBehaviour
             en.GetHit(damageInfo1, skillName, false, false, HitType.Interrupt, transform.position);
             en.GetHit(damageInfo2, skillName, false, false, HitType.Normal, transform.position);
             enemiesHit.Add(en);
+
+            bl_UCrosshair.Instance.OnHit();
         }
     }    
 }

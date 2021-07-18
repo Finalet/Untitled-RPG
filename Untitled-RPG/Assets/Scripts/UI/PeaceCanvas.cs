@@ -59,6 +59,7 @@ public class PeaceCanvas : MonoBehaviour
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
     public TextMeshProUGUI timeLabel;
+    public WaitTimeWindow waitTimeWindow;
 
     [Header("Debug")] 
     public GameObject DebugChatPanel;
@@ -99,7 +100,7 @@ public class PeaceCanvas : MonoBehaviour
             }
         }
 
-        timeLabel.text = TimeOfDayController.instance ? TimeOfDayController.instance.TimeStringFromPercent() : "";
+        timeLabel.text = TimeOfDayController.instance ? TimeOfDayController.instance.TimeStringFromPercent(TimeOfDayController.instance.timeOfDay) : "";
     }
 
     void HandleInputs () {
@@ -115,6 +116,13 @@ public class PeaceCanvas : MonoBehaviour
                 OpenInventory();
             else
                 CloseInventory();
+        }
+
+        if (Input.GetKeyDown(KeybindsManager.instance.waitTime)) {
+            if (!waitTimeWindow.gameObject.activeInHierarchy)
+                waitTimeWindow.OpenWindow();
+            else 
+                waitTimeWindow.CloseWindow();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {

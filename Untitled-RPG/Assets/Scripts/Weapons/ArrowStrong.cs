@@ -22,6 +22,8 @@ public class ArrowStrong : Arrow
         if (!enemiesHit.Contains(en)) {
             en.GetHit(damageInfo, skillName, true, true, HitType.Kickback, transform.position);
             enemiesHit.Add(en);
+
+            bl_UCrosshair.Instance.OnHit();
         }
     }  
 

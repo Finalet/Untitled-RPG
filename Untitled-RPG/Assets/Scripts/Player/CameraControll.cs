@@ -25,7 +25,7 @@ public class CameraControll : MonoBehaviour
 
     Camera cam;
     [Space]
-    public GameObject crosshair;
+    public CanvasGroup crosshair; bool showingCrosshair;
     public CinemachineFreeLook CM_cam;
     public CinemachineCameraOffset CM_offset;
 
@@ -114,10 +114,28 @@ public class CameraControll : MonoBehaviour
         else
             AimCamera();
 
-        if (isAiming || isShortAiming)
-            crosshair.SetActive(true);
-        else
-            crosshair.SetActive(false);
+        if (isAiming || isShortAiming) {
+            ShowCrosshair(); 
+        } else {
+            HideCrosshair();
+        }
+    }
+
+    void ShowCrosshair () {
+        if (showingCrosshair)
+            return;
+
+        showingCrosshair = true;
+        crosshair.DOFade(1, 0.2f);
+        bl_UCrosshair.Instance.OnAim(true);
+    }
+    void HideCrosshair () {
+        if (!showingCrosshair)
+            return;
+
+        showingCrosshair = false;
+        crosshair.DOFade(0, 0.2f);
+        bl_UCrosshair.Instance.OnAim(false);
     }
 
     void SprintingFOV () {

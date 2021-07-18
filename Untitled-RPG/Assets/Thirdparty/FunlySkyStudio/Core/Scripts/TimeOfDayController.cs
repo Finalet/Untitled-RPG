@@ -593,9 +593,9 @@ namespace Funly.SkyStudio
       }
     }
 
-    public string TimeStringFromPercent()
+    public string TimeStringFromPercent(float percent)
     {
-      float hoursFract = timeOfDay * 24.0f;
+      float hoursFract = percent * 24.0f;
       int hours = (int) hoursFract;
       int minutes = (int)((hoursFract - hours) * 60.0f);
 

@@ -16,7 +16,7 @@ public class CanvasScript : MonoBehaviour
     public GameObject castingBar;
 
     [Header("Overall UI")]
-    public Text warningText;
+    public TextMeshProUGUI warningText;
 
     [Header("Enemy")]
     public Image enemyHealthBar;
@@ -112,11 +112,10 @@ public class CanvasScript : MonoBehaviour
         }
     }
     float warningTextAlpha;
-    IEnumerator warning;
+    Coroutine warning;
     public void DisplayWarning(string text) {
-        warning = WarningTextIenum(text);
-        if (warning != null)
-            StartCoroutine(warning);   
+        if (warning != null) StopCoroutine(warning);
+        warning = StartCoroutine(WarningTextIenum(text));;
     }
     IEnumerator WarningTextIenum (string text){
         warningText.text = text;

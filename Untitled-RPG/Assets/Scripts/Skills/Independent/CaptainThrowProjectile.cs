@@ -83,6 +83,8 @@ public class CaptainThrowProjectile : MonoBehaviour
         if (en != null && !enemiesHit.Contains(en)) {
             en.GetHit(damageInfo, skill.skillName, true, true, HitType.Knockdown, transform.position);
             enemiesHit.Add(en);
+
+            bl_UCrosshair.Instance.OnHit();
         }
 
     }

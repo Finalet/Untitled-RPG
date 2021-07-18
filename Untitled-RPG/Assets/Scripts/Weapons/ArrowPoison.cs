@@ -24,6 +24,8 @@ public class ArrowPoison : Arrow
             en.GetHit(damageInfo, skillName, false, true, HitType.Normal, transform.position);
             en.AddRecurringEffect(poisonEffect);
             enemiesHit.Add(en);
+
+            bl_UCrosshair.Instance.OnHit();
         }
     }  
 

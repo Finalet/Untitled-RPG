@@ -94,6 +94,8 @@ public class Arrow : MonoBehaviour
         if (!enemiesHit.Contains(en)) {
             en.GetHit(damageInfo, skillName, false, false, HitType.Interrupt, transform.position);
             enemiesHit.Add(en);
+
+            bl_UCrosshair.Instance.OnHit();
         }
     }   
 

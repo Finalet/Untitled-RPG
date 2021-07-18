@@ -70,6 +70,8 @@ public class FireballProjectile : MonoBehaviour
         if (!enemiesHit.Contains(en)) {
             en.GetHit(damageInfo, "Fireball", true, false, HitType.Kickback, transform.position);
             enemiesHit.Add(en);
+
+            bl_UCrosshair.Instance.OnHit();
         }
     }
 

@@ -102,6 +102,8 @@ public class SimpleBowShot : AimingSkill
         newArrow = null;
 
         PlaySound(shootSounds[Random.Range(0, shootSounds.Length)], 0, 1.2f, 0, 0.25f);
+
+        bl_UCrosshair.Instance.OnFire();
     }
 
     void DrawDebugs () {

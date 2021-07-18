@@ -22,6 +22,8 @@ public class LightningProjectile : MonoBehaviour
         if (!enemiesHit.Contains(en)) {
             en.GetHit(damageInfo, "Lightning", false, true, HitType.Normal, transform.position);
             enemiesHit.Add(en);
+
+            bl_UCrosshair.Instance.OnHit();
         }
     }
 
