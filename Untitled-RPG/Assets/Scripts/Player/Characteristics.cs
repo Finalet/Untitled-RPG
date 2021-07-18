@@ -117,7 +117,7 @@ public class Characteristics : MonoBehaviour
 
     float hpTimer = 1;
     void regenerateHealth() {
-        if (health == maxHealth)
+        if (health == maxHealth || isDead)
             return;
 
         if (canRegenerateHealth && health < maxHealth) {
@@ -134,6 +134,9 @@ public class Characteristics : MonoBehaviour
     float timer = 0;
     float afterUseTimer = 0;
     void regenerateStamina() {
+        if (isDead)
+            return;
+
         if (maxStamina == 0) {
             canUseStamina = false;
             stamina = 0;

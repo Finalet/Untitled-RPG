@@ -20,7 +20,7 @@ public class Arrow : MonoBehaviour
     protected Rigidbody rb;
     protected AudioSource audioSource;
 
-    protected List<Enemy> enemiesHit = new List<Enemy>();
+    protected List<IDamagable> damagablesHit = new List<IDamagable>();
     protected virtual void Start() {
         rb = GetComponent<Rigidbody>();
         if (!instantShot) rb.isKinematic = true;
@@ -70,7 +70,7 @@ public class Arrow : MonoBehaviour
         
         Collision(other.transform);
 
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null) 
             return;
         
@@ -90,10 +90,10 @@ public class Arrow : MonoBehaviour
         GetComponent<AudioSource>().Play();
     }
 
-    protected virtual void Hit (Enemy en) {
-        if (!enemiesHit.Contains(en)) {
+    protected virtual void Hit (IDamagable en) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, skillName, false, false, HitType.Interrupt, transform.position);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();
         }

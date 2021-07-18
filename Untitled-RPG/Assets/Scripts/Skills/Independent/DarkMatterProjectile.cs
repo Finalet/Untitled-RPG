@@ -17,7 +17,7 @@ public class DarkMatterProjectile : MonoBehaviour
     Vector3 begPos;
     bool done;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
     void Start() {
         if (doNotDestroy)
             return;
@@ -50,7 +50,7 @@ public class DarkMatterProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (other.isTrigger || other.CompareTag("Player") || doNotDestroy)
             return;
         
@@ -59,9 +59,9 @@ public class DarkMatterProjectile : MonoBehaviour
         if (en == null) 
             return;
         
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, "Dark Matter", false, false, HitType.Interrupt, transform.position);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();
         }

@@ -7,7 +7,7 @@ public class LightningProjectile : MonoBehaviour
     public DamageInfo damageInfo;
     public int shots;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
 
     void Start() {
         Invoke("EnableCollider", 0.1f);
@@ -15,13 +15,13 @@ public class LightningProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, "Lightning", false, true, HitType.Normal, transform.position);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();
         }

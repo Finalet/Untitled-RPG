@@ -13,7 +13,7 @@ public enum EnemyState {Idle, Approaching, Attacking, Returning, Celebrating};
 }
 
 [RequireComponent(typeof (FieldOfView))]
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, IDamagable
 {
     public string enemyName;
     [Header("Stats")]
@@ -64,9 +64,6 @@ public abstract class Enemy : MonoBehaviour
     public AudioClip[] stepsSounds;
     public AudioClip[] attackSounds;
 
-    [Space]
-    public List<RecurringEffect> currentRecurringEffects = new List<RecurringEffect>(); 
-
     protected Animator animator;
     protected NavMeshAgent navAgent;
     protected Transform target;
@@ -76,6 +73,7 @@ public abstract class Enemy : MonoBehaviour
     protected FieldOfView fieldOfView;
     protected RagdollController ragdollController;
     protected EnemyController enemyController;
+    protected float baseControllerSpeed;
 
     protected float agrDelay; 
     protected float agrDelayTimer;
@@ -89,6 +87,7 @@ public abstract class Enemy : MonoBehaviour
         fieldOfView = GetComponent<FieldOfView>();
         fieldOfView.InitForEnemy();
         currentHealth = maxHealth;
+        baseControllerSpeed = enemyController.speed;
 
         SetInitialPosition();
 
@@ -137,6 +136,7 @@ public abstract class Enemy : MonoBehaviour
 
         enemyController.useRootMotion = isAttacking || isGettingInterrupted;       
         enemyController.useRootMotionRotation = isAttacking || isGettingInterrupted;       
+        enemyController.speed = enemyController.useRootMotion ? baseControllerSpeed * 50 : baseControllerSpeed;
     }
 
     protected virtual void AI () {
@@ -254,53 +254,6 @@ public abstract class Enemy : MonoBehaviour
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
         Destroy(gameObject);
-    }
-
-    public virtual void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
-        if (isDead || !canGetHit)
-            return;
-        
-        Agr();
-
-        int actualDamage = calculateActualDamage(damageInfo.damage);
-
-        if (immuneToKickBack && hitType == HitType.Kickback)
-            hitType = HitType.Normal;
-        if (immuneToKnockDown && hitType == HitType.Knockdown)
-            hitType = HitType.Normal;
-        if (immuneToInterrupt && hitType == HitType.Interrupt)
-            hitType = HitType.Normal;
-
-        if (hitType == HitType.Normal) {
-            animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
-        } else if (hitType == HitType.Interrupt) {
-            animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
-            animator.CrossFade("Attacks.Empty", 0.1f);
-        } else if (hitType == HitType.Kickback) {
-            KickBack(kickBackStrength);
-        } else if (hitType == HitType.Knockdown) {
-            KnockedDown();
-        }
-
-        currentHealth -= actualDamage;
-        PlayHitParticles();
-        PlayGetHitSounds();
-        PlayStabSounds();
-        
-        if (stopHit || damageInfo.isCrit) StartCoroutine(HitStop(damageInfo.isCrit));
-        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
-        DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit), damageTextPos);
-
-        string criticalDEBUGtext = damageInfo.isCrit ? " CRITICAL" : "";
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color=blue>{enemyName}</color> was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType}</color> damage by <color=#80FFFF>{skillName}</color>.");
-    }
-
-    protected void DisplayDamageNumber(DamageInfo damageInfo, Vector3 position = new Vector3()) {
-        if (position == Vector3.zero)   //If position is not specified then place on standard spot
-            position = transform.position + Vector3.up * 1.5f;
-
-        GameObject ddText = Instantiate(AssetHolder.instance.ddText, position, Quaternion.identity);
-        ddText.GetComponent<ddText>().Init(damageInfo);
     }
 
     protected int calculateActualDamage (int damage) {
@@ -469,18 +422,100 @@ public abstract class Enemy : MonoBehaviour
         audioSource.PlayOneShot(attackSounds[animationEvent.intParameter]);
     }
 
-    protected virtual void RunRecurringEffects () {
-        for (int i = currentRecurringEffects.Count-1; i >= 0; i--) {
-            currentRecurringEffects[i].frequencyTimer -= Time.deltaTime;
-            currentRecurringEffects[i].durationTimer -= Time.deltaTime;
-            if (currentRecurringEffects[i].frequencyTimer <= 0) {
-                GetHit(CalculateDamage.damageInfo(currentRecurringEffects[i].damageType, currentRecurringEffects[i].baseEffectPercentage, 0), currentRecurringEffects[i].name);
-                currentRecurringEffects[i].frequencyTimer = 1/currentRecurringEffects[i].frequencyPerSecond;
+    public Vector3 globalEnemyBounds (){
+        return Vector3.Scale(localEnemyBounds, transform.localScale);
+    }
+
+    float interruptBlockDuration = 10;
+    float accumulatedInterrupsWindow = 7;
+    int maxInterruptions = 5;
+    float firstInterruptTime;
+    int accumulatedInterruptions;
+    Coroutine interruptCor;
+    protected void CheckInterruptLimit () {
+        if (Time.time - firstInterruptTime > accumulatedInterrupsWindow) {
+            accumulatedInterruptions = 0;
+            firstInterruptTime = Time.time;
+        }
+
+        accumulatedInterruptions++;
+        if (accumulatedInterruptions >= maxInterruptions) {
+            if (interruptCor != null) StopCoroutine(interruptCor);
+            interruptCor = StartCoroutine(BlockInterrupts());
+
+            accumulatedInterruptions = 0;
+            firstInterruptTime = Time.time;
+        }
+    }
+    IEnumerator BlockInterrupts() {
+        immuneToInterrupt = true;
+        yield return new WaitForSeconds(interruptBlockDuration);
+        immuneToInterrupt = false;
+    }
+
+#region IDamagable
+
+    private List<RecurringEffect> _recurringEffects = new List<RecurringEffect>();
+    public List<RecurringEffect> recurringEffects {
+        get {
+            return _recurringEffects;
+        }
+    }
+
+    public virtual void GetHit (DamageInfo damageInfo, string damageSourceName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
+        if (isDead || !canGetHit)
+            return;
+        
+        Agr();
+
+        int actualDamage = calculateActualDamage(damageInfo.damage);
+
+        if (immuneToKickBack && hitType == HitType.Kickback)
+            hitType = HitType.Normal;
+        if (immuneToKnockDown && hitType == HitType.Knockdown)
+            hitType = HitType.Normal;
+        if (immuneToInterrupt && hitType == HitType.Interrupt)
+            hitType = HitType.Normal;
+
+        if (hitType == HitType.Normal) {
+            animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
+        } else if (hitType == HitType.Interrupt) {
+            animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
+            animator.CrossFade("Attacks.Empty", 0.1f);
+            CheckInterruptLimit();
+        } else if (hitType == HitType.Kickback) {
+            KickBack(kickBackStrength);
+        } else if (hitType == HitType.Knockdown) {
+            KnockedDown();
+        }
+
+        currentHealth -= actualDamage;
+        PlayHitParticles();
+        PlayGetHitSounds();
+        PlayStabSounds();
+        
+        if (stopHit || damageInfo.isCrit) StartCoroutine(HitStop(damageInfo.isCrit));
+        if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
+        
+        damageTextPos = damageTextPos == Vector3.zero ? transform.position + Vector3.up * 1.5f : damageTextPos;
+        Combat.instanace.DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit), damageTextPos);
+
+        string criticalDEBUGtext = damageInfo.isCrit ? " CRITICAL" : "";
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color=blue>{enemyName}</color> was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType}</color> damage by <color=#80FFFF>{damageSourceName}</color>.");
+    }
+
+    public virtual void RunRecurringEffects () {
+        for (int i = recurringEffects.Count-1; i >= 0; i--) {
+            recurringEffects[i].frequencyTimer -= Time.deltaTime;
+            recurringEffects[i].durationTimer -= Time.deltaTime;
+            if (recurringEffects[i].frequencyTimer <= 0) {
+                GetHit(CalculateDamage.damageInfo(recurringEffects[i].damageType, recurringEffects[i].baseEffectPercentage, 0), recurringEffects[i].name);
+                recurringEffects[i].frequencyTimer = 1/recurringEffects[i].frequencyPerSecond;
             }
-            if (currentRecurringEffects[i].durationTimer <= 0) {
-                Destroy(currentRecurringEffects[i].vfx.gameObject, 3f);
-                currentRecurringEffects[i].vfx.Stop();
-                currentRecurringEffects.RemoveAt(i);
+            if (recurringEffects[i].durationTimer <= 0) {
+                Destroy(recurringEffects[i].vfx.gameObject, 3f);
+                recurringEffects[i].vfx.Stop();
+                recurringEffects.RemoveAt(i);
             }
         }
     }
@@ -498,10 +533,8 @@ public abstract class Enemy : MonoBehaviour
             shape2.radius = shape.radius*0.8f;
             newEffect.vfx.Play();
         }
-        currentRecurringEffects.Add(newEffect);
+        recurringEffects.Add(newEffect);
     }
 
-    public Vector3 globalEnemyBounds (){
-        return Vector3.Scale(localEnemyBounds, transform.localScale);
-    }
+#endregion
 }

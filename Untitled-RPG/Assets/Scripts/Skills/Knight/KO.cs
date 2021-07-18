@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KO : Skill
 {
-    List<Enemy> enemiesInTrigger = new List<Enemy>();
+    List<IDamagable> damagablesInTrigger = new List<IDamagable>();
 
     [Header("Custom vars")]
     public AudioClip[] sounds;
@@ -63,26 +63,26 @@ public class KO : Skill
     } 
 
     void OnTriggerStay(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (!enemiesInTrigger.Contains(en)) enemiesInTrigger.Add(en);
+        if (!damagablesInTrigger.Contains(en)) damagablesInTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (enemiesInTrigger.Contains(en)) enemiesInTrigger.Remove(en);
+        if (damagablesInTrigger.Contains(en)) damagablesInTrigger.Remove(en);
     }
 
     public void Hit (float knockDown) {
-        for (int i = 0; i < enemiesInTrigger.Count; i++) {
+        for (int i = 0; i < damagablesInTrigger.Count; i++) {
             if (knockDown == 1) {
-                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
+                damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
             } else {
-                enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Normal);
+                damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Normal);
             }
         }
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
@@ -90,9 +90,9 @@ public class KO : Skill
     }
 
     void ClearTrigger () {
-        for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            if (enemiesInTrigger[i] == null) {
-                enemiesInTrigger.RemoveAt(i);
+        for (int i = 0; i < damagablesInTrigger.Count; i++) {
+            if (damagablesInTrigger[i] == null) {
+                damagablesInTrigger.RemoveAt(i);
             }
         }
     }

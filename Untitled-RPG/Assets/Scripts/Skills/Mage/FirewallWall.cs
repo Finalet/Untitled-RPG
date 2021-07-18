@@ -10,7 +10,7 @@ public class FirewallWall : MonoBehaviour
     public Light light1;
     public Light light2;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
     void Start() {
         Destroy(gameObject, duration + 0.5f);
         
@@ -33,20 +33,20 @@ public class FirewallWall : MonoBehaviour
     }
 
     void OnTriggerStay(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(CalculateDamage.damageInfo(skill.damageType, skill.baseDamagePercentage), "Firewall", false, false, HitType.Interrupt);
             StartCoroutine(List(en));
         }
     }
 
-    IEnumerator List (Enemy enemy) {
-        enemiesHit.Add(enemy);
+    IEnumerator List (IDamagable enemy) {
+        damagablesHit.Add(enemy);
         yield return new WaitForSeconds(0.7f);
-        enemiesHit.Remove(enemy);
+        damagablesHit.Remove(enemy);
     }
     IEnumerator Lights(){
         light1.intensity =0;

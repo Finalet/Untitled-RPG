@@ -2,18 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct DamageInfo {
-    public int damage;
-    public DamageType damageType;
-    public bool isCrit;
-
-    public DamageInfo(int _damage, DamageType _damageType, bool _isCrit) {
-        this.damage = _damage;
-        this.damageType = _damageType;
-        this.isCrit = _isCrit;
-    }
-}
-
 public static class CalculateDamage
 {
     public static DamageInfo damageInfo(float rawDamage) {
@@ -75,3 +63,27 @@ public static class CalculateDamage
         return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * 2) : damageBeforeCrit, DamageType.Enemy, isCritHit);
     }
 }
+
+#region Structs and Interface
+
+public interface IDamagable {
+    List<RecurringEffect> recurringEffects { get; }
+    
+    void GetHit(DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50);
+    void RunRecurringEffects();
+    void AddRecurringEffect(RecurringEffect effect);
+}
+
+public struct DamageInfo {
+    public int damage;
+    public DamageType damageType;
+    public bool isCrit;
+
+    public DamageInfo(int _damage, DamageType _damageType, bool _isCrit) {
+        this.damage = _damage;
+        this.damageType = _damageType;
+        this.isCrit = _isCrit;
+    }
+}
+
+#endregion

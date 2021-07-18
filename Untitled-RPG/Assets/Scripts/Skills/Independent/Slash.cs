@@ -9,7 +9,7 @@ public class Slash : Skill
     public AudioClip[] dualSwordSounds;
     public AudioClip[] TwoHandedSwordSounds;
 
-    List<Enemy> enemiesInCombatTrigger = new List<Enemy>();
+    List<IDamagable> damagablesInCombatTrigger = new List<IDamagable>();
 
     int hits;
     float lastHitTime;
@@ -143,30 +143,30 @@ public class Slash : Skill
     }
 
     void OnTriggerStay(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (!enemiesInCombatTrigger.Contains(en)) enemiesInCombatTrigger.Add(en);
+        if (!damagablesInCombatTrigger.Contains(en)) damagablesInCombatTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (enemiesInCombatTrigger.Contains(en)) enemiesInCombatTrigger.Remove(en);
+        if (damagablesInCombatTrigger.Contains(en)) damagablesInCombatTrigger.Remove(en);
     }
 
     public void Hit () {
-        for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
-            enemiesInCombatTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, hitType);
+        for (int i = 0; i < damagablesInCombatTrigger.Count; i++) {
+            damagablesInCombatTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, hitType);
         }
     }
 
     void ClearTrigger () {
-        for (int i = 0; i < enemiesInCombatTrigger.Count; i++) {
-            if (enemiesInCombatTrigger[i] == null) {
-                enemiesInCombatTrigger.RemoveAt(i);
+        for (int i = 0; i < damagablesInCombatTrigger.Count; i++) {
+            if (damagablesInCombatTrigger[i] == null) {
+                damagablesInCombatTrigger.RemoveAt(i);
             }
         }
     }

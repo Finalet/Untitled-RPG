@@ -19,11 +19,11 @@ public class ArrowPoison : Arrow
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 1.5f, 0.07f, transform.position);
     }
 
-    protected override void Hit (Enemy en) {
-        if (!enemiesHit.Contains(en)) {
+    protected override void Hit (IDamagable en) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, skillName, false, true, HitType.Normal, transform.position);
             en.AddRecurringEffect(poisonEffect);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();
         }

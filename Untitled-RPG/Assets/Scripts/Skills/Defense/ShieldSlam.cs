@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShieldSlam : Skill
 {
-    List<Enemy> enemiesInTrigger = new List<Enemy>();
+    List<IDamagable> damagablesInTrigger = new List<IDamagable>();
 
     protected override void CustomUse()
     {
@@ -14,24 +14,24 @@ public class ShieldSlam : Skill
 
     public void Hit (float hitNumber) {
         HitType ht = hitNumber == 0 ? HitType.Interrupt : HitType.Knockdown;
-        for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, ht);
+        for (int i = 0; i < damagablesInTrigger.Count; i++) {
+            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, ht);
         }
     }
 
     void OnTriggerStay(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (!enemiesInTrigger.Contains(en)) enemiesInTrigger.Add(en);
+        if (!damagablesInTrigger.Contains(en)) damagablesInTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (enemiesInTrigger.Contains(en)) enemiesInTrigger.Remove(en);
+        if (damagablesInTrigger.Contains(en)) damagablesInTrigger.Remove(en);
     }
 
     public override bool skillActive()

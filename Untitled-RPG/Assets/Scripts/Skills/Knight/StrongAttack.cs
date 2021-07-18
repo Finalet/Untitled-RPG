@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StrongAttack : Skill
 {
-    List<Enemy> enemiesInTrigger = new List<Enemy>();
+    List<IDamagable> damagablesInTrigger = new List<IDamagable>();
 
     Vector3 colliderSize;
 
@@ -44,30 +44,30 @@ public class StrongAttack : Skill
     }
 
     void OnTriggerStay(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (!enemiesInTrigger.Contains(en)) enemiesInTrigger.Add(en);
+        if (!damagablesInTrigger.Contains(en)) damagablesInTrigger.Add(en);
     }
     void OnTriggerExit(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (enemiesInTrigger.Contains(en)) enemiesInTrigger.Remove(en);
+        if (damagablesInTrigger.Contains(en)) damagablesInTrigger.Remove(en);
     }
 
     public void Hit () {
-        for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            enemiesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, critChance), skillName, true, true, HitType.Kickback);
+        for (int i = 0; i < damagablesInTrigger.Count; i++) {
+            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, critChance), skillName, true, true, HitType.Kickback);
         }
     }
 
     void ClearTrigger () {
-        for (int i = 0; i < enemiesInTrigger.Count; i++) {
-            if (enemiesInTrigger[i] == null) {
-                enemiesInTrigger.RemoveAt(i);
+        for (int i = 0; i < damagablesInTrigger.Count; i++) {
+            if (damagablesInTrigger[i] == null) {
+                damagablesInTrigger.RemoveAt(i);
             }
         }
     }

@@ -11,7 +11,7 @@ public class HailstoneProjectile : MonoBehaviour
     public Transform debirsPos;
     Vector3 finalDebrisPos;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
 
     bool isExtra;
     void Start() {
@@ -35,13 +35,13 @@ public class HailstoneProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, "Hailstone");
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
         }
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f* (1+damageInfo.damage/2000), 0.1f, transform.position);
 

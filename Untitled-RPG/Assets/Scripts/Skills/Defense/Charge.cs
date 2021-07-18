@@ -15,7 +15,7 @@ public class Charge : Skill
     
     bool charging;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
     Collider hitCollider;
 
     protected override void CustomUse()
@@ -29,7 +29,7 @@ public class Charge : Skill
         PlaySound(soundFX, 0, 1, 0, 1);
         PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.sprint, 0.05f, 1.7f);
         
-        enemiesHit.Clear();
+        damagablesHit.Clear();
         
         Combat.instanace.blockSkills = true;
         characteristics.immuneToDamage = true;
@@ -48,7 +48,7 @@ public class Charge : Skill
         float cleanListTimer = Time.time;
         while (Time.time - timeStarted < duraiton) {
             if (Time.time - cleanListTimer > 1) {
-                enemiesHit.Clear();
+                damagablesHit.Clear();
                 cleanListTimer = Time.time;
             }
             yield return null;
@@ -75,12 +75,12 @@ public class Charge : Skill
         if(!charging)
             return;
 
-        Enemy en = other.GetComponentInParent<Enemy>();
-        if (en == null || enemiesHit.Contains(en))
+        IDamagable en = other.GetComponentInParent<IDamagable>();
+        if (en == null || damagablesHit.Contains(en))
             return;
 
         en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, false, false, HitType.Kickback, new Vector3(), 30);
-        enemiesHit.Add(en);
+        damagablesHit.Add(en);
     }
 
     public override bool skillActive()

@@ -19,7 +19,7 @@ public class DancingSwordProjectile : MonoBehaviour
 
     protected Rigidbody rb;
 
-    protected List<Enemy> enemiesHit = new List<Enemy>();
+    protected List<IDamagable> damagablesHit = new List<IDamagable>();
 
     public Transform mesh;
     float randomRotation;
@@ -79,7 +79,7 @@ public class DancingSwordProjectile : MonoBehaviour
         
         Collision(other.transform);
 
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null) 
             return;
         
@@ -99,11 +99,11 @@ public class DancingSwordProjectile : MonoBehaviour
         GetComponent<AudioSource>().Play();
     }
 
-    protected virtual void Hit (Enemy en) {
-        if (!enemiesHit.Contains(en)) {
+    protected virtual void Hit (IDamagable en) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo1, skillName, false, false, HitType.Interrupt, transform.position);
             en.GetHit(damageInfo2, skillName, false, false, HitType.Normal, transform.position);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();
         }

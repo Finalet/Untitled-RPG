@@ -20,7 +20,7 @@ public class FireballProjectile : MonoBehaviour
     bool explosionExpand;
     float explosionRadius;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
     void Start() {
         if (doNotDestroy)
             return;
@@ -58,7 +58,7 @@ public class FireballProjectile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (other.isTrigger || other.CompareTag("Player") || doNotDestroy)
             return;
         
@@ -67,9 +67,9 @@ public class FireballProjectile : MonoBehaviour
         if (en == null)
             return;
 
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, "Fireball", true, false, HitType.Kickback, transform.position);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();
         }

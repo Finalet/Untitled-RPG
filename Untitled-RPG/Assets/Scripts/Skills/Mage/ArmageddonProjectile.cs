@@ -12,7 +12,7 @@ public class ArmageddonProjectile : MonoBehaviour
     public AudioClip[] explosionSounds;
     public SphereCollider explosionCollider;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
     bool exploded;
 
 
@@ -36,13 +36,13 @@ public class ArmageddonProjectile : MonoBehaviour
             exploded = true;
         }
 
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (other.isTrigger || other.CompareTag("Player") || en == null)
             return;
         
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, "Armageddon", false, false, HitType.Knockdown);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
         }
 
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2*(1+damageInfo.damage/2000), 0.2f, transform.position);

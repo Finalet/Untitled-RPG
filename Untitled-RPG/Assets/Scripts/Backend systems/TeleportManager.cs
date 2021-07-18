@@ -58,12 +58,12 @@ public class TeleportManager : MonoBehaviour
         cg.alpha = 0;
         cg.DOFade(1, 1).SetDelay(1);
         
-        instanciatedReviveWindow.GetComponentInChildren<Button>().onClick.AddListener(delegate{});
+        instanciatedReviveWindow.GetComponentInChildren<Button>().onClick.AddListener(delegate{RevivePlayer();});
     }
 
-    void Revive () {
+    void RevivePlayer () {
         Destroy(instanciatedReviveWindow);
-        PlayerControlls.instance.transform.position = adjustedStatuePos(getClosestStatue(transform.position));
+        PlayerControlls.instance.transform.position = adjustedStatuePos(getClosestStatue(PlayerControlls.instance.transform.position));
         Characteristics.instance.Revive();
     }
 
@@ -161,8 +161,9 @@ public class TeleportManager : MonoBehaviour
         ReviveStatue closestStatue = null;
         float closestDistance = Mathf.Infinity;
         foreach (ReviveStatue statue in reviveStatues) {
-            if (Vector3.Distance(position, statue.transform.position) < closestDistance){
-                closestDistance = Vector3.Distance(position, statue.transform.position);
+            float disToStatue = Vector3.Distance(position, statue.transform.position);
+            if (disToStatue < closestDistance){
+                closestDistance = disToStatue;
                 closestStatue = statue;
             }
         }

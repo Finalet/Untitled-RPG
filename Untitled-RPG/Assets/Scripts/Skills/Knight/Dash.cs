@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dash : Skill
 {
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
 
     [Header("Custom Vars")]
     public float dashDistance;
@@ -32,13 +32,13 @@ public class Dash : Skill
     }
 
     void OnTriggerEnter(Collider other) {
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
         }
     }
 
@@ -49,14 +49,14 @@ public class Dash : Skill
         } else {
             GetComponent<BoxCollider>().enabled = false;
             playerControlls.characterController.speedMultiplier = 1;
-            enemiesHit.Clear();
+            damagablesHit.Clear();
         }
     }
 
     void ClearTrigger () {
-        for (int i = 0; i < enemiesHit.Count; i++) {
-            if (enemiesHit[i] == null) {
-                enemiesHit.RemoveAt(i);
+        for (int i = 0; i < damagablesHit.Count; i++) {
+            if (damagablesHit[i] == null) {
+                damagablesHit.RemoveAt(i);
             }
         }
     }

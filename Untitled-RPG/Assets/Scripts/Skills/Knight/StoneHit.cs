@@ -9,7 +9,7 @@ public class StoneHit : Skill
     Vector3 baseCenter;
     Vector3 newCenter;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
 
     public AudioClip first;
     public AudioClip last;
@@ -62,7 +62,7 @@ public class StoneHit : Skill
         yes = false;
         GetComponent<BoxCollider>().center = baseCenter;
         GetComponent<BoxCollider>().enabled = false;
-        enemiesHit.Clear();
+        damagablesHit.Clear();
         yield return new WaitForSeconds(1.1f);
 
         soundFX.GetComponent<AudioSource>().clip = last;
@@ -81,20 +81,20 @@ public class StoneHit : Skill
         if (!yes)
             return;
 
-        Enemy en = other.transform.GetComponentInParent<Enemy>();
+        IDamagable en = other.transform.GetComponentInParent<IDamagable>();
         if (en == null || other.isTrigger)
             return;
 
-        if (!enemiesHit.Contains(en)) {
+        if (!damagablesHit.Contains(en)) {
             en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
         }
     }
 
     void ClearTrigger () {
-        for (int i = 0; i < enemiesHit.Count; i++) {
-            if (enemiesHit[i] == null) {
-                enemiesHit.RemoveAt(i);
+        for (int i = 0; i < damagablesHit.Count; i++) {
+            if (damagablesHit[i] == null) {
+                damagablesHit.RemoveAt(i);
             }
         }
     }

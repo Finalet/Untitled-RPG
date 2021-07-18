@@ -38,7 +38,6 @@ public class PeaceCanvas : MonoBehaviour
 
     [Space]
     public GameObject dragObject;
-    int chatLines;
     GameObject dragGO;
 
     [Header("Dragging items and skills")]
@@ -62,9 +61,8 @@ public class PeaceCanvas : MonoBehaviour
     public WaitTimeWindow waitTimeWindow;
 
     [Header("Debug")] 
-    public GameObject DebugChatPanel;
+    public RectTransform DebugChatPanel;
     public TextMeshProUGUI debugChatText;
-    public int maxChatLines;
     public GameObject DebugTooManyItems;
 
     void Awake() {
@@ -130,7 +128,7 @@ public class PeaceCanvas : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeybindsManager.instance.damageChat)) {
-            DebugChatPanel.SetActive(!DebugChatPanel.activeInHierarchy);
+            DebugChatPanel.gameObject.SetActive(!DebugChatPanel.gameObject.activeInHierarchy);
         } else if (Input.GetKeyDown(KeybindsManager.instance.tooManyItems)) {
             if (!Inventory.activeInHierarchy) OpenInventory();
             DebugTooManyItems.SetActive(!DebugTooManyItems.activeInHierarchy);
@@ -221,12 +219,10 @@ public class PeaceCanvas : MonoBehaviour
 
     public void DebugChat(string message) {
         debugChatText.text += message + "\n" ;
-        if (chatLines>=maxChatLines) {
+        if (DebugChatPanel.sizeDelta.y < debugChatText.preferredHeight) {
             int index = debugChatText.text.IndexOf('\n');
             string firstLine = debugChatText.text.Substring(0, index+1);
             debugChatText.text = debugChatText.text.Replace(firstLine, "");
-        } else {
-            chatLines++;
         }
     }
 

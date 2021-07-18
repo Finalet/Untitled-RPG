@@ -89,6 +89,11 @@ public class Combat : MonoBehaviour, ISavable
         return p;
     }
 
+    public void DisplayDamageNumber(DamageInfo damageInfo, Vector3 position) {
+        GameObject ddText = Instantiate(AssetHolder.instance.ddText, position, Quaternion.identity);
+        ddText.GetComponent<ddText>().Init(damageInfo);
+    }
+
 
 #region Voids for skills
 

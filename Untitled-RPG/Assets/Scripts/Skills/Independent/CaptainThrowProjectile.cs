@@ -21,12 +21,12 @@ public class CaptainThrowProjectile : MonoBehaviour
 
     bool playedReturnSound;
 
-    List<Enemy> enemiesHit = new List<Enemy>();
+    List<IDamagable> damagablesHit = new List<IDamagable>();
         
     public void Throw (Vector3 _shootPoint, float _strength) {
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
         transform.SetParent(null);
-        enemiesHit.Clear();
+        damagablesHit.Clear();
         right = PlayerControlls.instance.transform.right;
         lookDir = _shootPoint - transform.position;
         shootPoint = _shootPoint;
@@ -79,10 +79,10 @@ public class CaptainThrowProjectile : MonoBehaviour
         audioSource.PlayOneShot(hitSound);
 
         isReturning = true;
-        Enemy en = other.GetComponentInParent<Enemy>();
-        if (en != null && !enemiesHit.Contains(en)) {
+        IDamagable en = other.GetComponentInParent<IDamagable>();
+        if (en != null && !damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, skill.skillName, true, true, HitType.Knockdown, transform.position);
-            enemiesHit.Add(en);
+            damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();
         }
