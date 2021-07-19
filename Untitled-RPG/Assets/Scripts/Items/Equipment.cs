@@ -25,7 +25,9 @@ public class Equipment : Item
     public float attackSpeed;
     [Header("Misc")]
     public float critChance;
+    public float critStrength;
     public float blockChance;
+    public float walkSpeed;
     [Space]
     public Skill grantedSkill;
 
@@ -64,7 +66,7 @@ public class Equipment : Item
         value += healthValue * Health + staminaValue * Stamina;
         value += statsValue * (strength + agility + intellect);
         value += speedStatsValue * (castingTime + attackSpeed);
-        value += critBlockValue  * (critChance + blockChance);
+        value += critBlockValue  * (critChance + critStrength + blockChance + walkSpeed);
         value += grantedSkill == null ? 0 : grantedSkillValue;
         value += rarityValue * (int)itemRarity;
         

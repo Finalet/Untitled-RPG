@@ -10,7 +10,7 @@ public static class CalculateDamage
     public static DamageInfo damageInfo(float rawDamage, float critChance, float damageVariation = 0.15f) {
         bool isCritHit = isCrit(critChance);
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(rawDamage * (1-damageVariation), rawDamage * (1+damageVariation)));
-        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critMultiplier) : Mathf.RoundToInt(damageBeforeCrit), DamageType.Raw, isCritHit);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critStrength) : Mathf.RoundToInt(damageBeforeCrit), DamageType.Raw, isCritHit);
     }
 
     public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage) {
@@ -47,7 +47,7 @@ public static class CalculateDamage
         }
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(skillTreeAdjustedDamage * (1-damageVariation), skillTreeAdjustedDamage * (1+damageVariation)));
         bool isCritHit = isCrit(critChance);
-        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critMultiplier) : damageBeforeCrit, damageType, isCritHit);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critStrength) : damageBeforeCrit, damageType, isCritHit);
     }
 
     static bool isCrit(float critChance) {

@@ -43,7 +43,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     }
 
     public virtual void ValidateSlot() {
-        if (itemAmount <= 0 || itemInSlot == null)
+        if ( (itemAmount <= 0 && itemInSlot != null) || (itemAmount > 0 && itemInSlot == null))
             ClearSlot();
         
         if (itemInSlot != null && itemAmount > itemInSlot.maxStackAmount)

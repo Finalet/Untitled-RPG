@@ -43,6 +43,7 @@ public class EquipmentManager : MonoBehaviour, ISavable
     [Header("Weapons buffs")]
     public Buff shieldBuff;
     public Buff dualHandsBuff;
+    public Buff axeBuff;
     public Buff TwoHandedSwordBuff;
     public Buff TwoHandedStaffBuff;
 
@@ -114,8 +115,6 @@ public class EquipmentManager : MonoBehaviour, ISavable
         if (ring.itemInSlot != null) AddStats((Equipment)ring.itemInSlot);
         if (secondRing.itemInSlot != null) AddStats((Equipment)secondRing.itemInSlot);
         //ADD ALL OTHER ITEMS
-
-        CalculateEquipmentBuffs();
     }
 
     void AddStats (Equipment item) {
@@ -137,7 +136,9 @@ public class EquipmentManager : MonoBehaviour, ISavable
         characteristics.castingSpeedFromEquip.y *= (1+item.castingTime);
 
         characteristics.critChanceFromEquip += item.critChance;
+        characteristics.critStrengthFromEquip += item.critStrength;
         characteristics.blockChanceFromEquip += item.blockChance;
+        characteristics.walkSpeedFromEquipment *= (1+item.walkSpeed);
     }
 
     void ResetStats () {
@@ -156,7 +157,9 @@ public class EquipmentManager : MonoBehaviour, ISavable
         characteristics.castingSpeedFromEquip = Vector2.one;
 
         characteristics.critChanceFromEquip = 0;
+        characteristics.critStrengthFromEquip = 0;
         characteristics.blockChanceFromEquip = 0;
+        characteristics.walkSpeedFromEquipment = 1;
     }
 
     public void EquipWeaponPrefab (Weapon weapon, bool secondary = false) {
@@ -416,7 +419,7 @@ public class EquipmentManager : MonoBehaviour, ISavable
         return equiped;
     }
 
-    void CalculateEquipmentBuffs (){
+    public void CheckEquipmentBuffs (){
         int numberOfCommonArmor = 0;
         int numberOfUncommonArmor = 0;
         int numberOfRareArmor = 0;
@@ -437,6 +440,8 @@ public class EquipmentManager : MonoBehaviour, ISavable
         if (numberOfEpicArmor >= 5) characteristics.AddBuff(epicSetBuff); else characteristics.RemoveBuff(epicSetBuff);
         if (numberOfLegendaryArmor >= 5) characteristics.AddBuff(legendarySetBuff); else characteristics.RemoveBuff(legendarySetBuff);
         if (numberOfRelicArmor >= 5) characteristics.AddBuff(relicSetBuff); else characteristics.RemoveBuff(relicSetBuff);
+
+        CheckWeaponBuffs();
     }
 
     void CheckItemForRarity (Item item, ref int common, ref int uncommon, ref int rare, ref int epic, ref int legendary, ref int relic) {
@@ -447,6 +452,38 @@ public class EquipmentManager : MonoBehaviour, ISavable
             case ItemRarity.Epic: epic++; break;
             case ItemRarity.Legendary: legendary++; break;
             case ItemRarity.Relic: relic++; break;
+        }
+    }
+
+    void CheckWeaponBuffs () {
+        characteristics.RemoveBuff(TwoHandedStaffBuff);
+        characteristics.RemoveBuff(TwoHandedSwordBuff);
+        characteristics.RemoveBuff(shieldBuff);
+        characteristics.RemoveBuff(axeBuff);
+        characteristics.RemoveBuff(dualHandsBuff);
+        
+        Weapon mh = null;
+        Weapon sh = null;
+        if (isSlotEquiped(WeaponHand.OneHanded, out Item mainHandItem)) {
+            mh = (Weapon)mainHandItem;
+        }
+        if (isSlotEquiped(WeaponHand.OneHanded, out Item secondaryHandItem, true)) {
+            sh = (Weapon)secondaryHandItem;
+        }
+        if (mh != null) {
+            if (mh.weaponHand == WeaponHand.TwoHanded) {
+                if (mh.weaponCategory == WeaponCategory.Sword) characteristics.AddBuff(TwoHandedSwordBuff);
+                else if (mh.weaponCategory == WeaponCategory.Staff) characteristics.AddBuff(TwoHandedStaffBuff);
+            }
+            if (mh.weaponCategory == WeaponCategory.Axe) characteristics.AddBuff(axeBuff);
+        }
+        if (sh != null) {
+            if (sh.weaponCategory == WeaponCategory.Shield) characteristics.AddBuff(shieldBuff);
+            else if (sh.weaponCategory == WeaponCategory.Axe) characteristics.AddBuff(axeBuff);
+
+            if(mh != null) {
+                if (mh.weaponHand == WeaponHand.OneHanded && sh.weaponHand == WeaponHand.OneHanded) characteristics.AddBuff(dualHandsBuff);
+            }
         }
     }
 

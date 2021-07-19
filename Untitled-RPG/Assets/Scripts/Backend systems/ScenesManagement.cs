@@ -24,8 +24,8 @@ public class ScenesManagement : MonoBehaviour
         loadingScreen.SetActive(false);
     }
 
-    public void LoadLevel(string worldScene, Vector3 playerPos) {
-        StartCoroutine(Loading(worldScene, playerPos));
+    public void LoadLevel(string worldScene) {
+        StartCoroutine(Loading(worldScene));
     }
     public void LoadMenu () {
         StartCoroutine(LoadingMenu());
@@ -72,7 +72,7 @@ public class ScenesManagement : MonoBehaviour
         currentScene = "";
     }
 
-    IEnumerator Loading (string worldScene, Vector3 playerPos) {
+    IEnumerator Loading (string worldScene) {
         //Disable objects 
         foreach (GameObject go in GameobjectsToDisableOnUnload) {
             go.SetActive(false);
@@ -90,8 +90,6 @@ public class ScenesManagement : MonoBehaviour
         yield return new WaitForSeconds(1);
         AsyncOperation loadingPlayer = SceneManager.LoadSceneAsync(playerScene, LoadSceneMode.Additive);
         yield return loadingPlayer;
-        yield return new WaitForSeconds(1);
-        PlayerControlls.instance.transform.position = playerPos;
         isLoading = false;
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(worldScene));
         loadingScreen.SetActive(false);

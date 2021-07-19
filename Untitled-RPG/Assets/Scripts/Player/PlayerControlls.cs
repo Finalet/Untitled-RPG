@@ -9,7 +9,6 @@ public class PlayerControlls : MonoBehaviour, ISavable
     public static PlayerControlls instance;
 
     [Header("Movement")]
-    public float baseWalkSpeed = 1;
     public float walkSpeed;
     public bool toggleRunning = false;
     public int staminaReqToRoll = 50;
@@ -95,7 +94,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
         playerCamera = Camera.main;
         CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
         cameraControl = playerCamera.GetComponent<CameraControll>();
-        walkSpeed = baseWalkSpeed * Characteristics.instance.walkSpeedBuff;
+        walkSpeed = Characteristics.instance.walkSpeed;
 
         SaveManager.instance.saveObjects.Add(this);
     }
@@ -249,9 +248,9 @@ public class PlayerControlls : MonoBehaviour, ISavable
     
     void GroundAnimations() {
         if ( (InputDirection == 90 || InputDirection == -90) && isRunning && !isSprinting)
-            walkSpeed = baseWalkSpeed * Characteristics.instance.walkSpeedBuff * 1.2f;
+            walkSpeed = Characteristics.instance.walkSpeed * 1.2f;
         else 
-            walkSpeed = baseWalkSpeed * Characteristics.instance.walkSpeedBuff;
+            walkSpeed = Characteristics.instance.walkSpeed;
 
         if (!isIdle) {
             InputDirection = Mathf.Atan2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * Mathf.Rad2Deg;

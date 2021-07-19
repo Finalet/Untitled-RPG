@@ -150,7 +150,7 @@ public class Tooltip : MonoBehaviour
                 stats += $"Attack speed: <color={highlightColor}>{plusSign}{(100*w.attackSpeed).ToString()}%</color>{compareText}\n";
             }
 
-            if (w.critChance != 0 || w.blockChance != 0) {
+            if (w.critChance != 0 || w.critStrength != 0 || w.blockChance != 0 || w.walkSpeed != 0) {
                 if (stats != "") stats += addSpace();
             }
             if (w.critChance != 0) {
@@ -158,10 +158,20 @@ public class Tooltip : MonoBehaviour
                 string plusSign = w.critChance > 0 ? "+" : "";
                 stats += $"Critical chance: <color={highlightColor}>{plusSign}{(100*w.critChance).ToString()}%</color>{compareText}\n";
             }
+            if (w.critStrength != 0) {
+                compareText = compare ? $"{getCompareString(w.critStrength, wCompare.critStrength, false, true)}" : "";
+                string plusSign = w.critStrength > 0 ? "+" : "";
+                stats += $"Critical strength: <color={highlightColor}>{plusSign}{(100*w.critStrength).ToString()}%</color>{compareText}\n";
+            }
             if (w.blockChance != 0) {
                 compareText = compare ? $"{getCompareString(w.blockChance, wCompare.blockChance, false, true)}" : "";
                 string plusSign = w.blockChance > 0 ? "+" : "";
                 stats += $"Block chance: <color={highlightColor}>{plusSign}{(100*w.blockChance).ToString()}%</color>{compareText}\n";
+            }
+            if (w.walkSpeed != 0) {
+                compareText = compare ? $"{getCompareString(w.walkSpeed, wCompare.walkSpeed, false, true)}" : "";
+                string plusSign = w.walkSpeed > 0 ? "+" : "";
+                stats += $"Walk speed: <color={highlightColor}>{plusSign}{(100*w.walkSpeed).ToString()}%</color>{compareText}\n";
             }
         } else if (item is Skillbook) {
             Skillbook sb = (Skillbook)item;

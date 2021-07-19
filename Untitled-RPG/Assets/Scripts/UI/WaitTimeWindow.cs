@@ -85,7 +85,6 @@ public class WaitTimeWindow : MonoBehaviour
         isWaiting = true;
         waitUntilLabel.text = "Stop waiting";
         float pastSpeed = TimeOfDayController.instance.automaticIncrementSpeed;
-        float pastTimeScale = Time.timeScale;
         DOTween.To(()=> Time.timeScale, x=> Time.timeScale = x, 5, startStopTime); 
         DOTween.To(()=> TimeOfDayController.instance.automaticIncrementSpeed, x=> TimeOfDayController.instance.automaticIncrementSpeed = x, 0.015f, startStopTime); 
         selectedTimeSlider.interactable = false;
@@ -100,7 +99,7 @@ public class WaitTimeWindow : MonoBehaviour
         CM_cam.enabled = false;
         isWaiting = false;
         selectedTimeSlider.interactable = true;
-        DOTween.To(()=> Time.timeScale, x=> Time.timeScale = x, pastTimeScale, startStopTime); 
+        DOTween.To(()=> Time.timeScale, x=> Time.timeScale = x, 1, startStopTime); 
         DOTween.To(()=> TimeOfDayController.instance.automaticIncrementSpeed, x=> TimeOfDayController.instance.automaticIncrementSpeed = x, pastSpeed, startStopTime); 
         waitUntilLabel.text = waitUntilButtonString();
     }

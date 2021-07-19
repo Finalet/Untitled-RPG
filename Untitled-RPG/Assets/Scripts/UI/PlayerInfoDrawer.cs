@@ -24,7 +24,9 @@ public class PlayerInfoDrawer : MonoBehaviour
     public TextMeshProUGUI attackSpeed;
     [Space]
     public TextMeshProUGUI criticalChance;
+    public TextMeshProUGUI criticalStrength;
     public TextMeshProUGUI blockChance;
+    public TextMeshProUGUI walkSpeed;
 
     void Start() {
         playerName.text = Characteristics.instance.playerName;
@@ -53,6 +55,8 @@ public class PlayerInfoDrawer : MonoBehaviour
         attackSpeed.text = $"<color={highlightColor}>{Mathf.Round(Characteristics.instance.attackSpeed.y*1000f)/10f}%</color>\n";
         
         criticalChance.text = $"<color={highlightColor}>{Mathf.Round(Characteristics.instance.critChance*1000f)/10f}%</color>\n";
+        criticalStrength.text = $"<color={highlightColor}>{Mathf.Round(Characteristics.instance.critStrength*1000f)/10f}%</color>\n";
         blockChance.text = $"<color={highlightColor}>{Mathf.Round(Characteristics.instance.blockChance*1000f)/10f}%</color>\n";
+        walkSpeed.text = $"<color={highlightColor}>{Mathf.Round(Characteristics.instance.walkSpeed*1000f)/10f}%</color>\n";
     }
 }

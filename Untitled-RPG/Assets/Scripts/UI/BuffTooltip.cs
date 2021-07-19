@@ -69,11 +69,13 @@ public class BuffTooltip : MonoBehaviour
         if (buff.immuneToDamage) stats += $"<color={color}>Immune to damage.</color>\n";
         if (buff.immuneToInterrupt) stats += $"<color={color}>Immune to interruptions.</color>\n";
 
-        if (buff.critChanceBuff != 0 || buff.blockChanceBuff != 00)
+        if (buff.critChanceBuff != 0 || buff.critStrengthBuff != 0 || buff.blockChanceBuff != 0 || buff.walkSpeedBuff != 0)
             if (stats != "") stats += addSpace();
 
         if (buff.critChanceBuff != 0) stats += $"Critical chance: <color={color}>{(buff.critChanceBuff > 0 ? "+" : "")}{buff.critChanceBuff*100}%</color>\n";
+        if (buff.critStrengthBuff != 0) stats += $"Critical strength: <color={color}>{(buff.critStrengthBuff > 0 ? "+" : "")}{buff.critStrengthBuff*100}%</color>\n";
         if (buff.blockChanceBuff != 0) stats += $"Block chance: <color={color}>{(buff.blockChanceBuff > 0 ? "+" : "")}{buff.blockChanceBuff*100}%</color>\n";
+        if (buff.walkSpeedBuff != 0) stats += $"Walk speed: <color={color}>{(buff.walkSpeedBuff > 0 ? "+" : "")}{buff.walkSpeedBuff*100}%</color>\n";
 
         return stats;
     }

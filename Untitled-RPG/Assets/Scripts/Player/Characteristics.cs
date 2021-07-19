@@ -39,8 +39,9 @@ public class Characteristics : MonoBehaviour
     public Vector2 attackSpeed; public Vector2 attackSpeedFromEquip; //x = 1.1; y = 0.9;
     [Header("Misc")]
     public float critChance; public float critChanceFromEquip; public float critChanceFromBuff; float baseCritChance = 0.1f;
-    public float critMultiplier; float baseCritMultiplier = 2;
+    public float critStrength; float baseCritStrength = 2; public float critStrengthFromEquip; public float critStrengthFromBuff;
     public float blockChance; public float blockChanceFromEquip; public float blockChanceFromBuff;
+    public float walkSpeed; public float walkSpeedBuff; public float walkSpeedFromEquipment;
 
     [Header("Buffs")]
     public float meleeAttackBuff;
@@ -50,7 +51,6 @@ public class Characteristics : MonoBehaviour
     public float defenseBuff;
     public Vector2 castingSpeedBuff;
     public Vector2 attackSpeedBuff;
-    public float walkSpeedBuff;
     public float skillDistanceIncrease;
 
     int statsRatio = 4;
@@ -110,9 +110,10 @@ public class Characteristics : MonoBehaviour
         castingSpeed.y = 1 * castingSpeedFromEquip.y * (1-intellect*0.00005f) * castingSpeedBuff.y;
 
         critChance = baseCritChance + critChanceFromEquip + critChanceFromBuff;
-        critMultiplier = baseCritMultiplier;
+        critStrength = baseCritStrength + critStrengthFromEquip + critStrengthFromBuff;
 
         blockChance = blockChanceFromEquip + blockChanceFromBuff;
+        walkSpeed = 1 * walkSpeedBuff * walkSpeedFromEquipment;
     }
 
     float hpTimer = 1;
@@ -244,7 +245,6 @@ public class Characteristics : MonoBehaviour
             attackSpeedBuff.x *= (1-activeBuffs[i].buff1.attackSpeedBuff);
             attackSpeedBuff.y *= (1+activeBuffs[i].buff1.attackSpeedBuff);
 
-            walkSpeedBuff *= (1+activeBuffs[i].buff1.walkSpeedBuff);
 
             skillDistanceIncrease += activeBuffs[i].buff1.skillDistanceBuff;
 
@@ -252,7 +252,9 @@ public class Characteristics : MonoBehaviour
             immuneToInterruptInt += activeBuffs[i].buff1.immuneToInterrupt ? 1 : 0;
 
             critChanceFromBuff += activeBuffs[i].buff1.critChanceBuff;
+            critStrengthFromBuff += activeBuffs[i].buff1.critStrengthBuff;
             blockChanceFromBuff += activeBuffs[i].buff1.blockChanceBuff;
+            walkSpeedBuff *= (1+activeBuffs[i].buff1.walkSpeedBuff);
         }
 
         immuneToDamage = immuneToDamageInt > 0 ? true : false;
@@ -275,7 +277,6 @@ public class Characteristics : MonoBehaviour
         castingSpeedBuff = Vector2.one;
         attackSpeedBuff = Vector2.one;
         
-        walkSpeedBuff = 1;
 
         skillDistanceIncrease = 0;
 
@@ -283,7 +284,9 @@ public class Characteristics : MonoBehaviour
         immuneToInterruptInt = 0;
 
         critChanceFromBuff = 0;
+        critStrengthFromBuff = 0;
         blockChanceFromBuff = 0;
+        walkSpeedBuff = 1;
     }
 
 #region Getting Hit

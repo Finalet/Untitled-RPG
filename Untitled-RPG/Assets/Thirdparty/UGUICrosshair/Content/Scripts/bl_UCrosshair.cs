@@ -71,6 +71,7 @@ public class bl_UCrosshair : MonoBehaviour
         if (HideMouseCursor) { Cursor.visible = false; }
 
         canvasGroup = GetComponent<CanvasGroup>();
+        currentCross = crossHairStyleSlider;
     }
 
     /// <summary>

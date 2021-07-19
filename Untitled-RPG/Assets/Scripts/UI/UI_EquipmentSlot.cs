@@ -101,6 +101,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
             else
                 UIAudioManager.instance.PlayUISound(UIAudioManager.instance.EquipWeapon);
         }
+
+        EquipmentManager.instance.CheckEquipmentBuffs();
     }
 
     void MainHandAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -123,16 +125,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
 
         SharedAdd(item, amount, initialSlot);
         EquipmentManager.instance.EquipWeaponPrefab(w);
-
-        if (w.weaponHand == WeaponHand.TwoHanded) {
-            if (w.weaponCategory == WeaponCategory.Sword) Characteristics.instance.AddBuff(EquipmentManager.instance.TwoHandedSwordBuff);
-            else if (w.weaponCategory == WeaponCategory.Staff) Characteristics.instance.AddBuff(EquipmentManager.instance.TwoHandedStaffBuff);
-        } else if (w.weaponHand == WeaponHand.OneHanded || w.weaponHand == WeaponHand.SecondaryHand) {
-            if (w.weaponCategory != WeaponCategory.Shield && EquipmentManager.instance.isSlotEquiped(WeaponHand.OneHanded, out Item secondaryHandItem, true)) {
-                Weapon sw = (Weapon)secondaryHandItem;
-                if (sw.weaponHand == WeaponHand.OneHanded) Characteristics.instance.AddBuff(EquipmentManager.instance.dualHandsBuff);
-            }
-        }
     }
 
     void SecondaryHandAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -161,14 +153,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
 
         SharedAdd(item, amount, initialSlot);
         EquipmentManager.instance.EquipWeaponPrefab(w, true);
-
-        if (w.weaponCategory == WeaponCategory.Shield) {
-            Characteristics.instance.AddBuff(EquipmentManager.instance.shieldBuff);
-        } else if (w.weaponHand == WeaponHand.OneHanded || w.weaponHand == WeaponHand.SecondaryHand) {
-            if (EquipmentManager.instance.isSlotEquiped(WeaponHand.OneHanded, out Item mainHandItem)) {
-                Characteristics.instance.AddBuff(EquipmentManager.instance.dualHandsBuff);
-            }
-        }
     }
 
     void BowAdd (Item item, int amount, UI_InventorySlot initialSlot) {
@@ -265,7 +249,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
             } else {
                 UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UnequipWeapon);
             }
-            RemoveWeaponsBuff(w);
             EquipmentManager.instance.UnequipWeaponPrefab(w, equipmentSlotType == EquipmentSlotType.SecondaryHand ? true : false);
         } else if (itemInSlot is Armor) {
             if (equipmentSlotType != EquipmentSlotType.Necklace && equipmentSlotType != EquipmentSlotType.Ring)
@@ -289,6 +272,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
         equipmentIcon.color = baseColor;
 
         base.ClearSlot();
+
+        EquipmentManager.instance.CheckEquipmentBuffs();
     }
 
     public override void OnBeginDrag (PointerEventData pointerData) { //overriding these to not play UI sounds when equiping / unequiping by drag
@@ -304,20 +289,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
             PeaceCanvas.instance.dragSuccess = true;
             AddItem(PeaceCanvas.instance.itemBeingDragged, PeaceCanvas.instance.amountOfDraggedItem, PeaceCanvas.instance.initialSlot);
             //UIAudioManager.instance.PlayUISound(UIAudioManager.instance.DropItem);
-        }
-    }
-
-    void RemoveWeaponsBuff (Weapon unequipingItem) {
-        if (unequipingItem.weaponHand == WeaponHand.TwoHanded) {
-            if (unequipingItem.weaponCategory == WeaponCategory.Sword) {
-                Characteristics.instance.RemoveBuff(EquipmentManager.instance.TwoHandedSwordBuff);
-            } else if (unequipingItem.weaponCategory == WeaponCategory.Staff) {
-                Characteristics.instance.RemoveBuff(EquipmentManager.instance.TwoHandedStaffBuff);
-            }
-        } else if (unequipingItem.weaponCategory == WeaponCategory.Shield) {
-            Characteristics.instance.RemoveBuff(EquipmentManager.instance.shieldBuff);
-        } else if (unequipingItem.weaponHand == WeaponHand.OneHanded) {
-            Characteristics.instance.RemoveBuff(EquipmentManager.instance.dualHandsBuff);
         }
     }
 }

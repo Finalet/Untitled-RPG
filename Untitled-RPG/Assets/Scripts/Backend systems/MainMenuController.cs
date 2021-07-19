@@ -20,16 +20,12 @@ public class MainMenuController : MonoBehaviour
                 playerPos = new Vector3(-560,10,-120);
                 playerRot = Quaternion.identity;
                 break;
-            case "Village":
-                playerPos = new Vector3(-60,-1.2f,100);
-                playerRot = Quaternion.identity;
-                break;
             default:
                 playerPos = new Vector3(0,1,0);
                 playerRot = Quaternion.identity;
                 break;
         }
-        ScenesManagement.instance.LoadLevel(levelName, playerPos);
+        ScenesManagement.instance.LoadLevel(levelName);
     }
 
     public void ExitGame () {
