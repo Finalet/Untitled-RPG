@@ -8,7 +8,9 @@ public class EnemyArrow : MonoBehaviour
     public float gravityScale = 0.4f;
     public float gravityDelay = 0.2f;
     public TrailRenderer trail;
+    public GameObject mesh;
     public HitType hitType = HitType.Normal;
+    public AudioClip[] hitSounds;
 
     protected float timeShot;
     protected bool shot = false;
@@ -17,9 +19,11 @@ public class EnemyArrow : MonoBehaviour
     protected Rigidbody rb;
     protected DamageInfo damageInfo;
     protected string enemyName;
+    protected AudioSource audioSource;
 
     protected virtual void Start() {
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         rb.useGravity = false;
     }
 
@@ -65,7 +69,8 @@ public class EnemyArrow : MonoBehaviour
 
         if (other.CompareTag("Player") && other.GetType() == typeof(CapsuleCollider)) { 
             PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damageInfo.damage, enemyName, hitType, 0.2f, 1.5f);
-            Destroy(gameObject);
+            mesh.gameObject.SetActive(false);
+            Destroy(gameObject,1);
         }
     }
 
@@ -79,6 +84,6 @@ public class EnemyArrow : MonoBehaviour
         
         GetComponent<CapsuleCollider>().enabled = false;
         trail.emitting = false;
-        GetComponent<AudioSource>().Play();
+        audioSource.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length-1)]);
     }
 }

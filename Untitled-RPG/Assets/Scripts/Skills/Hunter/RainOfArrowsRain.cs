@@ -13,8 +13,9 @@ public class RainOfArrowsRain : MonoBehaviour
     void Start() {
         Destroy(gameObject, skill.rainDuration);
         AudioSource audioSource =  GetComponent<AudioSource>();
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
         audioSource.spatialBlend = 1;
-        audioSource.maxDistance = 100;
+        audioSource.maxDistance = 40;
         audioSource.minDistance = 1;
         audioSource.clip = skill.rainSound;
         audioSource.PlayDelayed(0.5f);

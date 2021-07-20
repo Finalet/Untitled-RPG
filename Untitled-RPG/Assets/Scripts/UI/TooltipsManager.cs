@@ -52,9 +52,7 @@ public class TooltipsManager : MonoBehaviour
         if (currentCompareTooltip != null)
             Destroy(currentCompareTooltip.gameObject);
         
-        bool instant = false;
-        if (currentToolTip != null)
-            instant = true;
+        bool instant = currentToolTip;
         while (Time.time - timeStarted < toolTipDelay && !instant) {
             if (cancelTooltip) {
                 cancelTooltip = false;
@@ -128,9 +126,7 @@ public class TooltipsManager : MonoBehaviour
         currentTooltipOwner = slotTransform.gameObject;
         cancelTooltip = false;
         
-        bool instant = false;
-        if (currentToolTip != null)
-            instant = true;
+        bool instant = currentSkillToolTip;
         while (Time.time - timeStarted < toolTipDelay && !instant) {
             if (cancelTooltip) {
                 cancelTooltip = false;
@@ -139,6 +135,10 @@ public class TooltipsManager : MonoBehaviour
             }
             yield return null;
         }
+
+        if (currentTooltipOwner != slotTransform.gameObject) //protection layer. without it sometimes tooltip shows previous skill.
+            yield break;
+
         Vector2 pivot = Vector2.one;
         Vector2 anchoredShift = new Vector2(-slotTransform.sizeDelta.x/2 - 10, +slotTransform.sizeDelta.y/2);
         if (currentSkillToolTip == null) {

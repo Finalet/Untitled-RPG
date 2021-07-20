@@ -223,6 +223,8 @@ MonoBehaviour:
   gravityScale: 0.4
   gravityDelay: 0.2
   trail: {fileID: 1474513073192199313}
+  impactSounds:
+  - {fileID: 8300000, guid: 92ec907e2e3ca494399f30ab333a2f70, type: 3}
   strongTrails: {fileID: 7247602239206584644}
   explostionVFX: {fileID: 6785406435111500929}
 --- !u!82 &-7150070857869859779
@@ -249,7 +251,7 @@ AudioSource:
   MinDistance: 5
   MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -282,7 +284,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

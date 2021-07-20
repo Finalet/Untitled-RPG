@@ -50,8 +50,8 @@ public class BuffTooltip : MonoBehaviour
         if (buff.castingSpeedBuff != 0 || buff.attackSpeedBuff != 0)
             if (stats != "") stats += addSpace();
 
-        if (buff.castingSpeedBuff != 0) stats += $"Casting speed: <color={color}>{(buff.castingSpeedBuff > 0 ? "+" : "")}{buff.castingSpeedBuff*100}%</color>\n";
-        if (buff.attackSpeedBuff != 0) stats += $"Attack speed: <color={color}>{(buff.attackSpeedBuff > 0 ? "+" : "")}{buff.attackSpeedBuff*100}%</color>\n";
+        if (buff.castingSpeedBuff != 0) stats += $"Cast duration: <color={color}>{(buff.castingSpeedBuff > 0 ? "+" : "")}{buff.castingSpeedBuff*100}%</color>\n";
+        if (buff.attackSpeedBuff != 0) stats += $"Attack duration: <color={color}>{(buff.attackSpeedBuff > 0 ? "+" : "")}{buff.attackSpeedBuff*100}%</color>\n";
 
         if (buff.walkSpeedBuff != 0)
             if (stats != "") stats += addSpace();

@@ -8,6 +8,8 @@ public class CaptainThrow : Skill
     public float maxDistance = 10;
     public float strength = 20;
     [Space]
+    public ParticleSystem hitFlash;
+    [Space]
     public AudioClip shootSound;
     public AudioClip hitSound;
     public AudioClip catchSound;
@@ -50,6 +52,15 @@ public class CaptainThrow : Skill
     }
     void ReturnCamera () {
         playerControlls.playerCamera.GetComponent<CameraControll>().isShortAiming = false;
+    }
+
+    public void PlayHitFlash (Vector3 hitPos){
+        hitFlash.transform.position = hitPos;
+        hitFlash.Play();
+        Invoke("ReturnFlash", 0.2f);
+    }
+    void ReturnFlash (){
+        hitFlash.transform.localPosition = Vector3.zero; 
     }
 
     public override bool skillActive()

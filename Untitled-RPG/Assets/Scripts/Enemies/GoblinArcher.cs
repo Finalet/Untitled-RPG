@@ -80,6 +80,7 @@ public class GoblinArcher : Enemy
 
         newArrow = null;
 
+        audioSource.PlayOneShot(attackSounds[Random.Range(0, attackSounds.Length-1)]);
     }
 
     protected override void ReturnToPosition () {

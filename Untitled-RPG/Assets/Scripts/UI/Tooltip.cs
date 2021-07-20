@@ -142,12 +142,12 @@ public class Tooltip : MonoBehaviour
             if (w.castingTime != 0) {
                 compareText = compare ? $"{getCompareString(w.castingTime, wCompare.castingTime, true, true)}" : "";
                 string plusSign = w.castingTime > 0 ? "+" : "";
-                stats += $"Casting time: <color={highlightColor}>{plusSign}{(100*w.castingTime).ToString()}%</color>{compareText}\n";
+                stats += $"Cast duration: <color={highlightColor}>{plusSign}{(100*w.castingTime).ToString()}%</color>{compareText}\n";
             }
             if (w.attackSpeed != 0) {
                 compareText = compare ? $"{getCompareString(w.attackSpeed, wCompare.attackSpeed, true, true)}" : "";
                 string plusSign = w.attackSpeed > 0 ? "+" : "";
-                stats += $"Attack speed: <color={highlightColor}>{plusSign}{(100*w.attackSpeed).ToString()}%</color>{compareText}\n";
+                stats += $"Attack duration: <color={highlightColor}>{plusSign}{(100*w.attackSpeed).ToString()}%</color>{compareText}\n";
             }
 
             if (w.critChance != 0 || w.critStrength != 0 || w.blockChance != 0 || w.walkSpeed != 0) {

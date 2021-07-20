@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class GoblinWarrior : Enemy
 {
+    [Space]
+    public AudioClip[] hitSounds;
 
     protected override void Start()
     {
@@ -77,5 +79,11 @@ public class GoblinWarrior : Enemy
     protected override void Idle () {
         base.Idle();
         navAgent.isStopped = true;
+    }
+
+    public override void Hit()
+    {
+        base.Hit();
+        audioSource.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length-1)]);
     }
 }

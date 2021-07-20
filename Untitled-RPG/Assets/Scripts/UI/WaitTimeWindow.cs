@@ -23,11 +23,6 @@ public class WaitTimeWindow : MonoBehaviour
 
     bool isWaiting;
 
-    void Start() {
-        MatchCurrentTime();
-        SetSelectedTime();
-    }
-
     void Update() {
         MatchCurrentTime();
         waitButton.interactable = Mathf.Abs(selectedTimeSlider.value - TimeOfDayController.instance.timeOfDay) > 0.03f;
@@ -38,6 +33,9 @@ public class WaitTimeWindow : MonoBehaviour
     }
 
     public void OpenWindow() {
+        MatchCurrentTime();
+        selectedTimeSlider.value = (currentTimeSlider.value + 0.1f) % 1;
+        SetSelectedTime();
         gameObject.SetActive(true);
     }
 

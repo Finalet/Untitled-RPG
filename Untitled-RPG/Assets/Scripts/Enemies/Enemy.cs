@@ -478,9 +478,9 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             hitType = HitType.Normal;
 
         if (hitType == HitType.Normal) {
-            animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
+            if (!isKnockedDown) animator.CrossFade("GetHitUpperBody.GetHit", 0.1f, animator.GetLayerIndex("GetHitUpperBody"), 0);
         } else if (hitType == HitType.Interrupt) {
-            animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
+            if (!isKnockedDown) animator.CrossFade("GetHit.GetHit", 0.1f, animator.GetLayerIndex("GetHit"), 0);
             animator.CrossFade("Attacks.Empty", 0.1f);
             CheckInterruptLimit();
         } else if (hitType == HitType.Kickback) {

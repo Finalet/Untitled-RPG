@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class ScenesManagement : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class ScenesManagement : MonoBehaviour
     public bool isLoading;
 
     public GameObject loadingScreen;
+    public Image blackout;
 
     string currentScene;
     string playerScene = "Player_Object";
@@ -32,6 +34,9 @@ public class ScenesManagement : MonoBehaviour
     }
 
     IEnumerator LoadingMenu () {
+        blackout.color = Color.black;
+        blackout.DOFade(0, 1);
+        
         string currentSceneName = currentScene == "" || currentScene == null ? SceneManager.GetActiveScene().name : currentScene;
 
         //Turn off all directional lights
@@ -61,7 +66,8 @@ public class ScenesManagement : MonoBehaviour
         yield return new WaitForSeconds(1);
         AsyncOperation loadMenu = SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
         yield return loadMenu;
-        yield return new WaitForSeconds(1);
+        blackout.DOFade(1, 1f);
+        yield return new WaitForSeconds(1f);
         isLoading = false;
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("MainMenu"));
         loadingScreen.SetActive(false);
@@ -73,6 +79,9 @@ public class ScenesManagement : MonoBehaviour
     }
 
     IEnumerator Loading (string worldScene) {
+        blackout.color = Color.black;
+        blackout.DOFade(0, 1);
+        
         //Disable objects 
         foreach (GameObject go in GameobjectsToDisableOnUnload) {
             go.SetActive(false);
@@ -90,6 +99,8 @@ public class ScenesManagement : MonoBehaviour
         yield return new WaitForSeconds(1);
         AsyncOperation loadingPlayer = SceneManager.LoadSceneAsync(playerScene, LoadSceneMode.Additive);
         yield return loadingPlayer;
+        blackout.DOFade(1, 1f);
+        yield return new WaitForSeconds(1f);
         isLoading = false;
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(worldScene));
         loadingScreen.SetActive(false);

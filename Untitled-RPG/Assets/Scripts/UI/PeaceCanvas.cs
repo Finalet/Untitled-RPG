@@ -59,6 +59,7 @@ public class PeaceCanvas : MonoBehaviour
     public GameObject skillbookPreviewPanel;
     public TextMeshProUGUI timeLabel;
     public WaitTimeWindow waitTimeWindow;
+    public Image blackout;
 
     [Header("Debug")] 
     public RectTransform DebugChatPanel;
@@ -72,6 +73,7 @@ public class PeaceCanvas : MonoBehaviour
 
     void Start() {
         SaveManager.instance.saveObjects.Add(settingsView.GetComponent<SettingsManager>());
+        BlackoutFade(false, 1f, 1);
     }
 
     void Update() {
@@ -103,14 +105,14 @@ public class PeaceCanvas : MonoBehaviour
 
     void HandleInputs () {
         if (Input.GetKeyDown(KeybindsManager.instance.skills)) {
-            if (!SkillsPanel.activeInHierarchy && currentInterractingNPC == null)
+            if (!SkillsPanel.activeInHierarchy && currentInterractingNPC == null && !waitTimeWindow.gameObject.activeInHierarchy)
                 OpenSkillsPanel();
             else 
                 CloseSkillsPanel();
         }
 
         if (Input.GetKeyDown(KeybindsManager.instance.inventory)) {
-            if (!Inventory.activeInHierarchy)
+            if (!Inventory.activeInHierarchy && !waitTimeWindow.gameObject.activeInHierarchy)
                 OpenInventory();
             else
                 CloseInventory();
@@ -207,7 +209,12 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void ExitToMenu () {
+        StartCoroutine(exitToMenu());
+    }
+    IEnumerator exitToMenu () {
+        blackout.DOFade(1, 1);
         Time.timeScale = 1;
+        yield return new WaitForSeconds(1);
         ScenesManagement.instance.LoadMenu();
     }
     public void ExitToDesktop() {
@@ -346,5 +353,15 @@ public class PeaceCanvas : MonoBehaviour
     public void HideKeySuggestion (){
         if (buttonSuggestionUI.activeInHierarchy)
             buttonSuggestionUI.SetActive(false);
+    }
+
+    public void BlackoutFade(bool fadeIn = true, float fadeDuration = 1, float delay = 0) {
+        if (fadeIn){
+            blackout.color = new Color (0,0,0,0);
+            blackout.DOFade(1, fadeDuration).SetDelay(delay);
+        } else {
+            blackout.color = Color.black;
+            blackout.DOFade(0, fadeDuration).SetDelay(delay);
+        }
     }
 }

@@ -224,9 +224,14 @@ MonoBehaviour:
   gravityScale: 0.6
   gravityDelay: 0.2
   trail: {fileID: 1474513073192199313}
+  impactSounds:
+  - {fileID: 8300000, guid: c4126bd0c33f32e4aa6ced9c680d3573, type: 3}
+  - {fileID: 8300000, guid: 2de8bd1b8491d7c43a5f500710e8ef18, type: 3}
+  - {fileID: 8300000, guid: 6e05d61264b04e34e8f6c26b9749c9f6, type: 3}
   poisonEffect:
     name: 
     skillTree: 0
+    damageType: 0
     baseEffectPercentage: 0
     frequencyPerSecond: 0
     duration: 0
@@ -257,7 +262,7 @@ AudioSource:
   MinDistance: 5
   MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -290,7 +295,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

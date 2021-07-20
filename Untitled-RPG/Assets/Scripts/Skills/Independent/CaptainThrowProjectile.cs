@@ -7,7 +7,7 @@ public class CaptainThrowProjectile : MonoBehaviour
     public bool isThrown;
     public Transform returnTransform;
     public DamageInfo damageInfo;
-    public Skill skill;
+    public CaptainThrow skill;
     public AudioClip hitSound;
     public AudioClip catchSound;
     public Transform mesh;
@@ -77,6 +77,8 @@ public class CaptainThrowProjectile : MonoBehaviour
 
         audioSource.time = 0.2f;
         audioSource.PlayOneShot(hitSound);
+
+        skill.PlayHitFlash(transform.position);
 
         isReturning = true;
         IDamagable en = other.GetComponentInParent<IDamagable>();

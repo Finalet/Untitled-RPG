@@ -221,6 +221,11 @@ MonoBehaviour:
   gravityScale: 0.6
   gravityDelay: 0.2
   trail: {fileID: 1474513073192199313}
+  impactSounds:
+  - {fileID: 8300000, guid: dd2e4fffab5395843b6ef6d9a8187166, type: 3}
+  - {fileID: 8300000, guid: 75e5bb731f96f204a814273d79690140, type: 3}
+  - {fileID: 8300000, guid: 682eff432640c3441b03c0a9f0e70852, type: 3}
+  - {fileID: 8300000, guid: c32b86e01b8b8b54d9f3c691874c97d2, type: 3}
 --- !u!82 &1556149965939986386
 AudioSource:
   m_ObjectHideFlags: 0
@@ -245,7 +250,7 @@ AudioSource:
   MinDistance: 5
   MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -278,7 +283,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

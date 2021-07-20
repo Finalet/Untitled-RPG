@@ -2,26 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class MainMenuController : MonoBehaviour
 {
+    public Image blackout;
     // Start is called before the first frame update
     void Awake() {
         if (SceneManager.GetActiveScene().name != "SceneManagement") {
             AsyncOperation addLoadingScene = SceneManager.LoadSceneAsync("SceneManagement", LoadSceneMode.Additive);
         }
     }
+    void Start() {
+        blackout.color = Color.black;
+        blackout.DOFade(0, 1).SetDelay(1);
+    }
 
     public void LoadLevel (string levelName) {
-        Vector3 playerPos;
+        StartCoroutine(loadLevel(levelName));
+    }
+    IEnumerator loadLevel (string levelName) {
+        blackout.DOFade(1, 1);
+        yield return new WaitForSeconds(1);
         Quaternion playerRot;
         switch (levelName) {
             case "City":
-                playerPos = new Vector3(-560,10,-120);
                 playerRot = Quaternion.identity;
                 break;
             default:
-                playerPos = new Vector3(0,1,0);
                 playerRot = Quaternion.identity;
                 break;
         }

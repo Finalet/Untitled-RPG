@@ -12,6 +12,7 @@ public class Arrow : MonoBehaviour
     public float gravityDelay = 0.2f;
     public TrailRenderer trail;
     [System.NonSerialized] public bool instantShot = false;
+    public AudioClip[] impactSounds;
 
     protected float timeShot;
     protected bool shot = false;
@@ -22,6 +23,7 @@ public class Arrow : MonoBehaviour
 
     protected List<IDamagable> damagablesHit = new List<IDamagable>();
     protected virtual void Start() {
+        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         if (!instantShot) rb.isKinematic = true;
         rb.useGravity = false;
@@ -87,7 +89,9 @@ public class Arrow : MonoBehaviour
         
         GetComponent<CapsuleCollider>().enabled = false;
         trail.emitting = false;
-        GetComponent<AudioSource>().Play();
+        
+        audioSource.clip = impactSounds[Random.Range(0, impactSounds.Length-1)];
+        audioSource.Play();
     }
 
     protected virtual void Hit (IDamagable en) {
@@ -97,16 +101,5 @@ public class Arrow : MonoBehaviour
 
             bl_UCrosshair.Instance.OnHit();
         }
-    }   
-
-    protected virtual void PlaySound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {
-        audioSource.clip = clip;
-        audioSource.time = timeOffest;
-        audioSource.pitch = pitch;
-        audioSource.volume = volume;
-        if (delay == 0)
-            audioSource.Play();
-        else
-            audioSource.PlayDelayed(delay);
     } 
 }
