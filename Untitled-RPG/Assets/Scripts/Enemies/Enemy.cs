@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyState {Idle, Approaching, Attacking, Returning, Celebrating};
+public enum EnemyState {Idle, Approaching, Attacking, Returning, Celebrating, Stunned};
  
 [System.Serializable] public struct Loot {
     public Item item;
@@ -12,7 +12,7 @@ public enum EnemyState {Idle, Approaching, Attacking, Returning, Celebrating};
     [Range(0,1)] public float amountVariability;
 }
 
-[RequireComponent(typeof (FieldOfView))]
+[RequireComponent(typeof (FieldOfView))] [SelectionBase]
 public abstract class Enemy : MonoBehaviour, IDamagable
 {
     public string enemyName;
@@ -33,7 +33,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     public int goldLootAmount;
 
     [Header("AI State")]
-    public EnemyState currentState;
+    [DisplayWithoutEdit] public EnemyState currentState;
+    [DisplayWithoutEdit] [SerializeField] protected float distanceToPlayer;
     
     [Header("Attack")]
     public bool isCoolingDown;
@@ -45,7 +46,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     [Header("Adjustements from debuffs")]
     public float TargetSkillDamagePercentage;
 
-    protected float distanceToPlayer;
 
     [Header("States")]
     public bool isAttacking;
@@ -53,6 +53,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     public bool isDead;
     public bool isKnockedDown;
     public bool isRagdoll;
+    public bool isStunned;
     public bool canGetHit = true;
     public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
 
@@ -134,6 +135,10 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         RunRecurringEffects();
         RunKnockDowns();
 
+        ApplyEnemyControllerSettings();
+    }
+
+    protected virtual void ApplyEnemyControllerSettings () {
         enemyController.useRootMotion = isAttacking || isGettingInterrupted;       
         enemyController.useRootMotionRotation = isAttacking || isGettingInterrupted;       
         enemyController.speed = enemyController.useRootMotion ? baseControllerSpeed * 50 : baseControllerSpeed;
@@ -156,6 +161,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             currentState = Vector3.Distance(transform.position, initialPos) > navAgent.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
         }
 
+        if (isStunned) currentState = EnemyState.Stunned;
+
         if (delayingAgr)
             return;
 
@@ -171,6 +178,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             ReturnToPosition();
         } else if (currentState == EnemyState.Celebrating) {
             Celebrate();
+        } else if (currentState == EnemyState.Stunned) {
+            Stun();
         }
     }
 
@@ -200,13 +209,16 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     protected virtual void ReturnToPosition() {
         if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
+
+        RegenerateMaxHealth();
     }
     protected virtual void Idle() {
         if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
     }
     protected virtual void Celebrate() {}
-    
+    protected virtual void Stun() {}
+
     protected virtual void Health () {
         if (isDead)
             return;
@@ -214,8 +226,11 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         if (currentHealth <= 0) {
             Die();
         }
+    }
 
-        //Add health regeneration
+    protected virtual void RegenerateMaxHealth () {
+        if (currentHealth < maxHealth)
+            currentHealth = Mathf.RoundToInt(Mathf.Lerp(currentHealth, maxHealth, Time.deltaTime * 5f));
     }
 
     protected virtual void Die () {
@@ -321,6 +336,9 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     }
 
     protected virtual void ShowHealthBar () {
+        if (!healthBar)
+            return;
+            
         if (isDead) {
             healthBar.SetActive(false);
             return;
@@ -355,7 +373,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             agrDelayTimer = agrDelay;
             delayingAgr = true;
             FaceTarget(true);
-                if (TryGetComponent(out EnemyAlarmNetwork eam)) eam.TriggerAlarm();
+            if (TryGetComponent(out EnemyAlarmNetwork eam)) eam.TriggerAlarm();
         }
         agrTimer = agrTime;
     }
@@ -452,6 +470,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         yield return new WaitForSeconds(interruptBlockDuration);
         immuneToInterrupt = false;
     }
+
+    public virtual void OnWeakSpotHit() {}
 
 #region IDamagable
 

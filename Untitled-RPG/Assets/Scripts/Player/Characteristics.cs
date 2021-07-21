@@ -53,7 +53,7 @@ public class Characteristics : MonoBehaviour
     public Vector2 attackSpeedBuff;
     public float skillDistanceIncrease;
 
-    int statsRatio = 4;
+    int statsRatio = 6;
     [Header("Stats regeneration")]
     public bool canRegenerateHealth; 
     public int HealthPointsPerSecond; 

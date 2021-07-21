@@ -190,20 +190,18 @@ public class PeaceCanvas : MonoBehaviour
         }
     }
     
-    float timeScalePrePause;
     public void TogglePause () {
         //return; //DISABLE PAUSE MENU WHILE WORKING ON THE GAME
 
         isGamePaused = !isGamePaused;
 
         if (isGamePaused) {
-            timeScalePrePause = Time.timeScale;
             Time.timeScale = 0;
             PauseMenu.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         } else {
-            Time.timeScale = timeScalePrePause;
+            Time.timeScale = 1;
             PauseMenu.SetActive(false);
         }
     }

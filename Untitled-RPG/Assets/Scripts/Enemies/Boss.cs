@@ -1,0 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class Boss : Enemy
+{
+    public GameObject healthBarPrefab;
+    BossTitleUI instanciatedHealthBar;
+
+    protected override void Update()
+    {
+        base.Update();
+        if (agr)
+            ShowBossHealthBar();
+        else   
+            HideBossHealthBar();
+    }
+    
+    protected virtual void ShowBossHealthBar() {
+        if (!instanciatedHealthBar) {
+            instanciatedHealthBar = Instantiate(healthBarPrefab, PeaceCanvas.instance.transform).GetComponent<BossTitleUI>();
+        }
+
+        instanciatedHealthBar.Init(this);
+    }
+    protected virtual void HideBossHealthBar() {
+        if (instanciatedHealthBar) instanciatedHealthBar.Hide();
+    }
+
+    protected override void ShowHealthBar (){}
+
+}

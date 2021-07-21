@@ -46,9 +46,9 @@ public class Wolf : Enemy
     {
         isAttacking = true;
         forceFaceTarget = true;
-        if (distanceToPlayer <= 1.5f) {
+        if (distanceToPlayer <= 2) {
             StartCoroutine(BiteAttack());
-        } else if (distanceToPlayer <= 3) {
+        } else if (distanceToPlayer <= 4.5f) {
             animator.SetTrigger("Pound Attack");
             hitType = HitType.Interrupt;
         }

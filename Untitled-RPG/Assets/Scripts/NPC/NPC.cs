@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Cinemachine;
 
+[SelectionBase]
 public abstract class NPC : MonoBehaviour
 {
     public string npcName;

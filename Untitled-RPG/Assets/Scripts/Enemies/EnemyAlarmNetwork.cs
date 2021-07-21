@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyAlarmNetwork : MonoBehaviour
 {
     public float alarmRadius = 10f;
-    public float alarmDelay = 0.3f;
+    public float alarmDelay = 0;
 
     [DisplayWithoutEdit()] public bool isTriggered;
     
@@ -29,14 +29,13 @@ public class EnemyAlarmNetwork : MonoBehaviour
                 EnemyAlarmNetwork eam = col.gameObject.GetComponentInParent<EnemyAlarmNetwork>();
                 if (eam != null) {
                     yield return new WaitForSeconds(Random.Range(0.7f * alarmDelay, 1.3f * alarmDelay));
-                    if (!eam.isTriggered && !GetComponent<Enemy>().isDead) col.gameObject.GetComponentInParent<EnemyAlarmNetwork>().AlarmEnemy(gameObject.name);
+                    if (!eam.isTriggered && !GetComponent<Enemy>().isDead) col.gameObject.GetComponentInParent<EnemyAlarmNetwork>().AlarmEnemy();
                 }
             }
         }
     }
 
-    public void AlarmEnemy (string whoTriggered) {
-        // print($"{gameObject.name} is alarmed by {whoTriggered}");
+    public void AlarmEnemy () {
         GetComponent<Enemy>().Agr();
     }
 }

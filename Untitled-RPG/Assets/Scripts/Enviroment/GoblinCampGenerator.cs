@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public enum CampSize {Small, Medium, Large}
+public enum CampType {Regular, Skull}
 
 public class GoblinCampGenerator : MonoBehaviour
 {
+    public CampType campType;
     public CampSize campSize;
-    public LayerMask floorMask;
     public ChestQuality chestQuality;
+    public LayerMask floorMask;
     [Header("Enemis")]
     public int numberOfGoblinWarriors;
     public int numberofGoblinArchers;
@@ -25,8 +27,10 @@ public class GoblinCampGenerator : MonoBehaviour
     public GameObject shortTent;
     public GameObject tallTent;
     public GameObject roundTent;
-    public GameObject ribCage;
+    public GameObject largeStoneSkull;
+    public GameObject[] largeDecorations;
     public GameObject[] boxes;
+    public GameObject[] spikes;
 
     [Header("Items & Details")]
     public GameObject chest;
@@ -39,10 +43,9 @@ public class GoblinCampGenerator : MonoBehaviour
     public GameObject bigGoblin;
 
     [Header("Spawned")]
-    public GameObject spawnedTower;
-    public GameObject spawnedShortTent;
-    public GameObject spawnedTallTent;
-    public GameObject spawnedRoundTent;
+    GameObject spawnedTower;
+    GameObject spawnedTallTent;
+    GameObject spawnedLargeStoneSkull;
     public Transform details;
     public Transform enemies;
 
@@ -122,39 +125,69 @@ public class GoblinCampGenerator : MonoBehaviour
     }
 
     void PlaceCenterStructure() {
-        switch (campSize) {
-            case CampSize.Small:
-                PlaceObject(bonefire);
-                PlaceObject(meatRotisser);
-                break;
-            case CampSize.Medium:
-                break;
-            case CampSize.Large:
-                break;
+        if (campType == CampType.Regular) {
+            switch (campSize) {
+                case CampSize.Small:
+                    PlaceObject(bonefire);
+                    PlaceObject(meatRotisser);
+                    break;
+                case CampSize.Medium:
+                    break;
+                case CampSize.Large:
+                    break;
+            }
+        } else if (campType == CampType.Skull) {
+            switch (campSize) {
+                case CampSize.Small:
+                    PlaceObject(bonefire);
+                    PlaceObject(meatRotisser);
+                    break;
+                case CampSize.Medium:
+                    break;
+                case CampSize.Large:
+                    break;
+            }
         }
     }
-
     void PlaceOutsideStructure() {
         List<int> usedInts = new List<int>();
-        switch (campSize) {
-            case CampSize.Small:
-                spawnedTower = PlaceObject(tower, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
-                spawnedShortTent = PlaceObject(shortTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
-                spawnedRoundTent = PlaceObject(roundTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
-                spawnedTallTent = PlaceObject(tallTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), true, Vector3.up);
-                GameObject spawnedRibCage = PlaceObject(ribCage, allowedStructureLocations[getUniqueIndex(usedInts)]);
-                spawnedRibCage.transform.localScale = Vector3.one * 0.3f;
+        if (campType == CampType.Regular) {
+            switch (campSize) {
+                case CampSize.Small:
+                    spawnedTower = PlaceObject(tower, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
+                    PlaceObject(shortTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
+                    PlaceObject(roundTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
+                    spawnedTallTent = PlaceObject(tallTent, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), true, Vector3.up);
+                    GameObject spawnedlargeDecoration = PlaceObject(largeDecorations[Random.Range(0, largeDecorations.Length-1)], allowedStructureLocations[getUniqueIndex(usedInts)]);
+                    spawnedlargeDecoration.transform.localScale = Vector3.one * 0.3f;
 
-                Vector3 boxesPos = getRandomPositionAroundCamp(getCampRadius() * 1.5f, 0.15f);
-                for (int i = 0; i < 2; i++) {
-                    Vector3 pos = boxesPos + new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f));
-                    PlaceObject(boxes[Random.Range(0, boxes.Length)], pos);
-                }
-                break;
-            case CampSize.Medium:
-                break;
-            case CampSize.Large:
-                break;
+                    Vector3 boxesPos = getRandomPositionAroundCamp(getCampRadius() * 1.5f, 0.15f);
+                    for (int i = 0; i < 2; i++) {
+                        Vector3 pos = boxesPos + new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f));
+                        PlaceObject(boxes[Random.Range(0, boxes.Length)], pos);
+                    }
+                    break;
+                case CampSize.Medium:
+                    break;
+                case CampSize.Large:
+                    break;
+            }
+        } else if (campType == CampType.Skull) {
+            switch (campSize) {
+                case CampSize.Small:
+                    spawnedLargeStoneSkull = PlaceObject(largeStoneSkull, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter());
+                    spawnedLargeStoneSkull.transform.position += -spawnedLargeStoneSkull.transform.forward * 5;
+                    PlaceObject(spikes[Random.Range(0, spikes.Length-1)], allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter());
+                    GameObject spike1 = PlaceObject(spikes[Random.Range(0, spikes.Length-1)], allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter());
+                    PlaceObject(spikes[Random.Range(0, spikes.Length-1)], spike1.transform.localPosition + spike1.transform.right * 1.5f, getCampCenter());
+
+                    spawnedTower = PlaceObject(tower, allowedStructureLocations[getUniqueIndex(usedInts)], getCampCenter(), false, Vector3.up);
+                    break;
+                case CampSize.Medium:
+                    break;
+                case CampSize.Large:
+                    break;
+            }
         }
     }
 
@@ -164,32 +197,62 @@ public class GoblinCampGenerator : MonoBehaviour
         enemies = new GameObject().transform;
         enemies.SetParent(transform);
         enemies.name = "Enemies";
-        switch (campSize) {
-            case CampSize.Small:
-                if (numberofGoblinArchers > 0){
-                    GameObject go = PlaceObject(goblinArcher, removeYposition(spawnedTower.transform.localPosition), -getCampCenter(), false, Vector3.up);
-                    go.GetComponent<NavMeshAgent>().enabled = false;
-                    go.transform.SetParent(enemies);
-                }
-                for (int i = 0; i < numberOfGoblinWarriors; i++) {
-                    PlaceObject(goblinWarrior, getRandomPositionAroundCamp(2, 0.15f), getCampCenter()).transform.SetParent(enemies);
-                }
-                Vector3 wolfPackPos = getRandomPositionAroundCamp(10, 0.15f);
-                for (int i = 0; i < numberOfWolfs; i++) {
-                    Vector3 pos = wolfPackPos + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f))* numberOfWolfs;
-                    PlaceObject(wolf, pos, getCampCenter()).transform.SetParent(enemies);
-                }
-                for (int i = 0; i < numberOfBigGoblins; i++) {
-                    PlaceObject(bigGoblin, getRandomPositionAroundCamp(7, 0.15f), getCampCenter()).transform.SetParent(enemies);
-                }
-                for (int i = 0; i < numberofGoblinArchers-1; i++) {
-                    PlaceObject(goblinArcher, getRandomPositionAroundCamp(3, 0.15f), getCampCenter()).transform.SetParent(enemies);
-                }
-                break;
-            case CampSize.Medium:
-                break;
-            case CampSize.Large:
-                break;
+        if (campType == CampType.Regular) {
+            switch (campSize) {
+                case CampSize.Small:
+                    if (numberofGoblinArchers > 0 && spawnedTower){
+                        GameObject go = PlaceObject(goblinArcher, spawnedTower.transform.localPosition + Vector3.up * 10, -getCampCenter(), false, Vector3.up);
+                        go.GetComponent<NavMeshAgent>().enabled = false;
+                        go.transform.SetParent(enemies);
+                    }
+                    for (int i = 0; i < numberOfGoblinWarriors; i++) {
+                        PlaceObject(goblinWarrior, getRandomPositionAroundCamp(2, 0.15f), getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    Vector3 wolfPackPos = getRandomPositionAroundCamp(10, 0.15f);
+                    for (int i = 0; i < numberOfWolfs; i++) {
+                        Vector3 pos = wolfPackPos + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f))* numberOfWolfs;
+                        PlaceObject(wolf, pos, getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    for (int i = 0; i < numberOfBigGoblins; i++) {
+                        PlaceObject(bigGoblin, getRandomPositionAroundCamp(7, 0.15f), getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    for (int i = 0; i < numberofGoblinArchers-1; i++) {
+                        PlaceObject(goblinArcher, getRandomPositionAroundCamp(3, 0.15f), getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    break;
+                case CampSize.Medium:
+                    break;
+                case CampSize.Large:
+                    break;
+            }
+        } else if (campType == CampType.Skull) {
+            switch (campSize) {
+                case CampSize.Small:
+                    if (numberofGoblinArchers > 0 && spawnedTower){
+                        GameObject go = PlaceObject(goblinArcher, spawnedTower.transform.localPosition + Vector3.up * 10, -getCampCenter(), false, Vector3.up);
+                        go.GetComponent<NavMeshAgent>().enabled = false;
+                        go.transform.SetParent(enemies);
+                    }
+                    for (int i = 0; i < numberOfGoblinWarriors; i++) {
+                        PlaceObject(goblinWarrior, getRandomPositionAroundCamp(2, 0.15f), getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    Vector3 wolfPackPos = getRandomPositionAroundCamp(10, 0.15f);
+                    for (int i = 0; i < numberOfWolfs; i++) {
+                        Vector3 pos = wolfPackPos + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f))* numberOfWolfs;
+                        PlaceObject(wolf, pos, getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    for (int i = 0; i < numberOfBigGoblins; i++) {
+                        PlaceObject(bigGoblin, getRandomPositionAroundCamp(7, 0.15f), getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    for (int i = 0; i < numberofGoblinArchers-1; i++) {
+                        PlaceObject(goblinArcher, getRandomPositionAroundCamp(3, 0.15f), getCampCenter(), false, Vector3.up).transform.SetParent(enemies);
+                    }
+                    break;
+                case CampSize.Medium:
+                    break;
+                case CampSize.Large:
+                    break;
+            }
         }
     }
     public void PlaceDetails () {
@@ -198,22 +261,34 @@ public class GoblinCampGenerator : MonoBehaviour
         details = new GameObject().transform;
         details.SetParent(transform);
         details.name = "Details";
-        switch (campSize) {
-            case CampSize.Small:
-                Chest go = PlaceObject(chest, removeYposition(spawnedTallTent.transform.localPosition), getCampCenter()).GetComponent<Chest>();
-                go.chestQuality = chestQuality;
-                go.UpdateMesh();
-                go.transform.SetParent(details);
+        if (campType == CampType.Regular) {
+            switch (campSize) {
+                case CampSize.Small:
+                    PlaceChest(chestQuality, removeYposition(spawnedTallTent.transform.localPosition), getCampCenter());
 
-                foreach (GameObject g in bones) {
-                    PlaceObject(g, getRandomPosition()).transform.SetParent(details);
-                }
-                break;
-            case CampSize.Medium:
-                break;
-            case CampSize.Large:
-                break;
+                    foreach (GameObject g in bones) {
+                        PlaceObject(g, getRandomPosition()).transform.SetParent(details);
+                    }
+                    break;
+                case CampSize.Medium:
+                    break;
+                case CampSize.Large:
+                    break;
+            }
+        } else if (campType == CampType.Skull) {
+            PlaceChest(chestQuality, removeYposition(spawnedLargeStoneSkull.transform.localPosition + spawnedLargeStoneSkull.transform.forward*1.5f), getCampCenter());
+            foreach (GameObject g in bones) {
+                PlaceObject(g, getRandomPosition()).transform.SetParent(details);
+            }
         }
+    }
+
+    Chest PlaceChest (ChestQuality chestQuality, Vector3 localPosition, Vector3 lookAt, bool invertForward = false, in Vector3 normal = new Vector3()) {
+        Chest go = PlaceObject(chest, localPosition, lookAt, invertForward, normal).GetComponent<Chest>();
+        go.chestQuality = chestQuality;
+        go.UpdateMesh();
+        go.transform.SetParent(details);
+        return go;
     }
 
     GameObject PlaceObject (GameObject prefab) {
@@ -288,7 +363,9 @@ public class GoblinCampGenerator : MonoBehaviour
         return allChildren;
     }
 
-    void GeneratePositionsAroundCamp (float randomness = 0.5f) {
+    void GeneratePositionsAroundCamp () {
+        float randomness = campType == CampType.Regular ? 0.5f : 0.5f;
+
         allowedStructureLocations = new Vector3[getNumberOfStructures()];
         float angle = 360 / getNumberOfStructures();
         for (int i = 0; i < allowedStructureLocations.Length; i++) {
@@ -311,22 +388,40 @@ public class GoblinCampGenerator : MonoBehaviour
     }
 
     int getNumberOfStructures() {
-        switch (campSize) {
-            case CampSize.Small:
-                return 5;
-            case CampSize.Medium:
-                return 6;
-            case CampSize.Large:
-                return 7;
-            default:
-                return 8;
+        if (campType == CampType.Regular) {
+            switch (campSize) {
+                case CampSize.Small:
+                    return 5;
+                case CampSize.Medium:
+                    return 6;
+                case CampSize.Large:
+                    return 7;
+                default:
+                    return 8;
+            }
+        } else if (campType == CampType.Skull) {
+            switch (campSize) {
+                case CampSize.Small:
+                    return 4;
+                case CampSize.Medium:
+                    return 5;
+                case CampSize.Large:
+                    return 6;
+                default:
+                    return 7;
+            }
+        } else {
+            throw new System.Exception("Wrong camp type or size");
         }
     }
 
     int getUniqueIndex (List<int> list) {
         int ID = Random.Range(0, getNumberOfStructures());
+        int numberOfTries = 0; 
         while (list.Contains(ID)){
             ID = Random.Range(0, getNumberOfStructures());
+            numberOfTries++;
+            if (numberOfTries >= 10000) throw new System.Exception($"Failed to find unique index in {numberOfTries} tries.");
         }
         list.Add(ID);
         return ID;

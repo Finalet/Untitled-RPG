@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using ECM.Controllers;
+using UnityEngine.SceneManagement;
 
 public class PlayerControlls : MonoBehaviour, ISavable
 {
@@ -527,7 +528,8 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     public void Load()
     {
-        transform.position = ES3.Load("pos", savePath, new Vector3(-560, 10, -120)); //default position at the City scene.
+        if (SceneManager.GetActiveScene().name == "City")
+            transform.position = ES3.Load("pos", savePath, new Vector3(-560, 10, -120)); //default position at the City scene.
     }
 
 #endregion

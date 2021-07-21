@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public enum ChestQuality {Regular, Silver, Gold}
 
+[SelectionBase]
 public class Chest : Container
 {
     [Header("Chest")]
