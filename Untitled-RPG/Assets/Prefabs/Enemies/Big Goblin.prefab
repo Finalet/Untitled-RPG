@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 0}
   value: 0.5
 --- !u!1 &4919854754283972522
 GameObject:
@@ -16767,7 +16768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyName: Big Goblin
-  maxHealth: 30000
+  maxHealth: 20000
   currentHealth: 0
   baseDamage: 2000
   attackRange: 10
@@ -16787,6 +16788,8 @@ MonoBehaviour:
     amountVariability: 0
   goldLootAmount: 0
   currentState: 0
+  distanceToPlayer: 0
+  agr: 0
   isCoolingDown: 0
   attackCoolDown: 5
   agrTime: 20
@@ -16796,8 +16799,8 @@ MonoBehaviour:
   isDead: 0
   isKnockedDown: 0
   isRagdoll: 0
+  isStunned: 0
   canGetHit: 1
-  agr: 0
   healthBar: {fileID: 6062701134100217151}
   hitParticles: {fileID: 6241078763338755961}
   getHitSounds:
@@ -17351,6 +17354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 0}
   value: 1
 --- !u!1 &7712876175627413595
 GameObject:

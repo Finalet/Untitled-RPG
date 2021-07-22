@@ -11,6 +11,7 @@ public class KeybindsManager : MonoBehaviour
     public KeyCode roll = KeyCode.V;
     public KeyCode crouch = KeyCode.C;
     public KeyCode jump = KeyCode.Space;
+    public KeyCode switchSkillRows = KeyCode.BackQuote;
     public KeyCode toggleRunning = KeyCode.CapsLock;
     public KeyCode sheathe = KeyCode.H;
     [Header("Main")]

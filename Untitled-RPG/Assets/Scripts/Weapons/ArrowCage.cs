@@ -29,22 +29,22 @@ public class ArrowCage : Arrow
         Vector3 cagePos;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 20)) {
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 20, LayerMask.GetMask("Terrain", "StaticLevel", "Default"))) {
             cagePos = hit.point;
         } else {
             cagePos = transform.position;
         }
         Vector3[] cornerPoints = new Vector3[4];
-        if (Physics.Raycast(cagePos + Vector3.up * 3f + Vector3.forward * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain"))) {
+        if (Physics.Raycast(cagePos + Vector3.up * 3f + Vector3.forward * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain", "StaticLevel", "Default"))) {
             cornerPoints[0] = hit.point;
         }
-        if (Physics.Raycast(cagePos + Vector3.up * 3f + -Vector3.forward * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain"))) {
+        if (Physics.Raycast(cagePos + Vector3.up * 3f + -Vector3.forward * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain", "StaticLevel", "Default"))) {
             cornerPoints[1] = hit.point;
         }
-        if (Physics.Raycast(cagePos + Vector3.up * 3f + Vector3.right * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain"))) {
+        if (Physics.Raycast(cagePos + Vector3.up * 3f + Vector3.right * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain", "StaticLevel", "Default"))) {
             cornerPoints[2] = hit.point;
         }
-        if (Physics.Raycast(cagePos + Vector3.up * 3f + -Vector3.right * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain"))) {
+        if (Physics.Raycast(cagePos + Vector3.up * 3f + -Vector3.right * 3, Vector3.down, out hit, 5, LayerMask.GetMask("Terrain", "StaticLevel", "Default"))) {
             cornerPoints[3] = hit.point;
         }
         cage.transform.SetParent(null);

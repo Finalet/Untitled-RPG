@@ -32,8 +32,10 @@ public class EnemySpawner : MonoBehaviour
         GameObject en = Instantiate(enemy, spawnPos, rotation);
         en.transform.SetParent(transform);
         listOfAllEnemies.Add(en);
-        particles.transform.position = spawnPos;
-        particles.Play();
+        if (particles){
+            particles.transform.position = spawnPos;
+            particles.Play();
+        }
     }
 
     void CleanList () {

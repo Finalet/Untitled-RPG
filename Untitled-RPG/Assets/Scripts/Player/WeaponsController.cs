@@ -62,7 +62,7 @@ public class WeaponsController : MonoBehaviour
 
     void Update() {
         CheckHandsEquip();
-        ReleaseEmptyHandAnim();
+        CheckHandAnimStatus();
 
         //Manual Sheath
         if (Input.GetKeyDown(KeybindsManager.instance.sheathe) && (isWeaponOut || isBowOut) ) {
@@ -117,40 +117,41 @@ public class WeaponsController : MonoBehaviour
         sheathingUnsheathing = true;
         animator.SetTrigger("Sheath"); 
 
+        bool doLeftArm = leftHandStatus != SingleHandStatus.Empty || isBowOut;
+        bool doRightArm = rightHandStatus != SingleHandStatus.Empty;
+
         weight = 0;
         while (weight <= 1) {
-            animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), weight);
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), weight);
+            if (doRightArm) SetAnimatorLayerWeight("RightArm", weight);
+            if (doLeftArm) SetAnimatorLayerWeight("LeftArm", weight);
 
             weight += Time.deltaTime * overlaySpeed;
             yield return new WaitForSeconds(Time.deltaTime);
         }
 
-        if (rightHandStatus != SingleHandStatus.Empty)
-            animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), 1);
-        if (leftHandStatus != SingleHandStatus.Empty)
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 1);
+        if (doRightArm) SetAnimatorLayerWeight("RightArm", 1);
+        if (doLeftArm) SetAnimatorLayerWeight("LeftArm", 1);
 
         PlaySheathSounds();
         SheathObj();
         weight = 1;
         while (weight >= 0) {
-            animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), weight);
-            animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), weight);
+            if (doRightArm) SetAnimatorLayerWeight("RightArm", weight);
+            if (doRightArm) SetAnimatorLayerWeight("RightHand", weight);
 
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), weight);
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), weight);
+            if (doLeftArm) SetAnimatorLayerWeight("LeftArm", weight);
+            if (doLeftArm) SetAnimatorLayerWeight("LeftHand", weight);
             
             weight -= Time.deltaTime * overlaySpeed;
             yield return new WaitForSeconds(Time.deltaTime);
         }
         weight = 0;
 
-        animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), 0);
-        animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 0);
+        if (doRightArm) SetAnimatorLayerWeight("RightArm", 0);
+        if (doRightArm) SetAnimatorLayerWeight("RightHand", 0);
 
-        animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 0);
-        animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 0);
+        if (doLeftArm) SetAnimatorLayerWeight("LeftArm", 0);
+        if (doLeftArm) SetAnimatorLayerWeight("LeftHand", 0);
         sheathingUnsheathing = false;
     }
 
@@ -159,7 +160,8 @@ public class WeaponsController : MonoBehaviour
             SheathObj();
 
         animator.SetTrigger("UnSheath"); //Triggered to play animation of closed fist
-        if (bothHandsStatus == BothHandsStatus.DualOneHanded) { //Currently not all weapons types supported, add ELSE IF to add more support 
+
+        /* if (bothHandsStatus == BothHandsStatus.DualOneHanded) { //Currently not all weapons types supported, add ELSE IF to add more support 
             SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
             SetParentAndTransorm(ref LeftHandEquipObj, LeftHandTrans);
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
@@ -177,7 +179,35 @@ public class WeaponsController : MonoBehaviour
             animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
         } else {
             Debug.LogError("Instant unsheathing for this type of weapon is not implemented yet");
+        } */
+
+        switch (leftHandStatus) {
+            case SingleHandStatus.OneHanded:
+                SetParentAndTransorm(ref LeftHandEquipObj, LeftHandTrans);
+                break;
+            case SingleHandStatus.Shield:
+                SetParentAndTransorm(ref LeftHandEquipObj, LeftHandShieldTrans);
+                break;
+            case SingleHandStatus.TwoHanded:
+                throw new System.Exception("Left hand status: carrying two handed weapon. This should not happen.");
+            case SingleHandStatus.Empty:
+                break;
         }
+        switch (rightHandStatus) {
+            case SingleHandStatus.OneHanded:
+                SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
+                break;
+            case SingleHandStatus.Shield:
+                throw new System.Exception("Right hand status: carrying shield. This should not happen.");
+            case SingleHandStatus.TwoHanded:
+                SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
+                break;
+            case SingleHandStatus.Empty:
+                break;
+        }
+        if (leftHandStatus != SingleHandStatus.Empty) animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
+        if (rightHandStatus != SingleHandStatus.Empty) animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
+
         isWeaponOut = true;
         
         blockSheathe = true;
@@ -189,7 +219,7 @@ public class WeaponsController : MonoBehaviour
 
         animator.SetTrigger("UnSheath"); //Triggered to play animation of closed fist
         SetParentAndTransorm(ref BowObj, LeftHandTrans);
-        animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
+        SetAnimatorLayerWeight("LeftHand", 1);
         SheathObj();
         isBowOut = true;
         
@@ -203,7 +233,7 @@ public class WeaponsController : MonoBehaviour
             isBowOut = false;
             return;
         }
-        
+        /*
         if (bothHandsStatus == BothHandsStatus.DualOneHanded) {
             SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
             SetParentAndTransorm(ref LeftHandEquipObj, rightHipSlot);
@@ -221,7 +251,37 @@ public class WeaponsController : MonoBehaviour
             }
         } else {
             Debug.LogWarning("Sheathing for this type of weapon is not implemented yet");
+        } */
+
+        switch (leftHandStatus) {
+            case SingleHandStatus.OneHanded:
+                SetParentAndTransorm(ref LeftHandEquipObj, rightHipSlot);
+                break;
+            case SingleHandStatus.Shield:
+                SetParentAndTransorm(ref LeftHandEquipObj, shieldBackSlot);
+                break;
+            case SingleHandStatus.TwoHanded:
+                throw new System.Exception("Left hand status: carrying two handed weapon. This should not happen.");
+            case SingleHandStatus.Empty:
+                break;
         }
+        switch (rightHandStatus) {
+            case SingleHandStatus.OneHanded:
+                SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
+                break;
+            case SingleHandStatus.Shield:
+                throw new System.Exception("Right hand status: carrying shield. This should not happen.");
+            case SingleHandStatus.TwoHanded:
+                Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
+                if (w.weaponCategory == WeaponCategory.Sword)
+                    SetParentAndTransorm(ref RightHandEquipObj, twohandedSwordSlot);
+                else if (w.weaponCategory == WeaponCategory.Staff)
+                    SetParentAndTransorm(ref RightHandEquipObj, twohandedStaffSlot);
+                break;
+            case SingleHandStatus.Empty:
+                break;
+        }
+
         isWeaponOut = false;
     }
 
@@ -276,20 +336,13 @@ public class WeaponsController : MonoBehaviour
             leftHandStatus = SingleHandStatus.Empty;
         }
 
-        //Check if bow
-        if (isBowOut) {
-            animatorWeaponType = 2;
-            PlayerControlls.instance.animator.SetInteger("weaponType", animatorWeaponType);
-            return;
-        }
-
         //Assign both hands status
         if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.Empty) {
             bothHandsStatus = BothHandsStatus.BothEmpty;
             animatorWeaponType = -1;
         } else if (rightHandStatus == SingleHandStatus.OneHanded && leftHandStatus == SingleHandStatus.Empty) {
             bothHandsStatus = BothHandsStatus.RightOneHanded;
-            animatorWeaponType = -1; //FIX LATER
+            animatorWeaponType = 0; //FIX LATER
         } else if (rightHandStatus == SingleHandStatus.OneHanded && leftHandStatus == SingleHandStatus.OneHanded) {
             bothHandsStatus = BothHandsStatus.DualOneHanded;
             animatorWeaponType = 0;
@@ -298,39 +351,57 @@ public class WeaponsController : MonoBehaviour
             animatorWeaponType = 1;
         } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.OneHanded) {
             bothHandsStatus = BothHandsStatus.LeftOneHanded;
-            animatorWeaponType = -1; //FIX LATER
+            animatorWeaponType = 0; //FIX LATER
         } else if (rightHandStatus == SingleHandStatus.OneHanded && leftHandStatus == SingleHandStatus.Shield) {
             bothHandsStatus = BothHandsStatus.OneHandedPlusShield;
             animatorWeaponType = 0; //FIX THIS, WE NEED TO PLAY SPECIFIC ANIM FOR SHIELD AND SWORD;
         } else if (rightHandStatus == SingleHandStatus.Empty && leftHandStatus == SingleHandStatus.Shield) {
             bothHandsStatus = BothHandsStatus.ShieldOnly;
-            animatorWeaponType = -1; //FIX LATER
+            animatorWeaponType = 2; //FIX LATER
         } else {
-            animatorWeaponType = -1; //FIX LATER
+            animatorWeaponType = 0; //FIX LATER
         }
 
+        //If bow, override the above
+        if (isBowOut) animatorWeaponType = 2;
+            
         PlayerControlls.instance.animator.SetInteger("weaponType", animatorWeaponType);
     }
 
     void SetParentAndTransorm (ref GameObject obj, Transform parent) {
+        if (!obj) return;
+
         obj.transform.SetParent(parent);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localEulerAngles = Vector3.zero;
         obj.transform.localScale = Vector3.one;
     }
 
-    void ReleaseEmptyHandAnim() {
+    void CheckHandAnimStatus() {
         if (sheathingUnsheathing)
             return;
+      
+        if (isWeaponOut) {
+            if (leftHandStatus != SingleHandStatus.Empty) SetAnimatorLayerWeight("LeftHand", 1);
+            else SetAnimatorLayerWeight("LeftHand", 0);
+
+            if (rightHandStatus != SingleHandStatus.Empty) SetAnimatorLayerWeight("RightHand", 1);
+            else SetAnimatorLayerWeight("RightHand", 0);
+
+        } else if (isBowOut) {
+            SetAnimatorLayerWeight("RightHand", 0);
+
+            if (BowObj)  SetAnimatorLayerWeight("LeftHand", 1);
+            else SetAnimatorLayerWeight("LeftHand", 0);
+        } else {
+            SetAnimatorLayerWeight("RightHand", 0);
+            SetAnimatorLayerWeight("LeftHand", 0);
+        }
             
-        if (rightHandStatus == SingleHandStatus.Empty) {
-            animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 0);
-            animator.SetLayerWeight((animator.GetLayerIndex("RightArm")), 0);
-        }
-        if (leftHandStatus == SingleHandStatus.Empty) {
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 0);
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftArm")), 0);
-        }
+    }
+
+    void SetAnimatorLayerWeight (string Layer, float weight) {
+        animator.SetLayerWeight((animator.GetLayerIndex(Layer)), weight);
     }
 
     void UnblockSheath () {

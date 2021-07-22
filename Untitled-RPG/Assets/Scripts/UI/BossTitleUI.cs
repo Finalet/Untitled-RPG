@@ -13,11 +13,14 @@ public class BossTitleUI : MonoBehaviour
     public TextMeshProUGUI healthNumberLabel;
     public TextMeshProUGUI bossNameLabel;
 
+    Material healthLineMaterial;
     CanvasGroup canvasGroup;
 
+    float prevFill;
+    float desFill;
     public void Init(Boss _relatedBoss) {
         canvasGroup = GetComponent<CanvasGroup>();
-        
+        healthLineMaterial = healthLine.material;
         relatedBoss = _relatedBoss;
         bossNameLabel.text = relatedBoss.enemyName;
 
@@ -31,7 +34,9 @@ public class BossTitleUI : MonoBehaviour
     }
 
     void Update() {
-        healthLine.fillAmount = (float)relatedBoss.currentHealth / (float)relatedBoss.maxHealth;
+        prevFill = healthLineMaterial.GetFloat("_FillAmount");
+        desFill = (float)relatedBoss.currentHealth / (float)relatedBoss.maxHealth;
+        healthLineMaterial.SetFloat("_FillAmount", Mathf.Lerp(prevFill, desFill, Time.deltaTime * 10));
         healthNumberLabel.text = relatedBoss.currentHealth.ToString();
     }
 }

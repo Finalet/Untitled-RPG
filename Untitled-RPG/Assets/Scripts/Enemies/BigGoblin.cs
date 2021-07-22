@@ -94,11 +94,6 @@ public class BigGoblin : Enemy
         //play attack sound
     }
 
-    protected override void ReturnToPosition () {
-        base.ReturnToPosition();
-        navAgent.destination = initialPos;
-    }
-
     protected override void Idle () {
         base.Idle();
         navAgent.isStopped = true;

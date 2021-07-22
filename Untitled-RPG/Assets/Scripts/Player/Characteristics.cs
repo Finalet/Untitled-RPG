@@ -349,6 +349,10 @@ public class Characteristics : MonoBehaviour
 
         PlayerControlls.instance.animator.Play("GetHit.Empty");
         health = maxHealth;
+        StartCoroutine(ReviveCourutine()); //Calling this cause without a delay some enemies think player is already alive but he is not
+    }
+    IEnumerator ReviveCourutine () {
+        yield return new WaitForSeconds(0.2f);
         isDead = false;
     }
 

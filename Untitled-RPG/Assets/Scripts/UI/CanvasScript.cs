@@ -52,6 +52,10 @@ public class CanvasScript : MonoBehaviour
             OpenQuickAccessMenu();
         else if (Input.GetKeyUp(KeybindsManager.instance.quickAccessMenu))
             CloseQuickAccessMenu();
+
+        if (Input. GetKeyDown(KeybindsManager.instance.switchSkillRows)) {
+            Combat.instanace.SwitchSkillRows();
+        }
     }
 
     float staminaColorLerp;

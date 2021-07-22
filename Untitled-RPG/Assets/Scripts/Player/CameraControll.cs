@@ -9,6 +9,8 @@ enum CamSettings {Smooth, Hard};
 
 public class CameraControll : MonoBehaviour
 {
+    public static CameraControll instance;
+
     [System.NonSerialized] public float camDistance;
     public bool stopInput;
 
@@ -42,6 +44,10 @@ public class CameraControll : MonoBehaviour
     float baseMouseYsensitivity;
 
     CamSettings currentCamSettings = CamSettings.Smooth;
+
+    void Awake() {
+        instance = this;
+    }
 
     void Start()
     {

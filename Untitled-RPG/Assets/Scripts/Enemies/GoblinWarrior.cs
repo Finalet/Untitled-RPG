@@ -70,12 +70,6 @@ public class GoblinWarrior : Enemy
         //play attack sound
     }
 
-    protected override void ReturnToPosition () {
-        base.ReturnToPosition();
-        navAgent.destination = initialPos;
-        navAgent.isStopped = false;
-    }
-
     protected override void Idle () {
         base.Idle();
         navAgent.isStopped = true;

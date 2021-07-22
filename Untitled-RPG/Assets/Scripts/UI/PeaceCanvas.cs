@@ -45,6 +45,11 @@ public class PeaceCanvas : MonoBehaviour
     public Skill skillBeingDragged;
     public int amountOfDraggedItem;
     public UI_InventorySlot initialSlot;
+    public bool isDraggingItemOrSkill {
+        get {
+            return itemBeingDragged || skillBeingDragged;
+        }
+    }
 
     [Header("Icons")]
     public Sprite bag;
@@ -104,6 +109,9 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void HandleInputs () {
+        if (blackout.color.a >= 0.5f)
+            return;
+
         if (Input.GetKeyDown(KeybindsManager.instance.skills)) {
             if (!SkillsPanel.activeInHierarchy && currentInterractingNPC == null && !waitTimeWindow.gameObject.activeInHierarchy)
                 OpenSkillsPanel();

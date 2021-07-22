@@ -63,12 +63,6 @@ public class Wolf : Enemy
         jawCollider.SetActive(true);
     }
 
-    protected override void ReturnToPosition()
-    {
-        base.ReturnToPosition();
-        navAgent.destination = initialPos;
-    }
-
     protected override void ApproachTarget()
     {
         base.ApproachTarget();

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemyMeleeWeapon : MonoBehaviour
 {
-    Enemy enemy;
+    public Enemy enemy;
     public float value; //hit only when its equal to the curve
 
     void Start() {
-        enemy = GetComponentInParent<Enemy>();
+        if(!enemy) enemy = GetComponentInParent<Enemy>();
     }
 
     void OnTriggerEnter(Collider other) {

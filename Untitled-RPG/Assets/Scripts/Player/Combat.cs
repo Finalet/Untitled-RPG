@@ -15,7 +15,21 @@ public class Combat : MonoBehaviour, ISavable
     public List<Skill> learnedSkills = new List<Skill>();
     public List<Skill> currentPickedSkills = new List<Skill>(); 
     public List<Skill> currentSkillsFromEquipment = new List<Skill>();
+    
+    private int _currentSkillSlotsRow;
+    public int currentSkillSlotsRow {
+        get {
+            return _currentSkillSlotsRow;
+        }
+        set {
+            _currentSkillSlotsRow = value;
+            for (int i = 0; i < allSkillSlots.Length; i++){ 
+                allSkillSlots[i].SwitchRows(_currentSkillSlotsRow);
+            }
+        }
+    }
     [Space]
+    [System.NonSerialized] public int numberOfSkillSlotsRows = 2;
     public UI_SkillPanelSlot[] allSkillSlots;
 
     [Space]
@@ -66,6 +80,11 @@ public class Combat : MonoBehaviour, ISavable
         for (int i = 0; i < allSkillSlots.Length; i++){ //validate each skill slot
             allSkillSlots[i].ValidateSkillSlot();
         }
+    }
+    public void SwitchSkillRows (int row = -1) {
+        if (PeaceCanvas.instance.isDraggingItemOrSkill) return;
+        
+        currentSkillSlotsRow = row == -1 ? (currentSkillSlotsRow + 1) % numberOfSkillSlotsRows : row;
     }
 
     public void LearnSkill (Skill skillToLearn) {
@@ -204,6 +223,9 @@ public class Combat : MonoBehaviour, ISavable
         for (int i = 0; i < allSkillSlots.Length; i++){ 
             allSkillSlots[i].SaveSlot();
         }
+
+        //Save row number for slots 
+        ES3.Save<int>("rowIndex", currentSkillSlotsRow, savefilePath);
     }
     public void Load() {
         //Load current skill trees
@@ -227,6 +249,9 @@ public class Combat : MonoBehaviour, ISavable
         for (int i = 0; i < allSkillSlots.Length; i++){
             allSkillSlots[i].LoadSlot();
         }
+
+        //Load row number for slots 
+        SwitchSkillRows(ES3.Load<int>("rowIndex", savefilePath, 0));
     }
 
 #endregion

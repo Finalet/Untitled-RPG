@@ -15,7 +15,7 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
 
     public override void ValidateSkillSlot()
     {
-        containsUnavailableSkill = false;
+        currentSkillIsUnavailable = false;
     }
 
     protected override void Update() {
@@ -153,14 +153,6 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
                 AddSkill(AssetHolder.instance.getSkill(0), null);
             else if (w.weaponCategory == WeaponCategory.Staff)
                 AddSkill(AssetHolder.instance.getSkill(8), null);
-        } else if (EquipmentManager.instance.secondaryHand.itemInSlot != null) {
-            Weapon w = (Weapon)EquipmentManager.instance.secondaryHand.itemInSlot;
-            if (w.weaponCategory == WeaponCategory.Sword)
-                AddSkill(AssetHolder.instance.getSkill(0), null);
-            else if (w.weaponCategory == WeaponCategory.Staff)
-                AddSkill(AssetHolder.instance.getSkill(8), null);
-            else 
-                ClearSlot();
         } else {
             ClearSlot();
         }

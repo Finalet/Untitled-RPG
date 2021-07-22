@@ -10,7 +10,7 @@ public abstract class Boss : Enemy
     protected override void Update()
     {
         base.Update();
-        if (agr)
+        if (agr && !isDead)
             ShowBossHealthBar();
         else   
             HideBossHealthBar();
@@ -18,15 +18,16 @@ public abstract class Boss : Enemy
     
     protected virtual void ShowBossHealthBar() {
         if (!instanciatedHealthBar) {
-            instanciatedHealthBar = Instantiate(healthBarPrefab, PeaceCanvas.instance.transform).GetComponent<BossTitleUI>();
+            instanciatedHealthBar = Instantiate(healthBarPrefab, CanvasScript.instance.transform).GetComponent<BossTitleUI>();
+            instanciatedHealthBar.Init(this);
         }
-
-        instanciatedHealthBar.Init(this);
     }
     protected virtual void HideBossHealthBar() {
         if (instanciatedHealthBar) instanciatedHealthBar.Hide();
     }
 
     protected override void ShowHealthBar (){}
+
+
 
 }

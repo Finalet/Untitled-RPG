@@ -83,11 +83,6 @@ public class GoblinArcher : Enemy
         audioSource.PlayOneShot(attackSounds[Random.Range(0, attackSounds.Length-1)]);
     }
 
-    protected override void ReturnToPosition () {
-        base.ReturnToPosition();
-        if(navAgent.enabled) navAgent.destination = initialPos;
-    }
-
     protected override void Idle () {
         base.Idle();
         if (navAgent.enabled) navAgent.isStopped = true;

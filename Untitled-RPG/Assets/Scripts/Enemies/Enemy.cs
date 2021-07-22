@@ -32,9 +32,10 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     public Loot[] itemsLoot;
     public int goldLootAmount;
 
-    [Header("AI State")]
+    [Header("AI")]
     [DisplayWithoutEdit] public EnemyState currentState;
     [DisplayWithoutEdit] [SerializeField] protected float distanceToPlayer;
+    [DisplayWithoutEdit] public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
     
     [Header("Attack")]
     public bool isCoolingDown;
@@ -55,7 +56,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     public bool isRagdoll;
     public bool isStunned;
     public bool canGetHit = true;
-    public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
 
     [Space]
     public GameObject healthBar;
@@ -80,6 +80,9 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     protected float agrDelayTimer;
     protected bool delayingAgr;
 
+    protected float celebrationDuration = 5;
+    protected float startedCelebratingTime;
+
     protected virtual void Start() {
         enemyController = GetComponent<EnemyController>();
         ragdollController = GetComponent<RagdollController>();
@@ -102,8 +105,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         initialPos = transform.position;
         //if spawned in the air - drop on the floor
         RaycastHit hit;
-        if (Physics.Raycast(initialPos, -Vector3.up, out hit, 4f)) 
-            initialPos = hit.point;
+        if (Physics.Raycast(initialPos, -Vector3.up, out hit, 10f)) 
+            initialPos = hit.point + Vector3.up * 0.05f;
     }
 
     protected virtual void Update() {
@@ -155,13 +158,22 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             if (distanceToPlayer > attackRange) {
                 if(!isAttacking) currentState = EnemyState.Approaching;
             } else {
-                currentState = Characteristics.instance.isDead ? EnemyState.Celebrating : EnemyState.Attacking;
+                currentState = EnemyState.Attacking;
             }
-        } else {
-            currentState = Vector3.Distance(transform.position, initialPos) > navAgent.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
+
+            if (Characteristics.instance.isDead && currentState != EnemyState.Celebrating){
+                currentState = EnemyState.Celebrating;
+                startedCelebratingTime = Time.time;
+                agrTimer = -10;
+            }
+
+        } else if (currentState != EnemyState.Celebrating || ( (Time.time - startedCelebratingTime > celebrationDuration) || distanceToPlayer > 20) ) {
+            currentState = Vector3.Distance(transform.position, initialPos) > enemyController.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
         }
 
         if (isStunned) currentState = EnemyState.Stunned;
+
+        
 
         if (delayingAgr)
             return;
@@ -210,6 +222,11 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
 
+        
+        if(navAgent.enabled) {
+            navAgent.destination = initialPos;
+            navAgent.isStopped = false;
+        }
         RegenerateMaxHealth();
     }
     protected virtual void Idle() {
@@ -235,6 +252,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
 
     protected virtual void Die () {
         isDead = true;
+        currentHealth = 0;
         gameObject.SetLayer(LayerMask.NameToLayer("Dead Enemy"), true);
         animator.CrossFade("GetHit.Die", 0.25f);
         animator.SetBool("isDead", true);
@@ -367,6 +385,9 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     }
 
     public virtual void Agr() {
+        if (Characteristics.instance.isDead)
+            return;
+
         if (!agr) {
             target = PlayerControlls.instance.transform;
             agr = true;
@@ -423,6 +444,16 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         int playID = Random.Range(0, stabSounds.Length);
         audioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
         audioSource.PlayOneShot(stabSounds[playID]);
+    }
+    public void PlaySound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {
+        audioSource.clip = clip;
+        audioSource.time = timeOffest;
+        audioSource.pitch = pitch;
+        audioSource.volume = volume;
+        if (delay == 0)
+            audioSource.PlayOneShot(audioSource.clip);
+        else
+            audioSource.PlayDelayed(delay);
     }
 
     public virtual void FootStep () {

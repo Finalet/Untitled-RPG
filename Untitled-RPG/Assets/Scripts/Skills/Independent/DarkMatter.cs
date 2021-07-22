@@ -74,7 +74,6 @@ public class DarkMatter : Skill
         CustomUse();
         if (weaponOutRequired && !WeaponsController.instance.isWeaponOut)
                 WeaponsController.instance.InstantUnsheathe();
-        playerControlls.isAttacking = true;
     }
 
     public override string getDescription()

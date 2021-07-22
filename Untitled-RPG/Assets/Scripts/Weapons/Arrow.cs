@@ -90,8 +90,10 @@ public class Arrow : MonoBehaviour
         GetComponent<CapsuleCollider>().enabled = false;
         trail.emitting = false;
         
-        audioSource.clip = impactSounds[Random.Range(0, impactSounds.Length-1)];
-        audioSource.Play();
+        if (impactSounds.Length != 0) {
+            audioSource.clip = impactSounds[Random.Range(0, impactSounds.Length-1)];
+            audioSource.Play();
+        }
     }
 
     protected virtual void Hit (IDamagable en) {
