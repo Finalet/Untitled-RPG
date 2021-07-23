@@ -177,10 +177,13 @@ public abstract class Skill : MonoBehaviour
     }
 
     public virtual bool skillActive () {
+        if (weaponOutRequired && !WeaponsController.instance.RightHandEquipObj) return false;
+        if (bowOutRequired && !WeaponsController.instance.BowObj) return false;
         if (playerControlls.isMounted || playerControlls.isPickingArea || PeaceCanvas.instance.anyPanelOpen || Combat.instanace.blockSkills || playerControlls.isSitting)
             return false;
         else 
             return true;
+        
     }
 
     protected virtual void PlaySound(AudioClip clip, float timeOffest = 0, float pitch = 1, float delay = 0, float volume = 1) {

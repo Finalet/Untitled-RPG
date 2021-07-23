@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -11,21 +12,32 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     public TextMeshProUGUI keyText;
 
     [Header("Skill panel")]
-    Skill currentSlotSkill;
+    public Skill currentSlotSkill;
     public Skill[] skillsInRows;
     public ItemAmountPair[] itemsAndAmontsInRows;
     [Space]
     public KeyCode assignedKey; 
 
-    int currentRow;
+    protected int currentRow;
     protected bool currentSkillIsUnavailable;
 
+    protected override void Start() {
+        base.Start();
+        skillsInRows = new Skill[Combat.instanace.numberOfSkillSlotsRows];
+        itemsAndAmontsInRows = new ItemAmountPair[Combat.instanace.numberOfSkillSlotsRows];
+    }
+
     public virtual void SwitchRows (int rowIndex) {
+        StartCoroutine(SwitchRowAnim(rowIndex));
+    }
+
+    IEnumerator SwitchRowAnim (int rowIndex) {
+        slotIcon.rectTransform.DOScaleY(0f, 0.1f);
+        yield return new WaitForSeconds(0.1f);
         currentRow = rowIndex;
-        currentSlotSkill = skillsInRows[currentRow];
-        itemInSlot = itemsAndAmontsInRows[currentRow].item1;
-        itemAmount = itemsAndAmontsInRows[currentRow].amount1;
+        GrabSlotContents();
         ValidateSkillSlot();
+        slotIcon.rectTransform.DOScaleY(1, 0.1f);
     }
 
     protected override string savefilePath(){
@@ -49,19 +61,49 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     protected override void Update() {
+        GrabSlotContents();
+
         if (currentSlotSkill != null) {
             DisplaySkill();
         } else if (itemInSlot != null) {
             DisplayItem();
         } else {
-            itemAmountText.text = "";
-            //In case when RMB canceled picking area.
-            slotIcon.sprite = null; 
-            slotIcon.color = new Color(0,0,0,0);
+            DisplayEmptySlot();
         }
 
         DisplayKey();
         DetectKeyPress();
+    }
+    void DisplayEmptySlot () {
+        itemAmountText.text = "";
+        slotIcon.sprite = null; 
+        slotIcon.color = transparentColor;
+        if (itemAmountText != null) itemAmountText.text = "";
+
+        if (keyText != null) keyText.color = Color.white;
+
+        if (cooldownImage == null) return;
+        cooldownImage.color = transparentColor;
+        cooldownImage.fillAmount = 1;
+        cooldownTimerText.text = "";
+    }
+    protected override void DisplayItem()
+    {
+        base.DisplayItem();
+        if (keyText != null) keyText.color = Color.white;
+    }
+
+    protected virtual void GrabSlotContents () {
+        currentSlotSkill = skillsInRows[currentRow];
+
+        itemInSlot = itemsAndAmontsInRows[currentRow].item1;
+        itemAmount = itemsAndAmontsInRows[currentRow].amount1;
+    }
+    void MatchRowContents() {
+        skillsInRows[currentRow] = currentSlotSkill;
+
+        itemsAndAmontsInRows[currentRow].item1 = itemInSlot;
+        itemsAndAmontsInRows[currentRow].amount1 = itemAmount;
     }
 
     protected virtual void ClearSlotAtRow(int row = -1) {
@@ -134,6 +176,12 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
     }
 
+    public override void UseItem()
+    {
+        base.UseItem();
+        MatchRowContents();
+    }
+
     void DisplayKey () {
         if (keyText != null)
             keyText.text = KeyCodeDictionary.keys[assignedKey];
@@ -153,9 +201,6 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
     }
     public override void LoadSlot() {
-        skillsInRows = new Skill[Combat.instanace.numberOfSkillSlotsRows];
-        itemsAndAmontsInRows = new ItemAmountPair[Combat.instanace.numberOfSkillSlotsRows];
-
         for (byte row = 0; row < Combat.instanace.numberOfSkillSlotsRows; row++) {
             byte type = ES3.Load<byte>($"{slotID}_t_{row}", savefilePath(), 0);
 
@@ -182,25 +227,22 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
 
 
     public void AddSkill (Skill skill, UI_SkillPanelSlot initialSlot, int row = -1) {
-        if (currentSlotSkill != null) { //Slot contains another skill
+        row = row == -1 ? currentRow : row;
+
+        if (skillsInRows[row] != null) { //Slot contains another skill
             if (initialSlot != null)
-                initialSlot.AddSkill(currentSlotSkill, null);
-        } else if (itemInSlot != null) { //Slot contains an item
+                initialSlot.AddSkill(skillsInRows[row], null);
+        } else if (itemsAndAmontsInRows[row].item1 != null) { //Slot contains an item
             if (initialSlot != null) {
-                initialSlot.AddItem(itemInSlot, itemAmount, null);
+                initialSlot.AddItem(itemsAndAmontsInRows[row].item1, itemsAndAmontsInRows[row].amount1, null);
             } else {
                 print("Destory item?");
                 return;
             }
         }
-        row = row == -1 ? currentRow : row;
-        currentSlotSkill = skill;
         skillsInRows[row] = skill;
         itemsAndAmontsInRows[row].item1 = null;
         itemsAndAmontsInRows[row].amount1 = 0;
-        itemInSlot = null;
-        itemAmount = 0;
-        itemAmountText.text = "";
         ValidateSkillSlot();
     }
 
@@ -208,17 +250,19 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         AddItemToRow(item, amount, initialSlot);
     }
     void AddItemToRow (Item item, int amount, UI_InventorySlot initialSlot, int row = -1) {
-        if (currentSlotSkill != null) { //Slot contains skill
+        row = row == -1 ? currentRow : row;
+        if (skillsInRows[row] != null) { //Slot contains skill
             if (initialSlot && initialSlot.GetComponent<UI_SkillPanelSlot>() != null) //If item was dragged from the skill panel
-                initialSlot.GetComponent<UI_SkillPanelSlot>().AddSkill(currentSlotSkill, null);
-            ClearSlot();
+                initialSlot.GetComponent<UI_SkillPanelSlot>().AddSkill(skillsInRows[row], null);
+            ClearSlotAtRow(row);
         }
         base.AddItem(item, amount, initialSlot);
-        row = row == -1 ? currentRow : row;
-        skillsInRows[row] = null;
+        itemsAndAmontsInRows[row].item1 = itemInSlot;
+        itemsAndAmontsInRows[row].amount1 = itemAmount;
+
         currentSlotSkill = null;
-        itemsAndAmontsInRows[row].item1 = item;
-        itemsAndAmontsInRows[row].amount1 = amount;
+        itemInSlot = null;
+        itemAmount = 0;
     }
 
     //--------------------------------Drag----------------------------------//

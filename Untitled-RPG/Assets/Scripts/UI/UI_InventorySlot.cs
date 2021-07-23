@@ -19,6 +19,8 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     public Image cooldownImage;
     public TextMeshProUGUI cooldownTimerText;
 
+    protected Color transparentColor = new Color(0,0,0,0);
+
     protected virtual string savefilePath() {
         return "saves/inventorySlots.txt"; ;
     }
@@ -127,12 +129,12 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         itemInSlot = null;
         itemAmount = 0;
         slotIcon.sprite = null;
-        slotIcon.color = new Color(0,0,0,0);
+        slotIcon.color = transparentColor;
         if (itemAmountText != null) itemAmountText.text = "";
         
         //Clear cooldown
         if (cooldownImage == null) return; //Stop if no cooldown in the slot (like equipment slots)
-        cooldownImage.color = new Color(0,0,0,0);
+        cooldownImage.color = transparentColor;
         cooldownImage.fillAmount = 1;
         cooldownTimerText.text = "";
     }
@@ -142,8 +144,11 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         itemAmountText.text = itemAmount == 1 ? "" : itemAmount.ToString();
         slotIcon.color = Color.white;
 
-        if (!(itemInSlot is Consumable))
+        if (!(itemInSlot is Consumable)) {
+            cooldownImage.color = new Color(0, 0, 0, 0);
+            cooldownTimerText.text = "";
             return;
+        }
 
         Consumable c = (Consumable)itemInSlot;
         if(c.isCoolingDown) {

@@ -82,7 +82,7 @@ public class Combat : MonoBehaviour, ISavable
         }
     }
     public void SwitchSkillRows (int row = -1) {
-        if (PeaceCanvas.instance.isDraggingItemOrSkill) return;
+        if (PeaceCanvas.instance.isDraggingItemOrSkill || PeaceCanvas.instance.isGamePaused) return;
         
         currentSkillSlotsRow = row == -1 ? (currentSkillSlotsRow + 1) % numberOfSkillSlotsRows : row;
     }

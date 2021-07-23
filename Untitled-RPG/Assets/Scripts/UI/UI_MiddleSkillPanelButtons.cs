@@ -13,6 +13,18 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     public Skill overrideSkill;
     public bool overrideLMB;
 
+    protected override void Start() {
+        base.Start();
+        currentRow = 0;
+        skillsInRows = new Skill[1];
+        itemsAndAmontsInRows = new ItemAmountPair[1];
+    }
+
+    public override void SwitchRows(int rowIndex)
+    {
+        //
+    }
+
     public override void ValidateSkillSlot()
     {
         currentSkillIsUnavailable = false;
