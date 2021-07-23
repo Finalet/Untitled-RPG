@@ -28,14 +28,14 @@ public abstract class NPC : MonoBehaviour
             return;
 
         if (playerDetected && !isInterracting) {
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], interractionIcon);
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], interractionIcon);
             once = false;
         } else if (!once) {
             PeaceCanvas.instance.HideKeySuggestion();
             once = true;
         }
 
-        if (playerDetected && Input.GetKeyDown(KeybindsManager.instance.interact)) {
+        if (playerDetected && Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Interact"])) {
             Interract();
         }
 
@@ -51,6 +51,7 @@ public abstract class NPC : MonoBehaviour
         PeaceCanvas.instance.HideKeySuggestion();
         isInterracting = true;
         npcCamera.enabled = true;
+        PeaceCanvas.instance.openPanels ++;
         CustomInterract();
     }
     protected abstract void CustomInterract ();
@@ -60,6 +61,7 @@ public abstract class NPC : MonoBehaviour
         
         isInterracting = false;
         npcCamera.enabled = false;
+        PeaceCanvas.instance.openPanels --;
         CustomStopInterract();
     }
     protected abstract void CustomStopInterract();

@@ -44,11 +44,11 @@ namespace FIMSpace.FTail
             #region Debug "`" disable key for editor only
 
 #if UNITY_EDITOR
-            if (Input.GetKey(KeyCode.BackQuote))
-            {
-                updateTailAnimator = false;
-                return;
-            }
+            // if (Input.GetKey(KeyCode.BackQuote))
+            // {
+            //     updateTailAnimator = false;
+            //     return;
+            // }
 #endif
 
             #endregion

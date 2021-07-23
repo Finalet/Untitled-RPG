@@ -6,27 +6,60 @@ public class KeybindsManager : MonoBehaviour
 {
     public static KeybindsManager instance;
 
-    [Header("Character")]
-    public KeyCode run = KeyCode.LeftShift;
-    public KeyCode roll = KeyCode.V;
-    public KeyCode crouch = KeyCode.C;
-    public KeyCode jump = KeyCode.Space;
-    public KeyCode switchSkillRows = KeyCode.BackQuote;
-    public KeyCode toggleRunning = KeyCode.CapsLock;
-    public KeyCode sheathe = KeyCode.H;
-    [Header("Main")]
-    public KeyCode quickAccessMenu = KeyCode.Tab;
-    public KeyCode inventory = KeyCode.I;
-    public KeyCode skills = KeyCode.K;
-    public KeyCode waitTime = KeyCode.O;
-    public KeyCode interact = KeyCode.F;
-    [Header("Misc")]
-    public KeyCode damageChat = KeyCode.F1;
-    public KeyCode tooManyItems = KeyCode.F2;
-    public KeyCode hideUI = KeyCode.F3;
-
     void Awake() {
         instance = this;
+        SetDefaultKeyBinds();
     }
     
+    string savefilePath = "saves/keyBinds";
+    
+    public Dictionary<string, KeyCode> defaultKeyBinds  = new Dictionary< string, KeyCode> () {
+        {"Run", KeyCode.LeftShift},
+        {"Roll", KeyCode.V},
+        {"Crouch", KeyCode.C},
+        {"Jump", KeyCode.Space},
+        {"Switch skill rows", KeyCode.BackQuote},
+        {"Toggle walk", KeyCode.CapsLock},
+        {"Sheathe weapon", KeyCode.H},
+
+        {"Quick access menu", KeyCode.Tab},
+        {"Inventory", KeyCode.I},
+        {"Skillbook", KeyCode.K},
+        {"Skip time", KeyCode.O},
+        {"Interact", KeyCode.F},
+
+        {"Damage log", KeyCode.F1},
+        {"Too many items", KeyCode.F2},
+        {"Hide interface", KeyCode.F3},
+
+        {"Slot 1", KeyCode.Alpha1},
+        {"Slot 2", KeyCode.Alpha2},
+        {"Slot 3", KeyCode.Alpha3},
+        {"Slot 4", KeyCode.Alpha4},
+        {"Slot 5", KeyCode.Alpha5},
+        {"Slot 6", KeyCode.Q},
+        {"Slot 7", KeyCode.E},
+        {"Slot 8", KeyCode.R},
+        {"Slot 9", KeyCode.T},
+        {"Slot 10", KeyCode.X},
+    };
+
+    public Dictionary<string, KeyCode> currentKeyBinds  = new Dictionary< string, KeyCode> () {};
+
+
+    public void SetDefaultKeyBinds() {
+        currentKeyBinds = new Dictionary<string, KeyCode>(defaultKeyBinds);
+    }
+
+    public void SaveKeybinds()
+    {
+        ES3.Save<Dictionary<string, KeyCode>>("currentKeyBinds", currentKeyBinds, savefilePath);
+        if (PeaceCanvas.instance) PeaceCanvas.instance.SetSuggestionKeys();
+    }
+
+    public void LoadKeybinds()
+    {
+        if (ES3.FileExists(savefilePath) && ES3.KeyExists("currentKeyBinds", savefilePath))
+            currentKeyBinds = ES3.Load<Dictionary<string, KeyCode>>("currentKeyBinds", savefilePath);
+    }
 }

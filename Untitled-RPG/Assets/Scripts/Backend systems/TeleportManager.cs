@@ -59,10 +59,13 @@ public class TeleportManager : MonoBehaviour
         cg.DOFade(1, 1).SetDelay(1);
         
         instanciatedReviveWindow.GetComponentInChildren<Button>().onClick.AddListener(delegate{RevivePlayer();});
+
+        PeaceCanvas.instance.openPanels++;
     }
 
     void RevivePlayer () {
         Destroy(instanciatedReviveWindow);
+        PeaceCanvas.instance.openPanels--;
         PlayerControlls.instance.transform.position = adjustedStatuePos(getClosestStatue(PlayerControlls.instance.transform.position));
         Characteristics.instance.Revive();
     }
@@ -84,7 +87,7 @@ public class TeleportManager : MonoBehaviour
         
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.ReadBook);
 
-        PeaceCanvas.instance.forceAnyPanelOpen = true;
+        PeaceCanvas.instance.openPanels++;
         PeaceCanvas.instance.CloseInventory();
 
         instanciatedTeleportMenu = Instantiate(teleportMenu, PeaceCanvas.instance.transform);
@@ -153,7 +156,7 @@ public class TeleportManager : MonoBehaviour
         if (!instanciatedTeleportMenu)
             return;
         Destroy(instanciatedTeleportMenu);
-        PeaceCanvas.instance.forceAnyPanelOpen = false;
+        PeaceCanvas.instance.openPanels--;
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.CloseBook);
     }
 

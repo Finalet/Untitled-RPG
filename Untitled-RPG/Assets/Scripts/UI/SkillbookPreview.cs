@@ -40,6 +40,8 @@ public class SkillbookPreview : MonoBehaviour
         float tooltipHeight = 311 + skillDescription.preferredHeight + skillStats.preferredHeight;
         GetComponent<RectTransform>().sizeDelta = new Vector2(400, tooltipHeight);
 
+        PeaceCanvas.instance.openPanels++;
+
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.ReadBook);
     }
 
@@ -108,6 +110,7 @@ public class SkillbookPreview : MonoBehaviour
     
     public void Close () {
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.CloseBook);
+        PeaceCanvas.instance.openPanels--;
         Destroy(gameObject);
     }
 }

@@ -65,7 +65,7 @@ public class WeaponsController : MonoBehaviour
         CheckHandAnimStatus();
 
         //Manual Sheath
-        if (Input.GetKeyDown(KeybindsManager.instance.sheathe) && (isWeaponOut || isBowOut) ) {
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Sheathe weapon"]) && (isWeaponOut || isBowOut) ) {
             StartCoroutine(Sheathe());
         }
     }

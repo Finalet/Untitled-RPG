@@ -16,6 +16,7 @@ public class Combat : MonoBehaviour, ISavable
     public List<Skill> currentPickedSkills = new List<Skill>(); 
     public List<Skill> currentSkillsFromEquipment = new List<Skill>();
     
+    [System.NonSerialized] public int maxSkillSlotRows = 5;
     private int _currentSkillSlotsRow;
     public int currentSkillSlotsRow {
         get {
@@ -24,12 +25,23 @@ public class Combat : MonoBehaviour, ISavable
         set {
             _currentSkillSlotsRow = value;
             for (int i = 0; i < allSkillSlots.Length; i++){ 
-                allSkillSlots[i].SwitchRows(_currentSkillSlotsRow);
+                allSkillSlots[i].SwitchRows(_currentSkillSlotsRow, SettingsManager.instance.gameObject.activeInHierarchy);
             }
         }
     }
-    [Space]
-    [System.NonSerialized] public int numberOfSkillSlotsRows = 2;
+    private int _numberOfSkillSlotsRows;
+    public int numberOfSkillSlotsRows{
+        get {
+            return _numberOfSkillSlotsRows;
+        }   
+        set {
+            _numberOfSkillSlotsRows = value;
+            
+            currentSkillSlotsRow = Mathf.Min(currentSkillSlotsRow, _numberOfSkillSlotsRows-1);
+            CanvasScript.instance.ChangeRowNumberLabel();
+        }
+    }
+    
     public UI_SkillPanelSlot[] allSkillSlots;
 
     [Space]
@@ -199,7 +211,7 @@ public class Combat : MonoBehaviour, ISavable
 
     public LoadPriority loadPriority {
         get {
-            return LoadPriority.First;
+            return LoadPriority.Last;
         }
     }
 
@@ -245,6 +257,8 @@ public class Combat : MonoBehaviour, ISavable
         foreach (int ID in skillIDs)
             currentPickedSkills.Add(AssetHolder.instance.getSkill(ID));
 
+        numberOfSkillSlotsRows = SettingsManager.instance.numberOfSkillRows;
+        
         //Load all skill slots 
         for (int i = 0; i < allSkillSlots.Length; i++){
             allSkillSlots[i].LoadSlot();

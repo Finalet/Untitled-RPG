@@ -29,7 +29,7 @@ public class LootItem : MonoBehaviour
         if (lowPriority)
             return;
 
-        if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Interact"])) {
             InventoryManager.instance.PickupLoot(this);
         }
     }
@@ -61,7 +61,7 @@ public class LootItem : MonoBehaviour
             }
         } else if (other.CompareTag("Player") && !other.isTrigger) {
             playerDetected = true;
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], InterractionIcons.HandPickup);
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], InterractionIcons.HandPickup);
         }
     }
 

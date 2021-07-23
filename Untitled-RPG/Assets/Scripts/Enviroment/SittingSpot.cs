@@ -19,15 +19,15 @@ public class SittingSpot : MonoBehaviour
             if (isTaken)
                 return;
 
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Sit");
-            if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], "Sit");
+            if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Interact"])) {
                 PlayerControlls.instance.Sit(this);
                 PeaceCanvas.instance.HideKeySuggestion();
                 sitTime = Time.time;
             }
         } else {
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], "Get up");
-            if (Input.GetKeyDown(KeybindsManager.instance.interact)) {
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], "Get up");
+            if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Interact"])) {
                 PlayerControlls.instance.Unsit(this);
                 PeaceCanvas.instance.HideKeySuggestion();
                 sitTime = Time.time;

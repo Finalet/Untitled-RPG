@@ -118,7 +118,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
         InBattleCheck();
         PushEnemies();
 
-        if (Input.GetKeyDown(KeybindsManager.instance.toggleRunning))
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Toggle walk"]))
             toggleRunning = !toggleRunning;
 
         if ( (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) || isSitting) {
@@ -158,20 +158,20 @@ public class PlayerControlls : MonoBehaviour, ISavable
         //if (Input.GetButtonDown("Jump"))  //JUMPING IS NOW FONE THROUGH "BASE CHARACTER CONTROLLER"
             //Jump();
 
-        if (Input.GetKeyDown(KeybindsManager.instance.crouch))
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Crouch"]))
             Crouch();
 
-        if (Input.GetKeyDown(KeybindsManager.instance.roll))
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Roll"]))
             Roll();
 
         if (!isIdle) {
-            if (Input.GetKey(KeybindsManager.instance.run))
+            if (Input.GetKey(KeybindsManager.instance.currentKeyBinds["Run"]))
             {
                 if (!toggleRunning)
                     isRunning = true;
                 else if (!isCrouch && !isAttacking && !isRolling && !isSitting)
                     isSprinting = true; //Start sprinting
-            } else if (Input.GetKeyUp(KeybindsManager.instance.run))
+            } else if (Input.GetKeyUp(KeybindsManager.instance.currentKeyBinds["Run"]))
             {
                 if (toggleRunning && !isRolling) {
                     isSprinting = false;
@@ -528,8 +528,12 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     public void Load()
     {
-        if (SceneManager.GetActiveScene().name == "City")
-            transform.position = ES3.Load("pos", savePath, new Vector3(-560, 10, -120)); //default position at the City scene.
+        for (int i = 0; i < SceneManager.sceneCount; i++) {
+            if (SceneManager.GetSceneAt(i).name == "City") {
+                transform.position = ES3.Load("pos", savePath, new Vector3(-560, 10, -120)); //default position at the City scene.
+                return;
+            }
+        }
     }
 
 #endregion

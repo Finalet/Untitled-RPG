@@ -17,6 +17,8 @@ public class CanvasScript : MonoBehaviour
 
     [Header("Overall UI")]
     public TextMeshProUGUI warningText;
+    public TextMeshProUGUI rowNumberLeftLabel;
+    public TextMeshProUGUI rowNumberRightLabel;
 
     [Header("Enemy")]
     public Image enemyHealthBar;
@@ -48,12 +50,12 @@ public class CanvasScript : MonoBehaviour
     void Update() {
         DisplayHPandStamina();
 
-        if (Input.GetKeyDown(KeybindsManager.instance.quickAccessMenu))
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Quick access menu"]))
             OpenQuickAccessMenu();
-        else if (Input.GetKeyUp(KeybindsManager.instance.quickAccessMenu))
+        else if (Input.GetKeyUp(KeybindsManager.instance.currentKeyBinds["Quick access menu"]))
             CloseQuickAccessMenu();
 
-        if (Input. GetKeyDown(KeybindsManager.instance.switchSkillRows)) {
+        if (Input. GetKeyDown(KeybindsManager.instance.currentKeyBinds["Switch skill rows"])) {
             Combat.instanace.SwitchSkillRows();
         }
     }
@@ -210,5 +212,17 @@ public class CanvasScript : MonoBehaviour
         PlayerControlls.instance.cameraControl.stopInput = false;
         quickAccessMenuIsOpen = false;
         quickAccessMenu.Close();
+    }
+
+    public void ChangeRowNumberLabel (){
+        if (Combat.instanace.numberOfSkillSlotsRows == 1) {
+            rowNumberLeftLabel.transform.parent.gameObject.SetActive(false);
+            rowNumberRightLabel.transform.parent.gameObject.SetActive(false);
+        } else {
+            rowNumberLeftLabel.transform.parent.gameObject.SetActive(true);
+            rowNumberRightLabel.transform.parent.gameObject.SetActive(true);
+        }
+        rowNumberLeftLabel.text = (Combat.instanace.currentSkillSlotsRow + 1).ToString();
+        rowNumberRightLabel.text = (Combat.instanace.currentSkillSlotsRow + 1).ToString();
     }
 }

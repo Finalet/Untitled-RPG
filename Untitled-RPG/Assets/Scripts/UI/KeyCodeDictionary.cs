@@ -58,6 +58,9 @@ public class KeyCodeDictionary
         {KeyCode.F10, "F10"},
         {KeyCode.F11, "F11"},
         {KeyCode.F12, "F12"},
+        {KeyCode.F13, "F13"},
+        {KeyCode.F14, "F14"},
+        {KeyCode.F15, "F15"},
 
         //KeyPad Numbers
         {KeyCode.Keypad1, "N1"},
@@ -70,6 +73,12 @@ public class KeyCodeDictionary
         {KeyCode.Keypad8, "N8"},
         {KeyCode.Keypad9, "N9"},
         {KeyCode.Keypad0, "N0"},
+        {KeyCode.KeypadPeriod, "N."},
+        {KeyCode.KeypadDivide, "N/"},
+        {KeyCode.KeypadMultiply, "N*"},
+        {KeyCode.KeypadMinus, "N-"},
+        {KeyCode.KeypadPlus, "N+"},
+        {KeyCode.KeypadEquals, "N="},
 
         //Shift, ctrl, tab, etc
         {KeyCode.LeftShift, "Shift"},
@@ -81,7 +90,8 @@ public class KeyCodeDictionary
         {KeyCode.LeftWindows, "Win"},
         {KeyCode.RightWindows, "R-win"},
         {KeyCode.Tab, "Tab"},
-        {KeyCode.CapsLock, "Cap"},
+        {KeyCode.CapsLock, "Caps"},
+        {KeyCode.Space, "Space"},
 
         //Symbols
         {KeyCode.Exclaim, "!"}, //1
@@ -125,4 +135,5 @@ public class KeyCodeDictionary
         //KeyCode none
         {KeyCode.None, ""},
     };
+
 }

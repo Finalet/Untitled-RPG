@@ -873,7 +873,7 @@ namespace ECM.Controllers
                 z = Input.GetAxisRaw("Vertical")
             };
 
-            jump = Input.GetKey(KeybindsManager.instance.jump);
+            jump = Input.GetKey(KeybindsManager.instance.currentKeyBinds["Jump"]);
 
             crouch = PlayerControlls.instance.isCrouch;
         }

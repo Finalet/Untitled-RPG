@@ -15,28 +15,37 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     public Skill currentSlotSkill;
     public Skill[] skillsInRows;
     public ItemAmountPair[] itemsAndAmontsInRows;
-    [Space]
-    public KeyCode assignedKey; 
+    
+    protected virtual KeyCode assignedKey {
+        get {
+            return KeybindsManager.instance.currentKeyBinds[$"Slot {slotID + 1}"];
+        }
+    }
 
     protected int currentRow;
     protected bool currentSkillIsUnavailable;
 
-    protected override void Start() {
-        base.Start();
-        skillsInRows = new Skill[Combat.instanace.numberOfSkillSlotsRows];
-        itemsAndAmontsInRows = new ItemAmountPair[Combat.instanace.numberOfSkillSlotsRows];
-    }
-
-    public virtual void SwitchRows (int rowIndex) {
+    public virtual void SwitchRows (int rowIndex, bool instant = false) {
+        if (rowIndex == currentRow) return;
+        if (instant) {
+            currentRow = rowIndex;
+            GrabSlotContents();
+            ValidateSkillSlot();
+            CanvasScript.instance.ChangeRowNumberLabel();
+            return;
+        }
         StartCoroutine(SwitchRowAnim(rowIndex));
     }
 
     IEnumerator SwitchRowAnim (int rowIndex) {
         slotIcon.rectTransform.DOScaleY(0f, 0.1f);
+        cooldownImage.rectTransform.DOScaleY(0f, 0.1f);
         yield return new WaitForSeconds(0.1f);
         currentRow = rowIndex;
+        CanvasScript.instance.ChangeRowNumberLabel();
         GrabSlotContents();
         ValidateSkillSlot();
+        cooldownImage.rectTransform.DOScaleY(1, 0.1f);
         slotIcon.rectTransform.DOScaleY(1, 0.1f);
     }
 
@@ -94,6 +103,8 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     protected virtual void GrabSlotContents () {
+        if (skillsInRows.Length == 0 || itemsAndAmontsInRows.Length == 0) return;
+
         currentSlotSkill = skillsInRows[currentRow];
 
         itemInSlot = itemsAndAmontsInRows[currentRow].item1;
@@ -161,7 +172,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     protected virtual void DetectKeyPress() {
-        if (PeaceCanvas.instance.anyPanelOpen)
+        if (PeaceCanvas.instance.anyPanelOpen || PeaceCanvas.instance.isGamePaused)
             return;
 
         if (Input.GetKeyDown(assignedKey)) {
@@ -188,7 +199,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     public override void SaveSlot() {
-        for (byte row = 0; row < Combat.instanace.numberOfSkillSlotsRows; row++) {
+        for (byte row = 0; row < Combat.instanace.maxSkillSlotRows; row++) {
             if (skillsInRows[row]) { //Saving skill 
                 SaveSkillSlot(2, (short)skillsInRows[row].ID, 0, row);
             } else {
@@ -201,7 +212,10 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         }
     }
     public override void LoadSlot() {
-        for (byte row = 0; row < Combat.instanace.numberOfSkillSlotsRows; row++) {
+        skillsInRows = new Skill[Combat.instanace.maxSkillSlotRows];
+        itemsAndAmontsInRows = new ItemAmountPair[Combat.instanace.maxSkillSlotRows];
+        
+        for (byte row = 0; row < Combat.instanace.maxSkillSlotRows; row++) {
             byte type = ES3.Load<byte>($"{slotID}_t_{row}", savefilePath(), 0);
 
             if (type == 2) { //Load skill
@@ -209,13 +223,12 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
                 AddSkill(AssetHolder.instance.getSkill(ID), null, row);
             } else if (type == 0) { //Empty Slot
                 ClearSlotAtRow(row);
-                continue;
             } else {
                 //Add item
                 short ID = ES3.Load<short>($"{slotID}_ID_{row}", savefilePath(), 0); //ID
                 byte amount = ES3.Load<byte>($"{slotID}_a_{row}", savefilePath(), 0); //Amount
                 AddItemToRow(AssetHolder.instance.getItem(ID), amount, null, row);
-            }            
+            }
         }
     }
 
@@ -261,8 +274,8 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         itemsAndAmontsInRows[row].amount1 = itemAmount;
 
         currentSlotSkill = null;
-        itemInSlot = null;
-        itemAmount = 0;
+        itemInSlot = null; //This is done on purpose because we assign itmes in the GrabSlotContents()
+        itemAmount = 0; //If I don't do this it breaks cause base.AddItem adds items to itenInSlot which is not good.
     }
 
     //--------------------------------Drag----------------------------------//

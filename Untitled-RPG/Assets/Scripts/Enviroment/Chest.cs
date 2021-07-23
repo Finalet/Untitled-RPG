@@ -62,13 +62,13 @@ public class Chest : Container
     }
 
     void Update() {
-        if (playerInTrigger && Input.GetKeyDown(KeybindsManager.instance.interact))
+        if (playerInTrigger && Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Interact"]))
             TryOpenContainer(1.5f);
     }
 
     void OnTriggerStay(Collider other) {
         if (other.CompareTag("Player")) {
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.interact], InterractionIcons.Chest);
+            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], InterractionIcons.Chest);
             playerInTrigger = true; //Doing this because OnTriggerStay is not called every frame
         }
     }

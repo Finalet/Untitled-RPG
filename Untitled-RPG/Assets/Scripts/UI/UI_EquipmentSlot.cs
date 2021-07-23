@@ -12,7 +12,6 @@ public class UI_EquipmentSlot : UI_InventorySlot
     Image equipmentIcon;
 
     Color baseColor = new Color(1,1,1, 220f/255f);
-    Color transparentColor = new Color(0,0,0,0);
 
      void Awake() {
         equipmentIcon = GetComponent<Image>();

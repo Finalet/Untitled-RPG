@@ -132,7 +132,7 @@ public class Golem : Boss
         Vector3 adjPlayerPos = target.transform.position + PlayerControlls.instance.rb.velocity * 0.5f;
         Quaternion rot = Quaternion.LookRotation(adjPlayerPos - transform.position, Vector3.up);
         GolemRockShard r = Instantiate(rockShard, transform.position, rot, null).GetComponent<GolemRockShard>();
-        float dot = Vector3.Dot(PlayerControlls.instance.rb.velocity, transform.forward) * 0.5f;
+        float dot = Vector3.Dot(PlayerControlls.instance.rb.velocity, transform.forward) * 0.7f;
         r.Init(distanceToPlayer + dot, this);
     }
 
@@ -179,7 +179,8 @@ public class Golem : Boss
     public override void OnWeakSpotHit()
     {
         base.OnWeakSpotHit();
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 1.5f, 0.1f, transform.position);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 1.5f, 0.1f, PlayerControlls.instance.transform.position);
+        StartCoroutine(HitStop(true));
         if (isStunned) return;
 
         PlaySound(weakSpotHitSound);

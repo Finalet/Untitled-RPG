@@ -33,6 +33,10 @@ public class WaitTimeWindow : MonoBehaviour
     }
 
     public void OpenWindow() {
+        if (!TimeOfDayController.instance) return;
+
+        PeaceCanvas.instance.openPanels++;
+        
         MatchCurrentTime();
         selectedTimeSlider.value = (currentTimeSlider.value + 0.1f) % 1;
         SetSelectedTime();
@@ -41,15 +45,9 @@ public class WaitTimeWindow : MonoBehaviour
 
     public void CloseWindow() {
         if (!isWaiting) {
+            PeaceCanvas.instance.openPanels--;
             gameObject.SetActive(false);
         }
-    }
-
-    void OnEnable() {
-        PeaceCanvas.instance.forceAnyPanelOpen = true;
-    }
-    void OnDisable() {
-        PeaceCanvas.instance.forceAnyPanelOpen = false;
     }
 
     void MatchCurrentTime () {

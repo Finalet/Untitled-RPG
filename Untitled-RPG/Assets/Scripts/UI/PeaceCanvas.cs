@@ -17,7 +17,20 @@ public class PeaceCanvas : MonoBehaviour
     [Space]
     public bool isGamePaused;
     public bool anyPanelOpen;
-    [DisplayWithoutEdit] public bool forceAnyPanelOpen;
+    public bool forceAnyPanelOpen {
+        get {
+            return openPanels > 0;
+        }
+    }
+    private int _openPanels;
+    public int openPanels {
+        get {
+            return _openPanels;
+        }
+        set {
+            _openPanels = Mathf.Max(0, value);
+        }
+    }
 
     [Space]
     public CinemachineVirtualCamera CM_MenuCam;
@@ -65,6 +78,9 @@ public class PeaceCanvas : MonoBehaviour
     public TextMeshProUGUI timeLabel;
     public WaitTimeWindow waitTimeWindow;
     public Image blackout;
+    public TextMeshProUGUI inventoryKeySuggestionLabel;
+    public TextMeshProUGUI skillbookKeySuggestionLabel;
+    public TextMeshProUGUI waittimeKeySuggestionLabel;
 
     [Header("Debug")] 
     public RectTransform DebugChatPanel;
@@ -79,13 +95,13 @@ public class PeaceCanvas : MonoBehaviour
     void Start() {
         SaveManager.instance.saveObjects.Add(settingsView.GetComponent<SettingsManager>());
         BlackoutFade(false, 1f, 1);
+        SetSuggestionKeys();
     }
 
     void Update() {
-        if (SkillsPanel.activeInHierarchy || Inventory.activeInHierarchy || currentInterractingNPC != null || settingsView.activeInHierarchy || currentInterractingContainer != null || Characteristics.instance.isDead || forceAnyPanelOpen)
-            anyPanelOpen = true;
-        else if (anyPanelOpen)  
-            StartCoroutine(noOpenPanels());
+        if (forceAnyPanelOpen) anyPanelOpen = true;
+        else if (anyPanelOpen) StartCoroutine(noOpenPanels());
+            
 
         HandleInputs();
 
@@ -108,25 +124,31 @@ public class PeaceCanvas : MonoBehaviour
         timeLabel.text = TimeOfDayController.instance ? TimeOfDayController.instance.TimeStringFromPercent(TimeOfDayController.instance.timeOfDay) : "";
     }
 
+    public void SetSuggestionKeys () {
+        inventoryKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Inventory"]];
+        skillbookKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Skillbook"]];
+        waittimeKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Skip time"]];
+    }
+
     void HandleInputs () {
-        if (blackout.color.a >= 0.5f)
+        if (blackout.color.a >= 0.5f || isGamePaused)
             return;
 
-        if (Input.GetKeyDown(KeybindsManager.instance.skills)) {
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Skillbook"])) {
             if (!SkillsPanel.activeInHierarchy && currentInterractingNPC == null && !waitTimeWindow.gameObject.activeInHierarchy)
                 OpenSkillsPanel();
             else 
                 CloseSkillsPanel();
         }
 
-        if (Input.GetKeyDown(KeybindsManager.instance.inventory)) {
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Inventory"])) {
             if (!Inventory.activeInHierarchy && !waitTimeWindow.gameObject.activeInHierarchy)
                 OpenInventory();
             else
                 CloseInventory();
         }
 
-        if (Input.GetKeyDown(KeybindsManager.instance.waitTime)) {
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Skip time"])) {
             if (!waitTimeWindow.gameObject.activeInHierarchy)
                 waitTimeWindow.OpenWindow();
             else 
@@ -137,12 +159,12 @@ public class PeaceCanvas : MonoBehaviour
             EscapeButton();
         }
 
-        if (Input.GetKeyDown(KeybindsManager.instance.damageChat)) {
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Damage log"])) {
             DebugChatPanel.gameObject.SetActive(!DebugChatPanel.gameObject.activeInHierarchy);
-        } else if (Input.GetKeyDown(KeybindsManager.instance.tooManyItems)) {
+        } else if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Too many items"])) {
             if (!Inventory.activeInHierarchy) OpenInventory();
             DebugTooManyItems.SetActive(!DebugTooManyItems.activeInHierarchy);
-        } else if (Input.GetKeyDown(KeybindsManager.instance.hideUI)) {
+        } else if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Hide interface"])) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }
     }
@@ -153,6 +175,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void OpenSkillsPanel () {
+        openPanels ++;
         if (Inventory.activeInHierarchy) CloseInventory();
         SkillsPanel.SetActive(true);
         Inventory.SetActive(false);
@@ -160,6 +183,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     public void OpenInventory (bool hideEquipmentSlots = false, bool noCameraZoom = false, bool playSound = true) {
+        openPanels++;
         if (SkillsPanel.activeInHierarchy) CloseSkillsPanel();
         Inventory.SetActive(true);
         
@@ -171,19 +195,29 @@ public class PeaceCanvas : MonoBehaviour
         if (playSound) UIAudioManager.instance.PlayUISound(UIAudioManager.instance.InventoryOpen);
     }
     public void CloseInventory() {
+        if (!Inventory.activeInHierarchy) return;
+
+        openPanels--;
         Inventory.SetActive(false);
         EquipmentSlots.SetActive(false);
         CM_MenuCam.Priority = 0;
         DebugTooManyItems.SetActive(false);
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.InventoryClose);
+        EndDrag();
     }
     public void CloseSkillsPanel(){
+        if (!SkillsPanel.activeInHierarchy) return;
+
+        openPanels--;
         SkillsPanel.SetActive(false);
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.SkillsPanelClose);
+        EndDrag();
     }
     public void CloseSettings () {
-        SettingsManager.instance.SaveSettings();
-        settingsView.SetActive(false);
+        SettingsManager.instance.CloseSettings();
+    }
+    public void OpenSettings () {
+        SettingsManager.instance.OpenSettings();
     }
 
     void EscapeButton () {

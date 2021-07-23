@@ -43,6 +43,7 @@ public class Container : MonoBehaviour
         
         isOpen = true;
         PeaceCanvas.instance.currentInterractingContainer = this;
+        PeaceCanvas.instance.openPanels++;
         opening = false;
     }
     
@@ -70,6 +71,7 @@ public class Container : MonoBehaviour
     public void CloseContainer () {
         CloseAnimation();
         PeaceCanvas.instance.currentInterractingContainer = null;
+        PeaceCanvas.instance.openPanels--;
         isOpen = false;
         uiRect.SetParent(transform);
         uiRect.gameObject.SetActive(false);

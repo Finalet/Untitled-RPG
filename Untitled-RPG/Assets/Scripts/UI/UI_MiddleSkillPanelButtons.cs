@@ -13,6 +13,12 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     public Skill overrideSkill;
     public bool overrideLMB;
 
+    protected override KeyCode assignedKey {
+        get {
+            return isLBM ? KeyCode.Mouse0 : KeyCode.Mouse1;
+        }
+    }
+
     protected override void Start() {
         base.Start();
         currentRow = 0;
@@ -20,7 +26,7 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
         itemsAndAmontsInRows = new ItemAmountPair[1];
     }
 
-    public override void SwitchRows(int rowIndex)
+    public override void SwitchRows(int rowIndex, bool instant = false)
     {
         //
     }
