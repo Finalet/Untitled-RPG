@@ -332,7 +332,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1a64cf0a23f83924f9debcb452685f6f, type: 2}
+  - {fileID: 2100000, guid: 12071ef28cb696e428feda3828ea661d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7266,6 +7266,8 @@ MonoBehaviour:
     amountVariability: 0
   goldLootAmount: 0
   currentState: 0
+  distanceToPlayer: 0
+  agr: 0
   isCoolingDown: 0
   attackCoolDown: 5
   agrTime: 10
@@ -7275,8 +7277,8 @@ MonoBehaviour:
   isDead: 0
   isKnockedDown: 0
   isRagdoll: 0
+  isStunned: 0
   canGetHit: 1
-  agr: 0
   healthBar: {fileID: 2670621119448169147}
   hitParticles: {fileID: 1682063558998294416}
   getHitSounds:
@@ -7868,6 +7870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 0}
   value: 1
 --- !u!65 &2413481049890888958
 BoxCollider:

@@ -8,6 +8,7 @@ public class ArrowSet : Skill
     public GameObject arrowPrefab;
     public int numberOfArrows = 6;
     public float strength = 100;
+    [Range(0,1)] public float distanceBetweenArrows;
     [Header("Sounds")]
     public AudioClip castingSound;
 
@@ -56,7 +57,7 @@ public class ArrowSet : Skill
     
         for (int i = 0; i < numberOfArrows; i++) {
             if (newArrows[i] != null) {
-                Vector3 newShootPoint = shootPoint + transform.right * (i-numberOfArrows/2f) * adjustingDistanceBetweenArrows;
+                Vector3 newShootPoint = shootPoint + transform.right * (i-numberOfArrows/2f) * adjustingDistanceBetweenArrows * (0.5f + distanceBetweenArrows*2);
                 newArrows[i].instantShot = true;
                 newArrows[i].Shoot(strength, newShootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName); //could be null if just canceled skill
                 newArrows[i] = null;

@@ -17,6 +17,9 @@ public class UI_CraftingResourceSlot : UI_InventorySlot, IDropHandler, IDragHand
     public void UpdateResourceDisplay () {
         DisplayItem();
     }
+    public override void ValidateSlot() {
+        //do nothing
+    }
 
     protected override void Start () {
         //do nothing

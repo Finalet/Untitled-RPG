@@ -111,11 +111,11 @@ public class TeleportManager : MonoBehaviour
     }
 
     void OpenPortal (Vector3 teleportPosition) {
-        if (InventoryManager.instance.getItemAmountInInventory(teleportationResource) < 2) {
+        if (InventoryManager.instance.getItemAmountInInventory(teleportationResource) >= 1) {
+            StartCoroutine(openPortal(teleportPosition));
+        } else {
             CanvasScript.instance.DisplayWarning($"{teleportationResource.itemName} is required");
-            return;
         }
-        StartCoroutine(openPortal(teleportPosition));        
     }
     float portalCastTime = 2;
     IEnumerator openPortal (Vector3 teleportPosition) {

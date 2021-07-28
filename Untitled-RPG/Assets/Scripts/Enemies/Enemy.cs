@@ -232,6 +232,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     protected virtual void Idle() {
         if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
+
+        RegenerateMaxHealth();
     }
     protected virtual void Celebrate() {}
     protected virtual void Stun() {}
@@ -247,7 +249,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
 
     protected virtual void RegenerateMaxHealth () {
         if (currentHealth < maxHealth)
-            currentHealth = Mathf.RoundToInt(Mathf.Lerp(currentHealth, maxHealth, Time.deltaTime * 5f));
+            currentHealth = Mathf.RoundToInt(Mathf.MoveTowards(currentHealth, maxHealth, Time.deltaTime * 10f));
     }
 
     protected virtual void Die () {

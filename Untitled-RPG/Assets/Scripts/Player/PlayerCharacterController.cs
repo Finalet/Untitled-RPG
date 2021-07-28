@@ -865,6 +865,10 @@ namespace ECM.Controllers
             //    pause = !pause;
 
             // Handle user input
+            if (PlayerControlls.instance.disableControl) {
+                moveDirection = Vector3.zero;
+                return;
+            }
 
             moveDirection = new Vector3
             {

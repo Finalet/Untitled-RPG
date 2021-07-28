@@ -26,6 +26,9 @@ public class Golem : Boss
     public AudioClip attack2Sound;
     public AudioClip rockShardLoop;
     public AudioClip rockShardExplosion;
+    public AudioClip jumpSound;
+
+    bool forceRigidbodyControl;
 
     protected override void Update() {
         base.Update();
@@ -88,13 +91,36 @@ public class Golem : Boss
                 StartCoroutine(DoublePunchAttack());
             }
         } else if (distanceToPlayer < 20) {
-            StartCoroutine(CastSpellAttack());
+            if (Random.value < 0.5) {
+                StartCoroutine(CastSpellAttack());
+            } else {
+                StartCoroutine(JumpAttack());
+            }
             attackRange = 4.5f;
         } else {
             StartCoroutine(CastSpellAttack());
         }
     }
-    void TurnOffIsAttacking () {
+    IEnumerator JumpAttack() {
+        forceRigidbodyControl = true;
+        animSwitched = false;
+        animator.SetTrigger("Jump");
+        PlaySound(jumpSound, 0, 1, 0.6f);
+        yield return new WaitForSeconds(1);
+        enemyController.jump = true;
+        jumpDir = (PlayerControlls.instance.transform.position + PlayerControlls.instance.rb.velocity * 0.5f - transform.position).normalized;
+        moveToPlayer = true;
+        yield return new WaitForSeconds(0.1f);
+        enemyController.jump = false;
+        while (!enemyController.isGrounded) {
+            yield return null;
+        }
+        moveToPlayer = false;
+        HitPlayerOnLanding();
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 5f, 0.15f, transform.position);
+        PlaySound(attack1Sound);
+        yield return new WaitForSeconds(1f);
+        forceRigidbodyControl = false;
         isAttacking = false;
     }
     IEnumerator CastSpellAttack() {
@@ -126,6 +152,36 @@ public class Golem : Boss
         PlaySound(attack2Sound);
         yield return new WaitForSeconds(0.2f);
         isAttacking = false;
+    }
+
+    void HitPlayerOnLanding() {
+        LayerMask player = LayerMask.GetMask("Player");
+        Collider[] findPlayer = Physics.OverlapBox(transform.position + Vector3.up, Vector3.one * 2, transform.rotation, player);
+        for (int i = 0; i < findPlayer.Length; i++) {
+            if (findPlayer[i] is CapsuleCollider) {
+                Hit();
+            }
+        }
+    }
+
+    bool moveToPlayer;
+    bool animSwitched;
+    Vector3 jumpDir;
+    void FixedUpdate() {
+        if (moveToPlayer) {
+            enemyController.movement.Move(jumpDir * distanceToPlayer * 2, 20, true);
+            if (distanceToPlayer <= 10 && !animSwitched) {
+                animator.SetTrigger("Land");
+                animSwitched = true;
+            }
+        }
+    }
+
+    protected override void ApplyEnemyControllerSettings()
+    {
+        enemyController.useRootMotion = !forceRigidbodyControl && (isAttacking || isGettingInterrupted);       
+        enemyController.useRootMotionRotation = !forceRigidbodyControl && (isAttacking || isGettingInterrupted);       
+        enemyController.speed = enemyController.useRootMotion ? baseControllerSpeed * 50 : baseControllerSpeed;
     }
 
     public void ShootRockShard(){
@@ -179,10 +235,10 @@ public class Golem : Boss
     public override void OnWeakSpotHit()
     {
         base.OnWeakSpotHit();
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 1.5f, 0.1f, PlayerControlls.instance.transform.position);
-        StartCoroutine(HitStop(true));
         if (isStunned) return;
 
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 1.5f, 0.1f, PlayerControlls.instance.transform.position);
+        StartCoroutine(HitStop(true));
         PlaySound(weakSpotHitSound);
         weakSpotHitPS.Play();
         stunHitTime = Time.time;

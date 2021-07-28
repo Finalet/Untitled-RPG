@@ -10,7 +10,9 @@ public class Skillbook : Item
 
     public override void Use()
     {
-        Instantiate(PeaceCanvas.instance.skillbookPreviewPanel, PeaceCanvas.instance.transform).GetComponent<SkillbookPreview>().focusSkill = AssetHolder.instance.getSkill(learnedSkill.ID);
+        SkillbookPreview p = Instantiate(PeaceCanvas.instance.skillbookPreviewPanel, PeaceCanvas.instance.transform).GetComponent<SkillbookPreview>();
+        p.focusSkill = AssetHolder.instance.getSkill(learnedSkill.ID);
+        p.parentSkillbook = this;
     }
     public override void Use(UI_InventorySlot initialSlot) {}
 

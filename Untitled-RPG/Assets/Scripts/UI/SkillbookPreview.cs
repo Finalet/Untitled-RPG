@@ -9,6 +9,7 @@ public class SkillbookPreview : MonoBehaviour
     public static SkillbookPreview instance;
 
     public Skill focusSkill;
+    public Item parentSkillbook;
     [Space]
     public Image skillIcon;
     public Text skillName;
@@ -21,7 +22,7 @@ public class SkillbookPreview : MonoBehaviour
 
     void Start() {
         if (instance != null) {
-            Destroy(SkillbookPreview.instance.gameObject);
+            SkillbookPreview.instance.Close();
         }
         instance = this;
         Init();
@@ -104,6 +105,8 @@ public class SkillbookPreview : MonoBehaviour
         notification.transform.DOScale(Vector3.zero, 0.4f).SetEase(Ease.OutExpo).SetDelay(3);
         notification.SetActive(true);
         Destroy(notification, 3.8f);
+
+        InventoryManager.instance.RemoveItemFromInventory(parentSkillbook, 1);
 
         Close();
     }
