@@ -44,9 +44,12 @@ public class CameraControll : MonoBehaviour
     float baseMouseYsensitivity;
 
     CamSettings currentCamSettings = CamSettings.Smooth;
+    CinemachineImpulseSource impulseSource;
 
     void Awake() {
         instance = this;
+
+        impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
     void Start()
@@ -220,8 +223,6 @@ public class CameraControll : MonoBehaviour
     public void CameraShake(float frequency = 0.2f, float amplitude = 2f, float duration = 0.1f, Vector3 position = new Vector3()) {
         if (position == Vector3.zero)
             position = transform.position;
-
-        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
         
         impulseSource.m_ImpulseDefinition.m_FrequencyGain = frequency;
         impulseSource.m_ImpulseDefinition.m_AmplitudeGain = amplitude;

@@ -234,10 +234,10 @@ namespace BattleDrakeStudios.ModularCharacters {
 
         private void CommitChanges(bool openEditor) {
             if (isNewMaterial) {
-                if(!AssetDatabase.IsValidFolder("Assets/BattleDrakeStudios/ModularCharacterEditor/Materials")) {
-                    AssetDatabase.CreateFolder("Assets/BattleDrakeStudios/ModularCharacterEditor", "Materials");
+                if(!AssetDatabase.IsValidFolder("Assets/Thirdparty/_Models/PolygonFantasyHeroCharacters/BattleDrakeStudios/ModularCharacterEditor/Materials")) {
+                    AssetDatabase.CreateFolder("Assets/Thirdparty/_Models/PolygonFantasyHeroCharacters/BattleDrakeStudios/ModularCharacterEditor", "Materials");
                 }
-                AssetDatabase.CreateAsset(characterMat, "Assets/BattleDrakeStudios/ModularCharacterEditor/Materials/" + materialName + ".mat");
+                AssetDatabase.CreateAsset(characterMat, "Assets/Thirdparty/_Models/PolygonFantasyHeroCharacters/BattleDrakeStudios/ModularCharacterEditor/Materials/" + materialName + ".mat");
             }
 
 

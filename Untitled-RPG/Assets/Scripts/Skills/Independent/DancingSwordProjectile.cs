@@ -13,6 +13,9 @@ public class DancingSwordProjectile : MonoBehaviour
     public float gravityDelay = 0.2f;
     [System.NonSerialized] public bool instantShot = false;
 
+    public Transform mesh;
+    public ParticleSystem shootParticles;
+
     protected float timeShot;
     protected bool shot = false;
     protected bool applyGravity;
@@ -21,7 +24,6 @@ public class DancingSwordProjectile : MonoBehaviour
 
     protected List<IDamagable> damagablesHit = new List<IDamagable>();
 
-    public Transform mesh;
     float randomRotation;
 
     [Space]
@@ -66,11 +68,12 @@ public class DancingSwordProjectile : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.AddForce(_strength * direction.normalized, ForceMode.Impulse);
         transform.SetParent(null);
+        shootParticles.Play();
 
         timeShot = Time.time;
         shot = true;
 
-        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.07f, 1f, 0.05f, transform.position);
+        PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.07f, 1f, 0.05f);
     }
 
     protected virtual void OnTriggerEnter(Collider other) {
@@ -97,6 +100,8 @@ public class DancingSwordProjectile : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         GetComponent<AudioSource>().clip = hitSounds[Random.Range(0, hitSounds.Length)];
         GetComponent<AudioSource>().Play();
+
+        shootParticles.Stop();
     }
 
     protected virtual void Hit (IDamagable en) {
