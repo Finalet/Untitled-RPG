@@ -7,13 +7,23 @@ using UnityEngine;
 namespace BattleDrakeStudios.ModularCharacters {
 
     [ExecuteInEditMode]
-    public class ModularCharacterManager : MonoBehaviour {
+    public class ModularCharacterManager : MonoBehaviour, ISavable {
+        
+        string characterName = "Unnamed";
+        Gender baseGender = Gender.Male;
 
-        int baseHeadID = 2;
-        int baseHairID = 1;
-        int baseEyebrowID = 7;
+        int baseHeadID = 1;
+        int baseHairID = -1;
+        int baseEyebrowID = -7;
         int baseEarID = -1;
-        int baseFacialHairID = 17;
+        int baseFacialHairID = -1;
+
+        Color baseSkinColor = new Color(255f/255, 204f/255, 174f/255);
+        Color baseHairColor = new Color(96f/255, 33f/255, 0/255);
+        Color baseEyesColor = new Color(0, 0, 0);
+        Color baseStubbleColor = new Color(205f/255, 179f/255, 161f/255);
+        Color baseBodyArtColor = new Color(79f/255, 96f/255, 165f/255);
+        Color baseScarColor = new Color(237f/255, 175f/255, 151f/255);
 
         [Header("Male Base")]
         [SerializeField] private List<BodyPartLinker> maleBaseBody = new List<BodyPartLinker>();
@@ -23,6 +33,7 @@ namespace BattleDrakeStudios.ModularCharacters {
 
         [Header("Character Material")]
         [SerializeField] private Material characterMaterial;
+        Material runtimeMaterial;
 
         [Header("MaleParts Arrays")]
         [SerializeField] private GameObject[] maleHelmetParts;
@@ -87,6 +98,10 @@ namespace BattleDrakeStudios.ModularCharacters {
         private Dictionary<ModularBodyPart, GameObject[]> characterBody = new Dictionary<ModularBodyPart, GameObject[]>();
         private Dictionary<ModularBodyPart, int> activeParts = new Dictionary<ModularBodyPart, int>();
 
+        void Start() {
+            if (SaveManager.instance) SaveManager.instance.saveObjects.Add(this);
+        }
+
         private void OnEnable() {
             if (isInitialized) {
                 InitializeDictionaries();
@@ -133,6 +148,7 @@ namespace BattleDrakeStudios.ModularCharacters {
                     Debug.LogError("bodyPart unsupported. You fucked something up, Grant");
                     return;
             }
+            if (partID == -1) return;
             ActivatePart(bodyPart, partID);
         }
 
@@ -146,7 +162,7 @@ namespace BattleDrakeStudios.ModularCharacters {
             }
 
         }
-
+        
         public void SetAllPartsMaterial(Material material) {
             foreach (var part in allParts) {
                 part.GetComponent<SkinnedMeshRenderer>().material = material;
@@ -375,6 +391,30 @@ namespace BattleDrakeStudios.ModularCharacters {
                 }
             }
         }
+
+        void UpdatePlayerAppearance () {
+            Characteristics.instance.playerName = characterName;
+            
+            SetupNewCharacter(baseGender, runtimeMaterial);
+            
+            if (baseHeadID != -1) ActivatePart(ModularBodyPart.Head, baseHeadID);
+            else DeactivatePart(ModularBodyPart.Head);
+            if (baseEarID != -1) ActivatePart(ModularBodyPart.Ear, baseEarID);
+            else DeactivatePart(ModularBodyPart.Ear);
+            if (baseEyebrowID != -1) ActivatePart(ModularBodyPart.Eyebrow, baseEyebrowID);
+            else DeactivatePart(ModularBodyPart.Eyebrow);
+            if (baseFacialHairID != -1) ActivatePart(ModularBodyPart.FacialHair, baseFacialHairID);
+            else DeactivatePart(ModularBodyPart.FacialHair);
+            if (baseHairID != -1) ActivatePart(ModularBodyPart.Hair, baseHairID);
+            else DeactivatePart(ModularBodyPart.Hair);
+
+            characterMaterial.SetColor("_Color_Skin", baseSkinColor);
+            characterMaterial.SetColor("_Color_Hair", baseHairColor);
+            characterMaterial.SetColor("_Color_Eyes", baseEyesColor);
+            characterMaterial.SetColor("_Color_Stubble", baseStubbleColor);
+            characterMaterial.SetColor("_Color_BodyArt", baseBodyArtColor);
+            characterMaterial.SetColor("_Color_Scar", baseScarColor);
+        }
         #endregion
 
         #region ListSetup
@@ -387,6 +427,47 @@ namespace BattleDrakeStudios.ModularCharacters {
                 femaleBaseBody.Add(new BodyPartLinker(bodyPart, 0));
             }
         }
+        #endregion
+
+        #region ISavable
+        
+        public LoadPriority loadPriority {
+            get {
+                return LoadPriority.First;
+            }
+        }
+
+        public void Save()
+        {
+            //
+        }
+
+        public void Load()
+        {
+            string saveFilePath = "saves/characterAppearance.json";
+
+            characterName = ES3.Load<string>("name", saveFilePath, "Unnamed");
+            baseGender = ES3.Load<Gender>("gender", saveFilePath, Gender.Male);
+            
+            baseHeadID = ES3.Load<int>("headID", saveFilePath, 0);
+            baseHairID = ES3.Load<int>("hairID", saveFilePath, -1);
+            baseEyebrowID = ES3.Load<int>("eyebrowID", saveFilePath, -1);
+            baseEarID = ES3.Load<int>("earID", saveFilePath, -1);
+            baseFacialHairID = ES3.Load<int>("facialHairID", saveFilePath, -1);
+            
+            baseSkinColor = ES3.Load<Color>("skinColor", saveFilePath, new Color(255f/255, 204f/255, 174f/255));
+            baseHairColor = ES3.Load<Color>("hairColor", saveFilePath, new Color(96f/255, 33f/255, 0/255));
+            baseEyesColor = ES3.Load<Color>("eyesColor", saveFilePath, new Color(0, 0, 0));
+            baseStubbleColor = ES3.Load<Color>("stubbleColor", saveFilePath, new Color(205f/255, 179f/255, 161f/255));
+            baseBodyArtColor = ES3.Load<Color>("bodyArtColor", saveFilePath, new Color(79f/255, 96f/255, 165f/255)); 
+            baseScarColor = ES3.Load<Color>("scarColor", saveFilePath, new Color(237f/255, 175f/255, 151f/255));
+
+            runtimeMaterial = new Material(characterMaterial);
+            runtimeMaterial.name = "RuntimeCharMaterial";
+
+            UpdatePlayerAppearance();
+        }
+        
         #endregion
     }
 }
