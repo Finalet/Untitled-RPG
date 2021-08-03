@@ -513,8 +513,6 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
 #region ISavable
 
-    string savePath = "saves/playerTrans.txt";
-
     public LoadPriority loadPriority {
         get {
             return LoadPriority.Last;
@@ -523,14 +521,14 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     public void Save()
     {
-        ES3.Save<Vector3>("pos", transform.position, savePath);
+        ES3.Save<Vector3>("pos", transform.position, SaveManager.instance.getCurrentCharacterFolderPath("playerTrans"));
     }
 
     public void Load()
     {
         for (int i = 0; i < SceneManager.sceneCount; i++) {
             if (SceneManager.GetSceneAt(i).name == "City") {
-                transform.position = ES3.Load("pos", savePath, new Vector3(-560, 10, -120)); //default position at the City scene.
+                transform.position = ES3.Load("pos", SaveManager.instance.getCurrentCharacterFolderPath("playerTrans"), new Vector3(-560, 10, -120)); //default position at the City scene.
                 return;
             }
         }

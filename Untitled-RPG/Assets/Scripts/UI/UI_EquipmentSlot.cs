@@ -18,7 +18,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
     }
 
     protected override string savefilePath() {
-        return "saves/equipmentSlots.txt";
+        return $"SaveData/{SaveManager.instance.currentProfile}/equipmentSlots.json";
     } 
 
     public override void SaveSlot (){

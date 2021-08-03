@@ -12,6 +12,7 @@ public class CharacterCreationManager : MonoBehaviour
     public Material defaultCharacterMat;
     public GameObject colorPickerPrefab;
     public Canvas canvas;
+    public Image blackout;
     Material newCharacterMat;
 
     [Space]
@@ -33,6 +34,7 @@ public class CharacterCreationManager : MonoBehaviour
     [Space]
     public CanvasGroup confirmMenu;
     public TextMeshProUGUI confirmTitle;
+    public TextMeshProUGUI errorLabel;
 
     [Space]
     public Button[] headButtons;
@@ -95,6 +97,8 @@ public class CharacterCreationManager : MonoBehaviour
         SetupBodyPart(ModularBodyPart.FacialHair, ref facialHairCurrentIndex, ref facialHairMaxIndex);
 
         UpdateLabels();
+        blackout.color = Color.black;
+        blackout.DOFade(0, 1).SetDelay(1);
     }
 
     public void OnGenderSelect (bool isMale) {
@@ -552,6 +556,19 @@ public class CharacterCreationManager : MonoBehaviour
     }
 
     public void ToggleConfirmationMenu() {
+        if (string.IsNullOrEmpty(nameInputField.text)) {
+            errorLabel.text = "Enter character's name.";
+            errorLabel.DOFade(0, 0);
+            errorLabel.DOFade(1, 1);
+            errorLabel.DOFade(0, 1).SetDelay(3);
+            return;
+        }
+        string inputedProfileName = nameInputField.text;
+        while (nameInputField.text[nameInputField.text.Length-1] == ' ') {
+            nameInputField.text = nameInputField.text.Substring(0, nameInputField.text.Length - 1);
+        }
+        if (inputedProfileName != nameInputField.text) print($"Fixed character name from \"{inputedProfileName}\" to \"{nameInputField.text}\")");
+
         if (confirmMenu.alpha < 1) {
             string color = "#" + ColorUtility.ToHtmlStringRGB(nameInputField.GetComponentInChildren<TextMeshProUGUI>().color);
             confirmTitle.text = $"Create <color={color}>{nameInputField.text}</color>?";
@@ -566,7 +583,11 @@ public class CharacterCreationManager : MonoBehaviour
     }
 
     public void ConfirmCharacter () {
-        string saveFilePath = "saves/characterAppearance.json";
+        SaveManager.instance.allCharacters.Add(nameInputField.text);
+        SaveManager.instance.currentCharacterIndex = SaveManager.instance.allCharacters.Count-1;
+        SaveManager.instance.SaveCharacters();
+        
+        string saveFilePath = SaveManager.instance.getCurrentCharacterFolderPath("characterAppearance");
 
         ES3.Save<string>("name", nameInputField.text, saveFilePath);
         ES3.Save<Gender>("gender", modularCharacterManager.CharacterGender, saveFilePath);
@@ -583,6 +604,18 @@ public class CharacterCreationManager : MonoBehaviour
         ES3.Save<Color>("stubbleColor", newCharacterMat.GetColor("_Color_Stubble"), saveFilePath);
         ES3.Save<Color>("bodyArtColor", newCharacterMat.GetColor("_Color_BodyArt"), saveFilePath);
         ES3.Save<Color>("scarColor", newCharacterMat.GetColor("_Color_Scar"), saveFilePath);
+
+        if (!ScenesManagement.instance)
+            return;
+
+        StartCoroutine(loadLevel());
+    }
+
+    IEnumerator loadLevel () {
+        blackout.color = new Color(0,0,0,0);
+        blackout.DOFade(1, 1);
+        yield return new WaitForSeconds(1);
+        ScenesManagement.instance.LoadLevel("City");
     }
 
 }

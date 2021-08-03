@@ -50,7 +50,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     protected override string savefilePath(){
-        return "saves/skillPanelSlots.txt";
+        return SaveManager.instance.getCurrentCharacterFolderPath("skillPanelSlots");
     }
 
     public virtual void ValidateSkillSlot() {

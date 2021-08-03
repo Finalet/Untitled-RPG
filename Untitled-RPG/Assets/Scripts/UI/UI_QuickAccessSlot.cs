@@ -16,7 +16,7 @@ public class UI_QuickAccessSlot : UI_InventorySlot
     public Sprite selectedFrame;
 
     protected override string savefilePath() {
-        return "saves/quickAccessSlots.txt";
+        return SaveManager.instance.getCurrentCharacterFolderPath("quickAccessSlots");
     }
 
     protected override void Update() {

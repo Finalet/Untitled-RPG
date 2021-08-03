@@ -11,8 +11,6 @@ public class KeybindsManager : MonoBehaviour
         SetDefaultKeyBinds();
     }
     
-    string savefilePath = "saves/keyBinds";
-    
     public Dictionary<string, KeyCode> defaultKeyBinds  = new Dictionary< string, KeyCode> () {
         {"Run", KeyCode.LeftShift},
         {"Roll", KeyCode.V},
@@ -53,13 +51,18 @@ public class KeybindsManager : MonoBehaviour
 
     public void SaveKeybinds()
     {
-        ES3.Save<Dictionary<string, KeyCode>>("currentKeyBinds", currentKeyBinds, savefilePath);
+        string saveFilePath = SaveManager.instance.getCurrentProfileFolderPath("keyBinds");
+
+        ES3.Save<Dictionary<string, KeyCode>>("currentKeyBinds", currentKeyBinds, saveFilePath);
         if (PeaceCanvas.instance) PeaceCanvas.instance.SetSuggestionKeys();
     }
 
     public void LoadKeybinds()
     {
-        if (ES3.FileExists(savefilePath) && ES3.KeyExists("currentKeyBinds", savefilePath))
-            currentKeyBinds = ES3.Load<Dictionary<string, KeyCode>>("currentKeyBinds", savefilePath);
+        string saveFilePath = SaveManager.instance.getCurrentProfileFolderPath("keyBinds");
+        
+        if (ES3.FileExists(saveFilePath) && ES3.KeyExists("currentKeyBinds", saveFilePath)) 
+            currentKeyBinds = ES3.Load<Dictionary<string, KeyCode>>("currentKeyBinds", saveFilePath);
+        else SetDefaultKeyBinds();
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class UI_StorageSlot : UI_InventorySlot
 {
     protected override string savefilePath() {
-        return "saves/storageSlots.txt";
+        return SaveManager.instance.getCurrentCharacterFolderPath("storageSlots");
     }
 
     void Awake() {

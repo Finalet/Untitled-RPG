@@ -13,13 +13,7 @@ public class Settings_KeybindsTemplate : MonoBehaviour
     float blinkRate = 3;
     float lastBlinkTime;
 
-    public void Init(string action, bool isSpacer = false) {
-        if (isSpacer) {
-            Destroy(actionLabel.gameObject);
-            Destroy(keyButton.gameObject);
-            Destroy(this);
-            return;
-        }
+    public void Init(string action) {
         actionLabel.text = action;
         keyLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds[action]];
         keyButton.onClick.AddListener(delegate{KeyButton(action);});

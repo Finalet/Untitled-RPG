@@ -32,6 +32,9 @@ public class ScenesManagement : MonoBehaviour
     public void LoadMenu () {
         StartCoroutine(LoadingMenu());
     }
+    public void LoadCharacterCreation () {
+        StartCoroutine(LoadingCharacterCreation());
+    }
 
     IEnumerator LoadingMenu () {
         blackout.color = Color.black;
@@ -91,9 +94,17 @@ public class ScenesManagement : MonoBehaviour
         loadingScreen.SetActive(true);
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("SceneManagement"));
         isLoading = true;
-        AsyncOperation unloadMenu = SceneManager.UnloadSceneAsync("MainMenu");
-        yield return unloadMenu;
-        yield return new WaitForSeconds(1);
+        if (SceneManager.GetActiveScene().name == "MainMenu")  {
+            AsyncOperation unloadMenu = SceneManager.UnloadSceneAsync("MainMenu");
+            yield return unloadMenu;
+            yield return new WaitForSeconds(1);
+        }
+        // NIGGAAAAAA INSTEAD SCAN ALL OPEN SCENCES AND UNLOAD UNNECCESARY ONESSSSSSSSSSSSSSSSSS AAAAAAAAAAAAAAAAA FUCK YOUUUUUUUUUUUU SHABI
+        if (SceneManager.GetActiveScene().name == "CharacterCreation") {
+            AsyncOperation unloadCharacterCreation = SceneManager.UnloadSceneAsync("CharacterCreation");
+            yield return unloadCharacterCreation;
+            yield return new WaitForSeconds(1);
+        }
         AsyncOperation loadingMap = SceneManager.LoadSceneAsync(worldScene, LoadSceneMode.Additive);
         yield return loadingMap;
         yield return new WaitForSeconds(1);
@@ -109,5 +120,36 @@ public class ScenesManagement : MonoBehaviour
         }
         GameobjectsToEnableOnLoad.Clear();
         currentScene = worldScene;
+    }
+
+    IEnumerator LoadingCharacterCreation () {
+        blackout.color = Color.black;
+        blackout.DOFade(0, 1);
+       
+        //Disable objects 
+        foreach (GameObject go in GameobjectsToDisableOnUnload) {
+            go.SetActive(false);
+        }
+        GameobjectsToDisableOnUnload.Clear();
+
+        //StartLoadingCharacterCreation
+        loadingScreen.SetActive(true);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("SceneManagement"));
+        isLoading = true;
+        AsyncOperation unloadMenu = SceneManager.UnloadSceneAsync("MainMenu");
+        yield return unloadMenu;
+        yield return new WaitForSeconds(1);
+        AsyncOperation loadingCharacterCreation = SceneManager.LoadSceneAsync("CharacterCreation", LoadSceneMode.Additive);
+        yield return loadingCharacterCreation;
+        blackout.DOFade(1, 1f);
+        yield return new WaitForSeconds(1f);
+        isLoading = false;
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("CharacterCreation"));
+        loadingScreen.SetActive(false);
+        foreach (GameObject go in GameobjectsToEnableOnLoad) {
+            go.SetActive(true);
+        }
+        GameobjectsToEnableOnLoad.Clear();
+        currentScene = "CharacterCreation";
     }
 }

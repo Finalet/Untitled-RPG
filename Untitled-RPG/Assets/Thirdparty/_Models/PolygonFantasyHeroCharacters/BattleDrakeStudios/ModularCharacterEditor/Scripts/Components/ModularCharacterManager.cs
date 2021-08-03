@@ -99,7 +99,7 @@ namespace BattleDrakeStudios.ModularCharacters {
         private Dictionary<ModularBodyPart, int> activeParts = new Dictionary<ModularBodyPart, int>();
 
         void Start() {
-            if (SaveManager.instance) SaveManager.instance.saveObjects.Add(this);
+            if (SaveManager.instance && PlayerControlls.instance) SaveManager.instance.saveObjects.Add(this);
         }
 
         private void OnEnable() {
@@ -444,8 +444,8 @@ namespace BattleDrakeStudios.ModularCharacters {
 
         public void Load()
         {
-            string saveFilePath = "saves/characterAppearance.json";
-
+            string saveFilePath = SaveManager.instance.getCurrentCharacterFolderPath("characterAppearance");
+            
             characterName = ES3.Load<string>("name", saveFilePath, "Unnamed");
             baseGender = ES3.Load<Gender>("gender", saveFilePath, Gender.Male);
             

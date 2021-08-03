@@ -22,7 +22,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     protected Color transparentColor = new Color(0,0,0,0);
 
     protected virtual string savefilePath() {
-        return "saves/inventorySlots.txt"; ;
+        return SaveManager.instance.getCurrentCharacterFolderPath("inventorySlots");
     }
 
     protected void SetSlotID (){

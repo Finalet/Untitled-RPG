@@ -8,8 +8,6 @@ public class SettingsManager : MonoBehaviour, ISavable
 {
     public static SettingsManager instance;
 
-    string savefilePath = "saves/settings.txt";
-
     [Header("Settings")]
     public float mouseSensitivity;
     public bool invertY;
@@ -31,9 +29,13 @@ public class SettingsManager : MonoBehaviour, ISavable
     public GameObject keyBindsTemplate;
 
     void Start() {
-        LoadSettings();
-        UpdateSettingsUI();
-        InitKeyBinds();
+        // LoadSettings();
+        // UpdateSettingsUI();
+        // InitKeyBinds();
+    }
+
+    string saveFilePath() {
+        return SaveManager.instance.getCurrentProfileFolderPath("settings");
     }
 
     public SettingsManager() {
@@ -54,22 +56,26 @@ public class SettingsManager : MonoBehaviour, ISavable
     }
 
     public void SaveSettings () {
-        ES3.Save<float>("mouseSensitivity", mouseSensitivity, savefilePath);
-        ES3.Save<bool>("invertY", invertY, savefilePath);
-        ES3.Save<bool>("displayHelmet", displayHelmet, savefilePath);
-        ES3.Save<bool>("displayCape", displayCape, savefilePath);
-        ES3.Save<int>("numberOfSkillRows", numberOfSkillRows, savefilePath);
+        string path = saveFilePath();
+
+        ES3.Save<float>("mouseSensitivity", mouseSensitivity, path);
+        ES3.Save<bool>("invertY", invertY, path);
+        ES3.Save<bool>("displayHelmet", displayHelmet, path);
+        ES3.Save<bool>("displayCape", displayCape, path);
+        ES3.Save<int>("numberOfSkillRows", numberOfSkillRows, path);
         KeybindsManager.instance.SaveKeybinds();
         
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
     }
 
     public void LoadSettings () {
-        mouseSensitivity = ES3.Load<float>("mouseSensitivity", savefilePath, 50);
-        invertY = ES3.Load<bool>("invertY", savefilePath, false);
-        displayHelmet = ES3.Load<bool>("displayHelmet", savefilePath, true);
-        displayCape = ES3.Load<bool>("displayCape", savefilePath, true);
-        numberOfSkillRows = ES3.Load<int>("numberOfSkillRows", savefilePath, 2);
+        string path = saveFilePath();
+
+        mouseSensitivity = ES3.Load<float>("mouseSensitivity", path, 50);
+        invertY = ES3.Load<bool>("invertY", path, false);
+        displayHelmet = ES3.Load<bool>("displayHelmet", path, true);
+        displayCape = ES3.Load<bool>("displayCape", path, true);
+        numberOfSkillRows = ES3.Load<int>("numberOfSkillRows", path, 2);
      
         KeybindsManager.instance.LoadKeybinds();
     }
@@ -108,7 +114,7 @@ public class SettingsManager : MonoBehaviour, ISavable
         UpdateSettingsUI();
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
 
-        ES3.Save<bool>("displayHelmet", displayHelmet, savefilePath);
+        ES3.Save<bool>("displayHelmet", displayHelmet, saveFilePath());
     }
     public void SetDisplayCapeSlot () {
         displayCape = displayCapeToggleInSlot.isOn;
@@ -117,7 +123,7 @@ public class SettingsManager : MonoBehaviour, ISavable
         UpdateSettingsUI();
         UIAudioManager.instance.PlayUISound(UIAudioManager.instance.UI_Select);
         
-        ES3.Save<bool>("displayCape", displayCape, savefilePath);
+        ES3.Save<bool>("displayCape", displayCape, saveFilePath());
     }
 
     public void SetNumberOfSkillRows () {
@@ -141,29 +147,31 @@ public class SettingsManager : MonoBehaviour, ISavable
 
     public void SetDetaultKeyBinds (){
         KeybindsManager.instance.SetDefaultKeyBinds();
-        Settings_KeybindsTemplate[] alltempaltes = keyBindsGrid.GetComponentsInChildren<Settings_KeybindsTemplate>();
-        InitKeyBinds(alltempaltes);
+        InitKeyBinds();
     }
 
-    void InitKeyBinds (Settings_KeybindsTemplate[] templatesArray = null) {
+    void InitKeyBinds () {
         int i = 0;
+        Settings_KeybindsTemplate[] templatesArray = keyBindsGrid.GetComponentsInChildren<Settings_KeybindsTemplate>();
+        keyBindsTemplate.SetActive(true);
         foreach (KeyValuePair<string, KeyCode> keyBind in KeybindsManager.instance.defaultKeyBinds) {
             Settings_KeybindsTemplate t;
-            if (templatesArray == null) {
-                t = Instantiate(keyBindsTemplate, keyBindsGrid.transform).GetComponent<Settings_KeybindsTemplate>();
-            } else {
+            if (templatesArray.Length == KeybindsManager.instance.defaultKeyBinds.Count) {
                 t = templatesArray[i];
+            } else {
+                t = Instantiate(keyBindsTemplate, keyBindsGrid.transform).GetComponent<Settings_KeybindsTemplate>();
             }
             
             t.Init(keyBind.Key);
 
-            if (templatesArray == null && (keyBind.Key == "Sheathe weapon" || keyBind.Key == "Interact" || keyBind.Key == "Hide interface")) {
-                Settings_KeybindsTemplate spacer = Instantiate(keyBindsTemplate, keyBindsGrid.transform).GetComponent<Settings_KeybindsTemplate>();
-                spacer.Init(keyBind.Key, true);
+            if (templatesArray.Length != KeybindsManager.instance.defaultKeyBinds.Count && (keyBind.Key == "Sheathe weapon" || keyBind.Key == "Interact" || keyBind.Key == "Hide interface")) {
+                GameObject spacer = new GameObject();
+                spacer.AddComponent<RectTransform>();
+                spacer.GetComponent<RectTransform>().SetParent(keyBindsGrid.transform);
             }
             i++;
         }
-        Destroy(keyBindsTemplate);
+        keyBindsTemplate.SetActive(false);
     }
 
 #region ISavable
@@ -178,8 +186,11 @@ public class SettingsManager : MonoBehaviour, ISavable
         //Don't do anything on general game save since we save settings manually when closing the settings window
     }
     public void Load() {
+        if (SaveManager.instance.allProfiles.Count == 0) return;
+
         LoadSettings();
         UpdateSettingsUI();
+        InitKeyBinds();
     }
 
 #endregion

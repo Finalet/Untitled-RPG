@@ -58,8 +58,6 @@ public class Combat : MonoBehaviour, ISavable
         }
     }
 
-    string savefilePath = "saves/combat.txt";
-
     void Awake() {
         instanace = this;
     }
@@ -209,6 +207,10 @@ public class Combat : MonoBehaviour, ISavable
 
 #region  Savable
 
+    string savefilePath () {
+        return SaveManager.instance.getCurrentCharacterFolderPath("combat");
+    }
+
     public LoadPriority loadPriority {
         get {
             return LoadPriority.Last;
@@ -217,19 +219,19 @@ public class Combat : MonoBehaviour, ISavable
 
     public void Save () {
         //Save skill tress
-        ES3.Save<SkillTree[]>("currentSkillTrees", currentSkillTrees, savefilePath);
+        ES3.Save<SkillTree[]>("currentSkillTrees", currentSkillTrees, savefilePath());
         
         //Save learned skills
         List<int> skillIDs = new List<int>();
         foreach (Skill sk in learnedSkills)
             skillIDs.Add(sk.ID);
-        ES3.Save<List<int>>("learnedSkillsIDs", skillIDs, savefilePath);
+        ES3.Save<List<int>>("learnedSkillsIDs", skillIDs, savefilePath());
 
         //Save picked skills     
         skillIDs.Clear();
         foreach (Skill sk in currentPickedSkills) 
             skillIDs.Add(sk.ID);
-        ES3.Save<List<int>>("currentPickedSkillsIDs", skillIDs, savefilePath);
+        ES3.Save<List<int>>("currentPickedSkillsIDs", skillIDs, savefilePath());
 
         //Save skill slots
         for (int i = 0; i < allSkillSlots.Length; i++){ 
@@ -237,7 +239,7 @@ public class Combat : MonoBehaviour, ISavable
         }
 
         //Save row number for slots 
-        ES3.Save<int>("rowIndex", currentSkillSlotsRow, savefilePath);
+        ES3.Save<int>("rowIndex", currentSkillSlotsRow, savefilePath());
     }
     public void Load() {
         //Load current skill trees
@@ -245,15 +247,15 @@ public class Combat : MonoBehaviour, ISavable
         defaultSkilltrees[0] = SkillTree.Knight;
         defaultSkilltrees[1] = SkillTree.Hunter;
 
-        currentSkillTrees = ES3.Load<SkillTree[]>("currentSkillTrees", savefilePath, defaultSkilltrees);
+        currentSkillTrees = ES3.Load<SkillTree[]>("currentSkillTrees", savefilePath(), defaultSkilltrees);
         
         //Load learned skills
-        List<int> skillIDs = ES3.Load<List<int>>("learnedSkillsIDs", savefilePath, new List<int>());
+        List<int> skillIDs = ES3.Load<List<int>>("learnedSkillsIDs", savefilePath(), new List<int>());
         foreach (int ID in skillIDs)
             learnedSkills.Add(AssetHolder.instance.getSkill(ID));
         
         //Load picked skills
-        skillIDs = ES3.Load<List<int>>("currentPickedSkillsIDs", savefilePath, new List<int>());
+        skillIDs = ES3.Load<List<int>>("currentPickedSkillsIDs", savefilePath(), new List<int>());
         foreach (int ID in skillIDs)
             currentPickedSkills.Add(AssetHolder.instance.getSkill(ID));
 
@@ -265,7 +267,7 @@ public class Combat : MonoBehaviour, ISavable
         }
 
         //Load row number for slots 
-        SwitchSkillRows(ES3.Load<int>("rowIndex", savefilePath, 0));
+        SwitchSkillRows(ES3.Load<int>("rowIndex", savefilePath(), 0));
     }
 
 #endregion
