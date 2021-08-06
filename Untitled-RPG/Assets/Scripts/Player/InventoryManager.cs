@@ -21,7 +21,6 @@ public class InventoryManager : MonoBehaviour, ISavable
     UI_InventorySlot[] allSlots;
     UI_QuickAccessSlot[] allQuickAccessSlots;
 
-    string savefilePath = "saves/currency.txt";
     float lootPickupDelay = 0.5f;
     float lootPickupTime;
 
@@ -184,7 +183,7 @@ public class InventoryManager : MonoBehaviour, ISavable
     }
 
     public void Save () {
-        ES3.Save<int>("currentGold", currentGold, savefilePath);
+        ES3.Save<int>("currentGold", currentGold, SaveManager.instance.getCurrentCharacterFolderPath("currency"));
 
         for (int i = 0; i < allSlots.Length; i++)
             allSlots[i].SaveSlot();
@@ -193,8 +192,7 @@ public class InventoryManager : MonoBehaviour, ISavable
             allQuickAccessSlots[i].SaveSlot();
     }
     public void Load () {
-        if (ES3.FileExists(savefilePath))
-            currentGold = ES3.Load<int>("currentGold", savefilePath);
+        currentGold = ES3.Load<int>("currentGold", SaveManager.instance.getCurrentCharacterFolderPath("currency"), 0);
         
         for (int i = 0; i < allSlots.Length; i++)
             allSlots[i].LoadSlot();

@@ -28,6 +28,9 @@ public static class CalculateDamage
             case DamageType.Ranged:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.rangedAttack);
                 break;
+            case DamageType.Healing:
+                skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.healingPower);
+                break;
             case DamageType.Defensive:
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage/100f * (float)Characteristics.instance.defense);
                 break;
@@ -41,7 +44,7 @@ public static class CalculateDamage
                 skillTreeAdjustedDamage = Mathf.RoundToInt(baseDamagePercentage);
                 break;
             default: 
-                Debug.LogError("Fuck you this can never happen");
+                Debug.LogError("You added a new type, didn't you, moron?");
                 skillTreeAdjustedDamage = 0;
                 break;
         }

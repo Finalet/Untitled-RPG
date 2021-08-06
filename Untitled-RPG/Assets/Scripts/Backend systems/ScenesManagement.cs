@@ -94,17 +94,15 @@ public class ScenesManagement : MonoBehaviour
         loadingScreen.SetActive(true);
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("SceneManagement"));
         isLoading = true;
-        if (SceneManager.GetActiveScene().name == "MainMenu")  {
-            AsyncOperation unloadMenu = SceneManager.UnloadSceneAsync("MainMenu");
-            yield return unloadMenu;
-            yield return new WaitForSeconds(1);
+        
+        for (int i = 0; i < SceneManager.sceneCount; i++) {
+            if (SceneManager.GetSceneAt(i).name != "SceneManagement") {
+                AsyncOperation unloadScene = SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i).name);
+                yield return unloadScene;
+                yield return new WaitForSeconds(1);
+            }
         }
-        // NIGGAAAAAA INSTEAD SCAN ALL OPEN SCENCES AND UNLOAD UNNECCESARY ONESSSSSSSSSSSSSSSSSS AAAAAAAAAAAAAAAAA FUCK YOUUUUUUUUUUUU SHABI
-        if (SceneManager.GetActiveScene().name == "CharacterCreation") {
-            AsyncOperation unloadCharacterCreation = SceneManager.UnloadSceneAsync("CharacterCreation");
-            yield return unloadCharacterCreation;
-            yield return new WaitForSeconds(1);
-        }
+        
         AsyncOperation loadingMap = SceneManager.LoadSceneAsync(worldScene, LoadSceneMode.Additive);
         yield return loadingMap;
         yield return new WaitForSeconds(1);

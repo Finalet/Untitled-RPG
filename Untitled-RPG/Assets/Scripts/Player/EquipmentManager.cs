@@ -491,7 +491,7 @@ public class EquipmentManager : MonoBehaviour, ISavable
 
     public LoadPriority loadPriority {
         get {
-            return LoadPriority.First;
+            return LoadPriority.Second;
         }
     }
 

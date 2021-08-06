@@ -4,7 +4,7 @@ public enum ConsumableType {Health, Stamina, Buff};
 
 public enum SkillTree {Knight, Hunter, Mage, Angel, Stealth, Defense, Summoner, Independent}
 public enum SkillType {Damaging, Healing, Buff }
-public enum DamageType {Melee, Ranged, Magic, Defensive, Enemy, NoDamage, Raw}
+public enum DamageType {Melee, Ranged, Magic, Healing, Defensive, Enemy, NoDamage, Raw}
 
 
 public enum EquipmentSlotType {Helmet, Chest, Gloves, Pants, Boots, Back, Necklace, Ring, MainHand, SecondaryHand, Bow}
@@ -13,11 +13,12 @@ public enum WeaponHand {OneHanded, TwoHanded, SecondaryHand, BowHand};
 public enum ArmorType {Helmet, Chest, Gloves, Pants, Boots, Back, Necklace, Ring}
 public enum ItemRarity {Common, Uncommon, Rare, Epic, Legendary, Relic}
 
+public enum RecurringEffectType {Damaging, Healing}
 [System.Serializable]
 public class RecurringEffect {
     public string name;
-    public SkillTree skillTree;
     public DamageType damageType;
+    public RecurringEffectType recurringEffectType;
     public int baseEffectPercentage;
     public float frequencyPerSecond;
     public float duration;
@@ -25,10 +26,10 @@ public class RecurringEffect {
     [System.NonSerialized] public float frequencyTimer; 
     [System.NonSerialized] public float durationTimer;
 
-    public RecurringEffect (string _name, SkillTree _skillTree, DamageType _damageType, int _baseEffectPercentage, float _frequencyPerSecond, float _duration, ParticleSystem _vfx, float _frequencyTimer, float _durationTimer) {
+    public RecurringEffect (string _name, DamageType _damageType, RecurringEffectType _recurringEffectType, int _baseEffectPercentage, float _frequencyPerSecond, float _duration, ParticleSystem _vfx, float _frequencyTimer, float _durationTimer) {
         this.name = _name;
-        this.skillTree = _skillTree;
         this.damageType = _damageType;
+        this.recurringEffectType = _recurringEffectType;
         this.baseEffectPercentage = _baseEffectPercentage;
         this.frequencyPerSecond = _frequencyPerSecond;
         this.duration = _duration;
@@ -48,9 +49,9 @@ public class Buff {
     public int healthBuff;
     public int staminaBuff;
     [Space]
-    public int strengthBuff;
-    public int agilityBuff;
-    public int intellectBuff;
+    public float strengthBuff;
+    public float agilityBuff;
+    public float intellectBuff;
     [Space]
     public float meleeAttackBuff;
     public float rangedAttackBuff;
@@ -73,7 +74,7 @@ public class Buff {
     [Space]
     public Skill associatedSkill;
 
-    public Buff(string name, string description, Sprite icon, float duration, int healthBuff, int staminaBuff, int strengthBuff, int agilityBuff, int intellectBuff, float meleeAttackBuff, float rangedAttackBuff, float magicPowerBuff, float healingPowerBuff, float defenseBuff, float castingSpeedBuff, float attackSpeedBuff, float walkSpeedBuff, int skillDistanceBuff, bool immuneToDamage, bool immuneToInterrupt, float critChanceBuff, float critStrengthBuff, float blockChanceBuff, Skill associatedSkill)
+    public Buff(string name, string description, Sprite icon, float duration, int healthBuff, int staminaBuff, float strengthBuff, float agilityBuff, float intellectBuff, float meleeAttackBuff, float rangedAttackBuff, float magicPowerBuff, float healingPowerBuff, float defenseBuff, float castingSpeedBuff, float attackSpeedBuff, float walkSpeedBuff, int skillDistanceBuff, bool immuneToDamage, bool immuneToInterrupt, float critChanceBuff, float critStrengthBuff, float blockChanceBuff, Skill associatedSkill)
     {
         this.name = name;
         this.description = description;

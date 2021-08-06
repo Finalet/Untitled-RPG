@@ -21,7 +21,7 @@ public class SaveManager : MonoBehaviour
         set {
             _currentProfileIndex = value;
             LoadCharacters();
-            ES3.Save<int>("currentProfileIndex", _currentProfileIndex, getSaveDataFolderPath("profiles"));
+            if (allProfiles.Count != 0) ES3.Save<int>("currentProfileIndex", _currentProfileIndex, getSaveDataFolderPath("profiles"));
         }
     }
     public List<string> allProfiles = new List<string>();
@@ -38,7 +38,7 @@ public class SaveManager : MonoBehaviour
         }
         set {
             _currentCharacterIndex = value;
-            ES3.Save<int>("currentCharacterIndex", _currentCharacterIndex, getCurrentProfileFolderPath("characters"));
+            if (allProfiles.Count != 0) ES3.Save<int>("currentCharacterIndex", _currentCharacterIndex, getCurrentProfileFolderPath("characters"));
         }
     }
     public List<string> allCharacters = new List<string>();

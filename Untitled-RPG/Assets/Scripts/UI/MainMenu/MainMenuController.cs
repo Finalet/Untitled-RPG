@@ -18,11 +18,11 @@ public class MainMenuController : MonoBehaviour, ISavable
     public TMP_InputField profileCreation_profileName;
     public TextMeshProUGUI profileCreation_errorLabel;
     public Button profileCreation_createButotn;
+    public Button deleteProfileButton;
     [Space]
-    public GameObject profileDeleteMenu;
-    public TextMeshProUGUI profileDeleteMenu_profileNameLabel;
+    public DeleteConfirmWindow deletionWindow;
     [Space]
-    public Button[] characterButtons;
+    public CharacterSelectionButton[] characterButtons;
 
 
     // Start is called before the first frame update
@@ -48,6 +48,7 @@ public class MainMenuController : MonoBehaviour, ISavable
         
         dropdownOptions.Add(new TMP_Dropdown.OptionData("New Profile", plusIcon));
         profilesDropdown.AddOptions(dropdownOptions);
+        deleteProfileButton.onClick.AddListener(delegate{OpenDeletionMenu(true);});
 
         if (profilesDropdown.options.Count == 1) OpenProfileCreation();
         else profilesDropdown.value = SaveManager.instance.currentProfileIndex;
@@ -91,9 +92,8 @@ public class MainMenuController : MonoBehaviour, ISavable
         SaveManager.instance.SaveProfiles();
     }
     
-    public void OpenProfileDelete() {
-        profileDeleteMenu_profileNameLabel.text = $"<color=red>Delete <color=#DEBE94><b>{SaveManager.instance.currentProfile}</color>?";
-        profileDeleteMenu.SetActive(true);
+    public void OpenDeletionMenu(bool isProfile, int charIndex = 0) {
+        deletionWindow.Init(isProfile, this, charIndex);
     }
 
     public void CreateNewProfile () {
@@ -116,7 +116,8 @@ public class MainMenuController : MonoBehaviour, ISavable
         SaveManager.instance.currentProfileIndex --;
         SaveManager.instance.currentProfileIndex = Mathf.Clamp(SaveManager.instance.currentProfileIndex, 0, SaveManager.instance.allProfiles.Count-1);
         InitProfilesDropdown();
-        if (profileDeleteMenu.activeInHierarchy) profileDeleteMenu.SetActive(false);
+        InitCharacterButtons();
+        if (deletionWindow.gameObject.activeInHierarchy) deletionWindow.gameObject.SetActive(false);
         SaveManager.instance.SaveProfiles();
     }
     void SwitchSelectedProfile () {
@@ -126,21 +127,18 @@ public class MainMenuController : MonoBehaviour, ISavable
     }
     
     void InitCharacterButtons () {
-        
         for (int i = 0; i < characterButtons.Length; i ++) {
-            characterButtons[i].onClick.RemoveAllListeners();
-            bool containsCharacter = SaveManager.instance.allCharacters.Count > i;
-            if (!containsCharacter) {
-                characterButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = "- Create new character -";
-                characterButtons[i].GetComponent<CanvasGroup>().alpha = 0.3f;
-                characterButtons[i].onClick.AddListener(delegate{LoadCharacterCreation();});
-                continue;
-            }
-            int charIndex = i;
-            characterButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = SaveManager.instance.allCharacters[i];
-            characterButtons[i].GetComponent<CanvasGroup>().alpha = 1;
-            characterButtons[i].onClick.AddListener(delegate{LoadLevel("City", charIndex);});
+            characterButtons[i].Init(i, SaveManager.instance.allCharacters.Count > i, this);
         }
+    }
+    public void DeleteCharacter(int index) {
+        ES3.DeleteDirectory(SaveManager.instance.getCurrentCharacterFolderPath());
+
+        SaveManager.instance.allCharacters.RemoveAt(index);
+        SaveManager.instance.currentCharacterIndex = 0;
+        InitCharacterButtons();
+        if (deletionWindow.gameObject.activeInHierarchy) deletionWindow.gameObject.SetActive(false);
+        SaveManager.instance.SaveCharacters();
     }
 
     public void LoadCharacterCreation () {

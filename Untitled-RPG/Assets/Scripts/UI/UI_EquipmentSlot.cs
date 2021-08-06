@@ -18,7 +18,7 @@ public class UI_EquipmentSlot : UI_InventorySlot
     }
 
     protected override string savefilePath() {
-        return $"SaveData/{SaveManager.instance.currentProfile}/equipmentSlots.json";
+        return SaveManager.instance.getCurrentCharacterFolderPath("equipmentSlots");
     } 
 
     public override void SaveSlot (){

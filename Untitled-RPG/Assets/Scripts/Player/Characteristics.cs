@@ -22,9 +22,9 @@ public class Characteristics : MonoBehaviour
     public int health; 
     public int stamina; 
     [Header("Stats")]
-    public int strength; public int strengthFromEquip; int strengthFromBuff;
-    public int agility; public int agilityFromEquip; int agilityFromBuff;
-    public int intellect; public int intellectFromEquip; int intellectFromBuff;
+    public int strength; public int strengthFromEquip;
+    public int agility; public int agilityFromEquip;
+    public int intellect; public int intellectFromEquip;
     [Header("Attacks")]
     public int meleeAttack; public int meleeAttackFromEquip;
     public int rangedAttack; public int rangedAttackFromEquip;
@@ -38,7 +38,7 @@ public class Characteristics : MonoBehaviour
     //X - Attack speed percentage (i.e. 1.0f), Y - Attack speed inverted (i.e. 0.909f)
     public Vector2 attackSpeed; public Vector2 attackSpeedFromEquip; //x = 1.1; y = 0.9;
     [Header("Misc")]
-    public float critChance; public float critChanceFromEquip; public float critChanceFromBuff; float baseCritChance = 0.1f;
+    public float critChance; public float critChanceFromEquip; public float critChanceFromBuff; float baseCritChance = 0.05f;
     public float critStrength; float baseCritStrength = 2; public float critStrengthFromEquip; public float critStrengthFromBuff;
     public float blockChance; public float blockChanceFromEquip; public float blockChanceFromBuff;
     public float walkSpeed; public float walkSpeedBuff; public float walkSpeedFromEquipment;
@@ -49,6 +49,9 @@ public class Characteristics : MonoBehaviour
     public float magicPowerBuff;
     public float healingPowerBuff;
     public float defenseBuff;
+    public float strengthBuff;
+    public float agilityBuff;
+    public float intellectBuff;
     public Vector2 castingSpeedBuff;
     public Vector2 attackSpeedBuff;
     public float skillDistanceIncrease;
@@ -63,6 +66,7 @@ public class Characteristics : MonoBehaviour
     public GameObject buffIcon;
 
     public List<BuffAndIcon> activeBuffs = new List<BuffAndIcon>();
+    public List <RecurringEffect> recurringEffects = new List<RecurringEffect>();
 
     void Awake() {
         if (instance == null)
@@ -84,12 +88,13 @@ public class Characteristics : MonoBehaviour
         StatsCalculations();
         regenerateHealth();
         regenerateStamina();
+        RunRecurringEffects();
     }
 
     public void StatsCalculations () {
-        strength = Mathf.RoundToInt(strengthFromEquip + strengthFromBuff);
-        agility = Mathf.RoundToInt(agilityFromEquip + agilityFromBuff);
-        intellect = Mathf.RoundToInt(intellectFromEquip + intellectFromBuff);
+        strength = Mathf.RoundToInt(strengthFromEquip * strengthBuff);
+        agility = Mathf.RoundToInt(agilityFromEquip * agilityBuff);
+        intellect = Mathf.RoundToInt(intellectFromEquip * intellectBuff);
 
         maxHealth = 5000 + (strength / statsRatio) + healthFromEquip + healthFromBuff;
         maxStamina = 0 + ((agility + intellect) / statsRatio) + staminaFromEquip + staminaFromBuff;
@@ -229,9 +234,9 @@ public class Characteristics : MonoBehaviour
             healthFromBuff += activeBuffs[i].buff1.healthBuff;
             staminaFromBuff += activeBuffs[i].buff1.staminaBuff;
             
-            strengthFromBuff += activeBuffs[i].buff1.strengthBuff;
-            agilityFromBuff += activeBuffs[i].buff1.agilityBuff;
-            intellectFromBuff += activeBuffs[i].buff1.intellectBuff;
+            strengthBuff *= 1 + activeBuffs[i].buff1.strengthBuff;
+            agilityBuff *= 1 + activeBuffs[i].buff1.agilityBuff;
+            intellectBuff *= 1 + activeBuffs[i].buff1.intellectBuff;
 
             meleeAttackBuff *= 1 + activeBuffs[i].buff1.meleeAttackBuff;
             rangedAttackBuff *= 1 + activeBuffs[i].buff1.rangedAttackBuff;
@@ -264,9 +269,9 @@ public class Characteristics : MonoBehaviour
         healthFromBuff = 0;
         staminaFromBuff = 0;
         
-        strengthFromBuff = 0;
-        agilityFromBuff = 0;
-        intellectFromBuff = 0;
+        strengthBuff = 1;
+        agilityBuff = 1;
+        intellectBuff = 1;
         
         meleeAttackBuff = 1;
         rangedAttackBuff = 1;
@@ -331,6 +336,60 @@ public class Characteristics : MonoBehaviour
 
         if (health <= 0)
             Die();
+    }
+    public void RunRecurringEffects () {
+        for (int i = recurringEffects.Count-1; i >= 0; i--) {
+            recurringEffects[i].frequencyTimer -= Time.deltaTime;
+            recurringEffects[i].durationTimer -= Time.deltaTime;
+            if (recurringEffects[i].frequencyTimer <= 0) {
+                
+                if (recurringEffects[i].recurringEffectType == RecurringEffectType.Damaging)
+                    GetHit(CalculateDamage.enemyDamageInfo(recurringEffects[i].baseEffectPercentage).damage, recurringEffects[i].name);
+                else if (recurringEffects[i].recurringEffectType == RecurringEffectType.Healing)
+                    GetHealed(CalculateDamage.damageInfo(recurringEffects[i].damageType, recurringEffects[i].baseEffectPercentage).damage, recurringEffects[i].name);
+                
+                recurringEffects[i].frequencyTimer = 1/recurringEffects[i].frequencyPerSecond;
+            }
+            if (recurringEffects[i].durationTimer <= 0) {
+                RemoveRecurringEffect(recurringEffects[i]);
+            }
+        }
+    }
+    
+    public void AddRecurringEffect (RecurringEffect effect) {
+        RecurringEffect newEffect = new RecurringEffect(effect.name, effect.damageType, effect.recurringEffectType, effect.baseEffectPercentage, effect.frequencyPerSecond, effect.duration,
+                    effect.vfx, effect.frequencyTimer, effect.durationTimer);
+        newEffect.durationTimer = newEffect.duration;
+        newEffect.frequencyTimer = 0;
+        if (newEffect.vfx != null) {
+            newEffect.vfx = Instantiate(newEffect.vfx, transform.position + Vector3.up * 1.6f, Quaternion.identity, transform).GetComponent<ParticleSystem>();
+            var shape = newEffect.vfx.shape;
+            shape.radius = 0.5f;
+            var shape2 = newEffect.vfx.transform.GetChild(0).GetComponent<ParticleSystem>().shape;
+            shape2.radius = shape.radius*0.8f;
+            newEffect.vfx.Play();
+        }
+        recurringEffects.Add(newEffect);
+    }
+    public void RemoveRecurringEffect (RecurringEffect effect) {
+        RecurringEffect effectToRemove = null;
+        if (!recurringEffects.Contains(effect)) {
+            for (int i = 0; i < recurringEffects.Count; i++) { //Lets try finding this effect
+                if (recurringEffects[i].name == effect.name) {
+                    effectToRemove = recurringEffects[i];
+                    break;
+                }
+            }
+        } else {
+            effectToRemove = effect;
+        }
+        if (effectToRemove == null) return;
+
+        if (effectToRemove.vfx) {
+            Destroy(effectToRemove.vfx.gameObject, 3f);
+            effectToRemove.vfx.Stop();
+        }
+        recurringEffects.Remove(effectToRemove);
     }
 
     void Die() {

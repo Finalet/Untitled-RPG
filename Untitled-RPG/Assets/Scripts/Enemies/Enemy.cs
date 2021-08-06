@@ -566,15 +566,17 @@ public abstract class Enemy : MonoBehaviour, IDamagable
                 recurringEffects[i].frequencyTimer = 1/recurringEffects[i].frequencyPerSecond;
             }
             if (recurringEffects[i].durationTimer <= 0) {
-                Destroy(recurringEffects[i].vfx.gameObject, 3f);
-                recurringEffects[i].vfx.Stop();
+                if (recurringEffects[i].vfx) {
+                    Destroy(recurringEffects[i].vfx.gameObject, 3f);
+                    recurringEffects[i].vfx.Stop();
+                }
                 recurringEffects.RemoveAt(i);
             }
         }
     }
     
     public virtual void AddRecurringEffect (RecurringEffect effect) {
-        RecurringEffect newEffect = new RecurringEffect(effect.name, effect.skillTree, effect.damageType, effect.baseEffectPercentage, effect.frequencyPerSecond, effect.duration,
+        RecurringEffect newEffect = new RecurringEffect(effect.name, effect.damageType, effect.recurringEffectType, effect.baseEffectPercentage, effect.frequencyPerSecond, effect.duration,
                     effect.vfx, effect.frequencyTimer, effect.durationTimer);
         newEffect.durationTimer = newEffect.duration;
         newEffect.frequencyTimer = 0;

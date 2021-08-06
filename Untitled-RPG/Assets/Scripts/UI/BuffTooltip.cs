@@ -34,9 +34,9 @@ public class BuffTooltip : MonoBehaviour
         if (buff.strengthBuff != 0 || buff.agilityBuff != 0 || buff.intellectBuff != 0)
             if (stats != "") stats += addSpace();
 
-        if (buff.strengthBuff != 0) stats += $"Strength: <color={color}>+{buff.strengthBuff}</color>\n";
-        if (buff.agilityBuff != 0) stats += $"Agility: <color={color}>+{buff.agilityBuff}</color>\n";
-        if (buff.intellectBuff != 0) stats += $"Intellect: <color={color}>+{buff.intellectBuff}</color>\n";
+        if (buff.strengthBuff != 0) stats += $"Strength: <color={color}>+{buff.strengthBuff*100}%</color>\n";
+        if (buff.agilityBuff != 0) stats += $"Agility: <color={color}>+{buff.agilityBuff*100}%</color>\n";
+        if (buff.intellectBuff != 0) stats += $"Intellect: <color={color}>+{buff.intellectBuff*100}%</color>\n";
 
         if (buff.meleeAttackBuff != 0 || buff.rangedAttackBuff != 0 || buff.magicPowerBuff != 0 || buff.healingPowerBuff != 0 || buff.defenseBuff != 0)
             if (stats != "") stats += addSpace();
