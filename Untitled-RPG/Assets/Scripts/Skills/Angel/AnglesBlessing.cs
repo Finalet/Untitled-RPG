@@ -20,6 +20,6 @@ public class AnglesBlessing : Skill
     }
 
     public override string getDescription() {
-        return $"Increase your strength, agility, and intellect by {buff.strengthBuff*100}% for {buff.duration} seconds.";
+        return $"Increase your casting and attack speed by {buff.castingSpeedBuff*100}%, skill distance by {buff.skillDistanceBuff} meters, and walk speed by {buff.walkSpeedBuff*100}%.";
     }
 }

@@ -47,6 +47,7 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void ShowTooltip(){
         currentTooltip = Instantiate(toolTipPrefab, transform).GetComponent<BuffTooltip>();
         currentTooltip.Init(buff);
+        currentTooltip.transform.SetParent(PeaceCanvas.instance.transform);
     }
     void HideTooltip (){
         Destroy(currentTooltip.gameObject);

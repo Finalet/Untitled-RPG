@@ -56,8 +56,6 @@ public class BuffTooltip : MonoBehaviour
         if (buff.walkSpeedBuff != 0)
             if (stats != "") stats += addSpace();
 
-        if (buff.walkSpeedBuff != 0) stats += $"Walk speed: <color={color}>+{buff.walkSpeedBuff*100}%</color>\n";
-
         if (buff.skillDistanceBuff != 0)
             if (stats != "") stats += addSpace();
 

@@ -36,6 +36,6 @@ public class LifeTree : Skill
 
     public override string getDescription() {
         DamageInfo damageInfo = CalculateDamage.damageInfo(effect.damageType, effect.baseEffectPercentage);
-        return $"Grow a life tree which restores your health by {damageInfo.damage} points {Mathf.RoundToInt(effect.frequencyPerSecond)} times per second when you are nearby. The tree decays and dies after {effect.duration} seconds.";
+        return $"Grow a life tree which restores your health by {damageInfo.damage} points {Mathf.RoundToInt(effect.frequencyPerSecond)} times per second when you are nearby. The tree decays and dies after {duration} seconds.";
     }
 }
