@@ -24,6 +24,18 @@ public class CraftingItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         itemRarityLabel.text = item.itemRarity.ToString();
         itemRarityLabel.color = UI_General.getRarityColor(item.itemRarity);
         GetComponent<Button>().onClick.AddListener(delegate{parentCraftingNPC.Select(item);});
+
+        if (item.specialFrameMat) {
+            RectTransform specialFrame = new GameObject().AddComponent<RectTransform>();
+            specialFrame.SetParent(itemIcon.transform);
+            specialFrame.anchoredPosition3D = Vector3.zero;
+            specialFrame.localScale = Vector2.one;
+            specialFrame.anchorMin = Vector2.zero;
+            specialFrame.anchorMax = Vector2.one;
+            specialFrame.offsetMin = Vector2.zero;
+            specialFrame.offsetMax = Vector2.zero;
+            specialFrame.gameObject.AddComponent<Image>().material = item.specialFrameMat;
+        }
     }
 
     public virtual void OnPointerEnter (PointerEventData pointerData) {

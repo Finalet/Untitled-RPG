@@ -63,6 +63,8 @@ public class UI_EquipmentSlot : UI_InventorySlot
         slotIcon.sprite = itemInSlot.itemIcon;
         slotIcon.color = Color.white;
         equipmentIcon.color = transparentColor;
+
+        CheckForSpecialFrame();
     }
 
     void SharedAdd (Item item, int amount, UI_InventorySlot initialSlot) {

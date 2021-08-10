@@ -43,7 +43,7 @@ public class HelpingHand : Skill
 
     public void Heal() {
         characteristics.GetHealed(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName));
-        playerControlls.isCasting = false;
+        finishedCast = true;
         VFX.Play();
         matchVFX = false;
     }

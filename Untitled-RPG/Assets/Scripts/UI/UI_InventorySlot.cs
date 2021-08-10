@@ -20,6 +20,7 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
     public TextMeshProUGUI cooldownTimerText;
 
     protected Color transparentColor = new Color(0,0,0,0);
+    protected Image instanciatedSpecialFrame;
 
     protected virtual string savefilePath() {
         return SaveManager.instance.getCurrentCharacterFolderPath("inventorySlots");
@@ -132,17 +133,39 @@ public class UI_InventorySlot : MonoBehaviour, IDropHandler, IDragHandler, IBegi
         slotIcon.color = transparentColor;
         if (itemAmountText != null) itemAmountText.text = "";
         
+        CheckForSpecialFrame();
+
         //Clear cooldown
         if (cooldownImage == null) return; //Stop if no cooldown in the slot (like equipment slots)
         cooldownImage.color = transparentColor;
         cooldownImage.fillAmount = 1;
         cooldownTimerText.text = "";
+
+    }
+
+    protected virtual void CheckForSpecialFrame() {
+        if (!itemInSlot) {
+            if (instanciatedSpecialFrame) Destroy(instanciatedSpecialFrame.gameObject);
+            return;
+        }
+        
+        if (itemInSlot.specialFrameMat) {
+            if (instanciatedSpecialFrame == null) {
+                instanciatedSpecialFrame = Instantiate(slotIcon, transform);
+                instanciatedSpecialFrame.sprite = null;
+                instanciatedSpecialFrame.material = itemInSlot.specialFrameMat;
+            }
+        } else {
+            if (instanciatedSpecialFrame) Destroy(instanciatedSpecialFrame.gameObject);
+        }
     }
 
     protected virtual void DisplayItem () {
         slotIcon.sprite = itemInSlot.itemIcon;
         itemAmountText.text = itemAmount == 1 ? "" : itemAmount.ToString();
         slotIcon.color = Color.white;
+
+        CheckForSpecialFrame();
 
         if (!(itemInSlot is Consumable)) {
             cooldownImage.color = new Color(0, 0, 0, 0);

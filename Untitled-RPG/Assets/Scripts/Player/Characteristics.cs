@@ -362,11 +362,7 @@ public class Characteristics : MonoBehaviour
         newEffect.durationTimer = newEffect.duration;
         newEffect.frequencyTimer = 0;
         if (newEffect.vfx != null) {
-            newEffect.vfx = Instantiate(newEffect.vfx, transform.position + Vector3.up * 1.6f, Quaternion.identity, transform).GetComponent<ParticleSystem>();
-            var shape = newEffect.vfx.shape;
-            shape.radius = 0.5f;
-            var shape2 = newEffect.vfx.transform.GetChild(0).GetComponent<ParticleSystem>().shape;
-            shape2.radius = shape.radius*0.8f;
+            newEffect.vfx = Instantiate(newEffect.vfx, transform.position + Vector3.up, Quaternion.identity, transform).GetComponent<ParticleSystem>();
             newEffect.vfx.Play();
         }
         recurringEffects.Add(newEffect);
@@ -436,12 +432,14 @@ public class Characteristics : MonoBehaviour
 
     public void GetHealed(DamageInfo healInfo) {
         health += healInfo.damage;
+        health = Mathf.Clamp(health, 0, maxHealth);
         DisplayHealNumber(healInfo.damage);
         string criticalDEBUGtext = healInfo.isCrit ? " CRITICAL" : "";
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> healed<color=green>{criticalDEBUGtext} {healInfo.damage}</color> points with <color=#80FFFF>{healInfo.sourceName}</color>.");
     }
     public void GetStamina(DamageInfo staminaInfo) {
         stamina += staminaInfo.damage;
+        stamina = Mathf.Clamp(stamina, 0, maxStamina);
         DisplayStaminaNumber(staminaInfo.damage);
         string criticalDEBUGtext = staminaInfo.isCrit ? " CRITICAL" : "";
         PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> regenerated<color=green>{criticalDEBUGtext} {staminaInfo.damage}</color> stamina from <color=#80FFFF>{staminaInfo.sourceName}</color>.");

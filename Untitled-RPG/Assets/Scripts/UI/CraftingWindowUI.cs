@@ -56,7 +56,7 @@ public class CraftingWindowUI : MonoBehaviour
         itemRarityLabel.text = ownerNPC.selectedItem.itemRarity.ToString();
         itemRarityLabel.color = UI_General.getRarityColor(ownerNPC.selectedItem.itemRarity);
         itemDescriptionLabel.text = ownerNPC.selectedItem.itemDesctription;
-        
+
         resourceTemplate.SetActive(true);
         if (resourcesSlots.Count < ownerNPC.selectedItem.craftingRecipe.Length) {
             for (int i = ownerNPC.selectedItem.craftingRecipe.Length - resourcesSlots.Count; i > 0; i--) {

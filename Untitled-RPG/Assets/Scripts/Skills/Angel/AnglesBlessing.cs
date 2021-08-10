@@ -19,7 +19,7 @@ public class AnglesBlessing : Skill
         characteristics.AddBuff(buff);
     }
 
-    public override string getDescription() {
-        return $"Increases your casting and attack speed by {buff.castingSpeedBuff*100}%, skill distance by {buff.skillDistanceBuff} meters, and walk speed by {buff.walkSpeedBuff*100}%.";
+    public override string getDescription() {// instead of directly grabing values from buff.attackspeed, I hardcoded the description. Otherwise it would be "attack speed by -15%".
+        return $"Increases your casting and attack speed by 15%, skill distance by {buff.skillDistanceBuff} meters, and walk speed by {buff.walkSpeedBuff*100}%.";
     }
 }

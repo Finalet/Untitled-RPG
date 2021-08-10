@@ -16,14 +16,18 @@ MonoBehaviour:
   itemName: Devil's Mantle
   itemDesctription: Its better not to tell anyone how you got this.
   itemRarity: 5
-  itemBasePrice: 527000
   isStackable: 0
   maxStackAmount: 1
   itemIcon: {fileID: 8138514194815037332, guid: 9629c7b7cd9945548a6b9e0f001c46d0,
     type: 3}
   lootPrefab: {fileID: 0}
-  isCraftable: 0
-  craftingRecipe: []
+  specialFrameMat: {fileID: 2100000, guid: 228d368eefeff634ab0ad29f8e9625d4, type: 2}
+  itemBasePrice: 527000
+  overridePrice: 0
+  isCraftable: 1
+  craftingRecipe:
+  - resource: {fileID: 11400000}
+    requiredAmount: 1
   MeleeAttack: 1200
   RangedAttack: 1200
   MagicPower: 1200
@@ -37,7 +41,9 @@ MonoBehaviour:
   castingTime: -0.1
   attackSpeed: -0.1
   critChance: 0
+  critStrength: 0
   blockChance: 0
+  walkSpeed: 0
   grantedSkill: {fileID: 0}
   armorType: 5
   modularArmor: {fileID: 11400000, guid: 824d8f17d4b0c4f4db559d9a758c960b, type: 2}

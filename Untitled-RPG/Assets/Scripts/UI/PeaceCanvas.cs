@@ -290,6 +290,20 @@ public class PeaceCanvas : MonoBehaviour
         } else {
             dragGO.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = amountOfDraggedItem.ToString();
         }
+
+        if (itemBeingDragged) {
+            if (itemBeingDragged.specialFrameMat) {
+                RectTransform specialFrame = new GameObject().AddComponent<RectTransform>();
+                specialFrame.SetParent(dragGO.transform);
+                specialFrame.anchoredPosition3D = Vector3.zero;
+                specialFrame.localScale = Vector2.one;
+                specialFrame.anchorMin = Vector2.zero;
+                specialFrame.anchorMax = Vector2.one;
+                specialFrame.offsetMin = Vector2.zero;
+                specialFrame.offsetMax = Vector2.zero;
+                specialFrame.gameObject.AddComponent<Image>().material = itemBeingDragged.specialFrameMat;
+            }
+        }
     }
 
     public void StartDraggingItem(Vector2 iconSize, Item item, int amount, UI_InventorySlot initialSlot1) {

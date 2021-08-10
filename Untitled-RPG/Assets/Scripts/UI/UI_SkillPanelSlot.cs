@@ -25,6 +25,8 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     protected int currentRow;
     protected bool currentSkillIsUnavailable;
 
+    bool validatedSlotsOnLoad;
+
     public virtual void SwitchRows (int rowIndex, bool instant = false) {
         if (rowIndex == currentRow) return;
         if (instant) {
@@ -71,6 +73,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
 
     protected override void Update() {
         GrabSlotContents();
+        if (!validatedSlotsOnLoad && currentSlotSkill) { ValidateSkillSlot(); validatedSlotsOnLoad = true;}
 
         if (currentSlotSkill != null) {
             DisplaySkill();
@@ -256,7 +259,6 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         skillsInRows[row] = skill;
         itemsAndAmontsInRows[row].item1 = null;
         itemsAndAmontsInRows[row].amount1 = 0;
-        ValidateSkillSlot();
     }
 
     public override void AddItem (Item item, int amount, UI_InventorySlot initialSlot) {

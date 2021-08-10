@@ -47,6 +47,8 @@ public class Tooltip : MonoBehaviour
         itemStats.text = generateItemStats(focusItem, compareItem);
         leftBottomLabel.text = "";
 
+        CheckForSpecialFrame();
+
         int grantedSkillHeight = 0;
         grantedSkillIcon.gameObject.SetActive(false);
         if (focusItem is Equipment) {
@@ -68,6 +70,20 @@ public class Tooltip : MonoBehaviour
         
         float tooltipHeight = 130 + itemDescription.preferredHeight + itemStats.preferredHeight + grantedSkillHeight;
         GetComponent<RectTransform>().sizeDelta = new Vector2(360, tooltipHeight);
+    }
+
+    void CheckForSpecialFrame () {
+        if (focusItem.specialFrameMat) {
+            RectTransform specialFrame = new GameObject().AddComponent<RectTransform>();
+            specialFrame.SetParent(itemIcon.transform);
+            specialFrame.anchoredPosition3D = Vector3.zero;
+            specialFrame.localScale = Vector2.one;
+            specialFrame.anchorMin = Vector2.zero;
+            specialFrame.anchorMax = Vector2.one;
+            specialFrame.offsetMin = Vector2.zero;
+            specialFrame.offsetMax = Vector2.zero;
+            specialFrame.gameObject.AddComponent<Image>().material = focusItem.specialFrameMat;
+        }
     }
 
     string generateItemStats (Item item, Item compareItem) {

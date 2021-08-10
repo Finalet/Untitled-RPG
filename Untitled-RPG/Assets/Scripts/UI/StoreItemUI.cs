@@ -28,6 +28,18 @@ public class StoreItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         itemPriceLabel.text = item.itemBasePrice.ToString();
         itemPriceLabel.GetComponent<RectTransform>().sizeDelta = new Vector2(itemPriceLabel.GetComponent<TextMeshProUGUI>().preferredWidth, 20);
         itemBuyButton.onClick.AddListener(delegate{parentStoreNPC.AddToCart(item);});
+
+        if (item.specialFrameMat) {
+            RectTransform specialFrame = new GameObject().AddComponent<RectTransform>();
+            specialFrame.SetParent(itemIcon.transform);
+            specialFrame.anchoredPosition3D = Vector3.zero;
+            specialFrame.localScale = Vector2.one;
+            specialFrame.anchorMin = Vector2.zero;
+            specialFrame.anchorMax = Vector2.one;
+            specialFrame.offsetMin = Vector2.zero;
+            specialFrame.offsetMax = Vector2.zero;
+            specialFrame.gameObject.AddComponent<Image>().material = item.specialFrameMat;
+        }
     }
 
     public virtual void OnPointerEnter (PointerEventData pointerData) {
