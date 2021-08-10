@@ -109,7 +109,7 @@ public class Whirlwind : Skill
 
     public void Hit () {
         for (int i = 0; i < damagablesInTrigger.Count; i++) {
-            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, false, true, HitType.Interrupt);
+            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), false, true, HitType.Interrupt);
         }
     }
 
@@ -123,7 +123,7 @@ public class Whirlwind : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Spin your sword for {duration} seconds, dealing {dmg.damage} {dmg.damageType} damage to everyone around.";
     }
 

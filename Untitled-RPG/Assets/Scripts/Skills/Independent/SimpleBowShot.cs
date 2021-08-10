@@ -93,7 +93,7 @@ public class SimpleBowShot : AimingSkill
 
         animator.Play("AttacksUpperBody.Hunter.Simple Bow Shot_release");
         coolDownTimer = coolDown * Characteristics.instance.attackSpeed.y;
-        newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName);
+        newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName));
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
         grabBowstring = false;
         //spineIKtransform.weight = 0.0f;
@@ -130,7 +130,7 @@ public class SimpleBowShot : AimingSkill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Shoot a regular arrow and deal {dmg.damage} {dmg.damageType} damage.";
     }
 }

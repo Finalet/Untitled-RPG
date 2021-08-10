@@ -98,6 +98,7 @@ public class PeaceCanvas : MonoBehaviour
         SetSuggestionKeys();
     }
 
+    bool notRequestedYet;
     void Update() {
         if (forceAnyPanelOpen) anyPanelOpen = true;
         else if (anyPanelOpen) StartCoroutine(noOpenPanels());
@@ -108,16 +109,18 @@ public class PeaceCanvas : MonoBehaviour
         if (!isGamePaused) {
             if (!anyPanelOpen) {
                 Cursor.visible = false;
-                PlayerControlls.instance.disableControl = false;
+                if (notRequestedYet) PlayerControlls.instance.disableControlRequests --;
                 Cursor.lockState = CursorLockMode.Locked;
                 if (!CanvasScript.instance.quickAccessMenuIsOpen) {
                     PlayerControlls.instance.cameraControl.stopInput = false;
                 }
+                notRequestedYet = false;
             } else {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-                PlayerControlls.instance.disableControl = true;
+                if (!notRequestedYet) PlayerControlls.instance.disableControlRequests ++;
                 PlayerControlls.instance.cameraControl.stopInput = true;
+                notRequestedYet = true;
             }
         }
 

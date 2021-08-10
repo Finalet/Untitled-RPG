@@ -52,7 +52,7 @@ public class TrainingDummy : StaticEnemy
         RunRecurringEffects();
     }
 
-    public override void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
+    public override void GetHit (DamageInfo damageInfo, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
         if (isDead || !canGetHit)
             return;
         
@@ -69,10 +69,10 @@ public class TrainingDummy : StaticEnemy
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
         
         damageTextPos = damageTextPos == Vector3.zero ? transform.position + Vector3.up * 1.5f : damageTextPos;
-        Combat.instanace.DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit), damageTextPos);
+        Combat.instanace.DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit, damageInfo.sourceName), damageTextPos);
 
         string criticalDEBUGtext = damageInfo.isCrit ? "CRITICAL " : "";
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color=blue>{enemyName}</color> was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType} damage</color> by <color=#80FFFF>{skillName}</color>.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color=blue>{enemyName}</color> was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType} damage</color> by <color=#80FFFF>{damageInfo.sourceName}</color>.");
     }
 
     public override void Hit(){

@@ -124,7 +124,7 @@ public class BigGoblin : Enemy
         GameObject go = Instantiate(projectile, boulderSpawnPos);
         go.SetActive(true);
         EnemyProjectile enProjectile = go.GetComponent<EnemyProjectile>();
-        enProjectile.baseDamage = Mathf.RoundToInt(baseDamage*1.5f);
+        enProjectile.enemyDamageInfo = CalculateDamage.enemyDamageInfo(Mathf.RoundToInt(baseDamage*1.5f), enemyName);
         enProjectile.hitType = hitType;
         enProjectile.enemyName = enemyName;
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.3f) {

@@ -15,7 +15,7 @@ public class ShieldSlam : Skill
     public void Hit (float hitNumber) {
         HitType ht = hitNumber == 0 ? HitType.Interrupt : HitType.Knockdown;
         for (int i = 0; i < damagablesInTrigger.Count; i++) {
-            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, ht);
+            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), true, true, ht);
         }
     }
 
@@ -43,7 +43,7 @@ public class ShieldSlam : Skill
 
     public override string getDescription()
     {
-        DamageInfo damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Use your shield to make two short hits in succession, dealing {damageInfo.damage} {damageInfo.damageType} damage each and knocking the target on the ground.\n\nShield is required.";
     }
 }

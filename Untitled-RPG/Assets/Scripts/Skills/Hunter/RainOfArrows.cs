@@ -125,7 +125,7 @@ public class RainOfArrows : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Bring down hundreds of arrows at a selected area for {rainDuration} seconds. Each arrow deals {dmg.damage} {dmg.damageType} damage.";
     }
 }

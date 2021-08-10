@@ -15,9 +15,9 @@ public class Consumable : Item
 
     public override void Use () {
         if (consumableType == ConsumableType.Health)
-            Characteristics.instance.GetHealed(actualEffect(), itemName);
+            Characteristics.instance.GetHealed(CalculateDamage.damageInfo(effectAmount, itemName));
         else if (consumableType == ConsumableType.Stamina)
-            Characteristics.instance.GetStamina(actualEffect(), itemName);
+            Characteristics.instance.GetStamina(CalculateDamage.damageInfo(effectAmount, itemName));
 
         PlayerControlls.instance.PlayGeneralAnimation(0, false, 0, true);
         PlayerAudioController.instance.PlayPlayerSound(PlayerAudioController.instance.drink);
@@ -33,9 +33,5 @@ public class Consumable : Item
     public bool canBeUsed () {
         // Define cases when consumable cannot be used;
         return true;
-    }
-
-    int actualEffect () {
-        return Mathf.RoundToInt(Random.Range(effectAmount * 0.85f, effectAmount * 1.15f));
     }
 }

@@ -44,7 +44,7 @@ public class ExplosiveArrow : Skill
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength/2 + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
 
-        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage, 1), skillName); //could be null if just canceled skill
+        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 1)); //could be null if just canceled skill
         playerControlls.isAttacking = false;
         grabBowstring = false;
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
@@ -91,7 +91,7 @@ public class ExplosiveArrow : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Launch an arrow that explodes on impact, dealing {dmg.damage} {dmg.damageType} to everyone inside the impact radius.";
     }
 }

@@ -39,8 +39,13 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     [Space]
     public bool castInterrupted;
+    public bool disableControl {
+        get {
+            return disableControlRequests > 0;
+        }
+    }
     [Space]
-    public bool disableControl;
+    public int disableControlRequests;
 
     float sprintingDirection;
     float desiredSprintingDirection;

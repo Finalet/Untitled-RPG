@@ -10,7 +10,7 @@ public class EnemyWeakSpot : MonoBehaviour, IDamagable
 
     public void AddRecurringEffect(RecurringEffect effect) {}
 
-    public void GetHit(DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = default, float kickBackStrength = 50)
+    public void GetHit(DamageInfo damageInfo1, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = default, float kickBackStrength = 50)
     {
         parentEnemy.OnWeakSpotHit();
     }

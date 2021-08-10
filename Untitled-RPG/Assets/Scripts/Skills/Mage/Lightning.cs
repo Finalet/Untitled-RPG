@@ -84,7 +84,7 @@ public class Lightning : Skill
         }
 
         GameObject go = Instantiate(lightningProjectile, shootPoint, Quaternion.identity);
-        go.GetComponent<LightningProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, Mathf.RoundToInt( baseDamagePercentage * (1+shots/10f) ));
+        go.GetComponent<LightningProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, Mathf.RoundToInt( baseDamagePercentage * (1+shots/10f)), skillName);
         go.GetComponent<AudioSource>().clip = sounds[shots-1];
         switch (shots) {
             case 1: go.GetComponent<AudioSource>().time = 0.8f; //1
@@ -134,7 +134,7 @@ public class Lightning : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Shoot up to {maxShots} lightnings in short successions. Starting at {dmg.damage} {dmg.damageType} damage, each following lightning deals more damage.";
     }
 }

@@ -54,7 +54,7 @@ public class DarkMatter : Skill
         prj.SetActive(true);
         prj.GetComponent<Rigidbody>().AddForce(direction.normalized * speed, ForceMode.Impulse);
         prj.GetComponent<DarkMatterProjectile>().distance = actualDistance;
-        prj.GetComponent<DarkMatterProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
+        prj.GetComponent<DarkMatterProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName);
         prj.GetComponent<DarkMatterProjectile>().doNotDestroy = false;
         playerControlls.isAttacking = false;
 
@@ -78,7 +78,7 @@ public class DarkMatter : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage,skillName, 0, 0);
         return $"Shoot small dark matter dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

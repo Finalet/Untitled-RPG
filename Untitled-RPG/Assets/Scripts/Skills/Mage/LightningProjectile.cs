@@ -20,7 +20,7 @@ public class LightningProjectile : MonoBehaviour
             return;
         
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo, "Lightning", false, true, HitType.Normal, transform.position);
+            en.GetHit(damageInfo, false, true, HitType.Normal, transform.position);
             damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();

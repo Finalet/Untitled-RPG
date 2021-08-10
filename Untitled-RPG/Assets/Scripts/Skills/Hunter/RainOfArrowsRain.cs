@@ -45,6 +45,6 @@ public class RainOfArrowsRain : MonoBehaviour
         Arrow ar = Instantiate(skill.arrowPrefab, pos, Quaternion.identity).GetComponent<Arrow>();
         ar.GetComponent<AudioSource>().clip = null;
         ar.instantShot = true;
-        ar.Shoot(10, ar.transform.position + Vector3.down * 10, CalculateDamage.damageInfo(skill.damageType, skill.baseDamagePercentage), skill.skillName);
+        ar.Shoot(10, ar.transform.position + Vector3.down * 10, CalculateDamage.damageInfo(skill.damageType, skill.baseDamagePercentage, skill.skillName));
     }
 }

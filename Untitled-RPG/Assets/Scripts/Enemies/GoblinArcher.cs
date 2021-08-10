@@ -73,7 +73,7 @@ public class GoblinArcher : Enemy
         shootPoint = PlayerControlls.instance.transform.position + Vector3.up * 1.5F + PlayerControlls.instance.rb.velocity * 0.5f * distanceToPlayer/30;
 
         coolDownTimer = attackCoolDown;
-        newArrow.Shoot(shootStrength, shootPoint, CalculateDamage.enemyDamageInfo(baseDamage), enemyName);
+        newArrow.Shoot(shootStrength, shootPoint, CalculateDamage.enemyDamageInfo(baseDamage, enemyName));
         newArrow.hitType = hitType;
         bowTransform.GetComponent<Bow>().ReleaseString();
         grabBowstring = false;

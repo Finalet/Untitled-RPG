@@ -38,7 +38,7 @@ public class FirewallWall : MonoBehaviour
             return;
         
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(CalculateDamage.damageInfo(skill.damageType, skill.baseDamagePercentage), "Firewall", false, false, HitType.Interrupt);
+            en.GetHit(CalculateDamage.damageInfo(skill.damageType, skill.baseDamagePercentage, skill.skillName, 0), false, false, HitType.Interrupt);
             StartCoroutine(List(en));
         }
     }

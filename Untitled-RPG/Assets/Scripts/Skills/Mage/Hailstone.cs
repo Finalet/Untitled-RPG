@@ -52,7 +52,7 @@ public class Hailstone : Skill
         finishedCast = true;
 
         GameObject go = Instantiate (projectile, pickedPosition, Quaternion.LookRotation(-playerControlls.transform.forward, Vector3.up));
-        go.transform.GetChild(0).GetComponent<HailstoneProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
+        go.transform.GetChild(0).GetComponent<HailstoneProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName);
         go.SetActive(true);
     }
 
@@ -74,7 +74,7 @@ public class Hailstone : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Crash a huge iceberg onto enemies in a specified area dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

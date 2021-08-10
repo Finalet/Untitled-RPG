@@ -40,7 +40,7 @@ public class HailstoneProjectile : MonoBehaviour
             return;
         
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo, "Hailstone");
+            en.GetHit(damageInfo);
             damagablesHit.Add(en);
         }
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 2f* (1+damageInfo.damage/2000), 0.1f, transform.position);

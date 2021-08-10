@@ -402,7 +402,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     }
 
     public virtual void Hit () {
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), enemyName, hitType, 0.2f, 1.5f);
+        DamageInfo enemyDamageInfo = CalculateDamage.enemyDamageInfo(baseDamage, enemyName);
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(enemyDamageInfo, hitType, 0.2f, 1.5f);
     }
 
     public bool checkCanHit (float value) {
@@ -410,10 +411,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             return true;
         else 
             return false;
-    }
-
-    protected virtual int damage () {
-        return Mathf.RoundToInt(Random.Range(baseDamage*0.85f, baseDamage*1.15f));
     }
 
     protected virtual void AttackCoolDown() {
@@ -515,7 +512,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         }
     }
 
-    public virtual void GetHit (DamageInfo damageInfo, string damageSourceName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
+    public virtual void GetHit (DamageInfo damageInfo, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
         if (isDead || !canGetHit)
             return;
         
@@ -551,10 +548,10 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         if (cameraShake) PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.2f, 1*(1+actualDamage/3000), 0.1f, transform.position);
         
         damageTextPos = damageTextPos == Vector3.zero ? transform.position + Vector3.up * 1.5f : damageTextPos;
-        Combat.instanace.DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit), damageTextPos);
+        Combat.instanace.DisplayDamageNumber(new DamageInfo(actualDamage, damageInfo.damageType, damageInfo.isCrit, damageInfo.sourceName), damageTextPos);
 
         string criticalDEBUGtext = damageInfo.isCrit ? " CRITICAL" : "";
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color=blue>{enemyName}</color> was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType}</color> damage by <color=#80FFFF>{damageSourceName}</color>.");
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color=blue>{enemyName}</color> was hit with<color=red>{criticalDEBUGtext} {actualDamage} {damageInfo.damageType}</color> damage by <color=#80FFFF>{damageInfo.sourceName}</color>.");
     }
 
     public virtual void RunRecurringEffects () {
@@ -562,7 +559,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             recurringEffects[i].frequencyTimer -= Time.deltaTime;
             recurringEffects[i].durationTimer -= Time.deltaTime;
             if (recurringEffects[i].frequencyTimer <= 0) {
-                GetHit(CalculateDamage.damageInfo(recurringEffects[i].damageType, recurringEffects[i].baseEffectPercentage, 0), recurringEffects[i].name);
+                GetHit(CalculateDamage.damageInfo(recurringEffects[i].damageType, recurringEffects[i].baseEffectPercentage, recurringEffects[i].name, 0));
                 recurringEffects[i].frequencyTimer = 1/recurringEffects[i].frequencyPerSecond;
             }
             if (recurringEffects[i].durationTimer <= 0) {

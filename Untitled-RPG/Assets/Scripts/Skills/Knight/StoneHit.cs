@@ -86,7 +86,7 @@ public class StoneHit : Skill
             return;
 
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
+            en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), true, true, HitType.Knockdown);
             damagablesHit.Add(en);
         }
     }
@@ -100,7 +100,7 @@ public class StoneHit : Skill
     }
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Hit the ground in front of you, knicking down enemies and dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

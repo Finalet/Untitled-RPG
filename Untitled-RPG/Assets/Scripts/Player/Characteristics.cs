@@ -187,7 +187,7 @@ public class Characteristics : MonoBehaviour
     }
     void DisplayDamageNumber(int damage) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 1f, Quaternion.identity);
-        ddText.GetComponent<ddText>().Init(new DamageInfo(damage, DamageType.Enemy, false));
+        ddText.GetComponent<ddText>().Init(new DamageInfo(damage, DamageType.Enemy, false, ""));
     }
     void DisplayHealNumber(int healAmount) {
         GameObject ddText = Instantiate(AssetHolder.instance.ddText, transform.position + Vector3.up * 2f, Quaternion.identity);
@@ -296,7 +296,7 @@ public class Characteristics : MonoBehaviour
 
 #region Getting Hit
 
-    public void GetHit (int damage, string enemyName, HitType hitType = HitType.Normal, float cameraShakeFrequency = 0, float cameraShakeAmplitude = 0) {
+    public void GetHit (DamageInfo enemyDamageInfo, HitType hitType = HitType.Normal, float cameraShakeFrequency = 0, float cameraShakeAmplitude = 0) {
         if (isDead)
             return;
         
@@ -316,7 +316,7 @@ public class Characteristics : MonoBehaviour
             }
         }
 
-        int actualDamage = immuneToDamage || blocked ? 0 : Mathf.RoundToInt( damage * defenseCoeff() ); 
+        int actualDamage = immuneToDamage || blocked ? 0 : Mathf.RoundToInt( enemyDamageInfo.damage * defenseCoeff() ); 
         health -= actualDamage;
         if (blocked) {
             DisplayDamageNumber("Blocked", DamageTextColor.White);
@@ -329,7 +329,7 @@ public class Characteristics : MonoBehaviour
             PlayerAudioController.instance.PlayGetHitSound(GetHitType.Hit);
         }
 
-        PrintHitInChat(actualDamage, enemyName, blocked, immuneToDamage);
+        PrintHitInChat(actualDamage, enemyDamageInfo.sourceName, blocked, immuneToDamage);
 
         if (cameraShakeFrequency != 0 && cameraShakeAmplitude != 0)
             PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
@@ -344,9 +344,9 @@ public class Characteristics : MonoBehaviour
             if (recurringEffects[i].frequencyTimer <= 0) {
                 
                 if (recurringEffects[i].recurringEffectType == RecurringEffectType.Damaging)
-                    GetHit(CalculateDamage.enemyDamageInfo(recurringEffects[i].baseEffectPercentage).damage, recurringEffects[i].name);
+                    GetHit(CalculateDamage.enemyDamageInfo(recurringEffects[i].baseEffectPercentage, recurringEffects[i].name));
                 else if (recurringEffects[i].recurringEffectType == RecurringEffectType.Healing)
-                    GetHealed(CalculateDamage.damageInfo(recurringEffects[i].damageType, recurringEffects[i].baseEffectPercentage).damage, recurringEffects[i].name);
+                    GetHealed(CalculateDamage.damageInfo(recurringEffects[i].damageType, recurringEffects[i].baseEffectPercentage, recurringEffects[i].name));
                 
                 recurringEffects[i].frequencyTimer = 1/recurringEffects[i].frequencyPerSecond;
             }
@@ -434,15 +434,17 @@ public class Characteristics : MonoBehaviour
         return Mathf.Pow(g, defense + Mathf.Log(1, g));
     }
 
-    public void GetHealed(int healAmount, string healingItem) {
-        health += healAmount;
-        DisplayHealNumber(healAmount);
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> healed <color=green>{healAmount}</color> points with <color=#80FFFF>{healingItem}</color>.");
+    public void GetHealed(DamageInfo healInfo) {
+        health += healInfo.damage;
+        DisplayHealNumber(healInfo.damage);
+        string criticalDEBUGtext = healInfo.isCrit ? " CRITICAL" : "";
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> healed<color=green>{criticalDEBUGtext} {healInfo.damage}</color> points with <color=#80FFFF>{healInfo.sourceName}</color>.");
     }
-    public void GetStamina(int staminaAmount, string staminaItem) {
-        stamina += staminaAmount;
-        DisplayStaminaNumber(staminaAmount);
-        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> regenerated <color=green>{staminaAmount}</color> stamina from <color=#80FFFF>{staminaItem}</color>.");
+    public void GetStamina(DamageInfo staminaInfo) {
+        stamina += staminaInfo.damage;
+        DisplayStaminaNumber(staminaInfo.damage);
+        string criticalDEBUGtext = staminaInfo.isCrit ? " CRITICAL" : "";
+        PeaceCanvas.instance.DebugChat($"[{System.DateTime.Now.Hour}:{System.DateTime.Now.Minute}:{System.DateTime.Now.Second}] <color={"#"+ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor)}>{Characteristics.instance.playerName}</color> regenerated<color=green>{criticalDEBUGtext} {staminaInfo.damage}</color> stamina from <color=#80FFFF>{staminaInfo.sourceName}</color>.");
     }
 }
 

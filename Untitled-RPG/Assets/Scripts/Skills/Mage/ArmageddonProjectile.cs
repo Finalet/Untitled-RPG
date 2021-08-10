@@ -41,7 +41,7 @@ public class ArmageddonProjectile : MonoBehaviour
             return;
         
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo, "Armageddon", false, false, HitType.Knockdown);
+            en.GetHit(damageInfo, false, false, HitType.Knockdown);
             damagablesHit.Add(en);
         }
 

@@ -15,15 +15,15 @@ public class ArrowExplosive : Arrow
         strongTrails.Stop();
     }
 
-    public override void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo, string _skillName) {
-        base.Shoot(_strength, _shotPoint, _damageInfo, _skillName);
+    public override void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo) {
+        base.Shoot(_strength, _shotPoint, _damageInfo);
         strongTrails.Play();
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 1.5f, 0.07f, transform.position);
     }
 
     protected override void Hit (IDamagable en) {
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo, skillName, false, true, HitType.Knockdown);
+            en.GetHit(damageInfo, false, true, HitType.Knockdown);
             damagablesHit.Add(en);
         }
     }  

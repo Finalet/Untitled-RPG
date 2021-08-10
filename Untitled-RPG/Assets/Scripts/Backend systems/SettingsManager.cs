@@ -164,7 +164,7 @@ public class SettingsManager : MonoBehaviour, ISavable
             
             t.Init(keyBind.Key);
 
-            if (templatesArray.Length != KeybindsManager.instance.defaultKeyBinds.Count && (keyBind.Key == "Sheathe weapon" || keyBind.Key == "Interact" || keyBind.Key == "Hide interface")) {
+            if (templatesArray.Length != KeybindsManager.instance.defaultKeyBinds.Count && (keyBind.Key == "Sheathe weapon" || keyBind.Key == "Interact" || keyBind.Key == "Free camera")) {
                 GameObject spacer = new GameObject();
                 spacer.AddComponent<RectTransform>();
                 spacer.GetComponent<RectTransform>().SetParent(keyBindsGrid.transform);

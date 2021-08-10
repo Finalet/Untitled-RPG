@@ -68,7 +68,7 @@ public class Firewall : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Create a wall of fire in front, blocking enemies and dealing {dmg.damage} {dmg.damageType} damage.";
     }
 }

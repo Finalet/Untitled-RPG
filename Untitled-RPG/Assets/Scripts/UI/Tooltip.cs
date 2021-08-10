@@ -76,9 +76,9 @@ public class Tooltip : MonoBehaviour
         if (item is Consumable) {
             Consumable c = (Consumable)item;
             if (c.consumableType == ConsumableType.Health) {
-                stats = $"Restores around <color={highlightColor}> +{c.effectAmount.ToString()}</color> health\n"; 
+                stats = $"Restores around <color={highlightColor}>{c.effectAmount.ToString()}</color> health\n"; 
             } else if (c.consumableType == ConsumableType.Stamina) {
-                stats = $"Restores around <color={highlightColor}> +{c.effectAmount.ToString()}</color> stamina\n";
+                stats = $"Restores around <color={highlightColor}>{c.effectAmount.ToString()}</color> stamina\n";
             }
             if(c.cooldownTime > 0)
                 stats += $"\nCool down: <color={highlightColor}>{c.cooldownTime.ToString()}</color> seconds";

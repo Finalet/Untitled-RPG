@@ -34,7 +34,7 @@ public class CaptainThrow : Skill
         projectile.catchSound = catchSound;
         projectile.returnTransform = shootPosition;
         projectile.skill = this;
-        projectile.damageInfo = CalculateDamage.damageInfo(damage());
+        projectile.damageInfo = CalculateDamage.damageInfo(damage(), skillName);
         PlaySound(shootSound, 0, 1, characteristics.attackSpeed.x * 0.45f);
     }
 
@@ -78,7 +78,7 @@ public class CaptainThrow : Skill
 
     public override string getDescription()
     {
-        DamageInfo damageInfo = CalculateDamage.damageInfo(damage(), 0, 0);
+        DamageInfo damageInfo = CalculateDamage.damageInfo(damage(), skillName, 0, 0);
         return $"Throws shield at an enemy, dealing {damageInfo.damage} {damageInfo.damageType} damage and knocking it down.\n\nShield is required.";
     }
 }

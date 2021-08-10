@@ -69,7 +69,7 @@ public class Fireball : Skill
         Fireball.SetActive(true);
         Fireball.GetComponent<Rigidbody>().AddForce(direction.normalized * speed, ForceMode.Impulse);
         Fireball.GetComponent<FireballProjectile>().distance = actualDistance;
-        Fireball.GetComponent<FireballProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage);
+        Fireball.GetComponent<FireballProjectile>().damageInfo = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName);
         Fireball.GetComponent<FireballProjectile>().doNotDestroy = false;
         playerControlls.isAttacking = false;
     }
@@ -109,7 +109,7 @@ public class Fireball : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Cast a fireball that deals {dmg.damage} {dmg.damageType} damage.";
     }
 }

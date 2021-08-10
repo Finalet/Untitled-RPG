@@ -59,7 +59,7 @@ public class ArrowSet : Skill
             if (newArrows[i] != null) {
                 Vector3 newShootPoint = shootPoint + transform.right * (i-numberOfArrows/2f) * adjustingDistanceBetweenArrows * (0.5f + distanceBetweenArrows*2);
                 newArrows[i].instantShot = true;
-                newArrows[i].Shoot(strength, newShootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName); //could be null if just canceled skill
+                newArrows[i].Shoot(strength, newShootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName)); //could be null if just canceled skill
                 newArrows[i] = null;
             }
         }
@@ -117,7 +117,7 @@ public class ArrowSet : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Cover vast area in front by launching multiple arrows and dealing {dmg.damage} {dmg.damageType} damage with each arrow.";
     }
 }

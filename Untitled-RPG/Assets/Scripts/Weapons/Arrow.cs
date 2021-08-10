@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    protected string skillName;
     protected DamageInfo damageInfo;
     
     public float lifeTime = 20;
@@ -46,11 +45,10 @@ public class Arrow : MonoBehaviour
             rb.AddForce(Physics.gravity * gravityScale);
     }
 
-    public virtual void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo, string _skillName) {
+    public virtual void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo) {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
 
-        skillName = _skillName;
         damageInfo = _damageInfo;
         Vector3 direction = _shotPoint - transform.position; 
 
@@ -98,7 +96,7 @@ public class Arrow : MonoBehaviour
 
     protected virtual void Hit (IDamagable en) {
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo, skillName, false, false, HitType.Interrupt, transform.position);
+            en.GetHit(damageInfo, false, false, HitType.Interrupt, transform.position);
             damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();

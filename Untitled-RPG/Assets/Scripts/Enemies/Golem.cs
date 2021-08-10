@@ -221,14 +221,15 @@ public class Golem : Boss
     }
 
     public override void Hit () {
-        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), enemyName, hitType, 0.2f, 2.5f);
+        DamageInfo enemyDamageInfo = CalculateDamage.enemyDamageInfo(baseDamage, enemyName);
+        PlayerControlls.instance.GetComponent<Characteristics>().GetHit(enemyDamageInfo, hitType, 0.2f, 2.5f);
     }
 
-    public override void GetHit(DamageInfo damageInfo, string damageSourceName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = default, float kickBackStrength = 50)
+    public override void GetHit(DamageInfo damageInfo, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = default, float kickBackStrength = 50)
     {
         DamageInfo adjForDefenseDI = damageInfo;
         adjForDefenseDI.damage = Mathf.RoundToInt(adjForDefenseDI.damage * (isDefending ? 0.05f : 1));
-        base.GetHit(adjForDefenseDI, damageSourceName, stopHit, cameraShake, hitType, damageTextPos, kickBackStrength);
+        base.GetHit(adjForDefenseDI, stopHit, cameraShake, hitType, damageTextPos, kickBackStrength);
         if (!isStunned) startedDefending = Time.time;
     }
 

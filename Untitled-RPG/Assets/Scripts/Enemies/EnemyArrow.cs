@@ -18,7 +18,6 @@ public class EnemyArrow : MonoBehaviour
 
     protected Rigidbody rb;
     protected DamageInfo damageInfo;
-    protected string enemyName;
     protected AudioSource audioSource;
 
     protected virtual void Start() {
@@ -43,11 +42,10 @@ public class EnemyArrow : MonoBehaviour
             rb.AddForce(Physics.gravity * gravityScale);
     }
 
-    public virtual void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo, string _enemyName) {
+    public virtual void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo) {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
 
-        enemyName = _enemyName;
         damageInfo = _damageInfo;
         Vector3 direction = _shotPoint - transform.position; 
 
@@ -68,7 +66,7 @@ public class EnemyArrow : MonoBehaviour
         Collision(other.transform);
 
         if (other.CompareTag("Player") && other.GetType() == typeof(CapsuleCollider)) { 
-            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damageInfo.damage, enemyName, hitType, 0.2f, 1.5f);
+            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damageInfo, hitType, 0.2f, 1.5f);
             mesh.gameObject.SetActive(false);
             Destroy(gameObject,1);
         }

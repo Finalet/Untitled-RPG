@@ -159,7 +159,7 @@ public class Slash : Skill
 
     public void Hit () {
         for (int i = 0; i < damagablesInCombatTrigger.Count; i++) {
-            damagablesInCombatTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, hitType);
+            damagablesInCombatTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), true, true, hitType);
         }
     }
 
@@ -191,7 +191,7 @@ public class Slash : Skill
     }
 
     public override string getDescription() {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Simple slashes that deal {dmg.damage} {dmg.damageType} damage.";
     }
 }

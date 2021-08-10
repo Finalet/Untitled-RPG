@@ -29,6 +29,7 @@ public class KeybindsManager : MonoBehaviour
         {"Damage log", KeyCode.F1},
         {"Too many items", KeyCode.F2},
         {"Hide interface", KeyCode.F3},
+        {"Free camera", KeyCode.F4},
 
         {"Slot 1", KeyCode.Alpha1},
         {"Slot 2", KeyCode.Alpha2},

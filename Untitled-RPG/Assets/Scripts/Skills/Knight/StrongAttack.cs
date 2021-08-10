@@ -60,7 +60,7 @@ public class StrongAttack : Skill
 
     public void Hit () {
         for (int i = 0; i < damagablesInTrigger.Count; i++) {
-            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, critChance), skillName, true, true, HitType.Kickback);
+            damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, critChance), true, true, HitType.Kickback);
         }
     }
 
@@ -85,7 +85,7 @@ public class StrongAttack : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Smash emeies with extra force and deal {dmg.damage} {dmg.damageType} damage. This skill has a {critChance*100}% chance of landing critical hits";
     }
 }

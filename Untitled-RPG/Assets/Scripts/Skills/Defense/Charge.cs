@@ -79,7 +79,7 @@ public class Charge : Skill
         if (en == null || damagablesHit.Contains(en))
             return;
 
-        en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, false, false, HitType.Kickback, new Vector3(), 30);
+        en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), false, false, HitType.Kickback, new Vector3(), 30);
         damagablesHit.Add(en);
     }
 
@@ -92,7 +92,7 @@ public class Charge : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Charge through enemies for {duraiton} seconds, dealing {dmg.damage} {dmg.damageType} damage.\n\nSkill damage depends on your defense and you cannot recieve damage while charging.\n\nShield is required.";
     }
 }

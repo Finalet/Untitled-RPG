@@ -26,10 +26,10 @@ public class TrainingDummyDPSIndicator : TrainingDummy
         totalDamageTaken = 0;
     }
 
-    public override void GetHit (DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
+    public override void GetHit (DamageInfo damageInfo, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50) {
         if (isDead || !canGetHit)
             return;
-        base.GetHit(damageInfo, skillName, stopHit, cameraShake, hitType, damageTextPos, kickBackStrength);
+        base.GetHit(damageInfo, stopHit, cameraShake, hitType, damageTextPos, kickBackStrength);
         totalDamageTaken += calculateActualDamage(damageInfo.damage);
     }
 }

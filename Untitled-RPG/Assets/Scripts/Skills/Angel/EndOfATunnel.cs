@@ -7,6 +7,7 @@ public class EndOfATunnel : Skill
     [Header("Custom Vars")]
     public ParticleSystem VFX;
     public Buff buff;
+    public AudioClip sound;
 
     protected override void CustomUse() {
         buff.icon = icon;
@@ -14,13 +15,13 @@ public class EndOfATunnel : Skill
 
         StartCoroutine(Using());
     }
-
+    
     IEnumerator Using () {
         animator.CrossFade("Attacks.Angel.End of a tunnel Start", 0.25f);
-        PlaySound(audioSource.clip, 0, characteristics.attackSpeed.x);
         Combat.instanace.blockSkills = true;
         yield return new WaitForSeconds(0.33f * PlayerControlls.instance.GetComponent<Characteristics>().attackSpeed.y);
-        characteristics.GetHealed(characteristics.maxHealth - characteristics.health, skillName);
+        characteristics.GetHealed(CalculateDamage.damageInfo(characteristics.maxHealth - characteristics.health, skillName, 0, 0));
+        PlaySound(sound);
         VFX.Play();
         Combat.instanace.blockSkills = false;
         playerControlls.isAttacking = false;

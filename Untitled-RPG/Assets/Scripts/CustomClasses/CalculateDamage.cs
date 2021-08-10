@@ -4,19 +4,19 @@ using UnityEngine;
 
 public static class CalculateDamage
 {
-    public static DamageInfo damageInfo(float rawDamage) {
-        return damageInfo(rawDamage, Characteristics.instance.critChance);
+    public static DamageInfo damageInfo(float rawDamage, string sourceName) {
+        return damageInfo(rawDamage, sourceName, Characteristics.instance.critChance);
     }
-    public static DamageInfo damageInfo(float rawDamage, float critChance, float damageVariation = 0.15f) {
+    public static DamageInfo damageInfo(float rawDamage, string sourceName, float critChance, float damageVariation = 0.15f) {
         bool isCritHit = isCrit(critChance);
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(rawDamage * (1-damageVariation), rawDamage * (1+damageVariation)));
-        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critStrength) : Mathf.RoundToInt(damageBeforeCrit), DamageType.Raw, isCritHit);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critStrength) : Mathf.RoundToInt(damageBeforeCrit), DamageType.Raw, isCritHit, sourceName);
     }
 
-    public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage) {
-        return damageInfo(damageType, baseDamagePercentage, Characteristics.instance.critChance);
+    public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage, string sourceName) {
+        return damageInfo(damageType, baseDamagePercentage, sourceName, Characteristics.instance.critChance);
     }
-    public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage, float critChance, float damageVariation = 0.15f) {
+    public static DamageInfo damageInfo (DamageType damageType, int baseDamagePercentage, string sourceName, float critChance, float damageVariation = 0.15f) {
         int skillTreeAdjustedDamage;
         switch (damageType) {
             case DamageType.Melee:
@@ -50,20 +50,17 @@ public static class CalculateDamage
         }
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(skillTreeAdjustedDamage * (1-damageVariation), skillTreeAdjustedDamage * (1+damageVariation)));
         bool isCritHit = isCrit(critChance);
-        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critStrength) : damageBeforeCrit, damageType, isCritHit);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * Characteristics.instance.critStrength) : damageBeforeCrit, damageType, isCritHit, sourceName);
     }
 
     static bool isCrit(float critChance) {
         return Random.value < critChance;
     }
 
-    public static DamageInfo enemyDamageInfo (int baseDamage) {
-        return enemyDamageInfo(baseDamage, 0); 
-    }
-    public static DamageInfo enemyDamageInfo (int baseDamage, float critChance = 0, float damageVariation = 0.15f) {
+    public static DamageInfo enemyDamageInfo (int baseDamage, string sourceName, float critChance = 0, float damageVariation = 0.15f) {
         int damageBeforeCrit = Mathf.RoundToInt(Random.Range(baseDamage * (1-damageVariation), baseDamage * (1+damageVariation)));
         bool isCritHit = isCrit(critChance);
-        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * 2) : damageBeforeCrit, DamageType.Enemy, isCritHit);
+        return new DamageInfo(isCritHit ? Mathf.RoundToInt(damageBeforeCrit * 2) : damageBeforeCrit, DamageType.Enemy, isCritHit, sourceName);
     }
 }
 
@@ -72,7 +69,7 @@ public static class CalculateDamage
 public interface IDamagable {
     List<RecurringEffect> recurringEffects { get; }
     
-    void GetHit(DamageInfo damageInfo, string skillName, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50);
+    void GetHit(DamageInfo damageInfo, bool stopHit = false, bool cameraShake = false, HitType hitType = HitType.Normal, Vector3 damageTextPos = new Vector3 (), float kickBackStrength = 50);
     void RunRecurringEffects();
     void AddRecurringEffect(RecurringEffect effect);
 }
@@ -81,11 +78,13 @@ public struct DamageInfo {
     public int damage;
     public DamageType damageType;
     public bool isCrit;
+    public string sourceName;
 
-    public DamageInfo(int _damage, DamageType _damageType, bool _isCrit) {
+    public DamageInfo(int _damage, DamageType _damageType, bool _isCrit, string _sourceName) {
         this.damage = _damage;
         this.damageType = _damageType;
         this.isCrit = _isCrit;
+        this.sourceName = _sourceName;
     }
 }
 

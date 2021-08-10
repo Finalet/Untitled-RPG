@@ -45,7 +45,7 @@ public class StrongArrow : Skill
             shootPoint = PlayerControlls.instance.playerCamera.transform.forward * (strength/2 + PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().camDistance) + PlayerControlls.instance.playerCamera.transform.position;
         }
 
-        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0.4f), skillName); //could be null if just canceled skill
+        if (newArrow != null) newArrow.Shoot(strength, shootPoint, CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0.4f)); //could be null if just canceled skill
         playerControlls.isAttacking = false;
         grabBowstring = false;
         WeaponsController.instance.BowObj.GetComponent<Bow>().ReleaseString();
@@ -92,7 +92,7 @@ public class StrongArrow : Skill
 
     public override string getDescription()
     {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Shoot a powerful arrow that deals {dmg.damage} {dmg.damageType} damage and kickbacks an enemy.";
     }
 }

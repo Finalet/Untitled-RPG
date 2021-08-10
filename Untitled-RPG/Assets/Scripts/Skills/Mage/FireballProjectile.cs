@@ -68,7 +68,7 @@ public class FireballProjectile : MonoBehaviour
             return;
 
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo, "Fireball", true, false, HitType.Kickback, transform.position);
+            en.GetHit(damageInfo, true, false, HitType.Kickback, transform.position);
             damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();

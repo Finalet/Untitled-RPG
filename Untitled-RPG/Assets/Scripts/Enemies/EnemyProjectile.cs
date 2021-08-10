@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyProjectile : MonoBehaviour
 {
-    public int baseDamage;
+    public DamageInfo enemyDamageInfo;
     public HitType hitType;
     public ParticleSystem hitParticles;
     public bool shot;
@@ -24,16 +24,12 @@ public class EnemyProjectile : MonoBehaviour
             return;
             
         if (other.CompareTag("Player") && other.GetType() == typeof(CapsuleCollider)) { // Checks if charater got hit, and not its triggers
-            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(damage(), enemyName, hitType, 0.2f, 1f);
+            PlayerControlls.instance.GetComponent<Characteristics>().GetHit(enemyDamageInfo, hitType, 0.2f, 1f);
         }
         if (!other.isTrigger && !playedSound) {
             audioSource.PlayOneShot(audioSource.clip);
             hitParticles.Play();
             playedSound = true;
         }
-    }
-
-    int damage () {
-        return Mathf.RoundToInt(Random.Range(baseDamage*0.85f, baseDamage*1.15f));
     }
 }

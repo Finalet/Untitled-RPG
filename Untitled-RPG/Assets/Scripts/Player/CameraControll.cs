@@ -86,6 +86,21 @@ public class CameraControll : MonoBehaviour
         }
         
         CheckCameraUnderRoof();
+
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Free camera"])) {
+            ToggleFreeCamera();
+        }
+    }
+
+    void ToggleFreeCamera() {
+        Quaternion rot = transform.rotation;
+        CinemachineBrain CM_brain = GetComponent<CinemachineBrain>();
+        FreeCameraController freeCam = GetComponent<FreeCameraController>();
+
+        CM_brain.enabled = !CM_brain.enabled;
+        freeCam.enabled = !freeCam.enabled;
+
+        PlayerControlls.instance.disableControlRequests += freeCam.enabled ? 1 : -1;
     }
 
     void UpdateMouseSettings() {

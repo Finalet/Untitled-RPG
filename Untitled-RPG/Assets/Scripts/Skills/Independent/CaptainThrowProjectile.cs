@@ -83,7 +83,7 @@ public class CaptainThrowProjectile : MonoBehaviour
         isReturning = true;
         IDamagable en = other.GetComponentInParent<IDamagable>();
         if (en != null && !damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo, skill.skillName, true, true, HitType.Knockdown, transform.position);
+            en.GetHit(damageInfo, true, true, HitType.Knockdown, transform.position);
             damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();

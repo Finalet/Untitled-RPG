@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DancingSwordProjectile : MonoBehaviour
 {
-    protected string skillName;
     protected DamageInfo damageInfo1;
     protected DamageInfo damageInfo2;
     
@@ -55,11 +54,10 @@ public class DancingSwordProjectile : MonoBehaviour
             rb.AddForce(Physics.gravity * gravityScale);
     }
 
-    public virtual void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo1, DamageInfo _damageInfo2, string _skillName) {
+    public virtual void Shoot (float _strength, Vector3 _shotPoint, DamageInfo _damageInfo1, DamageInfo _damageInfo2) {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
 
-        skillName = _skillName;
         damageInfo1 = _damageInfo1;
         damageInfo2 = _damageInfo2;
         Vector3 direction = _shotPoint - transform.position; 
@@ -106,8 +104,8 @@ public class DancingSwordProjectile : MonoBehaviour
 
     protected virtual void Hit (IDamagable en) {
         if (!damagablesHit.Contains(en)) {
-            en.GetHit(damageInfo1, skillName, false, false, HitType.Interrupt, transform.position);
-            en.GetHit(damageInfo2, skillName, false, false, HitType.Normal, transform.position);
+            en.GetHit(damageInfo1, false, false, HitType.Interrupt, transform.position);
+            en.GetHit(damageInfo2, false, false, HitType.Normal, transform.position);
             damagablesHit.Add(en);
 
             bl_UCrosshair.Instance.OnHit();

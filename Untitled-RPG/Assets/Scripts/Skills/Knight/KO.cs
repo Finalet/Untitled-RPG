@@ -80,9 +80,9 @@ public class KO : Skill
     public void Hit (float knockDown) {
         for (int i = 0; i < damagablesInTrigger.Count; i++) {
             if (knockDown == 1) {
-                damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Knockdown);
+                damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), true, true, HitType.Knockdown);
             } else {
-                damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage), skillName, true, true, HitType.Normal);
+                damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), true, true, HitType.Normal);
             }
         }
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
@@ -109,7 +109,7 @@ public class KO : Skill
     }
 
     public override string getDescription() {
-        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, 0, 0);
+        DamageInfo dmg = CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, 0, 0);
         return $"Knock down enemies and deal {dmg.damage} {dmg.damageType} damage.";
     }
 }

@@ -42,6 +42,7 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void RemoveBuff () {
         Characteristics.instance.RemoveBuff(buff);
+        HideTooltip();
     }
 
     void ShowTooltip(){
@@ -50,7 +51,7 @@ public class BuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         currentTooltip.transform.SetParent(PeaceCanvas.instance.transform);
     }
     void HideTooltip (){
-        Destroy(currentTooltip.gameObject);
+        if  (currentTooltip) Destroy(currentTooltip.gameObject);
     }
 
     public virtual void OnPointerEnter (PointerEventData eventData) {

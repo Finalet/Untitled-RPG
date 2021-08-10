@@ -5,24 +5,23 @@ using Crest;
 
 public class FreeCameraController : MonoBehaviour
 {
-    public PlayerControlls instance;
-
     public float speed = 1;
-    public float mouseSensitivity = 1;
     Vector3 move;
     
     float xRotation = 0f;
     float yRotation = 0f;
 
-    void Update () {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+    void OnEnable() {
+        xRotation = transform.rotation.eulerAngles.x;
+        yRotation = transform.rotation.eulerAngles.y;
+    }
 
+    void Update () {
         move = (Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward + Input.GetAxis("QE") * transform.up )* speed / 10f;
         transform.Translate(move, Space.World);
 
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime * 100f;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime * 100f;
+        float mouseX = Input.GetAxis("Mouse X") * SettingsManager.instance.mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * SettingsManager.instance.mouseSensitivity * Time.deltaTime * (SettingsManager.instance.invertY ? 1 : -1);
 
         xRotation += mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
@@ -36,5 +35,8 @@ public class FreeCameraController : MonoBehaviour
         } else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftControl)) {
             speed *= 0.25f;
         }
+
+        speed += Input.mouseScrollDelta.y * 0.5f;
+        speed = Mathf.Clamp(speed, 0, Mathf.Infinity);
     }
 }
