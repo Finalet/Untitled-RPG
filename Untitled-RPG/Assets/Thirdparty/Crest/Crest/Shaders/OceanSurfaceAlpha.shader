@@ -36,6 +36,7 @@ Shader "Crest/Ocean Surface Alpha"
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
+			#include "OceanConstants.hlsl"
 			#include "OceanGlobals.hlsl"
 			#include "OceanInputsDriven.hlsl"
 			#include "OceanHelpersNew.hlsl"

@@ -2,7 +2,7 @@
 
 namespace MalbersAnimations.Utilities
 {
-    /// <summary>Scriptable object to modify the effect parameters before, during or after the effect plays.</summary>
+    /// <summary>Scriptable object to modify the effect parameters before, during or after the effect plays. Used on With the Effect Manager</summary>
     public abstract class EffectModifier : ScriptableObject
     {
         [TextArea]

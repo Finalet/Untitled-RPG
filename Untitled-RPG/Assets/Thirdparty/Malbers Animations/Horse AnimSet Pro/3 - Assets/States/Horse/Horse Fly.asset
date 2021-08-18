@@ -1,0 +1,166 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35363fa86a09c2d4aa6a51d44b66cdd5, type: 3}
+  m_Name: Horse Fly
+  m_EditorClassIdentifier: 
+  Active: 1
+  Input: Fly
+  Priority: 6
+  General:
+    modify: -1
+    RootMotion: 0
+    Sprint: 1
+    Gravity: 0
+    Grounded: 0
+    OrientToGround: 0
+    CustomRotation: 0
+    FreeMovement: 1
+    AdditivePosition: 1
+    AdditiveRotation: 1
+    Persistent: 0
+    IgnoreLowerStates: 1
+    LockMovement: 0
+    LockInput: 0
+  SleepFromState: []
+  SleepFromMode:
+  - {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
+  QueueFrom: []
+  TagModifiers:
+  - AnimationTag: TakeOff
+    modifier:
+      modify: -1
+      RootMotion: 1
+      Sprint: 1
+      Gravity: 0
+      Grounded: 0
+      OrientToGround: 0
+      CustomRotation: 0
+      FreeMovement: 0
+      AdditivePosition: 0
+      AdditiveRotation: 1
+      Persistent: 1
+      IgnoreLowerStates: 1
+      LockMovement: 0
+      LockInput: 0
+  TryLoop:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  EnterTag:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  ExitTag:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  ExitFrame: 1
+  ExitOnMain: 1
+  ExitCooldown:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  CanStrafe: 1
+  MovementStrafe: 1
+  IdleStrafe: 0.1
+  debug: 1
+  Editor_Tabs1: 3
+  ID: {fileID: 11400000, guid: c44e7e8d6840aa243b6c33ec85052763, type: 2}
+  Bank: 30
+  Ylimit: 80
+  BankStrafe: 5
+  YlimitStrafe: 10
+  InertiaLerp:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  AlwaysForward:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Impulse:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  ImpulseTime:
+    UseConstant: 1
+    ConstantValue: 0.5
+    Variable: {fileID: 0}
+  ImpulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  canLand:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  LandOn:
+    serializedVersion: 2
+    m_Bits: 17
+  LandMultiplier:
+    UseConstant: 1
+    ConstantValue: 1.2
+    Variable: {fileID: 0}
+  AvoidSurface: 0
+  SurfaceDistance: 0.5
+  SurfaceLayer:
+    serializedVersion: 2
+    m_Bits: 16
+  GlideOnly:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  AutoGlide:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  GlideChance:
+    minValue: 1
+    maxValue: 5
+  FlapChange:
+    minValue: 2
+    maxValue: 8
+  FlapSpeed: 1
+  GlideSpeed: 2
+  Variation: 0.3
+  GravityDrag:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  DownAcceleration:
+    UseConstant: 1
+    ConstantValue: 3
+    Variable: {fileID: 0}
+  BoneBlockingLanding: 0
+  BoneName: Head
+  BoneOffsetPos: {x: 0, y: 0, z: 0}
+  BlockLandDist: 0.4

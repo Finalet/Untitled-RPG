@@ -39,10 +39,8 @@ namespace MalbersAnimations.SA
 
             if (smooth)
             {
-                character.localRotation = Quaternion.Slerp(character.localRotation, m_CharacterTargetRot,
-                    smoothTime * Time.deltaTime);
-                camera.localRotation = Quaternion.Slerp(camera.localRotation, m_CameraTargetRot,
-                    smoothTime * Time.deltaTime);
+                character.localRotation = Quaternion.Slerp(character.localRotation, m_CharacterTargetRot, smoothTime * Time.deltaTime);
+                camera.localRotation = Quaternion.Slerp(camera.localRotation, m_CameraTargetRot, smoothTime * Time.deltaTime);
             }
             else
             {

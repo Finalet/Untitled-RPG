@@ -57,11 +57,12 @@ void CrestNodeFoam_half
 	// Get the "special" properties from the texture. The texel node only exposes zw (width and height). We could
 	// compute this ourselves.
 	half2 texelSizeXY =
-#if SHADERGRAPH_PREVIEW
+#ifdef SHADERGRAPH_PREVIEW
 	i_texelSize;
 #else
 	 _TextureFoam_TexelSize.xy;
 #endif
+
 
 	float whiteFoam = WhiteFoamTexture(i_texture, texelSizeXY, i_scale, i_feather, i_foam, i_oceanParams0.x, i_oceanParams1.x, i_worldXZUndisplaced, (float2)0.0, lodVal);
 	o_albedo = saturate(whiteFoam * i_albedoIntensity);

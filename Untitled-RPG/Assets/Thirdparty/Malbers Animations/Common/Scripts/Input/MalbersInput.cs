@@ -6,7 +6,8 @@ using MalbersAnimations.Scriptables;
 
 namespace MalbersAnimations
 {
-   // [HelpURL("https://malbersanimations.gitbook.io/animal-controller/main-components/malbers-input")]
+    [HelpURL("https://malbersanimations.gitbook.io/animal-controller/main-components/malbers-input")]
+    [AddComponentMenu("Malbers/Input/Malbers Input")]
     public class MalbersInput : MInput, IInputSource
     {
         #region Variables
@@ -15,7 +16,7 @@ namespace MalbersAnimations
 
         public InputAxis Horizontal = new InputAxis("Horizontal", true, true);
         public InputAxis Vertical = new InputAxis("Vertical", true, true);
-        public InputAxis UpDown = new InputAxis("UpDown", true, true);
+        public InputAxis UpDown = new InputAxis("UpDown", false, true);
 
 
         /// <summary>Send to the Character to Move using the interface ICharacterMove</summary>
@@ -26,8 +27,9 @@ namespace MalbersAnimations
         private float upDown;
         #endregion
 
+        protected Vector3 RawInputAxis;
 
-        public virtual void SetMoveCharacter(bool val) { MoveCharacter = val; }
+        public virtual void SetMoveCharacter(bool val) => MoveCharacter = val;
 
         protected override void OnDisable()
         {
@@ -50,24 +52,18 @@ namespace MalbersAnimations
             MoveCharacter = true;       //Set that the Character can be moved
         }
 
-        void InitializeCharacter()
-        { mCharacterMove = GetComponent<ICharacterMove>(); }
+        protected void InitializeCharacter() => mCharacterMove = GetComponent<ICharacterMove>();
 
 
         public virtual void UpAxis(bool input)
         {
-            //Debug.Log("UpAxis" + input);
-
             if (upDown == -1) return;        //This means that the Down Button was pressed so ignore the Up button
             upDown = input ? 1 : 0;
         }
 
-        public virtual void DownAxis(bool input)
-        {
-            upDown = input ? -1 : 0;
-        }
+        public virtual void DownAxis(bool input) => upDown = input ? -1 : 0;
 
-        void Update()  { SetInput(); }
+        void Update() => SetInput();
 
 
         /// <summary>Send all the Inputs and Axis to the Animal</summary>
@@ -75,16 +71,15 @@ namespace MalbersAnimations
         {
             horizontal = Horizontal.GetAxis;
             vertical = Vertical.GetAxis;
-            if (UpDown.active) upDown = UpDown.GetAxis;
-            CharacterAxisMove();
+            upDown = UpDown.GetAxis;
+
+            RawInputAxis = new Vector3(horizontal, upDown, vertical);
+            if (MoveCharacter) mCharacterMove?.SetInputAxis(RawInputAxis);
+
             base.SetInput();
         }
 
-        protected void CharacterAxisMove()
-        {
-            if (MoveCharacter && mCharacterMove != null)
-                mCharacterMove.SetInputAxis(new Vector3(horizontal, upDown, vertical));
-        } 
+        public void ResetInputAxis() => RawInputAxis = Vector3.zero;
 
         /// <summary>Convert the List of Inputs into a Dictionary</summary>
         void List_to_Dictionary()
@@ -97,12 +92,15 @@ namespace MalbersAnimations
     }
     ///──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     #region InputRow and Input Axis
+
+    
+    
     /// <summary>Input Class to change directly between Keys and Unity Inputs </summary>
     [System.Serializable]
-    public class InputRow
+    public class InputRow : IInputAction
     {
-        public BoolReference active = new BoolReference(true);
         public string name = "InputName";
+        public BoolReference active = new BoolReference(true);
         public InputType type = InputType.Input;
         public string input = "Value";
         public KeyCode key = KeyCode.A;
@@ -111,6 +109,9 @@ namespace MalbersAnimations
         public InputButton GetPressed = InputButton.Press;
         /// <summary>Current Input Value</summary>
         public bool InputValue = false;
+        public bool ToggleValue = false;
+        [Tooltip("When the Input is Disabled the Button will a false value to all their connections")]
+        public bool ResetOnDisable = true;
 
 
         public UnityEvent OnInputDown = new UnityEvent();
@@ -118,6 +119,8 @@ namespace MalbersAnimations
         public UnityEvent OnLongPress = new UnityEvent();
         public UnityEvent OnDoubleTap = new UnityEvent();
         public BoolEvent OnInputChanged = new BoolEvent();
+        public UnityEvent OnInputEnable = new UnityEvent();
+        public UnityEvent OnInputDisable = new UnityEvent();
 
         protected IInputSystem inputSystem = new DefaultInput();
 
@@ -129,14 +132,14 @@ namespace MalbersAnimations
         //public FloatReference LongPressTime = new FloatReference(0.5f);
         private bool FirstInputPress= false;
         private bool InputCompleted = false;
-        private float InputCurrentTime;
+        private float InputStartTime;
         public UnityEvent OnInputPressed = new UnityEvent();
         public FloatEvent OnPressedNormalized = new FloatEvent();
 
         #endregion
 
         /// <summary>Return True or False to the Selected type of Input of choice</summary>
-        public virtual bool GetInput
+        public virtual bool GetValue
         {
             get
             {
@@ -147,11 +150,9 @@ namespace MalbersAnimations
 
                 switch (GetPressed)
                 {
-
                     case InputButton.Press:
 
-                        InputValue = type == InputType.Input ? InputSystem.GetButton(input) : Input.GetKey(key);
-
+                        InputValue = (type == InputType.Input) ? InputSystem.GetButton(input) : Input.GetKey(key);
 
                         if (oldValue != InputValue)
                         {
@@ -159,44 +160,43 @@ namespace MalbersAnimations
                                 OnInputDown.Invoke();
                             else
                                 OnInputUp.Invoke();
+
+                            OnInputChanged.Invoke(InputValue);
                         }
-                        
-                        OnInputChanged.Invoke(InputValue);
 
                         if (InputValue) OnInputPressed.Invoke();
 
-                        return InputValue;
-
-
+                        break;
                     //-------------------------------------------------------------------------------------------------------
                     case InputButton.Down:
 
-                        InputValue = type == InputType.Input ? InputSystem.GetButtonDown(input) : Input.GetKeyDown(key);
+                        InputValue = (type == InputType.Input) ? InputSystem.GetButtonDown(input) : Input.GetKeyDown(key);
 
                         if (oldValue != InputValue)
                         {
                             if (InputValue) OnInputDown.Invoke();
+
                             OnInputChanged.Invoke(InputValue);
                         }
-                        return InputValue;
-
-
+                        break;
                     //-------------------------------------------------------------------------------------------------------
                     case InputButton.Up:
 
-                        InputValue = type == InputType.Input ? InputSystem.GetButtonUp(input) : Input.GetKeyUp(key);
+                        InputValue = (type == InputType.Input) ? InputSystem.GetButtonUp(input) : Input.GetKeyUp(key);
 
                         if (oldValue != InputValue)
                         {
-                            if (InputValue) OnInputUp.Invoke();
+                            if (!InputValue) OnInputUp.Invoke();
+
                             OnInputChanged.Invoke(InputValue);
                         }
-                        return InputValue;
-
+                        break;
                     //-------------------------------------------------------------------------------------------------------
                     case InputButton.LongPress:
 
-                        InputValue = type == InputType.Input ? InputSystem.GetButton(input) : Input.GetKey(key);
+                        InputValue = (type == InputType.Input) ? InputSystem.GetButton(input) : Input.GetKey(key);
+
+                        if (oldValue != InputValue) OnInputChanged.Invoke(InputValue); //Just to make sure the Input is Pressed
 
                         if (InputValue)
                         {
@@ -204,82 +204,113 @@ namespace MalbersAnimations
                             {
                                 if (!FirstInputPress)
                                 {
-                                    InputCurrentTime = Time.time;
+                                    InputStartTime = Time.time;
                                     FirstInputPress = true;
                                     OnInputDown.Invoke();
                                 }
                                 else
                                 {
-                                    if (Time.time - InputCurrentTime >= LongPressTime)
+                                    if (MTools.ElapsedTime(InputStartTime, LongPressTime))
                                     {
-                                        OnLongPress.Invoke();
                                         OnPressedNormalized.Invoke(1);
+                                        OnLongPress.Invoke();
                                         InputCompleted = true;                     //This will avoid the longpressed being pressed just one time
                                         return (InputValue = true);
                                     }
                                     else
-                                    {
-                                        OnPressedNormalized.Invoke((Time.time - InputCurrentTime) / LongPressTime);
-                                    }
+                                        OnPressedNormalized.Invoke((Time.time - InputStartTime) / LongPressTime);
                                 }
                             }
                         }
                         else
                         {
-                            if (!InputCompleted && FirstInputPress)
-                            {
-                                OnInputUp.Invoke();      //If the Input was released before the LongPress was completed ... take it as Interrupted
-                            }
+                            //If the Input was released before the LongPress was completed ... take it as Interrupted
+                            if (!InputCompleted && FirstInputPress) OnInputUp.Invoke();
+
                             FirstInputPress = InputCompleted = false;  //This will reset the Long Press
                         }
-                        return (InputValue = false);
 
+
+
+                        break;
                     //-------------------------------------------------------------------------------------------------------
                     case InputButton.DoubleTap:
+                        InputValue = (type == InputType.Input) ? InputSystem.GetButton(input) : Input.GetKey(key);
 
-                        InputValue = type == InputType.Input ? InputSystem.GetButtonDown(input) : Input.GetKeyDown(key);
 
-                        if (InputValue)
+                        if (oldValue != InputValue)
                         {
-                            if (InputCurrentTime != 0 && (Time.time - InputCurrentTime) > DoubleTapTime)
-                            {
-                                FirstInputPress = false;    //This is in case it was just one Click/Tap this will reset it
-                            }
+                            OnInputChanged.Invoke(InputValue); //Just to make sure the Input is Pressed
 
-                            if (!FirstInputPress)
+                            if (InputValue)
                             {
-                                OnInputDown.Invoke();
-                                InputCurrentTime = Time.time;
-                                FirstInputPress = true;
-                            }
-                            else
-                            {
-                                if ((Time.time - InputCurrentTime) <= DoubleTapTime)
+                                if (InputStartTime != 0 && MTools.ElapsedTime(InputStartTime, DoubleTapTime))
                                 {
-                                    FirstInputPress = false;
-                                    InputCurrentTime = 0;
-                                    OnDoubleTap.Invoke();       //Sucesfull Double tap
+                                    FirstInputPress = false;    //This is in case it was just one Click/Tap this will reset it
+                                }
 
-                                    return (InputValue = true);
+                                if (!FirstInputPress)
+                                {
+                                    OnInputDown.Invoke();
+                                    InputStartTime = Time.time;
+                                    FirstInputPress = true;
                                 }
                                 else
                                 {
-                                    FirstInputPress = false;
+                                    if ((Time.time - InputStartTime) <= DoubleTapTime)
+                                    {
+                                        FirstInputPress = false;
+                                        InputStartTime = 0;
+                                        OnDoubleTap.Invoke();       //Sucesfull Double tap
+                                    }
+                                    else
+                                    {
+                                        FirstInputPress = false;
+                                    }
                                 }
                             }
                         }
-                      
-                        return (InputValue = false);
+                        break;
+                    case InputButton.Toggle:
+
+                        InputValue = (type == InputType.Input) ? InputSystem.GetButtonDown(input) : Input.GetKeyDown(key);
+
+                        if (oldValue != InputValue)
+                        {
+                            if (InputValue)
+                            {
+                                ToggleValue ^= true;
+                                OnInputChanged.Invoke(ToggleValue);
+                            }
+                        }
+
+                        break;
+                    default: break;
                 }
-                return false;
+                return InputValue;
             }
         }
 
-        public IInputSystem InputSystem
-        {
-            get { return inputSystem; }
-            set { inputSystem = value; }
+        public IInputSystem InputSystem { get => inputSystem; set => inputSystem = value; }
+        public string Name { get => name; set => name = value; }
+        public bool Active 
+        { get => active.Value;
+            set
+            { active.Value = value;
+                if (value)
+                    OnInputEnable.Invoke();
+                else 
+                    OnInputEnable.Invoke();
+            }
         }
+        public InputButton Button => GetPressed;
+
+        public UnityEvent InputDown => this.OnInputDown;
+
+        public UnityEvent InputUp => this.OnInputUp;
+
+        public BoolEvent InputChanged => this.OnInputChanged;
+
 
         #region Constructors
 
@@ -290,6 +321,7 @@ namespace MalbersAnimations
             key = k;
             GetPressed = InputButton.Down;
             inputSystem = new DefaultInput();
+            ResetOnDisable = true;
         }
 
         public InputRow(string input, KeyCode key)
@@ -300,6 +332,7 @@ namespace MalbersAnimations
             this.input = input;
             GetPressed = InputButton.Down;
             inputSystem = new DefaultInput();
+            ResetOnDisable = true;
         }
 
         public InputRow(string unityInput, KeyCode k, InputButton pressed)
@@ -310,6 +343,7 @@ namespace MalbersAnimations
             input = unityInput;
             GetPressed = InputButton.Down;
             inputSystem = new DefaultInput();
+            ResetOnDisable = true;
         }
 
         public InputRow(string name, string unityInput, KeyCode k, InputButton pressed, InputType itype)
@@ -321,6 +355,7 @@ namespace MalbersAnimations
             input = unityInput;
             GetPressed = pressed;
             inputSystem = new DefaultInput();
+            ResetOnDisable = true;
         }
 
         public InputRow(bool active , string name, string unityInput, KeyCode k, InputButton pressed, InputType itype)
@@ -332,6 +367,7 @@ namespace MalbersAnimations
             input = unityInput;
             GetPressed = pressed;
             inputSystem = new DefaultInput();
+            ResetOnDisable = true;
         }
 
         public InputRow()
@@ -343,6 +379,7 @@ namespace MalbersAnimations
             key = KeyCode.A;
             GetPressed = InputButton.Press;
             inputSystem = new DefaultInput();
+            ResetOnDisable = true;
         }
 
         #endregion
@@ -360,28 +397,20 @@ namespace MalbersAnimations
         float currentAxisValue = 0;
 
 
+
         /// <summary>Returns the Axis Value</summary>
         public float GetAxis
         {
             get
             {
                 if (inputSystem == null || !active) return 0f;
-
                 currentAxisValue = raw ? inputSystem.GetAxisRaw(input) : inputSystem.GetAxis(input);
-
-             //   OnAxisValueChanged.Invoke(currentAxisValue);
                 return currentAxisValue;
             }
         }
 
-        /// <summary>
-        /// Set/Get which Input System this Axis is using by Default is set to use the Unity Input System
-        /// </summary>
-        public IInputSystem InputSystem
-        {
-            get { return inputSystem; }
-            set { inputSystem = value; }
-        }
+        /// <summary> Set/Get which Input System this Axis is using by Default is set to use the Unity Input System </summary>
+        public IInputSystem InputSystem { get => inputSystem; set => inputSystem = value; }
 
         public InputAxis()
         {

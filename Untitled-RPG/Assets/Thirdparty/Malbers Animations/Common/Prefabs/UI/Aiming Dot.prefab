@@ -97,9 +97,25 @@ MonoBehaviour:
     useTransform: 1
     useVector3: 1
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
       m_PersistentCalls:
         m_Calls: []
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114353910745635238}
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
@@ -107,6 +123,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseBool:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
       m_PersistentCalls:
         m_Calls: []
     ResponseString:
@@ -119,16 +141,33 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114353910745635238}
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 114353910745635238}
           m_MethodName: SetTransform
           m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseVector3:
       m_PersistentCalls:
         m_Calls:
@@ -148,6 +187,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
 --- !u!114 &114353910745635238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a678aa093696e44886619b4e971c6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainCamera: {fileID: 0}
   WorldTransform: {fileID: 0}
   Lerp: 1
   StartOff: 0

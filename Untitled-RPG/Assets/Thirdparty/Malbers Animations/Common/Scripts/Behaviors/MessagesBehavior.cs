@@ -1,43 +1,22 @@
-﻿using MalbersAnimations.Scriptables;
-using UnityEngine;
+﻿using UnityEngine;
+using MalbersAnimations.Scriptables;
+using MalbersAnimations.Utilities;
+using System.Linq;
+using UnityEngine.Animations;
+
+#if UNITY_EDITOR
+using UnityEditorInternal;
+using UnityEditor;
+#endif
 
 namespace MalbersAnimations
 {
-    /// <summary>
-    /// Recieve messages from the Animator State Machine Behaviours using MessageBehaviour
-    /// </summary>
-    public interface IAnimatorListener
-    {
-        /// <summary> Recieve messages from the Animator State Machine Behaviours </summary>
-        /// <param name="message">The name of the method</param>
-        /// <param name="value">the parameter</param>
-        void OnAnimatorBehaviourMessage(string message, object value);
-
-        /*
-        public virtual void OnAnimatorBehaviourMessage(string message, object value)
-        {
-            this.InvokeWithParams(message, value);
-        }
-        */
-    }
-
-    public interface IAnimatorParameters
-    {
-        void SetAnimParameter(int hash, int value);
-
-        /// <summary>Set a float on the Animator</summary>
-        void SetAnimParameter(int hash, float value);
-
-        /// <summary>Set a Bool on the Animator</summary>
-        void SetAnimParameter(int hash, bool value);
-
-        /// <summary>Set a Trigger to the Animator</summary>
-        void SetAnimParameter(int hash);
-    }
-
     public class MessagesBehavior : StateMachineBehaviour
     {
         public bool UseSendMessage;
+        public bool SendToChildren = false;
+        public bool debug;
+        public bool NormalizeTime = true;
 
         public MesssageItem[] onEnterMessage;   //Store messages to send it when Enter the animation State
         public MesssageItem[] onExitMessage;    //Store messages to send it when Exit  the animation State
@@ -45,157 +24,400 @@ namespace MalbersAnimations
 
         IAnimatorListener[] listeners;         //To all the MonoBehavious that Have this 
 
+        private bool firstime = false;
+
+        public bool OnEnter = true;
+        public bool OnExit= true;
+        public bool OnTime = true;
 
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            listeners = animator.GetComponents<IAnimatorListener>();
-
-
-            foreach (MesssageItem ontimeM in onTimeMessage)  //Set all the messages Ontime Sent = false when start
+            if (!firstime)
             {
-                ontimeM.sent = false;
+                if (SendToChildren)
+                    listeners = animator.GetComponentsInChildren<IAnimatorListener>();
+                else
+                    listeners = animator.GetComponents<IAnimatorListener>();
+                firstime = true;
+               
             }
 
-            foreach (MesssageItem onEnterM in onEnterMessage)
+           if (OnTime)
+                foreach (MesssageItem ontimeM in onTimeMessage) ontimeM.sent = false;  //Set all the messages Ontime Sent = false when start
+
+            if (OnEnter)
             {
-                if (onEnterM.Active && !string.IsNullOrEmpty(onEnterM.message))
+                foreach (MesssageItem onEnterM in onEnterMessage)
                 {
-                    if (UseSendMessage)
-                        DeliverMessage(onEnterM, animator);
-                    else
-                        foreach (var item in listeners) DeliverListener(onEnterM, item);
+                    if (onEnterM.Active && !string.IsNullOrEmpty(onEnterM.message))
+                    {
+                        if (UseSendMessage)
+                            onEnterM.DeliverMessage(animator, SendToChildren, debug);
+                        else
+                            foreach (var animListener in listeners)
+                                onEnterM.DeliverAnimListener(animListener,debug);
+                    }
                 }
             }
         }
 
-        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex, AnimatorControllerPlayable controller)
         {
-            foreach (MesssageItem onExitM in onExitMessage)
+            if (OnExit)
             {
-                if (onExitM.Active && !string.IsNullOrEmpty(onExitM.message))
+                foreach (MesssageItem onExitM in onExitMessage)
                 {
-                    if (UseSendMessage)
-                        DeliverMessage(onExitM, animator);
-                    else
-                        foreach (var item in listeners) DeliverListener(onExitM, item);
+                    if (onExitM.Active && !string.IsNullOrEmpty(onExitM.message))
+                    {
+                        if (onEnterMessage != null && onEnterMessage.Length > 0 && onEnterMessage.ToList().Exists(x => x.message == onExitM.message))
+                        {
+                            if (animator.GetCurrentAnimatorStateInfo(layerIndex).fullPathHash == stateInfo.fullPathHash)
+                            {
+                                return;   //Means is Looping to itself So Skip the Exit Mode because an Enter Mode is Playing
+                            }
+                        }
+
+                        if (UseSendMessage)
+                            onExitM.DeliverMessage(animator, SendToChildren, debug);
+                        else
+                            foreach (var animListener in listeners)
+                                onExitM.DeliverAnimListener(animListener, debug);
+                    }
                 }
             }
         }
 
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (stateInfo.fullPathHash == animator.GetNextAnimatorStateInfo(layerIndex).fullPathHash) return; //means is transitioning to itself
-
-            foreach (MesssageItem onTimeM in onTimeMessage)
+            if (OnTime)
             {
-                if (onTimeM.Active && onTimeM.message != string.Empty)
+                if (stateInfo.fullPathHash == animator.GetNextAnimatorStateInfo(layerIndex).fullPathHash) return; //means is transitioning to itself
+
+                foreach (MesssageItem onTimeM in onTimeMessage)
                 {
-                    // float stateTime = stateInfo.loop ? stateInfo.normalizedTime % 1 : stateInfo.normalizedTime;
-                    float stateTime = stateInfo.normalizedTime % 1;
-
-                    if (!onTimeM.sent && (stateTime >= onTimeM.time))
+                    if (onTimeM.Active && !string.IsNullOrEmpty(onTimeM.message))
                     {
-                        onTimeM.sent = true;
+                        // float stateTime = stateInfo.loop ? stateInfo.normalizedTime % 1 : stateInfo.normalizedTime;
+                        float stateTime = NormalizeTime ? stateInfo.normalizedTime % 1 : stateInfo.normalizedTime;
 
-                      //  Debug.Log(onTimeM.message + ": "+stateTime);
+                        if (!onTimeM.sent && (stateTime >= onTimeM.time))
+                        {
+                            onTimeM.sent = true;
 
-                        if (UseSendMessage)
-                            DeliverMessage(onTimeM, animator);
-                        else
-                            foreach (var item in listeners) DeliverListener(onTimeM, item);
+                            if (UseSendMessage)
+                                onTimeM.DeliverMessage(animator, SendToChildren, debug);
+
+                            else
+                                foreach (var item in listeners)
+                                    onTimeM.DeliverAnimListener(item, debug);
+                        }
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Using Message to the Monovehaviours asociated to this animator delivery with Send Message
-        /// </summary>
-        void DeliverMessage(MesssageItem m, Animator anim)
-        {
-            switch (m.typeM)
-            {
-                case TypeMessage.Bool:
-                    anim.SendMessage(m.message, m.boolValue, SendMessageOptions.DontRequireReceiver);
-                    break;
-                case TypeMessage.Int:
-                    anim.SendMessage(m.message, m.intValue, SendMessageOptions.DontRequireReceiver);
-                    break;
-                case TypeMessage.Float:
-                    anim.SendMessage(m.message, m.floatValue, SendMessageOptions.DontRequireReceiver);
-                    break;
-                case TypeMessage.String:
-                    anim.SendMessage(m.message, m.stringValue, SendMessageOptions.DontRequireReceiver);
-                    break;
-                case TypeMessage.Void:
-                    anim.SendMessage(m.message, SendMessageOptions.DontRequireReceiver);
-                    break;
-                case TypeMessage.IntVar:
-                    anim.SendMessage(m.message,(int) m.intVarValue, SendMessageOptions.DontRequireReceiver);
-                    break;
-                case TypeMessage.Transform:
-                    anim.SendMessage(m.message, m.transformValue, SendMessageOptions.DontRequireReceiver);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
-
-        /// <summary>
-        /// Send messages to all scripts with IBehaviourListener to this animator 
-        /// </summary>
-        void DeliverListener(MesssageItem m, IAnimatorListener listener)
-        {
-            switch (m.typeM)
-            {
-                case TypeMessage.Bool:
-                    listener.OnAnimatorBehaviourMessage(m.message, m.boolValue);
-                    break;
-                case TypeMessage.Int:
-                    listener.OnAnimatorBehaviourMessage(m.message, m.intValue);
-                    break;
-                case TypeMessage.Float:
-                    listener.OnAnimatorBehaviourMessage(m.message, m.floatValue);
-                    break;
-                case TypeMessage.String:
-                    listener.OnAnimatorBehaviourMessage(m.message, m.stringValue);
-                    break;
-                case TypeMessage.Void:
-                    listener.OnAnimatorBehaviourMessage(m.message, null);
-                    break;
-                case TypeMessage.IntVar:
-                    listener.OnAnimatorBehaviourMessage(m.message, (int) m.intVarValue);
-                    break;
-                case TypeMessage.Transform:
-                    listener.OnAnimatorBehaviourMessage(m.message, m.transformValue);
-                    break;
-                default:
-                    break;
-            }
-        }
+        } 
     }
-    [System.Serializable]
-    public class MesssageItem
+   
+    //INSPECTOR
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(MessagesBehavior))]
+    public class MessageBehaviorsEd : Editor
     {
-        public string message;
-        public TypeMessage typeM;
-        public bool boolValue;
-        public int intValue;
-        public float floatValue;
-        public string stringValue;
-        public IntVar intVarValue;
-        public Transform transformValue;
+        private ReorderableList listOnEnter, listOnExit, listOnTime;
+        private MessagesBehavior MMessage;
+        private SerializedProperty onExitMessage, onEnterMessage, onTimeMessage, UseSendMessage, SendToChildren, NormalizeTime, debug, OnExit, OnTime, OnEnter;
 
-        public float time;
-        public bool sent;
-        public bool Active = true;
 
-        public MesssageItem()
+        Color selected = new Color(0, 0.6f, 1f, 1f);
+
+        private void OnEnable()
         {
-            message = string.Empty;
-            Active = true;
+
+            MMessage = ((MessagesBehavior)target);
+            onExitMessage = serializedObject.FindProperty("onExitMessage");
+            onEnterMessage = serializedObject.FindProperty("onEnterMessage");
+            onTimeMessage = serializedObject.FindProperty("onTimeMessage");
+            UseSendMessage = serializedObject.FindProperty("UseSendMessage");
+            SendToChildren = serializedObject.FindProperty("SendToChildren");
+            NormalizeTime = serializedObject.FindProperty("NormalizeTime");
+            debug = serializedObject.FindProperty("debug");
+            OnEnter = serializedObject.FindProperty("OnEnter");
+            OnExit = serializedObject.FindProperty("OnExit");
+            OnTime = serializedObject.FindProperty("OnTime");
+
+            //script = MonoScript.FromScriptableObject(MMessage);
+
+            listOnEnter = new ReorderableList(serializedObject, onEnterMessage, true, true, true, true);
+            listOnExit = new ReorderableList(serializedObject, onExitMessage, true, true, true, true);
+            listOnTime = new ReorderableList(serializedObject, onTimeMessage, true, true, true, true);
+
+            listOnEnter.drawHeaderCallback = HeaderCallbackDelegate1;
+            listOnExit.drawHeaderCallback = HeaderCallbackDelegate2;
+            listOnTime.drawHeaderCallback = HeaderCallbackDelegate3;
+
+
+            listOnEnter.drawElementCallback = (rect, index, isActive, isFocused) =>
+            {
+                EditorGUI.PropertyField(rect, onEnterMessage.GetArrayElementAtIndex(index), GUIContent.none);
+            };
+
+            listOnExit.drawElementCallback =  (rect, index, isActive, isFocused) =>
+            {
+                EditorGUI.PropertyField(rect, onExitMessage.GetArrayElementAtIndex(index), GUIContent.none);
+            };
+
+            listOnTime.drawElementCallback = drawElementCallback3;
         }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            MalbersEditor.DrawDescription("Send Messages to all the MonoBehaviours that uses the Interface |IAnimatorListener|");
+
+
+            EditorGUI.BeginChangeCheck();
+
+            EditorGUILayout.BeginVertical(MTools.StyleGray);
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                var currentGUIColor = GUI.color;
+
+                GUI.color = OnEnter.boolValue ? selected : currentGUIColor;
+                OnEnter.boolValue = GUILayout.Toggle(OnEnter.boolValue,
+                                    new GUIContent("Enter", "Send the message On Enter State "), EditorStyles.miniButton);
+                
+                GUI.color = OnExit.boolValue ? selected : currentGUIColor;
+                OnExit.boolValue = GUILayout.Toggle(OnExit.boolValue,
+                                   new GUIContent("Exit", "Send the message On Exit State"), EditorStyles.miniButton);
+
+
+                GUI.color = OnTime.boolValue ? selected : currentGUIColor;
+
+                OnTime.boolValue = GUILayout.Toggle(OnTime.boolValue,
+                                  new GUIContent("Time", "Send the message On Update State using a time"), EditorStyles.miniButton);
+
+
+                GUI.color = SendToChildren.boolValue ? ( Color.green) : currentGUIColor;
+
+                SendToChildren.boolValue = GUILayout.Toggle(SendToChildren.boolValue,
+                    new GUIContent("Children", "The Messages will be sent also to the Animator gameobject children"), EditorStyles.miniButton);
+             
+                
+                
+                GUI.color = UseSendMessage.boolValue ? (Color.green) : currentGUIColor;
+                UseSendMessage.boolValue = GUILayout.Toggle(UseSendMessage.boolValue,
+                    new GUIContent("SendMessage()", "Uses the SendMessage() method, instead of checking for IAnimator Listener Interfaces"), EditorStyles.miniButton);
+
+                //EditorGUILayout.PropertyField(SendToChildren, new GUIContent("Message Children", "All the children gameObjects in the hierarchy will receive the message"));
+
+                GUI.color = currentGUIColor;
+                
+                MalbersEditor.DrawDebugIcon(debug);
+
+                EditorGUILayout.EndHorizontal();
+
+                if (OnEnter.boolValue) 
+                    listOnEnter.DoLayoutList();
+
+                if (OnExit.boolValue) 
+                    listOnExit.DoLayoutList(); 
+              
+                if (OnTime.boolValue) 
+                    listOnTime.DoLayoutList();  
+              
+                EditorGUIUtility.labelWidth = 0;
+            }
+
+            EditorGUILayout.EndVertical();
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(target, "Message Behaviour Inspector");
+                //EditorUtility.SetDirty(target);
+            }
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+
+        /// <summary>  Reordable List Header  </summary>
+        void HeaderCallbackDelegate1(Rect rect)
+        {
+            Rect R_1 = new Rect(rect.x, rect.y, (rect.width / 3) + 30, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_1, "Msg (On Enter)");
+
+            Rect R_3 = new Rect(rect.x + 10 + ((rect.width) / 3) + 5 + 30, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_3, "Type");
+
+            Rect R_5 = new Rect(rect.x + 10 + ((rect.width) / 3) * 2 + 5 + 15, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_5, "Value");
+        }
+
+        void HeaderCallbackDelegate2(Rect rect)
+        {
+            Rect R_1 = new Rect(rect.x, rect.y, (rect.width / 3) + 30, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_1, "Msg (On Exit)");
+
+            Rect R_3 = new Rect(rect.x + 10 + ((rect.width) / 3) + 5 + 30, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_3, "Type");
+
+            Rect R_5 = new Rect(rect.x + 10 + ((rect.width) / 3) * 2 + 5 + 15, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_5, "Value");
+        }
+
+        void HeaderCallbackDelegate3(Rect rect)
+        {
+            Rect R_1 = new Rect(rect.x, rect.y, (rect.width / 4) + 30, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_1, "Msg (OnTime)");
+
+            Rect R_3 = new Rect(rect.x + 10 + ((rect.width) / 4) + 5 + 30, rect.y,  32, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_3, "Type");
+            Rect R_4 = new Rect(rect.x + 10 + ((rect.width) / 4) * 2 + 5 + 20, rect.y, ((rect.width) / 4) - 5, EditorGUIUtility.singleLineHeight);
+
+            EditorGUI.LabelField(R_4, "Time");
+
+            Rect R_4_1 = new Rect(R_4);
+            R_4_1.x += 32;
+            R_4_1.width = 23;
+
+            NormalizeTime.boolValue = GUI.Toggle(R_4_1,NormalizeTime.boolValue, new GUIContent("N", "Normalize the State Animation Time"),EditorStyles.miniButton);
+
+            Rect R_5 = new Rect(rect.x + ((rect.width) / 4) * 3 + 5 + 10, rect.y, ((rect.width) / 4) - 5, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(R_5, "Value");
+
+        }
+
+        //ON ENTER
+        void drawElementCallback1(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            var element = MMessage.onEnterMessage[index];
+            rect.y += 2;
+
+            Rect R_0 = new Rect(rect.x, rect.y, 15, EditorGUIUtility.singleLineHeight);
+            element.Active = EditorGUI.Toggle(R_0, element.Active);
+
+            Rect R_1 = new Rect(rect.x + 15, rect.y, (rect.width / 3) + 15, EditorGUIUtility.singleLineHeight);
+            element.message = EditorGUI.TextField(R_1, element.message);
+
+
+            Rect R_3 = new Rect(rect.x + ((rect.width) / 3) + 5 + 30, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            element.typeM = (TypeMessage)EditorGUI.EnumPopup(R_3, element.typeM);
+
+            Rect R_5 = new Rect(rect.x + ((rect.width) / 3) * 2 + 5 + 15, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            switch (element.typeM)
+            {
+                case TypeMessage.Bool:
+                    element.boolValue = EditorGUI.ToggleLeft(R_5, element.boolValue ? " True" : " False", element.boolValue);
+                    break;
+                case TypeMessage.Int:
+                    element.intValue = EditorGUI.IntField(R_5, element.intValue);
+                    break;
+                case TypeMessage.Float:
+                    element.floatValue = EditorGUI.FloatField(R_5, element.floatValue);
+                    break;
+                case TypeMessage.String:
+                    element.stringValue = EditorGUI.TextField(R_5, element.stringValue);
+                    break;
+                case TypeMessage.IntVar:
+                    element.intVarValue = (IntVar)EditorGUI.ObjectField(R_5, element.intVarValue, typeof(IntVar), false);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        //ON EXIT
+        void drawElementCallback2(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            var element = MMessage.onExitMessage[index];
+            var sp_element = onExitMessage.GetArrayElementAtIndex(index);
+
+            rect.y += 2;
+
+            Rect R_0 = new Rect(rect.x, rect.y, 15, EditorGUIUtility.singleLineHeight);
+            element.Active = EditorGUI.Toggle(R_0, element.Active);
+
+            Rect R_1 = new Rect(rect.x + 15, rect.y, (rect.width / 3) + 15, EditorGUIUtility.singleLineHeight);
+            element.message = EditorGUI.TextField(R_1, element.message);
+
+            Rect R_3 = new Rect(rect.x + ((rect.width) / 3) + 5 + 30, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            element.typeM = (TypeMessage)EditorGUI.EnumPopup(R_3, element.typeM);
+
+            Rect R_5 = new Rect(rect.x + ((rect.width) / 3) * 2 + 5 + 15, rect.y, ((rect.width) / 3) - 5 - 15, EditorGUIUtility.singleLineHeight);
+            switch (element.typeM)
+            {
+                case TypeMessage.Bool:
+                    element.boolValue = EditorGUI.ToggleLeft(R_5, element.boolValue ? " True" : " False", element.boolValue);
+                    break;
+                case TypeMessage.Int:
+                    EditorGUI.PropertyField(R_5, sp_element.FindPropertyRelative("intValue"), GUIContent.none);
+                    break;
+                case TypeMessage.Float:
+                    EditorGUI.PropertyField(R_5, sp_element.FindPropertyRelative("floatValue"), GUIContent.none);
+                    break;
+                case TypeMessage.String:
+                    EditorGUI.PropertyField(R_5, sp_element.FindPropertyRelative("stringValue"), GUIContent.none);
+                    break;
+                case TypeMessage.IntVar:
+                    EditorGUI.PropertyField(R_5, sp_element.FindPropertyRelative("intVarValue"), GUIContent.none);
+                    break;
+                case TypeMessage.Transform:
+                    EditorGUI.PropertyField(R_5, sp_element.FindPropertyRelative("transformValue"), GUIContent.none);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        //ON Time
+        void drawElementCallback3(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            var element = MMessage.onTimeMessage[index];
+            rect.y += 2;
+
+            Rect R_0 = new Rect(rect.x, rect.y, 15, EditorGUIUtility.singleLineHeight);
+            element.Active = EditorGUI.Toggle(R_0, element.Active);
+
+            Rect R_1 = new Rect(rect.x + 15, rect.y, (rect.width / 4) + 15, EditorGUIUtility.singleLineHeight);
+            element.message = EditorGUI.TextField(R_1, element.message);
+
+            Rect R_3 = new Rect(rect.x + ((rect.width) / 4) + 5 + 30, rect.y, ((rect.width) / 4) - 5 - 5, EditorGUIUtility.singleLineHeight);
+            element.typeM = (TypeMessage)EditorGUI.EnumPopup(R_3, element.typeM);
+
+            Rect R_4 = new Rect(rect.x + ((rect.width) / 4) * 2 + 5 + 25, rect.y, ((rect.width) / 4) - 5 - 15, EditorGUIUtility.singleLineHeight);
+
+            element.time = EditorGUI.FloatField(R_4, element.time);
+
+            //if (element.time > 1) element.time = 1;
+             if (element.time < 0) element.time = 0;
+
+            Rect R_5 = new Rect(rect.x + ((rect.width) / 4) * 3 + 15, rect.y, ((rect.width) / 4) - 15, EditorGUIUtility.singleLineHeight);
+            switch (element.typeM)
+            {
+                case TypeMessage.Bool:
+                    element.boolValue = EditorGUI.ToggleLeft(R_5, element.boolValue ? " True" : " False", element.boolValue);
+                    break;
+                case TypeMessage.Int:
+                    element.intValue = EditorGUI.IntField(R_5, element.intValue);
+                    break;
+                case TypeMessage.Float:
+                    element.floatValue = EditorGUI.FloatField(R_5, element.floatValue);
+                    break;
+                case TypeMessage.String:
+                    element.stringValue = EditorGUI.TextField(R_5, element.stringValue);
+                    break;
+                case TypeMessage.IntVar:
+                    element.intVarValue = (IntVar)EditorGUI.ObjectField(R_5, element.intVarValue, typeof(IntVar), false);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
     }
+#endif
 }

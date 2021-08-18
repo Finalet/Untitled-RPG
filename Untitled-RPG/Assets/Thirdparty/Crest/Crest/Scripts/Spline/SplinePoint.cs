@@ -1,18 +1,33 @@
 ﻿// Crest Ocean System
 
-// This file is subject to the MIT License as seen in the root of this folder structure (LICENSE)
+// Copyright 2020 Wave Harmonic Ltd
 
 using UnityEditor;
 using UnityEngine;
 
 namespace Crest.Spline
 {
+    public interface ISplinePointCustomData
+    {
+        Vector2 GetData();
+    }
+
     /// <summary>
     /// Spline point, intended to be child of Spline object
     /// </summary>
     [ExecuteAlways]
+    [AddComponentMenu(Internal.Constants.MENU_PREFIX_SPLINE + "Spline Point")]
     public class SplinePoint : MonoBehaviour
     {
+        /// <summary>
+        /// The version of this asset. Can be used to migrate across versions. This value should
+        /// only be changed when the editor upgrades the version.
+        /// </summary>
+        [SerializeField, HideInInspector]
+#pragma warning disable 414
+        int _version = 0;
+#pragma warning restore 414
+
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
@@ -28,6 +43,14 @@ namespace Crest.Spline
             Gizmos.DrawIcon(transform.position, iconName, true);
             Gizmos.DrawIcon(transform.position, iconName, true);
             Gizmos.DrawIcon(transform.position, iconName, true);
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            if (transform.parent.TryGetComponent(out IReceiveSplinePointOnDrawGizmosSelectedMessages receiver))
+            {
+                receiver.OnSplinePointDrawGizmosSelected(this);
+            }
         }
 #endif
     }
@@ -53,6 +76,18 @@ namespace Crest.Spline
             {
                 EditorGUILayout.HelpBox("Spline component must be present on parent of this GameObject.", MessageType.Error);
                 return;
+            }
+
+            // For any components on spline that want custom data added to spline points, add them
+            var customDatas = parent.GetComponents<ISplinePointCustomDataSetup>();
+            foreach (var customData in customDatas)
+            {
+                // NOTE: This will not be registered with the undo/redo history, but with the way these are attached, it
+                // wouldn't make sense to register them. These data objects are harmless.
+                if (customData.AttachDataToSplinePoint(thisSP.gameObject))
+                {
+                    EditorUtility.SetDirty(thisSP.gameObject);
+                }
             }
 
             GUILayout.Label("Selection", EditorStyles.boldLabel);
@@ -122,22 +157,28 @@ namespace Crest.Spline
                         Selection.activeObject = parent;
                     }
                 }
-                DestroyImmediate(thisSP.gameObject);
+                Undo.DestroyObjectImmediate(thisSP.gameObject);
             }
         }
 
-        static GameObject CreateNewSP()
+        static GameObject CreateNewSP(Transform spline)
         {
             var newPoint = new GameObject();
             newPoint.name = "SplinePoint";
             newPoint.AddComponent<SplinePoint>();
+            newPoint.transform.parent = spline;
+
+            if (spline.TryGetComponent(out ISplinePointCustomDataSetup customData))
+            {
+                customData.AttachDataToSplinePoint(newPoint);
+            }
+
             return newPoint;
         }
 
         public static GameObject AddSplinePointBefore(Transform parent, int beforeIdx = 0)
         {
-            var newPoint = CreateNewSP();
-            newPoint.transform.parent = parent;
+            var newPoint = CreateNewSP(parent);
 
             // Put in front of child at beforeIdx
             newPoint.transform.SetSiblingIndex(beforeIdx);
@@ -177,8 +218,7 @@ namespace Crest.Spline
             // If no index specified, assume adding after last point
             if (afterIdx == -1) afterIdx = parent.childCount - 1;
 
-            var newPoint = CreateNewSP();
-            newPoint.transform.parent = parent;
+            var newPoint = CreateNewSP(parent);
 
             var newIdx = afterIdx + 1;
             newPoint.transform.SetSiblingIndex(newIdx);

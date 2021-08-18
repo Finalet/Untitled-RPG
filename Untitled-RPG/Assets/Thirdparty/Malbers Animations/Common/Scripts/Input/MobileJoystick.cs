@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
@@ -9,32 +7,35 @@ using MalbersAnimations.Scriptables;
 
 namespace MalbersAnimations
 {
+    [HelpURL("https://malbersanimations.gitbook.io/animal-controller/mobile/mobile-joystick")]
+    [AddComponentMenu("Malbers/Input/Mobile Joystick")]
+
     public class MobileJoystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
     {
-        //[Tooltip("The Character will follow the camera forward axis")]
-        //public bool CameraInput = false;
-
-        /// <summary>Invert the X Axis</summary>
+        [Tooltip("Inverts the Horizontal value of the joystick")]
         public bool invertX;
-        public float deathpoint = 0.1f;
-        /// <summary>Invert the X Axis</summary>
+        [Tooltip("Inverts the Vertical value of the joystick")]
         public bool invertY;                     // Bollean to define whether or not the Y axis is inverted.
 
-     //   [Header("Sensitivity")]
+        [Tooltip("If the Axis Magnitude is lower than this value then the Axis will zero out")]
+        public float deathpoint = 0.1f;
         /// <summary>sensitivity for the X Axis</summary>
         public float sensitivityX = 1;
         /// <summary>sensitivity for the Y Axis</summary>
         public float sensitivityY = 1;
 
 
-    //    [Header("References")]
+        [Tooltip("The Joystick Start position will be First click on the Area")]
+        public bool Dynamic = false;
+
+        //    [Header("References")]
         /// <summary> Is the Joystick is being pressed.</summary>
         public BoolReference pressed;
         /// <summary>Variable to Store the XAxis and Y Axis of the JoyStick</summary>
         public Vector2Reference axisValue;
+        private Vector2 DeltaDrag;
 
-
-     //   [Header("Events")]
+        //   [Header("Events")]
         public UnityEvent OnJoystickDown = new UnityEvent();
         public UnityEvent OnJoystickUp = new UnityEvent();
         public Vector2Event OnAxisChange = new Vector2Event();
@@ -49,12 +50,18 @@ namespace MalbersAnimations
         public bool AxisEditor = true;
         public bool EventsEditor = true;
         public bool ReferencesEditor = true;
+        [Tooltip("If true, then the joystick will not use the starting position as guide for calculating the movement axis")]
+        public bool m_Drag = false;
 
 
         /// <summary>JoyStick Background</summary>
-        private Graphic bg;
+        public Graphic bg;
+
+        /// <summary>Drag Area Background</summary>
+        public Graphic DragRect;
+
         /// <summary>JoyStick Button</summary>
-        private Graphic Jbutton;
+        public Graphic Jbutton;
 
         /// <summary>Mutliplier to </summary>
         private const float mult = 3;
@@ -63,13 +70,13 @@ namespace MalbersAnimations
 
         public bool Pressed
         {
-            get { return pressed; }
+            get => pressed; 
             set { OnJoystickPressed.Invoke(pressed.Value = value); }
         }
 
         public Vector2 AxisValue
         {
-            get { return axisValue; }
+            get => axisValue;  
             set
             {
                 if (invertX) value.x *= -1;
@@ -79,26 +86,27 @@ namespace MalbersAnimations
             }
         }
 
-        public float XAxis { get { return AxisValue.x; } }
-        public float YAxis { get { return AxisValue.y; } }
-
-
+        public float XAxis => AxisValue.x;
+        public float YAxis => AxisValue.y;
 
         void Start()
         {
-            bg = GetComponent<Graphic>();
-            Jbutton = transform.GetChild(0).GetComponent<Graphic>();
+            if (bg == null)   bg = GetComponent<Graphic>();
+            if (Jbutton == null) Jbutton = transform.GetChild(0).GetComponent<Graphic>();
+            if (DragRect == null) DragRect = GetComponent<Graphic>(); 
+
             BgXSize = bg.rectTransform.sizeDelta.x;
             BgYSize = bg.rectTransform.sizeDelta.y;
-
-            //m_Cam = Camera.main.transform;
         }
 
         void Update()
         {
-            OnAxisChange.Invoke(axisValue);
-            OnXAxisChange.Invoke(axisValue.Value.x);
-            OnYAxisChange.Invoke(axisValue.Value.y);
+            if (Pressed)
+            {
+                OnAxisChange.Invoke(axisValue);
+                OnXAxisChange.Invoke(axisValue.Value.x);
+                OnYAxisChange.Invoke(axisValue.Value.y);
+            }
         }
 
 
@@ -106,30 +114,34 @@ namespace MalbersAnimations
         // When draging is occuring this will be called every time the cursor is moved.
         public virtual void OnDrag(PointerEventData Point)
         {
-            Vector2 pos;
             Vector2 TargetAxis = Vector2.zero; ;
 
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(bg.rectTransform, Point.position, Point.pressEventCamera, out pos))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(bg.rectTransform, Point.position, Point.pressEventCamera, out Vector2 pos))
             {
+                if (!m_Drag || Dynamic)
+                {
+                    pos.x /= BgXSize;              // Get the Joystick position on the 2 axes based on the Bg position.
+                    pos.y /= BgYSize;              // Get the Joystick position on the 2 axes based on the Bg position.
 
-                pos.x = (pos.x / BgXSize);              // Get the Joystick position on the 2 axes based on the Bg position.
-                pos.y = (pos.y / BgYSize);              // Get the Joystick position on the 2 axes based on the Bg position.
+                    TargetAxis = new Vector3(pos.x * mult * sensitivityX, pos.y * mult * sensitivityY);        // Position is relative to the  Bg.
 
-                TargetAxis = new Vector3(pos.x * mult * sensitivityX, pos.y * mult * sensitivityY);        // Position is relative to the  Bg.
+                    TargetAxis = (TargetAxis.magnitude > 1.0f ? TargetAxis.normalized : TargetAxis);
 
-                TargetAxis = (TargetAxis.magnitude > 1.0f ? TargetAxis.normalized : TargetAxis);
+                    Vector2 JButtonPos = new Vector2(TargetAxis.x * (BgXSize / mult), TargetAxis.y * (BgYSize / mult));
 
-                Vector2 JButtonPos = new Vector2(TargetAxis.x * (BgXSize / mult), TargetAxis.y * (BgYSize / mult));
+                    Jbutton.rectTransform.anchoredPosition = JButtonPos;
+                }
+                else
+                {
+                    Jbutton.rectTransform.anchoredPosition = pos;
+                    var relative = pos - DeltaDrag;
 
-                Jbutton.rectTransform.anchoredPosition = JButtonPos;
+                    TargetAxis =
+                        new Vector3(relative.x * sensitivityX * Screen.width * 0.001f, relative.y * sensitivityY * 0.001f * Screen.height);      // Position is relative to the  Bg.
+                    DeltaDrag = pos;
+                }
             }
-
-            //if (CameraInput && m_Cam)
-            //{
-
-            //    var Input = (TargetAxis.y * m_Cam.forward) + (TargetAxis.x * m_Cam.right);
-            //    TargetAxis = new Vector2(Input.x, Input.z);
-            //}
+             
 
             if (TargetAxis.magnitude <= deathpoint)
             {
@@ -139,23 +151,48 @@ namespace MalbersAnimations
             {
                 AxisValue = TargetAxis;
             }
+
+
+            //OnAxisChange.Invoke(axisValue);
+            //OnXAxisChange.Invoke(axisValue.Value.x);
+            //OnYAxisChange.Invoke(axisValue.Value.y);
         }
 
         // When the virtual analog's press occured this will be called.
-        public virtual void OnPointerDown(PointerEventData enventData)
+        public virtual void OnPointerDown(PointerEventData Point)
         {
-            Pressed = true;
-            OnDrag(enventData);
             OnJoystickDown.Invoke();
+            Pressed = true;
+
+            DeltaDrag = Vector2.zero;
+
+            if (Dynamic && !m_Drag)
+            {
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(DragRect.rectTransform, Point.position, Point.pressEventCamera, out Vector2 DeltaDrag))
+                {
+                    DeltaDrag.x -= DragRect.rectTransform.sizeDelta.x;              // Get the Joystick Correct X Position
+                    DeltaDrag.y -= DragRect.rectTransform.sizeDelta.y;              // Get the Joystick Correct X Position
+                    bg.rectTransform.anchoredPosition = DeltaDrag;
+                }
+            }
+            else
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(bg.rectTransform, Point.position, Point.pressEventCamera, out DeltaDrag);
+            }
+            OnDrag(Point);
         }
 
         // When the virtual analog's release occured this will be called.
         public virtual void OnPointerUp(PointerEventData ped)
         {
+            OnJoystickUp.Invoke();
             Pressed = false;
             AxisValue = Vector2.zero;
             Jbutton.rectTransform.anchoredPosition = Vector3.zero;
-            OnJoystickUp.Invoke();
+            DeltaDrag = Vector2.zero;
+            OnAxisChange.Invoke(axisValue);
+            OnXAxisChange.Invoke(axisValue.Value.x);
+            OnYAxisChange.Invoke(axisValue.Value.y);
         }
     }
 }

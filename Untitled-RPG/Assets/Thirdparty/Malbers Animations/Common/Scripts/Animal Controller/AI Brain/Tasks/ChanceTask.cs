@@ -4,10 +4,13 @@ namespace MalbersAnimations.Controller.AI
     [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Tasks/Chance Task")]
     public class ChanceTask : MTask
     {
-        [Range(0,1), Tooltip("Change the this Task can execute another Task when the AI State start")]
+        public override string DisplayName => "General/Chance";
+
+        [Range(0,1), Tooltip("Chance this Task can execute another Task when the AI State start")]
         public float Chance = 1;
 
-        [RequiredField,Tooltip("Task to execute if the chance succeded")]
+        [Tooltip("Task to execute if the chance succeded")]
+        [CreateScriptableAsset]
         public MTask Task;
 
         public override void StartTask(MAnimalBrain brain, int index )

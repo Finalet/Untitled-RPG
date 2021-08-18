@@ -10,11 +10,16 @@
 /////////////////////////////
 // Samplers
 
+#if defined(UNITY_DECLARE_SCREENSPACE_TEXTURE)
+UNITY_DECLARE_SCREENSPACE_TEXTURE(_CameraDepthTexture);
+UNITY_DECLARE_SCREENSPACE_TEXTURE(_BackgroundTexture);
+#elif defined(TEXTURE2D_X)
 TEXTURE2D_X(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
 
 TEXTURE2D_X(_CameraOpaqueTexture);
 SAMPLER(sampler_CameraOpaqueTexture);
+#endif
 
 // NOTE: _Normals is used outside of _APPLYNORMALMAPPING_ON so we cannot surround it here.
 sampler2D _Normals;
@@ -57,6 +62,7 @@ half4 _DepthFogDensity;
 // Normals
 // ----------------------------------------------------------------------------
 
+half _NormalsStrengthOverall;
 #if _APPLYNORMALMAPPING_ON
 half _NormalsStrength;
 half _NormalsScale;

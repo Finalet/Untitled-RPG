@@ -18,13 +18,13 @@ public static class UI_General
     public static Color highlightTextColor = new Color (1, 0.74f, 0.35f);
     public static Color secondaryHighlightTextColor = new Color (0, 0.9f, 0);
 
-    public static IEnumerator PressAnimation (Image image, KeyCode pressedKey) {
+    public static IEnumerator PressAnimation (RectTransform rect, KeyCode pressedKey) {
         float animationDepth = 0.85f;
         float animationSpeed = 10f;
-        Vector2 currentSize = image.GetComponent<RectTransform>().localScale;
+        Vector2 currentSize = rect.localScale;
         while (currentSize.x > animationDepth) {
-            image.GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one * animationDepth, Time.deltaTime * animationSpeed);
-            currentSize = image.GetComponent<RectTransform>().localScale;
+            rect.localScale = Vector2.MoveTowards(currentSize, Vector2.one * animationDepth, Time.deltaTime * animationSpeed);
+            currentSize = rect.localScale;
             yield return new WaitForSeconds(Time.deltaTime);
         }
 
@@ -33,11 +33,11 @@ public static class UI_General
         }
 
         while (currentSize.x < 1) {
-            image.GetComponent<RectTransform>().localScale = Vector2.MoveTowards(currentSize, Vector2.one, Time.deltaTime * animationSpeed);
-            currentSize = image.GetComponent<RectTransform>().localScale;
+            rect.localScale = Vector2.MoveTowards(currentSize, Vector2.one, Time.deltaTime * animationSpeed);
+            currentSize = rect.localScale;
             yield return new WaitForSeconds(Time.deltaTime);
         } 
-        image.GetComponent<RectTransform>().localScale = Vector2.one;
+        rect.localScale = Vector2.one;
     }
 
        public static Color getRarityColor (ItemRarity itemRarity) {
@@ -93,7 +93,12 @@ public static class UI_General
                 case ResourceType.QuestItem: return "Quest item";
                 case ResourceType.Misc: return "Miscellaneous";
             }
-        }
+        } else if (item is Mount) {
+            return "Mount";
+        } else if (item is MountEquipment) {
+            MountEquipment me = (MountEquipment)item;
+            return me.equipmentType.ToString();
+        } 
         return $"NOT IMPLEMENTED";
     }
 

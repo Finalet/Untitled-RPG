@@ -65,11 +65,34 @@ public class CanvasScript : MonoBehaviour
     void DisplayHPandStamina () {
         healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, (float)characteristics.health/characteristics.maxHealth, Time.deltaTime * 10);
         healthBar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characteristics.health.ToString();
-        staminaFillAmount = characteristics.maxStamina == 0 ? 0 : Mathf.Lerp(staminaFillAmount, (float)characteristics.stamina/characteristics.maxStamina, Time.deltaTime * 10);
 
+        if (!PlayerControlls.instance.isMounted) DisplayPlayerStamina();
+        else DisplayMountStamina();
+    }
+    void DisplayPlayerStamina () {
+        staminaFillAmount = characteristics.maxStamina == 0 ? 0 : Mathf.Lerp(staminaFillAmount, (float)characteristics.stamina/characteristics.maxStamina, Time.deltaTime * 10);
         StaminaBarPosition();
 
         if (!Characteristics.instance.canUseStamina) {
+            if (staminaColorLerp < 1)
+                staminaColorLerp += Time.deltaTime * 10;
+        } else {
+            if (staminaColorLerp > 0)
+                staminaColorLerp -= Time.deltaTime * 10;
+        }
+        staminaColorLerp = Mathf.Clamp01(staminaColorLerp);
+        staminaFillAmount = Mathf.Clamp01(staminaFillAmount);
+        
+        staminaBar.material.SetFloat("_ColorLerp", staminaColorLerp);
+        staminaBar.material.SetFloat("_FillAmount", staminaFillAmount);
+    }
+    void DisplayMountStamina () {
+        MountController mountController = PlayerControlls.instance.rider.MountStored.Animal.GetComponent<MountController>();
+        
+        staminaFillAmount = mountController.totalMaxStamina == 0 ? 0 : Mathf.Lerp(staminaFillAmount, (float)mountController.currentStamina/mountController.totalMaxStamina, Time.deltaTime * 10);
+        StaminaBarMountedPosition();
+
+        if (!PlayerControlls.instance.rider.MountStored.Animal.UseSprint) {
             if (staminaColorLerp < 1)
                 staminaColorLerp += Time.deltaTime * 10;
         } else {
@@ -86,6 +109,12 @@ public class CanvasScript : MonoBehaviour
     void StaminaBarPosition () {
         Vector3 currentPos = staminaBar.transform.GetComponent<RectTransform>().anchoredPosition;
         Vector2 desPos = Camera.main.WorldToScreenPoint(PlayerControlls.instance.transform.position + PlayerControlls.instance.playerCamera.transform.right * 0.5f + Vector3.up * 1.2f);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), desPos, PeaceCanvas.instance.UICamera, out desPos);
+        staminaBar.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(currentPos, desPos, 10 * Time.deltaTime);
+    }
+    void StaminaBarMountedPosition () {
+        Vector3 currentPos = staminaBar.transform.GetComponent<RectTransform>().anchoredPosition;
+        Vector2 desPos = Camera.main.WorldToScreenPoint(PlayerControlls.instance.rider.MountStored.transform.position + PlayerControlls.instance.rider.MountStored.transform.right * 0.7f + Vector3.up * 1.2f);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), desPos, PeaceCanvas.instance.UICamera, out desPos);
         staminaBar.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(currentPos, desPos, 10 * Time.deltaTime);
     }

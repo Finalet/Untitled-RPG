@@ -18433,10 +18433,8 @@ GameObject:
   - component: {fileID: 199134904954007714}
   - component: {fileID: 54129463802585006}
   - component: {fileID: 135405681865087232}
-  - component: {fileID: 114423086384018814}
   - component: {fileID: 82662544559373652}
   - component: {fileID: 82613331252923294}
-  - component: {fileID: 114903982182419436}
   m_Layer: 1
   m_Name: FireBall
   m_TagString: Untagged
@@ -22996,22 +22994,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.37
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114423086384018814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1757608949838354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f26783105052d1c4dbcdf416634cbbdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force: 500
-  radius: 2
-  life: 10
-  explotion: {fileID: 100010, guid: 645413a00f7bd0242bbd6d0e5eb6f439, type: 3}
 --- !u!82 &82662544559373652
 AudioSource:
   m_ObjectHideFlags: 0
@@ -23204,52 +23186,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114903982182419436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1757608949838354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4977ce6c4031944a4d6d786517e86e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 1
-  PushForce: 10
-  Trigger: {fileID: 135405681865087232}
-  SelfStatEnter:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  SelfStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  EnemyStatEnter:
-    ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
-    modify: 3
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-  EnemyStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  debug: 0
-  DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 3224371477
-  triggerInteraction: 2

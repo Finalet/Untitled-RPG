@@ -2,9 +2,13 @@
 
 namespace MalbersAnimations.Controller.AI
 {
-    [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Decision/Check State", order = 0)]
+    [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Decision/Check State", order = 1)]
     public class CheckStateDecision : MAIDecision
     {
+        public override string DisplayName => "Animal/Check State";
+
+
+
         [Space, Tooltip("Check the Decision on the Animal(Self) or the Target(Target)")]
         public Affected check = Affected.Self;
         [Tooltip("Check if the State is Entering or Exiting")]

@@ -135,27 +135,24 @@ namespace Crest
                 return null;
             }
 
-            int oceanLayer = LayerMask.NameToLayer(ocean.LayerName);
-            if (oceanLayer == -1)
+            int oceanLayer = ocean.Layer;
+
+#pragma warning disable 0618
+            if (ocean.LayerName != "")
             {
-                Debug.LogError("Invalid ocean layer: " + ocean.LayerName + " please add this layer.", ocean);
-                oceanLayer = 0;
+                oceanLayer = LayerMask.NameToLayer(ocean.LayerName);
+                if (oceanLayer == -1)
+                {
+                    Debug.LogError("Invalid ocean layer: " + ocean.LayerName + " please add this layer.", ocean);
+                    oceanLayer = 0;
+                }
             }
+#pragma warning restore 0618
 
 #if PROFILE_CONSTRUCTION
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
 #endif
-
-            // create mesh data
-            Mesh[] meshInsts = new Mesh[(int)PatchType.Count];
-            Bounds[] meshBounds = new Bounds[(int)PatchType.Count];
-            // 4 tiles across a LOD, and support lowering density by a factor
-            var tileResolution = Mathf.Round(0.25f * lodDataResolution / geoDownSampleFactor);
-            for (int i = 0; i < (int)PatchType.Count; i++)
-            {
-                meshInsts[i] = BuildOceanPatch((PatchType)i, tileResolution, out meshBounds[i]);
-            }
 
             ClearOutTiles(ocean, tiles);
 
@@ -168,9 +165,22 @@ namespace Crest
             root.transform.localRotation = Quaternion.identity;
             root.transform.localScale = Vector3.one;
 
-            for (int i = 0; i < lodCount; i++)
+            if (!OceanRenderer.RunningHeadless && !OceanRenderer.RunningWithoutGPU)
             {
-                CreateLOD(ocean, tiles, root.transform, i, lodCount, meshInsts, meshBounds, lodDataResolution, geoDownSampleFactor, oceanLayer);
+                // create mesh data
+                Mesh[] meshInsts = new Mesh[(int)PatchType.Count];
+                Bounds[] meshBounds = new Bounds[(int)PatchType.Count];
+                // 4 tiles across a LOD, and support lowering density by a factor
+                var tileResolution = Mathf.Round(0.25f * lodDataResolution / geoDownSampleFactor);
+                for (int i = 0; i < (int)PatchType.Count; i++)
+                {
+                    meshInsts[i] = BuildOceanPatch((PatchType)i, tileResolution, out meshBounds[i]);
+                }
+
+                for (int i = 0; i < lodCount; i++)
+                {
+                    CreateLOD(ocean, tiles, root.transform, i, lodCount, meshInsts, meshBounds, lodDataResolution, geoDownSampleFactor, oceanLayer);
+                }
             }
 
 #if PROFILE_CONSTRUCTION
@@ -344,7 +354,20 @@ namespace Crest
 
                 mesh.SetIndices(null, MeshTopology.Triangles, 0);
                 mesh.vertices = arrV;
+
+                // HDRP needs full data. Do this on a define to keep door open to runtime changing of RP.
+#if CREST_HDRP
+                var norms = new Vector3[verts.Count];
+                for (int i = 0; i < norms.Length; i++) norms[i] = Vector3.up;
+                var tans = new Vector4[verts.Count];
+                for (int i = 0; i < tans.Length; i++) tans[i] = new Vector4(1, 0, 0, 1);
+
+                mesh.normals = norms;
+                mesh.tangents = tans;
+#else
                 mesh.normals = null;
+#endif
+
                 mesh.SetIndices(arrI, MeshTopology.Triangles, 0);
 
                 // recalculate bounds. add a little allowance for snapping. in the chunk renderer script, the bounds will be expanded further
@@ -455,7 +478,7 @@ namespace Crest
                     var oceanChunkRenderer = patch.AddComponent<OceanChunkRenderer>();
                     oceanChunkRenderer._boundsLocal = meshBounds[(int)patchTypes[i]];
                     patch.AddComponent<MeshFilter>().sharedMesh = meshData[(int)patchTypes[i]];
-                    oceanChunkRenderer.SetInstanceData(lodIndex, lodCount, lodDataResolution, geoDownSampleFactor);
+                    oceanChunkRenderer.SetInstanceData(lodIndex);
                     tiles.Add(oceanChunkRenderer);
                 }
 
@@ -471,9 +494,19 @@ namespace Crest
                 mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
                 mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; // arbitrary - could be turned on if desired
                 mr.receiveShadows = false; // this setting is ignored by unity for the transparent ocean shader
-                mr.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
+
+                // I'm not really convinced that only HDRP should get MVs, but its the one thats had the most testing,
+                // so keeping it this way for now. I'm guessing we'll enable on URP and maybe BIRP in the future.
+                if (RenderPipelineHelper.IsHighDefinition)
+                {
+                    mr.motionVectorGenerationMode = MotionVectorGenerationMode.Camera;
+                }
+                else
+                {
+                    mr.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
+                }
+
                 mr.material = ocean.OceanMaterial;
-                // The rendering layer mask has different purposes per pipeline.
                 mr.renderingLayerMask = OceanRenderer.Instance.RenderingLayerMask;
 
                 // rotate side patches to point the +x side outwards

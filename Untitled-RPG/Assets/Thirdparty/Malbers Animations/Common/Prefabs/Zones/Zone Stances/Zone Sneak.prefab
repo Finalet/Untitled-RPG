@@ -54,6 +54,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -65,6 +66,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -197,7 +199,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UseColliders: 1
   gizmoType: 0
-  alpha: 0.116
   debugSize: 0.03
   DebugColor: {r: 0.5, g: 0, b: 0, a: 1}
   DrawAxis: 0
@@ -214,87 +215,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5db483093dc6384a8e91aac44f175ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  automatic: 0
-  AutomaticDisabled: 5
+  automatic: 1
   HeadOnly: 0
   HeadName: Head
   zoneType: 2
   stateAction: 0
   stanceAction: 0
+  Layer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1048576
+    Variable: {fileID: 0}
+  stateStatus:
+    UseConstant: 1
+    ConstantValue: -1
+    Variable: {fileID: 0}
+  tags: []
   modeID: {fileID: 0}
   stateID: {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3, type: 2}
   stanceID: {fileID: 11400000, guid: fb28eb0d24b07c44c94e9a2d720ab7ec, type: 2}
   ActionID: {fileID: 11400000, guid: d56c59f4c0db07e43bb40a54364069a5, type: 2}
-  ID:
+  modeIndex:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Force:
     UseConstant: 1
     ConstantValue: 10
     Variable: {fileID: 0}
-  Align: 1
-  AlingPoint: {fileID: 4582853123744830}
-  AlingPoint2: {fileID: 0}
-  AlignTime: 0.5
-  AlignCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  DoubleSided: 1
-  AlignPos: 0
-  AlignRot: 1
-  AlignLookAt: 0
+  EnterDrag:
+    UseConstant: 1
+    ConstantValue: 2
+    Variable: {fileID: 0}
+  ExitDrag:
+    UseConstant: 1
+    ConstantValue: 4
+    Variable: {fileID: 0}
+  Bounce:
+    UseConstant: 1
+    ConstantValue: 8
+    Variable: {fileID: 0}
   ActionDelay: 0
-  StatModifier:
-    ID: {fileID: 0}
-    modify: 1
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
+  ModeFloat: 0
+  RemoveAnimalOnActive: 0
   OnEnter:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnExit:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnZoneActivation:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  nextTargets: []
-  stoppingDistance:
-    UseConstant: 1
-    ConstantValue: 0.5
-    Variable: {fileID: 0}
-  waitTime:
-    minValue: 0
-    maxValue: 5
-  pointType: 0
   EditorShowEvents: 0
-  EditorAI: 0
+  ShowStatModifiers: 0
 --- !u!1 &1762367727614750
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,17 +324,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1762367727614750}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 87

@@ -7,7 +7,7 @@ using Cinemachine;
 using DG.Tweening;
 using Funly.SkyStudio;
 
-public enum InterractionIcons {Bag, Chest, Coins, Craft, HandPickup, HandShake,HandPray}
+public enum InterractionIcons {Bag, Chest, Coins, Craft, Horse, HandPickup, HandShake,HandPray}
 
 
 public class PeaceCanvas : MonoBehaviour
@@ -69,6 +69,7 @@ public class PeaceCanvas : MonoBehaviour
     public Sprite chest;
     public Sprite coins;
     public Sprite craft;
+    public Sprite horse;
     public Sprite handPickup;
     public Sprite handshake;
     public Sprite handpray;
@@ -81,6 +82,7 @@ public class PeaceCanvas : MonoBehaviour
     public TextMeshProUGUI inventoryKeySuggestionLabel;
     public TextMeshProUGUI skillbookKeySuggestionLabel;
     public TextMeshProUGUI waittimeKeySuggestionLabel;
+    public TextMeshProUGUI callmountKeySuggestionLabel;
 
     [Header("Debug")] 
     public RectTransform DebugChatPanel;
@@ -131,6 +133,7 @@ public class PeaceCanvas : MonoBehaviour
         inventoryKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Inventory"]];
         skillbookKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Skillbook"]];
         waittimeKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Skip time"]];
+        callmountKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Call mount"]];
     }
 
     void HandleInputs () {
@@ -255,6 +258,7 @@ public class PeaceCanvas : MonoBehaviour
         StartCoroutine(exitToMenu());
     }
     IEnumerator exitToMenu () {
+        blackout.transform.SetAsLastSibling();
         blackout.DOFade(1, 1);
         Time.timeScale = 1;
         yield return new WaitForSeconds(1);
@@ -375,7 +379,11 @@ public class PeaceCanvas : MonoBehaviour
         buttonSuggestionUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = action; //Action label
         buttonSuggestionUI.transform.GetChild(1).gameObject.SetActive(false); //Action icon
         buttonSuggestionUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = key; //Key label
+        buttonSuggestionUI.transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = 0; //Progress
         buttonSuggestionUI.SetActive(true);
+    }
+    public void UpdateKeySuggestionProgress(float progress) {
+        buttonSuggestionUI.transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = progress;
     }
     public void ShowKeySuggestion (string key, InterractionIcons icon) {
         buttonSuggestionUI.transform.GetChild(0).gameObject.SetActive(false); //Action label
@@ -393,6 +401,9 @@ public class PeaceCanvas : MonoBehaviour
             case InterractionIcons.Craft:
                 buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = craft; //Action icon
                 break;
+            case InterractionIcons.Horse:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = horse; //Action icon
+                break;
             case InterractionIcons.HandPickup:
                 buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = handPickup; //Action icon
                 break;
@@ -404,6 +415,7 @@ public class PeaceCanvas : MonoBehaviour
                 break;
         }
         buttonSuggestionUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = key; //Key label
+        buttonSuggestionUI.transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = 0; //Progress
         buttonSuggestionUI.SetActive(true);
     }
 

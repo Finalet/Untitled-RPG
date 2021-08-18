@@ -14,6 +14,8 @@ public class DEBUG_TooManyItems : MonoBehaviour
     public Transform skillbooksGrid;
     public Transform consumablesGrid;
     public Transform resourcesGrid;
+    public Transform mountsGrid;
+    public Transform mountsEquipmentGrid;
 
     void Start() {
         transform.SetAsLastSibling();
@@ -24,6 +26,8 @@ public class DEBUG_TooManyItems : MonoBehaviour
         allItems.AddRange(AssetHolder.instance.skillbooks);
         allItems.AddRange(AssetHolder.instance.consumables);
         allItems.AddRange(AssetHolder.instance.resources);
+        allItems.AddRange(AssetHolder.instance.mounts);
+        allItems.AddRange(AssetHolder.instance.mountEquipment);
 
         foreach (Item item in allItems) {
             DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, allGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
@@ -47,6 +51,14 @@ public class DEBUG_TooManyItems : MonoBehaviour
         }
         foreach (Item item in AssetHolder.instance.resources) {
             DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, resourcesGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            slot.AddItem(item, 1, null);
+        }
+        foreach (Item item in AssetHolder.instance.mounts) {
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, mountsGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
+            slot.AddItem(item, 1, null);
+        }
+        foreach (Item item in AssetHolder.instance.mountEquipment) {
+            DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, mountsEquipmentGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();
             slot.AddItem(item, 1, null);
         }
     }

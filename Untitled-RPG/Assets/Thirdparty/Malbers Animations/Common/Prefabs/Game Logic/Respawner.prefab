@@ -45,9 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0b5b9d4af0f31439aabd6b5de7b49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: 'Respawn the Player Animal when he dies
-
-    This Transform also works as the Respawn Point'
+  text: "Respawn the 'Player' Animal when \xEDt dies"
 --- !u!114 &114776409365645682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,8 +58,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0990a10022a06a340902beb0a5c34f6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 0}
-  RespawnState: {fileID: 0}
+  player: {fileID: 0}
+  RespawnPoint:
+    UseConstant: 1
+    ConstantValue: {fileID: 4455119416797234}
+    Variable: {fileID: 0}
+  RespawnState: {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
   RespawnTime:
     UseConstant: 1
     ConstantValue: 4
@@ -73,8 +75,6 @@ MonoBehaviour:
   OnRestartGame:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114992131066738298
 MonoBehaviour:
   m_ObjectHideFlags: 0

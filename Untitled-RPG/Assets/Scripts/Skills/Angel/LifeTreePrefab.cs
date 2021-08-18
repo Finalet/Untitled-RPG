@@ -151,6 +151,8 @@ public class LifeTreePrefab : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
+
 [CustomEditor(typeof(LifeTreePrefab))]
 class LifeTreePrefabInspecotr : Editor {
     public override void OnInspectorGUI() {
@@ -164,3 +166,5 @@ class LifeTreePrefabInspecotr : Editor {
         
     }
 }
+
+#endif

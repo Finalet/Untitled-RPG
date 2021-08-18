@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace MalbersAnimations
 {
-    [CustomEditor(typeof(TransformAnimation))]
+    [CustomEditor(typeof(TransformAnimation)),CanEditMultipleObjects]
     public class TransformAnimationEditor : Editor
     {
         TransformAnimation My;

@@ -1,40 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MalbersAnimations.Utilities
 {
-    [CreateAssetMenu(menuName = "Malbers Animations/Scriptables/Effect Modifiers/FireBall")]
+    [CreateAssetMenu(menuName = "Malbers Animations/Modifier/Effects/FireBall")]
     public class FireBallEffectM : EffectModifier
     {
-        public float velocity = 300;
-        Rigidbody rb;  
-        IAim aim;
+        public float Power = 20;
+        Rigidbody rb;
 
-        public override void AwakeEffect(Effect effect){}
-        
+        public override void AwakeEffect(Effect effect) { }
+
         public override void StartEffect(Effect effect)
         {
-            rb = effect.Instance.GetComponent<Rigidbody>();         //Get the riggidbody of the effect
-            aim = effect.Owner.GetComponent<IAim>();                //Check if the owner has lookAt
+            var aim = effect.Owner.FindComponent<LookAt>();                //Check if the owner has lookAt
 
             effect.Instance.SendMessage("SetOwner", effect.Owner, SendMessageOptions.DontRequireReceiver);
 
-            if (aim != null && aim.Active && !aim.Limited)
+            var Direction = (aim != null && aim.IsAiming) ? aim.AimDirection.normalized : effect.Owner.transform.forward;
+
+            var projectile = effect.Instance.FindInterface<IProjectile>();
+
+            if (projectile != null)
             {
-                rb.AddForce(aim.AimDirection.normalized * velocity);     //If it has look at take the direction from te lookat
+                projectile.Fire(Direction * Power);
             }
             else
             {
-                Animator ownerAnimator = effect.Owner.GetComponent<Animator>();
-                Vector3 velocityv = ownerAnimator.velocity.normalized;
-                
-
-                if (ownerAnimator.velocity.magnitude < 0.1)
-                {
-                    velocityv = effect.Owner.transform.forward;
-                }
-                rb.AddForce(velocityv * velocity);
+                rb = effect.Instance.GetComponent<Rigidbody>();         //Get the riggidbody of the effect
+                rb.AddForce(Direction * Power);     //If it has look at take the direction from te lookat
             }
         }
     }

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 namespace MalbersAnimations
 {
     [InitializeOnLoad]
-    public class SceneEditorManager : MonoBehaviour
+    public class SceneEditorManager
     {
         // constructor
         static SceneEditorManager()
@@ -18,16 +18,20 @@ namespace MalbersAnimations
 
         static void SceneOpenedCallback(Scene _scene, UnityEditor.SceneManagement.OpenSceneMode _mode)
         {
-            var allGO = _scene.GetRootGameObjects();
-
-            foreach (var go in allGO)
+            if (!string.IsNullOrEmpty(_scene.name))
             {
-                var iscene = go.GetComponent<IScene>();
 
-                if (iscene != null)
+                var allGO = _scene.GetRootGameObjects();
+
+                foreach (var go in allGO)
                 {
-                    iscene.SceneLoaded();
-                    break;
+                    var iscene = go.GetComponent<IScene>();
+
+                    if (iscene != null)
+                    {
+                        iscene.SceneLoaded();
+                        break;
+                    }
                 }
             }
         }

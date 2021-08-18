@@ -10,13 +10,11 @@ namespace MalbersAnimations.Utilities
     {
         private ReorderableList list;
         SerializedProperty activeMeshesList, showMeshesList, random;
-         private ActiveMeshes m;
-        private MonoScript script;
+        private ActiveMeshes m;
 
         private void OnEnable()
         {
             m = (ActiveMeshes)target;
-            script = MonoScript.FromMonoBehaviour(target as MonoBehaviour);
 
             activeMeshesList = serializedObject.FindProperty("Meshes");
             showMeshesList = serializedObject.FindProperty("showMeshesList");
@@ -39,20 +37,17 @@ namespace MalbersAnimations.Utilities
             {
                 EditorGUILayout.BeginVertical(MalbersEditor.StyleGray);
                 {
-                    MalbersEditor.DrawScript(script);
+                    list.DoLayoutList();
+                    if (showMeshesList.boolValue)
                     {
-                        list.DoLayoutList();
-                        if (showMeshesList.boolValue)
+                        if (list.index != -1)
                         {
-                            if (list.index != -1)
+                            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                             {
-                                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                                {
-                                    SerializedProperty Element = activeMeshesList.GetArrayElementAtIndex(list.index);
-                                    MalbersEditor.Arrays(Element);
-                                }
-                                EditorGUILayout.EndVertical();
+                                SerializedProperty Element = activeMeshesList.GetArrayElementAtIndex(list.index);
+                                MalbersEditor.Arrays(Element);
                             }
+                            EditorGUILayout.EndVertical();
                         }
                     }
                 }
@@ -62,7 +57,6 @@ namespace MalbersAnimations.Utilities
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(target, "Active Meshes Inspector");
-                //EditorUtility.SetDirty(target);
             }
             serializedObject.ApplyModifiedProperties();
         }
@@ -134,8 +128,10 @@ namespace MalbersAnimations.Utilities
 
         void ToggleButton(int index)
         {
-            if (m.Meshes[index].meshes != null)
-                m.Meshes[index].ChangeMesh();
+            var activeMesh = m.Meshes[index];
+            
+            if (activeMesh.meshes != null && activeMesh.meshes.Length > 0)
+                activeMesh.ChangeMesh();
         }
 
         void OnAddCallBack(ReorderableList list)

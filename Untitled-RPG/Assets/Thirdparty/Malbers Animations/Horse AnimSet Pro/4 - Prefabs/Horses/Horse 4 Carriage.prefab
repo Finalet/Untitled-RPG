@@ -58,6 +58,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AutoMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   MountAnimation: Mount Animal Left
   DismountID:
     UseConstant: 0
@@ -1245,6 +1249,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 2
+  ModeID: 3
+  Ability: -1
   PushForce: 10
   Trigger: {fileID: 65322848432428056}
   SelfStatEnter:
@@ -1275,6 +1281,12 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
+  OnAttackBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAttackEnd:
+    m_PersistentCalls:
+      m_Calls: []
   debug: 1
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
   hitLayer:
@@ -1437,6 +1449,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AutoMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   MountAnimation: Mount Animal Back
   DismountID:
     UseConstant: 0
@@ -1603,40 +1619,26 @@ MonoBehaviour:
     OnInputDown:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -1650,23 +1652,15 @@ MonoBehaviour:
     OnInputDown:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls:
@@ -1681,20 +1675,14 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -1708,40 +1696,26 @@ MonoBehaviour:
     OnInputDown:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -1766,40 +1740,26 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -1824,40 +1784,26 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -1871,40 +1817,26 @@ MonoBehaviour:
     OnInputDown:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -1941,40 +1873,26 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -2000,40 +1918,26 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active:
       UseConstant: 1
       ConstantValue: 1
@@ -2058,8 +1962,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputUp:
       m_PersistentCalls:
         m_Calls:
@@ -2074,46 +1976,30 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   showInputEvents: 0
   OnInputEnabled:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnInputDisabled:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   PlayerID: Player0
   Horizontal:
     active: 1
@@ -2123,8 +2009,6 @@ MonoBehaviour:
     OnAxisValueChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   Vertical:
     active: 1
     name: Vertical
@@ -2133,8 +2017,6 @@ MonoBehaviour:
     OnAxisValueChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   UpDown:
     active: 0
     name: UpDown
@@ -2143,8 +2025,6 @@ MonoBehaviour:
     OnAxisValueChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
 --- !u!114 &114392322531126454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2163,6 +2043,7 @@ MonoBehaviour:
   ModeShowAbilities: 1
   Editor_Tabs1: 3
   Editor_Tabs2: 4
+  SelectedMode: 0
   hitLayer:
     serializedVersion: 2
     m_Bits: 2148532224
@@ -2175,9 +2056,12 @@ MonoBehaviour:
   OnEnterExitStates: []
   OnEnterExitStances: []
   OverrideStartState: {fileID: 0}
-  GroundLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  groundLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
   currentStance: 0
   defaultStance: 0
   isPlayer:
@@ -2187,10 +2071,6 @@ MonoBehaviour:
   AnimatorSpeed:
     UseConstant: 1
     ConstantValue: 1
-    Variable: {fileID: 0}
-  MovementDeathValue:
-    UseConstant: 1
-    ConstantValue: 0.05
     Variable: {fileID: 0}
   alwaysForward:
     UseConstant: 1
@@ -2218,6 +2098,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  MainCamera: {fileID: 0}
   AdditivePosition: {x: 0, y: 0, z: 0}
   AdditiveRotation: {x: 0, y: 0, z: 0, w: 1}
   SmoothVertical:
@@ -2270,13 +2151,9 @@ MonoBehaviour:
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
       OnExit:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
     Abilities:
     - Name: Front Legs
       Index:
@@ -2297,13 +2174,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Back Legs
       Index:
         UseConstant: 1
@@ -2323,13 +2196,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Back Leg
       Index:
         UseConstant: 1
@@ -2349,13 +2218,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     abilityIndex:
       UseConstant: 1
       ConstantValue: -1
@@ -2367,11 +2232,12 @@ MonoBehaviour:
     OnAbilityIndex:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
   - active: 1
     ignoreLowerModes: 0
     AnimationTag: Damaged
@@ -2395,13 +2261,9 @@ MonoBehaviour:
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
       OnExit:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
     Abilities:
     - Name: Front Right
       Index:
@@ -2422,13 +2284,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Right
       Index:
         UseConstant: 1
@@ -2448,13 +2306,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Back Right
       Index:
         UseConstant: 1
@@ -2474,13 +2328,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Front Left
       Index:
         UseConstant: 1
@@ -2500,13 +2350,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Left
       Index:
         UseConstant: 1
@@ -2526,13 +2372,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Back Left
       Index:
         UseConstant: 1
@@ -2552,13 +2394,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     abilityIndex:
       UseConstant: 1
       ConstantValue: -1
@@ -2570,11 +2408,12 @@ MonoBehaviour:
     OnAbilityIndex:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
   - active: 1
     ignoreLowerModes: 0
     AnimationTag: Action
@@ -2598,13 +2437,9 @@ MonoBehaviour:
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
       OnExit:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
     Abilities:
     - Name: Eat
       Index:
@@ -2625,13 +2460,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Drink
       Index:
         UseConstant: 1
@@ -2651,13 +2482,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     - Name: Sleep
       Index:
         UseConstant: 1
@@ -2677,13 +2504,9 @@ MonoBehaviour:
         OnEnter:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
     abilityIndex:
       UseConstant: 1
       ConstantValue: 0
@@ -2695,11 +2518,16 @@ MonoBehaviour:
     OnAbilityIndex:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
+  StartWithMode:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   pivots:
   - name: Chest
     position: {x: 0, y: 1.33, z: 0.97}
@@ -2957,11 +2785,15 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
+  GravityMaxAcel:
+    UseConstant: 1
+    ConstantValue: 15
+    Variable: {fileID: 0}
   rootMotion:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  RayCastRadius:
+  rayCastRadius:
     UseConstant: 1
     ConstantValue: 0.05
     Variable: {fileID: 0}
@@ -2985,18 +2817,12 @@ MonoBehaviour:
   OnAnimationChange:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnInputLocked:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnMovementLocked:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnSprintEnabled:
     m_PersistentCalls:
       m_Calls:
@@ -3023,38 +2849,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnGrounded:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnStateChange:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnModeStart:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnModeEnd:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnStanceChange:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   OnSpeedChange:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: MalbersAnimations.Controller.SpeedModifierEvent, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Vertical: Vertical
   m_Horizontal: Horizontal
   m_UpDown: UpDown
@@ -3063,6 +2875,7 @@ MonoBehaviour:
   m_Grounded: Grounded
   m_Movement: Movement
   m_State: State
+  m_StateStatus: StateStatus
   m_LastState: LastState
   m_Mode: Mode
   m_Stance: Stance
@@ -3102,6 +2915,10 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    multiplier:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     regenerate: 1
     RegenRate:
       UseConstant: 1
@@ -3110,6 +2927,10 @@ MonoBehaviour:
     RegenWaitTime:
       UseConstant: 1
       ConstantValue: 1
+      Variable: {fileID: 0}
+    DegenWaitTime:
+      UseConstant: 1
+      ConstantValue: 0
       Variable: {fileID: 0}
     degenerate: 0
     DegenRate:
@@ -3125,13 +2946,9 @@ MonoBehaviour:
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnStatEmpty:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     Below: 10
     Above: 15
     OnStatBelow:
@@ -3148,8 +2965,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnStatAbove:
       m_PersistentCalls:
         m_Calls:
@@ -3164,8 +2979,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnValueChangeNormalized:
       m_PersistentCalls:
         m_Calls:
@@ -3180,18 +2993,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDegenereate:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - active: 1
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     value:
@@ -3206,6 +3013,10 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    multiplier:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     regenerate: 1
     RegenRate:
       UseConstant: 1
@@ -3214,6 +3025,10 @@ MonoBehaviour:
     RegenWaitTime:
       UseConstant: 1
       ConstantValue: 3
+      Variable: {fileID: 0}
+    DegenWaitTime:
+      UseConstant: 1
+      ConstantValue: 0
       Variable: {fileID: 0}
     degenerate: 0
     DegenRate:
@@ -3229,8 +3044,6 @@ MonoBehaviour:
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnStatEmpty:
       m_PersistentCalls:
         m_Calls:
@@ -3258,20 +3071,14 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     Below: 0
     Above: 0
     OnStatBelow:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnStatAbove:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnValueChangeNormalized:
       m_PersistentCalls:
         m_Calls:
@@ -3286,18 +3093,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDegenereate:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   PinnedStat:
     active: 1
     ID: {fileID: 0}
@@ -3313,12 +3114,20 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    multiplier:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     regenerate: 0
     RegenRate:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
     RegenWaitTime:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    DegenWaitTime:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
@@ -3336,40 +3145,26 @@ MonoBehaviour:
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnStatEmpty:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     Below: 0
     Above: 0
     OnStatBelow:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnStatAbove:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnValueChangeNormalized:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     OnDegenereate:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
 --- !u!114 &114119103264466322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3384,8 +3179,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 1
   GroundLayer:
-    serializedVersion: 2
-    m_Bits: 1
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
   Tracks: {fileID: 198000013136168986, guid: 70fe502b33f22f9458eee8b3c5b3925b, type: 3}
   Dust: {fileID: 198000010737321038, guid: f0185de6019ebaa4db45528f37bad8d2, type: 3}
   StepsVolume: 0.2
@@ -3430,8 +3228,6 @@ MonoBehaviour:
     OnMaterialChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Name: Mane1
     mesh: {fileID: 137780046794687422}
     materials:
@@ -3450,8 +3246,6 @@ MonoBehaviour:
     OnMaterialChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Name: Mane1 Low
     mesh: {fileID: 137483070309594832}
     materials:
@@ -3470,8 +3264,6 @@ MonoBehaviour:
     OnMaterialChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Name: Armor
     mesh: {fileID: 137924263681312808}
     materials:
@@ -3487,9 +3279,8 @@ MonoBehaviour:
     OnMaterialChanged:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   showMeshesList: 1
+  changeHidden: 0
   random: 0
 --- !u!114 &114490123406761878
 MonoBehaviour:
@@ -3512,8 +3303,6 @@ MonoBehaviour:
     OnActiveMesh:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Name: Armor
     meshes:
     - {fileID: 4031671830580722}
@@ -3522,8 +3311,6 @@ MonoBehaviour:
     OnActiveMesh:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Name: Mane
     meshes:
     - {fileID: 4141339878941636}
@@ -3532,8 +3319,6 @@ MonoBehaviour:
     OnActiveMesh:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Name: Carriage Saddle
     meshes:
     - {fileID: 4325604894279734}
@@ -3542,8 +3327,6 @@ MonoBehaviour:
     OnActiveMesh:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Name: Reins
     meshes:
     - {fileID: 4185550305950618}
@@ -3552,8 +3335,6 @@ MonoBehaviour:
     OnActiveMesh:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   showMeshesList: 1
   random: 0
 --- !u!114 &114877441594284282
@@ -3607,43 +3388,33 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseInt:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseBool:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.StringEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector3Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector2:
       m_PersistentCalls:
         m_Calls:
@@ -3658,10 +3429,10 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.Vector2Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 13aebbaec2ec2004290a70fdf90eb6a6, type: 2}
     useInt: 1
     useFloat: 0
@@ -3675,13 +3446,9 @@ MonoBehaviour:
     Response:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseInt:
       m_PersistentCalls:
         m_Calls:
@@ -3708,8 +3475,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseBool:
       m_PersistentCalls:
         m_Calls:
@@ -3724,35 +3489,31 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.StringEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector3Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector2:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector2Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 6a983ea4cab3ed347a77e3a1ec51a4ef, type: 2}
     useInt: 1
     useFloat: 0
@@ -3777,13 +3538,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseInt:
       m_PersistentCalls:
         m_Calls:
@@ -3810,8 +3567,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseBool:
       m_PersistentCalls:
         m_Calls:
@@ -3838,35 +3593,31 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.StringEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector3Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector2:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector2Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: e0d2989fc8db01d41b4c1ae79bba109c, type: 2}
     useInt: 0
     useFloat: 0
@@ -3880,18 +3631,12 @@ MonoBehaviour:
     Response:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseInt:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseBool:
       m_PersistentCalls:
         m_Calls:
@@ -3918,35 +3663,31 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.StringEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector3Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector2:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector2Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 8e5a46a73f5b5b54294d476418b3c09f, type: 2}
     useInt: 0
     useFloat: 0
@@ -3960,18 +3701,12 @@ MonoBehaviour:
     Response:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseInt:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseBool:
       m_PersistentCalls:
         m_Calls:
@@ -3986,35 +3721,31 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.StringEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector3Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector2:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector2Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 6db0a93f790768f4abb1ada45c5ea4ca, type: 2}
     useInt: 0
     useFloat: 0
@@ -4039,18 +3770,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseInt:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseBool:
       m_PersistentCalls:
         m_Calls:
@@ -4065,35 +3790,31 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.StringEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector3Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector2:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector2Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 7103f9e29505e9e43bf1027b033f56b2, type: 2}
     useInt: 0
     useFloat: 0
@@ -4107,23 +3828,21 @@ MonoBehaviour:
     Response:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.FloatEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseInt:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.IntEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseBool:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.BoolEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls:
@@ -4138,30 +3857,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: MalbersAnimations.Events.StringEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.GameObjectEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.TransformEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector3Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     ResponseVector2:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: MalbersAnimations.Events.Vector2Event, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
 --- !u!1 &1418358853399334
 GameObject:
   m_ObjectHideFlags: 0
@@ -5090,6 +4801,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AutoMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   MountAnimation: Mount Animal FrontLeft
   DismountID:
     UseConstant: 0
@@ -5811,6 +5526,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AutoMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   MountAnimation: Mount Animal FrontRight
   DismountID:
     UseConstant: 0
@@ -6006,6 +5725,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AutoMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   MountAnimation: Mount Animal Right
   DismountID:
     UseConstant: 0
@@ -6704,6 +6427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 1
+  ModeID: 3
+  Ability: -1
   PushForce: 10
   Trigger: {fileID: 65697600920350334}
   SelfStatEnter:
@@ -6734,6 +6459,12 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
+  OnAttackBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAttackEnd:
+    m_PersistentCalls:
+      m_Calls: []
   debug: 1
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
   hitLayer:

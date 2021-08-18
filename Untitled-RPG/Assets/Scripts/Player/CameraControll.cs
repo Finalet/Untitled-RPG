@@ -46,6 +46,8 @@ public class CameraControll : MonoBehaviour
     CamSettings currentCamSettings = CamSettings.Smooth;
     CinemachineImpulseSource impulseSource;
 
+    CinemachineFreeLook CM_mounted;
+
     void Awake() {
         instance = this;
 
@@ -107,6 +109,16 @@ public class CameraControll : MonoBehaviour
         baseMouseXsensitivity = SettingsManager.instance.mouseSensitivity * 0.03f;
         baseMouseYsensitivity = SettingsManager.instance.mouseSensitivity * 0.0002f;
         CM_cam.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
+
+        if (PlayerControlls.instance.isMounted) MatchMountCameraSettings();
+        else CM_mounted = null;
+    }
+    void MatchMountCameraSettings(){
+        if (CM_mounted == null) CM_mounted = PlayerControlls.instance.rider.Montura.Animal.GetComponentInChildren<CinemachineFreeLook>();
+        
+        CM_mounted.m_XAxis.m_MaxSpeed = baseMouseXsensitivity;
+        CM_mounted.m_YAxis.m_MaxSpeed = baseMouseYsensitivity;
+        CM_mounted.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
     }
 
     float rotationX;

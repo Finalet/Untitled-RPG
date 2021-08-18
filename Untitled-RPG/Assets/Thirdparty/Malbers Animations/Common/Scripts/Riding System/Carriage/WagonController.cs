@@ -4,6 +4,7 @@ using System.Collections;
 namespace MalbersAnimations.HAP
 {
     /// <summary>This Script controls the behavior of the wagons </summary>
+    [AddComponentMenu("Malbers/Riding/Wagon Controller")]
     public class WagonController : MonoBehaviour
     {
         [Header("Horse")]

@@ -4,7 +4,7 @@ namespace MalbersAnimations.Controller
 {
     public class AttackTriggerBehaviour : StateMachineBehaviour
     {
-        //[Header("MANIMAL")]
+        [Tooltip("0: Disable All Attack Triggers\n-1: Enable All Attack Triggers\nx: Enable the Attack Trigger by its index")]
         public int AttackTrigger = 1;                           //ID of the Attack Trigger to Enable/Disable during the Attack Animation
 
         [Tooltip("Range on the Animation that the Attack Trigger will be Active")]
@@ -12,40 +12,42 @@ namespace MalbersAnimations.Controller
         public RangedFloat AttackActivation = new RangedFloat(0.3f, 0.6f);
 
         private bool isOn, isOff;
-        private MAnimal animal;
+        private IMDamagerSet[] damagers;
 
 
-        override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        override public void OnStateEnter(Animator anim, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            animal = animator.GetComponent<MAnimal>();
+            if (damagers == null) damagers = anim.GetComponents<IMDamagerSet>();
             isOn = isOff = false;                                   //Reset the ON/OFF parameters (to be used on the Range of the animation
         }
 
-        override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        override public void OnStateUpdate(Animator anim, AnimatorStateInfo state, int layer)
         {
-            if (!isOn && (stateInfo.normalizedTime % 1) >= AttackActivation.minValue)
+            var time = state.normalizedTime % 1;
+
+            if (!isOn && (time >= AttackActivation.minValue))
             {
-                animal.AttackTrigger(AttackTrigger);
+                foreach (var d in damagers) d.ActivateDamager(AttackTrigger);
                 isOn = true;
             }
 
-            if (!isOff && (stateInfo.normalizedTime % 1) >= AttackActivation.maxValue)
+            if (!isOff && (time >= AttackActivation.maxValue))
             {
-                animal.AttackTrigger(0);
+                if (anim.IsInTransition(layer) && anim.GetNextAnimatorStateInfo(layer).fullPathHash == state.fullPathHash) return; //means is transitioning to it self so do not OFF it
+                foreach (var d in damagers) d.ActivateDamager(0);
                 isOff = true;
             }
         }
 
-        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        override public void OnStateExit(Animator anim, AnimatorStateInfo state, int layer)
         {
-            if (animator.GetCurrentAnimatorStateInfo(layerIndex).fullPathHash == stateInfo.fullPathHash)
-            {
-               // Debug.Log("SELF");
-                return;
-            } //means is transitioning to it self
-            
-            animal.AttackTrigger(0);                //Disable all Attack Triggers
-            isOn = isOff = false;                   //Reset the ON/OFF variables
+            if (anim.GetCurrentAnimatorStateInfo(layer).fullPathHash == state.fullPathHash) return; //means is transitioning to it self
+
+            if (!isOff)
+                foreach (var d in damagers) d.ActivateDamager(0);  //Double check that the Trigger is OFF
+
+
+            isOn = isOff = false;                                               //Reset the ON/OFF variables
         }
     }
 }

@@ -5,10 +5,14 @@ namespace MalbersAnimations.Controller.AI
 {
     public abstract class MTask : BrainBase 
     {
+        /// <summary>What name will be displayed while adding a new Task</summary>
+        public abstract string DisplayName { get; }
+
+
         [Tooltip("ID Used for sending messages to the Brain to see if the Task started")]
         public IntReference MessageID = new IntReference(0);
-        //[Space, Tooltip("Apply the Task to the Animal(Self) or the Target(Target)")]
-        //public Affected affect = Affected.Self;
+        [Tooltip("If the previous Task is done then this Task will start")]
+        public bool WaitForPreviousTask = false;
 
         /// <summary>When a AI State starts using this Task, Run this Code</summary>
         public virtual void StartTask(MAnimalBrain brain, int index) { }
@@ -17,7 +21,7 @@ namespace MalbersAnimations.Controller.AI
         public virtual void UpdateTask(MAnimalBrain brain, int index) { }
 
         /// <summary>While a AI State Ends, run this Code</summary>
-        public virtual void ExitTask(MAnimalBrain brain, int index) { }
+        public virtual void ExitAIState(MAnimalBrain brain, int index) { brain.TaskDone(index); }
 
         public virtual void OnTargetArrived(MAnimalBrain brain, Transform target, int index) { }
 

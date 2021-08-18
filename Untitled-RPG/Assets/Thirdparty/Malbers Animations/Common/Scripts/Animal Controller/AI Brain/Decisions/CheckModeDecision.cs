@@ -4,17 +4,19 @@ using UnityEngine;
 
 namespace MalbersAnimations.Controller.AI
 {
-    [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Decision/Check Mode", order = 1)]
+    [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Decision/Check Mode", order = 2)]
     public class CheckModeDecision : MAIDecision
     {
+        public override string DisplayName => "Animal/Check Mode";
+
         [Space, Tooltip("Check the Decision on the Animal(Self) or the Target(Target)")]
         public Affected checkOn = Affected.Self;
         [Tooltip("Check if the Mode is Entering or Exiting")]
         public EEnterExit ModeState = EEnterExit.Enter;
 
         public ModeID ModeID;
-        [Tooltip("Which Ability of the Mode should I search for. If is set to -1 then I'll search for all of them")]
-        public IntReference Ability = new IntReference(-1);
+        [Tooltip("Which ability is playing in the Mode. If is set to less or equal to zero; then it will return true if the Mode Playing")]
+        public IntReference Ability = new IntReference(0);
 
         public override bool Decide(MAnimalBrain brain,int Index)
         {
@@ -48,7 +50,7 @@ namespace MalbersAnimations.Controller.AI
         {
             if (animal.ActiveModeID == ModeID)
             {
-                if (Ability == -1)
+                if (Ability <= 0)
                     return true; //Means that Is playing a random mode does not mater which one
                 else
                     return Ability == (animal.ModeAbility % 1000); //Return if the Ability is playing 
@@ -56,14 +58,13 @@ namespace MalbersAnimations.Controller.AI
             return false;
         }
 
+        //Why????????????????
         private bool OnExitMode(MAnimal animal)
         {
-            if (animal.LastMode != 0 && animal.LastModeStatus == MStatus.Completed || animal.LastModeStatus == MStatus.Interrupted)
+            if (animal.LastModeID != 0)
             {
-                //Forget Last Mode (IMPORTANT)
-                animal.LastMode = 0;
-                animal.LastAbility = 0;
-                animal.LastModeStatus = MStatus.None;
+                animal.LastModeID = 0;
+                animal.LastAbilityIndex = 0;
                 return true;
             }
             return false;

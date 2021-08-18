@@ -194,6 +194,31 @@ public class Tooltip : MonoBehaviour
             stats = Combat.instanace.learnedSkills.Contains(AssetHolder.instance.getSkill(sb.learnedSkill.ID)) ? "<color=red>You already know this skill" : "";
         } else if (item is Resource) {
             // do nothing;
+        } else if (item is Mount) {
+            Mount m = (Mount)item;
+            Mount mCompare = (Mount)compareItem;
+            bool compare = compareItem != null ? true : false;
+            string compareText = "";
+            
+            compareText = compare ? $"{getCompareString(m.movementSpeed, mCompare.movementSpeed)}" : "";
+            stats += $"Movement speed: <color={highlightColor}>{m.movementSpeed}</color>{compareText}\n";
+
+            compareText = compare ? $"{getCompareString(m.maxStamina, mCompare.maxStamina)}" : "";
+            stats += $"Stamina: <color={highlightColor}>{m.maxStamina}{compareText}</color>";
+        } else if (item is MountEquipment) {
+            MountEquipment m = (MountEquipment)item;
+            MountEquipment mCompare = (MountEquipment)compareItem;
+            bool compare = compareItem != null ? true : false;
+            string compareText = "";
+            
+            if (m.movementSpeed != 0) {
+                compareText = compare ? $"{getCompareString(m.movementSpeed, mCompare.movementSpeed)}" : "";
+                stats += $"Movement speed: <color={highlightColor}>{m.movementSpeed}</color>{compareText}\n";
+            }
+            if (m.stamina != 0) {
+                compareText = compare ? $"{getCompareString(m.stamina, mCompare.stamina)}" : "";
+                stats += $"Stamina: <color={highlightColor}>{m.stamina}{compareText}</color>";
+            }
         } else {
             stats = "NOT IMPLEMENTED";
         }

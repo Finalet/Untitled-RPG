@@ -7,67 +7,42 @@ namespace MalbersAnimations
     [CustomEditor(typeof(MInput))]
     public class MInputEditor : Editor
     {
-        private ReorderableList list;
-        private SerializedProperty inputs, showInputEvents;
-        private MInput M;
-        MonoScript script;
+        protected ReorderableList list;
+        protected SerializedProperty inputs, showInputEvents, IgnoreOnPause, OnInputEnabled, OnInputDisableds, OnInputDisabled;
+        private MInput MInp;
 
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
-            M = ((MInput)target);
-            script = MonoScript.FromMonoBehaviour(target as MonoBehaviour);
+            MInp = ((MInput)target);
 
             inputs = serializedObject.FindProperty("inputs");
+            OnInputEnabled = serializedObject.FindProperty("OnInputEnabled");
+            OnInputDisabled = serializedObject.FindProperty("OnInputDisabled");
             showInputEvents = serializedObject.FindProperty("showInputEvents");
+            IgnoreOnPause = serializedObject.FindProperty("IgnoreOnPause");
 
-            list = new ReorderableList(serializedObject, inputs, true, true, true, true);
-            list.drawElementCallback = DrawElementCallback;
-            list.drawHeaderCallback = HeaderCallbackDelegate;
-            list.onAddCallback = OnAddCallBack;
+            list = new ReorderableList(serializedObject, inputs, true, true, true, true)
+            {
+                drawElementCallback = DrawElementCallback,
+                drawHeaderCallback = HeaderCallbackDelegate,
+                onAddCallback = OnAddCallBack
+            };
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            MalbersEditor.DrawDescription("Inputs for conecting with Scripts");
+           MalbersEditor.DrawDescription("Inputs to connect to components via UnityEvents");
 
             EditorGUILayout.BeginVertical(MalbersEditor.StyleGray);
             {
-                MalbersEditor.DrawScript(script);
-
                 EditorGUI.BeginChangeCheck();
                 {
-#if REWIRED
-                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("PlayerID"), new GUIContent("Player ID", "Rewired Player ID"));
-                EditorGUILayout.EndVertical();
-#endif
-
-                    list.DoLayoutList();
-
-                    var Index = list.index;
-
-                    if (Index != -1)
-                    {
-                        SerializedProperty Element = inputs.GetArrayElementAtIndex(Index);
-                        DrawInputEvents(Element, Index);
-                    }
-
-                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                    {
-                        EditorGUI.indentLevel++;
-                        showInputEvents.boolValue = EditorGUILayout.Foldout(showInputEvents.boolValue, "Events (Enable/Disable Malbers Input)");
-                        EditorGUI.indentLevel--;
-
-                        if (showInputEvents.boolValue)
-                        {
-                            EditorGUILayout.PropertyField(serializedObject.FindProperty("OnInputEnabled"));
-                            EditorGUILayout.PropertyField(serializedObject.FindProperty("OnInputDisabled"));
-                        }
-                    }
-                    EditorGUILayout.EndVertical();
+                    EditorGUILayout.PropertyField(IgnoreOnPause);
+                    DrawRewired();
+                    DrawListAnEvents();
                 }
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -78,79 +53,134 @@ namespace MalbersAnimations
             EditorGUILayout.EndVertical();
         }
 
-        void DrawInputEvents(SerializedProperty Element, int index)
+        protected void DrawRewired()
         {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+#if REWIRED
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("PlayerID"), new GUIContent("Player ID", "Rewired Player ID"));
+                EditorGUILayout.EndVertical();
+#endif
+        }
 
-            EditorGUI.indentLevel++;
-            Element.isExpanded = EditorGUILayout.Foldout(Element.isExpanded, new GUIContent(Element.FindPropertyRelative("name").stringValue + " Properties"));
-            EditorGUI.indentLevel--;
-            if (Element.isExpanded)
+        protected void DrawListAnEvents()
+        {
+            list.DoLayoutList();
+
+            var Index = list.index;
+
+            if (Index != -1)
             {
+                SerializedProperty Element = inputs.GetArrayElementAtIndex(Index);
+                DrawInputEvents(Element, Index);
+            }
 
-                EditorGUILayout.PropertyField(Element.FindPropertyRelative("active"));
-                EditorGUILayout.Space();
-                EditorGUILayout.LabelField("Events", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            {
+                EditorGUI.indentLevel++;
+                showInputEvents.boolValue = EditorGUILayout.Foldout(showInputEvents.boolValue, "Events (Enable/Disable Malbers Input)");
+                EditorGUI.indentLevel--;
 
-                InputButton GetPressed = (InputButton)Element.FindPropertyRelative("GetPressed").enumValueIndex;
-
-
-                switch (GetPressed)
+                if (showInputEvents.boolValue)
                 {
-                    case InputButton.Press:
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputPressed"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputChanged"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputDown"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputUp"));
-                        break;
-                    case InputButton.Down:
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputDown"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputChanged"));
-                        break;
-                    case InputButton.Up:
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputUp"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputChanged"));
-                        break;
-                    case InputButton.LongPress:
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("LongPressTime"), new GUIContent("On Long Press", "Time the Input Should be Pressed"));
-                        EditorGUILayout.Space();
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnLongPress"), new GUIContent("On Long Press"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnPressedNormalized"), new GUIContent("On Pressed Time Normalized"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputDown"), new GUIContent("On Pressed Down"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputUp"), new GUIContent("On Pressed Interrupted"));
-                        break;
-                    case InputButton.DoubleTap:
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("DoubleTapTime"));
-                        EditorGUILayout.Space();
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputDown"), new GUIContent("On First Tap"));
-                        EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnDoubleTap"));
-                        break;
-                    default:
-                        break;
+                    EditorGUILayout.PropertyField(OnInputEnabled);
+                    EditorGUILayout.PropertyField(OnInputDisabled);
                 }
             }
             EditorGUILayout.EndVertical();
         }
 
-        /// <summary>Reordable List Header</summary>
-        void HeaderCallbackDelegate(Rect rect)
+        protected void DrawInputEvents(SerializedProperty Element, int index)
         {
-            Rect R_1 = new Rect(rect.x + 20, rect.y, (rect.width - 20) / 4 - 23, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(R_1, "Name");
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            {
+                var inputname =  Element.FindPropertyRelative("name").stringValue;
 
-            Rect R_2 = new Rect(rect.x + (rect.width - 20) / 4 + 15, rect.y, (rect.width - 20) / 4, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(R_2, "Type");
+                EditorGUI.indentLevel++;
+                Element.isExpanded = EditorGUILayout.Foldout(Element.isExpanded, inputname + " Properties");
+                EditorGUI.indentLevel--;
+                if (Element.isExpanded)
+                {
 
-            Rect R_3 = new Rect(rect.x + ((rect.width - 20) / 4) * 2 + 18, rect.y, ((rect.width - 30) / 4) + 11, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(R_3, "Value");
+                    var active = Element.FindPropertyRelative("active");
+                    var OnInputChanged = Element.FindPropertyRelative("OnInputChanged");
+                    var OnInputDown = Element.FindPropertyRelative("OnInputDown");
+                    var OnInputUp = Element.FindPropertyRelative("OnInputUp");
+                    var OnInputEnable = Element.FindPropertyRelative("OnInputEnable");
+                    var OnInputDisable = Element.FindPropertyRelative("OnInputDisable");
+                    var ResetOnDisable = Element.FindPropertyRelative("ResetOnDisable");
 
-            Rect R_4 = new Rect(rect.x + ((rect.width) / 4) * 3 + 15, rect.y, ((rect.width) / 4) - 15, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(R_4, "Button");
+                    EditorGUILayout.PropertyField(active);
+                    EditorGUILayout.PropertyField(ResetOnDisable);
+                    EditorGUILayout.Space();
+                    EditorGUILayout.LabelField("Events", EditorStyles.boldLabel);
+
+                    InputButton GetPressed = (InputButton)Element.FindPropertyRelative("GetPressed").enumValueIndex;
+
+
+                    switch (GetPressed)
+                    {
+                        case InputButton.Press:
+                            EditorGUILayout.PropertyField(OnInputChanged);
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputPressed"));
+                            EditorGUILayout.PropertyField(OnInputDown);
+                            EditorGUILayout.PropertyField(OnInputUp);
+                            break;
+                        case InputButton.Down:
+                            EditorGUILayout.PropertyField(OnInputDown);
+                            EditorGUILayout.PropertyField(OnInputChanged);
+                            break;
+                        case InputButton.Up:
+                            EditorGUILayout.PropertyField(OnInputUp);
+                            EditorGUILayout.PropertyField(OnInputChanged);
+                            break;
+                        case InputButton.LongPress:
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("LongPressTime"), new GUIContent("Long Press Time", "Time the Input Should be Pressed"));
+                            EditorGUILayout.Space();
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnLongPress"), new GUIContent("On Long Press Completed"));
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnPressedNormalized"), new GUIContent("On Pressed Time Normalized"));
+                            EditorGUILayout.PropertyField(OnInputDown, new GUIContent("On Input Down"));
+                            EditorGUILayout.PropertyField(OnInputUp, new GUIContent("On Pressed Interrupted"));
+                            EditorGUILayout.PropertyField(OnInputChanged);
+                            break;
+                        case InputButton.DoubleTap:
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("DoubleTapTime"));
+                            EditorGUILayout.Space();
+                            EditorGUILayout.PropertyField(OnInputDown, new GUIContent("On First Tap"));
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnDoubleTap"));
+                            EditorGUILayout.PropertyField(OnInputChanged);
+                            break;
+                        case InputButton.Toggle:
+                            EditorGUILayout.PropertyField(OnInputChanged,  new GUIContent("On Input Toggle"));
+                            break;
+                        default:
+                            break;
+                    }
+
+                    EditorGUILayout.PropertyField(OnInputEnable, new GUIContent("On ["+inputname+"] Enabled"));
+                    EditorGUILayout.PropertyField(OnInputDisable, new GUIContent("On [" + inputname + "] Disabled"));
+
+                }
+            }
+            EditorGUILayout.EndVertical();
         }
 
-        void DrawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
+        protected void HeaderCallbackDelegate(Rect rect)
         {
-            var element = M.inputs[index];
+
+            Rect R_1 = new Rect(rect.x + 20, rect.y, (rect.width - 20) / 4 + 12, EditorGUIUtility.singleLineHeight);
+            Rect R_2 = new Rect(rect.x + (rect.width - 20) / 4 + 35, rect.y, (rect.width - 20) / 4 - 20, EditorGUIUtility.singleLineHeight);
+            Rect R_3 = new Rect(rect.x + ((rect.width - 20) / 4) * 2 + 18, rect.y, ((rect.width - 30) / 4) + 11, EditorGUIUtility.singleLineHeight);
+            Rect R_4 = new Rect(rect.x + ((rect.width) / 4) * 3 + 15, rect.y, ((rect.width) / 4) - 15, EditorGUIUtility.singleLineHeight);
+
+            EditorGUI.LabelField(R_1, "   Name", EditorStyles.boldLabel);
+            EditorGUI.LabelField(R_2, "   Type", EditorStyles.boldLabel);
+            EditorGUI.LabelField(R_3, "  Value", EditorStyles.boldLabel);
+            EditorGUI.LabelField(R_4, "Button", EditorStyles.boldLabel);
+        }
+
+        protected void DrawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            var element = MInp.inputs[index];
 
             var elementSer = inputs.GetArrayElementAtIndex(index);
 
@@ -189,13 +219,24 @@ namespace MalbersAnimations
             EditorGUI.PropertyField(R_4, GetPressed, GUIContent.none);
         }
 
-        void OnAddCallBack(ReorderableList list)
+        protected void OnAddCallBack(ReorderableList list)
         {
-            if (M.inputs == null)
+            if (MInp.inputs == null)
             {
-                M.inputs = new System.Collections.Generic.List<InputRow>();
+                MInp.inputs = new System.Collections.Generic.List<InputRow>();
             }
-            M.inputs.Add(new InputRow(true,"New", "InputValue", KeyCode.Alpha0, InputButton.Press, InputType.Input));
+            MInp.inputs.Add(new InputRow("New", "InputValue", KeyCode.Alpha0, InputButton.Press, InputType.Input));
+        }
+
+        /// <summary>The element's axis number within the InputManager.</summary>
+        protected enum AxisNumber
+        {
+            X, Y, Three, Four, Five, Six, Seven, Eight, Nine, Ten
+        }
+
+        protected enum AxisType
+        {
+            KeyMouseButton, Mouse, Joystick
         }
     }
 }

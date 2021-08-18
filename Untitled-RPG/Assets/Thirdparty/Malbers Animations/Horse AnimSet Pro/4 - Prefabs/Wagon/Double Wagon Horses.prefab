@@ -168,7 +168,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4323974921880596}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1018349143218298
 GameObject:
@@ -228,6 +228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114496886632057786
@@ -313,9 +315,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainAnimal: {fileID: 114485282551010660}
   SecondAnimal: {fileID: 114575701254271080}
-  PullingDirection: {x: 0, y: 0, z: 0}
-  CurrentAngleSide: 0
-  CanRotateInPlace: 0
   RotationOffset: {x: 0, y: 0, z: -1.85}
 --- !u!114 &114063724378798712
 MonoBehaviour:
@@ -380,6 +379,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -391,6 +391,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -496,100 +497,6 @@ CapsuleCollider:
   m_Height: 0.803262
   m_Direction: 0
   m_Center: {x: -0.09912812, y: -0.074897885, z: 0.021093955}
---- !u!1 &1052730653357924
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4478405228745770}
-  - component: {fileID: 114284886401491486}
-  - component: {fileID: 65836523602862392}
-  m_Layer: 2
-  m_Name: Attack Trigger Back
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4478405228745770
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1052730653357924}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.07}
-  m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000005}
-  m_Children: []
-  m_Father: {fileID: 4323974921880596}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114284886401491486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1052730653357924}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4977ce6c4031944a4d6d786517e86e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 2
-  PushForce: 10
-  Trigger: {fileID: 65836523602862392}
-  SelfStatEnter:
-    ID: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
-    modify: 3
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-  SelfStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  EnemyStatEnter:
-    ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
-    modify: 3
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-  EnemyStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  debug: 1
-  DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  triggerInteraction: 2
---- !u!65 &65836523602862392
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1052730653357924}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.7103384, y: 1.3422785, z: 0.90293646}
-  m_Center: {x: -1.9849942e-16, y: 0.67113924, z: -0.04853178}
 --- !u!1 &1056563303811450
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,6 +574,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -678,6 +586,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -837,8 +746,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7025fecf782df864abd3f0f02d345543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 0
+  Animal: {fileID: 114485282551010660}
+  MountPoint: {fileID: 4518063295449112}
+  MountBase: {fileID: 0}
+  FootLeftIK: {fileID: 4779850406833544}
+  FootRightIK: {fileID: 4634128169433980}
+  KneeLeftIK: {fileID: 4735840144607432}
+  KneeRightIK: {fileID: 4377139256148354}
   active:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  Set_AIMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Set_AIDismount:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  Set_InputMount:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  set_InputDismount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Set_MTriggersMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Set_MTriggersDismount:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
@@ -857,6 +796,7 @@ MonoBehaviour:
   MountOnlyStates: []
   DismountOnlyStates: []
   ForceDismountStates: []
+  SpeedMultipliers: []
   straightSpine:
     UseConstant: 1
     ConstantValue: 0
@@ -948,14 +888,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  SpeedMultipliers: []
-  MountPoint: {fileID: 4518063295449112}
-  FootLeftIK: {fileID: 4779850406833544}
-  FootRightIK: {fileID: 4634128169433980}
-  KneeLeftIK: {fileID: 4735840144607432}
-  KneeRightIK: {fileID: 4377139256148354}
   StraightSpineOffsetTransform: {fileID: 0}
-  Animal: {fileID: 114485282551010660}
+  debug: 0
   Editor_Tabs1: 3
   Editor_Tabs2: 1
 --- !u!153 &153946074131187124
@@ -969,7 +903,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -7.4799232, y: 0.76399964, z: -0.31941104}
+  m_ConnectedAnchor: {x: 0.000076293945, y: -0.67, z: 1.150589}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -1229,186 +1163,6 @@ CapsuleCollider:
   m_Height: 0.4902411
   m_Direction: 1
   m_Center: {x: 0.023171647, y: 0.14656946, z: -0.000000006013177}
---- !u!1 &1096148121176010
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4966091328054954}
-  - component: {fileID: 114783210439092862}
-  - component: {fileID: 65873244091620750}
-  m_Layer: 2
-  m_Name: Attack Trigger Back
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4966091328054954
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096148121176010}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.07}
-  m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000005}
-  m_Children: []
-  m_Father: {fileID: 4489371312074098}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114783210439092862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096148121176010}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4977ce6c4031944a4d6d786517e86e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 2
-  PushForce: 10
-  Trigger: {fileID: 65873244091620750}
-  SelfStatEnter:
-    ID: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
-    modify: 3
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-  SelfStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  EnemyStatEnter:
-    ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
-    modify: 3
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-  EnemyStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  debug: 1
-  DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  triggerInteraction: 2
---- !u!65 &65873244091620750
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096148121176010}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.7103384, y: 1.3422785, z: 0.90293646}
-  m_Center: {x: -1.9849942e-16, y: 0.67113924, z: -0.04853178}
---- !u!1 &1096742121599396
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4104507862288852}
-  - component: {fileID: 65611692660780972}
-  - component: {fileID: 114170096567249970}
-  - component: {fileID: 114018854225655280}
-  m_Layer: 2
-  m_Name: Right
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4104507862288852
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096742121599396}
-  m_LocalRotation: {x: 0, y: -0.5735764, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: 0.45, y: 0, z: 0.12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4817263933339060}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -70, z: 0}
---- !u!65 &65611692660780972
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096742121599396}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.08, y: 1.4, z: 0.8}
-  m_Center: {x: 0.00014770404, y: 0.7, z: -0.1}
---- !u!114 &114170096567249970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096742121599396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal Right
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: a2f04612d20299e469d38b9131b62c7b, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: 1, y: 0, z: 0}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114018854225655280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096742121599396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1097630608374032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1498,6 +1252,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114707231864687248
@@ -1517,92 +1273,6 @@ MonoBehaviour:
   debugSize: 0.03
   DebugColor: {r: 0, g: 0.91724133, b: 1, a: 1}
   DrawAxis: 0
-  AxisSize: 0.3
---- !u!1 &1108391450011314
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4912588593889662}
-  - component: {fileID: 65229288214239426}
-  - component: {fileID: 114232225045523794}
-  - component: {fileID: 114332504870265532}
-  m_Layer: 2
-  m_Name: Left
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4912588593889662
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108391450011314}
-  m_LocalRotation: {x: 0, y: 0.5735764, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: -0.45, y: 0, z: 0.12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4959987382930054}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 70, z: 0}
---- !u!65 &65229288214239426
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108391450011314}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.08, y: 1.4, z: 0.8}
-  m_Center: {x: 0.00014770404, y: 0.7, z: 0.01}
---- !u!114 &114232225045523794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108391450011314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal Left
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 589e0eb4f8d9485428dc7f6f45a7c978, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: -1, y: 0, z: 0}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114332504870265532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108391450011314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
   AxisSize: 0.3
 --- !u!1 &1117089388629630
 GameObject:
@@ -1735,6 +1405,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -1746,6 +1417,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1891,6 +1563,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -1902,6 +1575,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2055,6 +1729,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -2066,6 +1741,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2161,6 +1837,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114797618326995562
@@ -2239,6 +1917,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114806911874462186
@@ -2424,92 +2104,6 @@ CapsuleCollider:
   m_Height: 0.50992656
   m_Direction: 0
   m_Center: {x: -0.24579519, y: -0.07489789, z: 0.021093877}
---- !u!1 &1202829698046468
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4398076994947736}
-  - component: {fileID: 65434662783964918}
-  - component: {fileID: 114516206074017684}
-  - component: {fileID: 114474844298252118}
-  m_Layer: 2
-  m_Name: Back
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4398076994947736
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1202829698046468}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.85}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4959987382930054}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &65434662783964918
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1202829698046468}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.69, y: 1.4, z: 1.0068741}
-  m_Center: {x: 0.0001309514, y: 0.7, z: 0.084121704}
---- !u!114 &114516206074017684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1202829698046468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal Back
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 546c5af4b9225fc4ca870587992ae126, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: 0, y: 0, z: -1}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114474844298252118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1202829698046468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1214761276616526
 GameObject:
   m_ObjectHideFlags: 0
@@ -2564,6 +2158,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -2575,6 +2170,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2667,92 +2263,6 @@ Transform:
   m_Father: {fileID: 4420686168118680}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1235002147967314
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4363774267771794}
-  - component: {fileID: 65915823929780262}
-  - component: {fileID: 114531787439089052}
-  - component: {fileID: 114349468126829076}
-  m_Layer: 2
-  m_Name: Front Left
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4363774267771794
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235002147967314}
-  m_LocalRotation: {x: -0, y: 0.93814504, z: -0, w: 0.34624258}
-  m_LocalPosition: {x: -0.589, y: 0, z: 1.022}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4817263933339060}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 139.255, z: 0}
---- !u!65 &65915823929780262
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235002147967314}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.99536467, y: 1.4, z: 0.7695775}
-  m_Center: {x: -0.12258426, y: 0.7, z: -0.20455527}
---- !u!114 &114531787439089052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235002147967314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal FrontLeft
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 3072778ca4c8fd148867631a9611488e, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: -1, y: 0, z: 1}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114349468126829076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235002147967314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1236198211091580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2877,92 +2387,6 @@ Transform:
   m_Father: {fileID: 4091626381815074}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1264409028055722
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4172516525951040}
-  - component: {fileID: 65901125882892738}
-  - component: {fileID: 114880577344555730}
-  - component: {fileID: 114089196423843146}
-  m_Layer: 2
-  m_Name: Front Left
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4172516525951040
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1264409028055722}
-  m_LocalRotation: {x: -0, y: 0.93814504, z: -0, w: 0.34624258}
-  m_LocalPosition: {x: -0.589, y: 0, z: 1.022}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4959987382930054}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 139.255, z: 0}
---- !u!65 &65901125882892738
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1264409028055722}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.99536467, y: 1.4, z: 0.7695775}
-  m_Center: {x: -0.12258426, y: 0.7, z: -0.20455527}
---- !u!114 &114880577344555730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1264409028055722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal FrontLeft
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 3072778ca4c8fd148867631a9611488e, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: -1, y: 0, z: 1}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114089196423843146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1264409028055722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1265780407640394
 GameObject:
   m_ObjectHideFlags: 0
@@ -3294,6 +2718,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -3305,6 +2730,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3394,6 +2820,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -3405,6 +2832,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3712,7 +3140,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1323163061004622}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.4799995, y: 1.4339997, z: -1.47}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4605844682748012}
@@ -3796,6 +3224,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -3807,6 +3236,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3899,8 +3329,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MountAnimation: Mount Wagon Left
-  DismountID:
+  Montura: {fileID: 114941355186869462}
+  AutoMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Dismount:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  MountID:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: c0af630b06da99d469ecfa503438e1fa, type: 2}
+  m_DismountID:
     UseConstant: 0
     ConstantValue: 0
     Variable: {fileID: 11400000, guid: c0af630b06da99d469ecfa503438e1fa, type: 2}
@@ -3924,7 +3366,7 @@ MonoBehaviour:
   UseColliders: 1
   gizmoType: 0
   debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
+  DebugColor: {r: 1, g: 1, b: 1, a: 0.07058824}
   DrawAxis: 0
   AxisSize: 0.3
 --- !u!1 &1342758190299488
@@ -3972,6 +3414,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -3983,6 +3426,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -4057,6 +3501,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -4068,6 +3513,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -4097,100 +3543,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.308048, y: -0.40980408, z: -0.0000040382147}
     m_Extent: {x: 0.34566653, y: 0.5678679, z: 0.08307624}
   m_DirtyAABB: 0
---- !u!1 &1352030146475082
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4764096322439196}
-  - component: {fileID: 114040183791317932}
-  - component: {fileID: 65403117643708708}
-  m_Layer: 2
-  m_Name: Attack Trigger Front
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4764096322439196
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1352030146475082}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.925}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4489371312074098}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114040183791317932
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1352030146475082}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4977ce6c4031944a4d6d786517e86e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 1
-  PushForce: 10
-  Trigger: {fileID: 65403117643708708}
-  SelfStatEnter:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  SelfStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  EnemyStatEnter:
-    ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
-    modify: 3
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-  EnemyStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  debug: 1
-  DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  triggerInteraction: 2
---- !u!65 &65403117643708708
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1352030146475082}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.8834305, z: 1}
-  m_Center: {x: 0, y: 0.94171524, z: -0}
 --- !u!1 &1352146558745682
 GameObject:
   m_ObjectHideFlags: 0
@@ -4237,6 +3589,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -4248,6 +3601,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -4394,92 +3748,6 @@ Transform:
   m_Father: {fileID: 4608781620680568}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1359456056293244
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4620294479217408}
-  - component: {fileID: 65264906597558368}
-  - component: {fileID: 114870347135436624}
-  - component: {fileID: 114002568894955756}
-  m_Layer: 2
-  m_Name: Right
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4620294479217408
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1359456056293244}
-  m_LocalRotation: {x: 0, y: -0.5735764, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: 0.45, y: 0, z: 0.12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4959987382930054}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -70, z: 0}
---- !u!65 &65264906597558368
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1359456056293244}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.08, y: 1.4, z: 0.8}
-  m_Center: {x: 0.00014770404, y: 0.7, z: -0.1}
---- !u!114 &114870347135436624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1359456056293244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal Right
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: a2f04612d20299e469d38b9131b62c7b, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: 1, y: 0, z: 0}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114002568894955756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1359456056293244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1363720417523206
 GameObject:
   m_ObjectHideFlags: 0
@@ -4517,7 +3785,7 @@ Transform:
   - {fileID: 4019302087596708}
   - {fileID: 4422228978668886}
   m_Father: {fileID: 4323974921880596}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &205171087911201146
 LODGroup:
@@ -4613,6 +3881,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -4624,6 +3893,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -4773,6 +4043,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114969526057186684
@@ -4940,6 +4212,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -4951,6 +4224,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -5010,6 +4284,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -5021,6 +4296,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -5148,6 +4424,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -5159,6 +4436,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -5291,6 +4569,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -5302,6 +4581,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -5570,7 +4850,6 @@ GameObject:
   - component: {fileID: 4489371312074098}
   - component: {fileID: 95525230635063732}
   - component: {fileID: 114575701254271080}
-  - component: {fileID: 114960540070985850}
   - component: {fileID: 114394843399100018}
   - component: {fileID: 114360414518162782}
   - component: {fileID: 114473553459241824}
@@ -5596,10 +4875,7 @@ Transform:
   m_Children:
   - {fileID: 4352947610152564}
   - {fileID: 4696059312600364}
-  - {fileID: 4764096322439196}
-  - {fileID: 4966091328054954}
   - {fileID: 4484435314139780}
-  - {fileID: 4959987382930054}
   m_Father: {fileID: 4605844682748012}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5637,13 +4913,26 @@ MonoBehaviour:
   showPivots: 1
   PivotPosDir: 0
   showStates: 1
-  ModeShowAbilities: 1
+  ModeShowEvents: 0
   Editor_Tabs1: 4
   Editor_Tabs2: 0
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 2148532224
-  triggerInteraction: 2
+  Editor_EventTabs: 0
+  SelectedMode: 0
+  SelectedState: 0
+  debugStates: 0
+  debugModes: 0
+  ShowAnimParametersOptional: 1
+  ShowAnimParameters: 1
+  ShowLockInputs: 0
+  ShowMisc: 0
+  ShowStateInInspector: 0
+  debugGizmos: 0
+  ShowMovement: 0
+  ShowGround: 1
+  showGeneral: 1
+  showExposedVariables: 0
+  showReferences: 1
+  showGravity: 1
   CloneStates: 1
   states:
   - {fileID: 11400000, guid: 376f4ba2e1c978545b3ac17f142a79e9, type: 2}
@@ -5653,15 +4942,20 @@ MonoBehaviour:
   OnEnterExitStates: []
   OnEnterExitStances: []
   OverrideStartState: {fileID: 0}
-  GroundLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  currentStance: 0
-  defaultStance: 0
   isPlayer:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  groundLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  height: 1
+  center: {x: 0, y: 0, z: 0}
+  currentStance: {fileID: 0}
+  defaultStance: {fileID: 0}
   AnimatorSpeed:
     UseConstant: 1
     ConstantValue: 1
@@ -5683,6 +4977,8 @@ MonoBehaviour:
     ConstantValue: 0
     Variable: {fileID: 0}
   MovementAxis: {x: 0, y: 0, z: 0}
+  MovementAxisRaw: {x: 0, y: 0, z: 0}
+  RawInputAxis: {x: 0, y: 0, z: 0}
   MovementAxisSmoothed: {x: 0, y: 0, z: 0}
   useCameraInput:
     UseConstant: 1
@@ -5692,8 +4988,11 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
-  AdditivePosition: {x: 0, y: 0, z: 0}
-  AdditiveRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_MainCamera:
+    UseConstant: 1
+    ConstantValue: {fileID: 0}
+    Variable: {fileID: 0}
+  additivePosLog: 0
   SmoothVertical:
     UseConstant: 1
     ConstantValue: 1
@@ -5710,18 +5009,38 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 15
     Variable: {fileID: 0}
+  AlignPosDelta:
+    UseConstant: 1
+    ConstantValue: 2.5
+    Variable: {fileID: 0}
+  AlignRotDelta:
+    UseConstant: 1
+    ConstantValue: 2.5
+    Variable: {fileID: 0}
   AlignRotLerp:
     UseConstant: 1
     ConstantValue: 10
     Variable: {fileID: 0}
+  AlignLoop:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
   maxAngleSlope: 40
   Rotator: {fileID: 0}
+  RootBone: {fileID: 0}
+  grounded:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   Anim: {fileID: 95525230635063732}
-  RB: {fileID: 0}
+  RB: {fileID: 54855191757384928}
+  StartWithMode:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   modes:
   - active: 1
     ignoreLowerModes: 0
-    AnimationTag: Attack1
     Input: Attack1
     ID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
     modifier: {fileID: 0}
@@ -5729,30 +5048,17 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    GlobalProperties:
-      Status: 0
-      HoldByTime:
-        UseConstant: 1
-        ConstantValue: 0
-        Variable: {fileID: 0}
-      affect: 0
-      affectStates: []
-      InterruptTime: 0
-      ShowEvents: 0
-      OnEnter:
-        m_PersistentCalls:
-          m_Calls: []
-      OnExit:
-        m_PersistentCalls:
-          m_Calls: []
     Abilities:
-    - Name: Front Legs
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Front Legs
       Index:
         UseConstant: 1
         ConstantValue: 1
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5760,7 +5066,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5768,13 +5076,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Legs
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Legs
       Index:
         UseConstant: 1
         ConstantValue: 2
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5782,7 +5093,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5790,13 +5103,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Leg
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Leg
       Index:
         UseConstant: 1
         ConstantValue: 3
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5804,7 +5120,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5812,9 +5130,9 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    abilityIndex:
+    m_AbilityIndex:
       UseConstant: 1
-      ConstantValue: -1
+      ConstantValue: -99
       Variable: {fileID: 0}
     DefaultIndex:
       UseConstant: 1
@@ -5826,9 +5144,18 @@ MonoBehaviour:
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    OnEnterMode:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitMode:
+      m_PersistentCalls:
+        m_Calls: []
+    ModeActivationTime: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
   - active: 1
     ignoreLowerModes: 0
-    AnimationTag: Damaged
     Input: 
     ID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
     modifier: {fileID: 11400000, guid: 6f757d5c1f4fbb941906a3f77727e4bd, type: 2}
@@ -5836,30 +5163,17 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    GlobalProperties:
-      Status: 0
-      HoldByTime:
-        UseConstant: 1
-        ConstantValue: 0
-        Variable: {fileID: 0}
-      affect: 0
-      affectStates: []
-      InterruptTime: 0
-      ShowEvents: 0
-      OnEnter:
-        m_PersistentCalls:
-          m_Calls: []
-      OnExit:
-        m_PersistentCalls:
-          m_Calls: []
     Abilities:
-    - Name: Front Right
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Front Right
       Index:
         UseConstant: 1
         ConstantValue: 1
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5867,7 +5181,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5875,13 +5191,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Right
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Right
       Index:
         UseConstant: 1
         ConstantValue: 2
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5889,7 +5208,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5897,13 +5218,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Right
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Right
       Index:
         UseConstant: 1
         ConstantValue: 3
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5911,7 +5235,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5919,13 +5245,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Front Left
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Front Left
       Index:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5933,7 +5262,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5941,13 +5272,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Left
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Left
       Index:
         UseConstant: 1
         ConstantValue: 5
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5955,7 +5289,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5963,13 +5299,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Left
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Left
       Index:
         UseConstant: 1
         ConstantValue: 6
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -5977,7 +5316,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -5985,9 +5326,9 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    abilityIndex:
+    m_AbilityIndex:
       UseConstant: 1
-      ConstantValue: -1
+      ConstantValue: -99
       Variable: {fileID: 0}
     DefaultIndex:
       UseConstant: 1
@@ -5999,9 +5340,18 @@ MonoBehaviour:
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    OnEnterMode:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitMode:
+      m_PersistentCalls:
+        m_Calls: []
+    ModeActivationTime: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
   - active: 1
     ignoreLowerModes: 0
-    AnimationTag: Action
     Input: Action
     ID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
     modifier: {fileID: 0}
@@ -6009,30 +5359,17 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    GlobalProperties:
-      Status: 0
-      HoldByTime:
-        UseConstant: 1
-        ConstantValue: 0
-        Variable: {fileID: 0}
-      affect: 0
-      affectStates: []
-      InterruptTime: 0
-      ShowEvents: 0
-      OnEnter:
-        m_PersistentCalls:
-          m_Calls: []
-      OnExit:
-        m_PersistentCalls:
-          m_Calls: []
     Abilities:
-    - Name: Eat
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Eat
       Index:
         UseConstant: 1
         ConstantValue: 2
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -6040,7 +5377,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -6048,13 +5387,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Drink
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Drink
       Index:
         UseConstant: 1
         ConstantValue: 7
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -6062,7 +5404,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -6070,13 +5414,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Sleep
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Sleep
       Index:
         UseConstant: 1
         ConstantValue: 6
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -6084,7 +5431,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -6092,9 +5441,9 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    abilityIndex:
+    m_AbilityIndex:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: -99
       Variable: {fileID: 0}
     DefaultIndex:
       UseConstant: 1
@@ -6106,6 +5455,40 @@ MonoBehaviour:
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    OnEnterMode:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitMode:
+      m_PersistentCalls:
+        m_Calls: []
+    ModeActivationTime: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
+  sleep:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  OnStrafe:
+    m_PersistentCalls:
+      m_Calls: []
+  m_strafe:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  m_CanStrafe:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  m_StrafeNormalize:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  m_StrafeLerp:
+    UseConstant: 1
+    ConstantValue: 5
+    Variable: {fileID: 0}
+  Aimer: {fileID: 0}
   pivots:
   - name: Chest
     position: {x: 0, y: 1.33, z: 0.97}
@@ -6149,11 +5532,14 @@ MonoBehaviour:
     EditorModify: 0
     EditorDisplay: 0
     PivotColor: {r: 0, g: 0, b: 0, a: 0}
+  Has_Pivot_Hip: 0
+  Has_Pivot_Chest: 0
   speedSets:
   - name: Ground
     states:
     - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
     - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 3
@@ -6161,6 +5547,10 @@ MonoBehaviour:
     TopIndex:
       UseConstant: 1
       ConstantValue: 4
+      Variable: {fileID: 0}
+    BackSpeedMult:
+      UseConstant: 1
+      ConstantValue: 0.5
       Variable: {fileID: 0}
     Speeds:
     - name: Walk
@@ -6177,6 +5567,22 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 20
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
       animator:
         UseConstant: 1
         ConstantValue: 1
@@ -6185,14 +5591,13 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 20
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Trot
       nameHash: 361272146
@@ -6208,6 +5613,22 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 20
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
       animator:
         UseConstant: 1
         ConstantValue: 1
@@ -6216,14 +5637,13 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 20
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Canter
       nameHash: 361272146
@@ -6237,6 +5657,22 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpPosition:
         UseConstant: 1
+        ConstantValue: 2
+        Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 20
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
       animator:
@@ -6245,16 +5681,15 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpAnimator:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 2
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 20
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Gallop
       nameHash: 361272146
@@ -6270,11 +5705,7 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      animator:
-        UseConstant: 1
-        ConstantValue: 1
-        Variable: {fileID: 0}
-      lerpAnimator:
+      lerpPosAnim:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
@@ -6282,10 +5713,29 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 20
         Variable: {fileID: 0}
-      sprint: 1
       lerpRotation:
         UseConstant: 1
         ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      animator:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      lerpAnimator:
+        UseConstant: 1
+        ConstantValue: 2
+        Variable: {fileID: 0}
+      strafeSpeed:
+        UseConstant: 1
+        ConstantValue: 0
+        Variable: {fileID: 0}
+      lerpStrafe:
+        UseConstant: 1
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Sprint
       nameHash: 361272146
@@ -6299,6 +5749,22 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpPosition:
         UseConstant: 1
+        ConstantValue: 2
+        Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 20
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
       animator:
@@ -6307,16 +5773,15 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpAnimator:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 2
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 20
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
   CustomSpeed: 0
   currentSpeedModifier:
@@ -6334,6 +5799,22 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 4
       Variable: {fileID: 0}
+    lerpPosAnim:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    rotation:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    lerpRotation:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    lerpRotAnim:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
     animator:
       UseConstant: 1
       ConstantValue: 1
@@ -6342,32 +5823,39 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 4
       Variable: {fileID: 0}
-    rotation:
+    strafeSpeed:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    sprint: 1
-    lerpRotation:
+    lerpStrafe:
       UseConstant: 1
       ConstantValue: 4
       Variable: {fileID: 0}
-  gravityDirection:
+  m_gravityDir:
     UseConstant: 1
-    ConstantValue: {x: -0, y: -1, z: -0}
+    ConstantValue: {x: 0, y: -1, z: 0}
     Variable: {fileID: 0}
-  GravityForce:
+  m_gravityPower:
     UseConstant: 1
-    ConstantValue: 3
+    ConstantValue: 9.8
     Variable: {fileID: 0}
-  GravityMultiplier:
+  m_gravityTime:
     UseConstant: 1
-    ConstantValue: 1
+    ConstantValue: 10
+    Variable: {fileID: 0}
+  m_gravityTimeLimit:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  ground_Changes_Gravity:
+    UseConstant: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   rootMotion:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  RayCastRadius:
+  rayCastRadius:
     UseConstant: 1
     ConstantValue: 0.05
     Variable: {fileID: 0}
@@ -6388,6 +5876,11 @@ MonoBehaviour:
     ConstantValue: 1
     Variable: {fileID: 0}
   currentAnimTag: 0
+  platform: {fileID: 0}
+  FallForward:
+    UseConstant: 1
+    ConstantValue: 2
+    Variable: {fileID: 0}
   OnAnimationChange:
     m_PersistentCalls:
       m_Calls: []
@@ -6399,31 +5892,11 @@ MonoBehaviour:
       m_Calls: []
   OnSprintEnabled:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114694550762835764}
-        m_MethodName: _PinStat
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StatID, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 114694550762835764}
-        m_MethodName: _PinStatDegenerate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   OnGrounded:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMovementDetected:
     m_PersistentCalls:
       m_Calls: []
   OnStateChange:
@@ -6441,279 +5914,32 @@ MonoBehaviour:
   OnSpeedChange:
     m_PersistentCalls:
       m_Calls: []
+  OnTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   m_Vertical: Vertical
   m_Horizontal: Horizontal
   m_UpDown: UpDown
-  m_IDFloat: IDFloat
-  m_IDInt: IDInt
   m_Grounded: Grounded
   m_Movement: Movement
   m_State: State
+  m_StateStatus: StateStatus
+  m_StateExitStatus: StateExitStatus
+  m_StateFloat: StateFloat
   m_LastState: LastState
+  m_StateTime: StateTime
+  m_SpeedMultiplier: SpeedMultiplier
   m_Mode: Mode
+  m_ModeStatus: ModeStatus
+  m_ModePower: ModePower
   m_Stance: Stance
+  m_LastStance: LastStance
   m_Slope: Slope
   m_Type: Type
-  m_SpeedMultiplier: SpeedMultiplier
-  m_StateTime: StateTime
   m_Random: Random
   m_DeltaAngle: DeltaAngle
-  debugStates: 0
-  debugModes: 0
-  debugGizmos: 0
---- !u!114 &114960540070985850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1478525681549208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b6db78c48b0b6342937f21d4681fba7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats:
-  - active: 1
-    ID: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
-    value:
-      UseConstant: 1
-      ConstantValue: 100
-      Variable: {fileID: 0}
-    maxValue:
-      UseConstant: 1
-      ConstantValue: 100
-      Variable: {fileID: 0}
-    minValue:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    regenerate: 1
-    RegenRate:
-      UseConstant: 1
-      ConstantValue: 12
-      Variable: {fileID: 0}
-    RegenWaitTime:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-    degenerate: 0
-    DegenRate:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-    InmuneTime:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    resetTo: 1
-    ShowEvents: 1
-    OnStatFull:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStatEmpty:
-      m_PersistentCalls:
-        m_Calls: []
-    Below: 10
-    Above: 15
-    OnStatBelow:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114575701254271080}
-          m_MethodName: set_UseSprint
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    OnStatAbove:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114575701254271080}
-          m_MethodName: set_UseSprint
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-    OnValueChangeNormalized:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
-          m_MethodName: Invoke
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    OnValueChange:
-      m_PersistentCalls:
-        m_Calls: []
-    OnDegenereate:
-      m_PersistentCalls:
-        m_Calls: []
-  - active: 1
-    ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
-    value:
-      UseConstant: 1
-      ConstantValue: 100
-      Variable: {fileID: 0}
-    maxValue:
-      UseConstant: 1
-      ConstantValue: 100
-      Variable: {fileID: 0}
-    minValue:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    regenerate: 1
-    RegenRate:
-      UseConstant: 1
-      ConstantValue: 2
-      Variable: {fileID: 0}
-    RegenWaitTime:
-      UseConstant: 1
-      ConstantValue: 3
-      Variable: {fileID: 0}
-    degenerate: 0
-    DegenRate:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    InmuneTime:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    resetTo: 1
-    ShowEvents: 1
-    OnStatFull:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStatEmpty:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114960540070985850}
-          m_MethodName: _DisableStat
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432,
-              type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StatID, Assembly-CSharp
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114575701254271080}
-          m_MethodName: ActivateState
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9,
-              type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StateID, Assembly-CSharp
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    Below: 0
-    Above: 0
-    OnStatBelow:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStatAbove:
-      m_PersistentCalls:
-        m_Calls: []
-    OnValueChangeNormalized:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 11400000, guid: bee0895a0f76ff840bfba0a11f37d898, type: 2}
-          m_MethodName: Invoke
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    OnValueChange:
-      m_PersistentCalls:
-        m_Calls: []
-    OnDegenereate:
-      m_PersistentCalls:
-        m_Calls: []
-  PinnedStat:
-    active: 1
-    ID: {fileID: 0}
-    value:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    maxValue:
-      UseConstant: 1
-      ConstantValue: 100
-      Variable: {fileID: 0}
-    minValue:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    regenerate: 0
-    RegenRate:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    RegenWaitTime:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    degenerate: 0
-    DegenRate:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    InmuneTime:
-      UseConstant: 1
-      ConstantValue: 0
-      Variable: {fileID: 0}
-    resetTo: 1
-    ShowEvents: 0
-    OnStatFull:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStatEmpty:
-      m_PersistentCalls:
-        m_Calls: []
-    Below: 0
-    Above: 0
-    OnStatBelow:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStatAbove:
-      m_PersistentCalls:
-        m_Calls: []
-    OnValueChangeNormalized:
-      m_PersistentCalls:
-        m_Calls: []
-    OnValueChange:
-      m_PersistentCalls:
-        m_Calls: []
-    OnDegenereate:
-      m_PersistentCalls:
-        m_Calls: []
+  m_Strafe: Strafe
+  m_strafeAngle: StrafeAngle
 --- !u!114 &114394843399100018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6728,10 +5954,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 1
   GroundLayer:
-    serializedVersion: 2
-    m_Bits: 1
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
   Tracks: {fileID: 198000013136168986, guid: 70fe502b33f22f9458eee8b3c5b3925b, type: 3}
   Dust: {fileID: 198000010737321038, guid: f0185de6019ebaa4db45528f37bad8d2, type: 3}
+  instantiateTracks: 0
   StepsVolume: 0.2
   DustParticles: 16
   Scale: {x: 1, y: 1, z: 1}
@@ -6826,6 +6056,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   showMeshesList: 1
+  changeHidden: 0
   random: 0
 --- !u!114 &114473553459241824
 MonoBehaviour:
@@ -6919,6 +6150,8 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 1
+    useComponent: 0
+    useSprite: 0
     Response:
       m_PersistentCalls:
         m_Calls:
@@ -6933,6 +6166,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
@@ -6942,6 +6178,12 @@ MonoBehaviour:
     ResponseBool:
       m_PersistentCalls:
         m_Calls: []
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -6949,6 +6191,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -6970,6 +6218,8 @@ MonoBehaviour:
           m_CallState: 2
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 13aebbaec2ec2004290a70fdf90eb6a6, type: 2}
     useInt: 1
     useFloat: 0
@@ -6980,7 +6230,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -7026,6 +6281,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -7033,6 +6294,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -7043,6 +6310,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 6a983ea4cab3ed347a77e3a1ec51a4ef, type: 2}
     useInt: 1
     useFloat: 0
@@ -7053,6 +6322,8 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
       m_PersistentCalls:
         m_Calls:
@@ -7067,6 +6338,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
@@ -7122,6 +6396,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -7129,6 +6409,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -7139,6 +6425,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: e0d2989fc8db01d41b4c1ae79bba109c, type: 2}
     useInt: 0
     useFloat: 0
@@ -7149,7 +6437,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -7184,6 +6477,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -7191,6 +6490,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -7201,6 +6506,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 8e5a46a73f5b5b54294d476418b3c09f, type: 2}
     useInt: 0
     useFloat: 0
@@ -7211,7 +6518,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -7234,6 +6546,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -7241,6 +6559,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -7251,6 +6575,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 6db0a93f790768f4abb1ada45c5ea4ca, type: 2}
     useInt: 0
     useFloat: 0
@@ -7261,6 +6587,8 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
       m_PersistentCalls:
         m_Calls:
@@ -7275,6 +6603,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
@@ -7295,6 +6626,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -7302,6 +6639,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -7312,6 +6655,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 7103f9e29505e9e43bf1027b033f56b2, type: 2}
     useInt: 0
     useFloat: 0
@@ -7322,7 +6667,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -7332,6 +6682,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseBool:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
       m_PersistentCalls:
         m_Calls: []
     ResponseString:
@@ -7354,6 +6710,12 @@ MonoBehaviour:
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
@@ -7362,6 +6724,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
 --- !u!1 &1483507452065586
 GameObject:
   m_ObjectHideFlags: 0
@@ -7394,92 +6758,6 @@ Transform:
   m_Father: {fileID: 4105628623122458}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1484568630760570
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4148239200530116}
-  - component: {fileID: 65552291772859626}
-  - component: {fileID: 114421784029390758}
-  - component: {fileID: 114932674296530946}
-  m_Layer: 2
-  m_Name: Left
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4148239200530116
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1484568630760570}
-  m_LocalRotation: {x: 0, y: 0.5735764, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: -0.45, y: 0, z: 0.12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4817263933339060}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 70, z: 0}
---- !u!65 &65552291772859626
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1484568630760570}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.08, y: 1.4, z: 0.8}
-  m_Center: {x: 0.00014770404, y: 0.7, z: 0.01}
---- !u!114 &114421784029390758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1484568630760570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal Left
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 589e0eb4f8d9485428dc7f6f45a7c978, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: -1, y: 0, z: 0}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114932674296530946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1484568630760570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1504610125426570
 GameObject:
   m_ObjectHideFlags: 0
@@ -7710,6 +6988,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114166387096864456
@@ -7825,6 +7105,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -7836,6 +7117,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -7925,6 +7207,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -7936,6 +7219,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -8054,6 +7338,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -8065,6 +7350,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -8169,6 +7455,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -8180,6 +7467,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -8262,12 +7550,10 @@ Transform:
   m_LocalPosition: {x: -0.33, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1662164697408447679}
   - {fileID: 4330866560053316}
   - {fileID: 4870857127874100}
-  - {fileID: 4670530243170244}
-  - {fileID: 4478405228745770}
   - {fileID: 4591566487665406}
-  - {fileID: 4817263933339060}
   m_Father: {fileID: 4605844682748012}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8319,16 +7605,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputs:
-  - active:
+  - name: Jump
+    active:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
-    name: Jump
-    type: 1
+    type: 0
     input: Jump
     key: 32
     GetPressed: 0
     InputValue: 0
+    ToggleValue: 0
+    ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
         m_Calls: []
@@ -8344,6 +7632,12 @@ MonoBehaviour:
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
+    OnInputEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInputDisable:
+      m_PersistentCalls:
+        m_Calls: []
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
@@ -8352,16 +7646,18 @@ MonoBehaviour:
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-  - active:
+  - name: Sprint
+    active:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
-    name: Sprint
     type: 1
     input: Fire3
     key: 304
     GetPressed: 0
     InputValue: 0
+    ToggleValue: 0
+    ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
         m_Calls: []
@@ -8388,6 +7684,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    OnInputEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInputDisable:
+      m_PersistentCalls:
+        m_Calls: []
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
@@ -8396,16 +7698,18 @@ MonoBehaviour:
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-  - active:
+  - name: Attack1
+    active:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    name: Attack1
     type: 1
     input: Fire1
     key: 323
     GetPressed: 1
     InputValue: 0
+    ToggleValue: 0
+    ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
         m_Calls: []
@@ -8421,6 +7725,12 @@ MonoBehaviour:
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
+    OnInputEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInputDisable:
+      m_PersistentCalls:
+        m_Calls: []
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
@@ -8429,16 +7739,18 @@ MonoBehaviour:
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-  - active:
+  - name: Speed ++
+    active:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
-    name: Speed ++
     type: 1
     input: SpeedUp
     key: 50
     GetPressed: 1
     InputValue: 0
+    ToggleValue: 0
+    ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
         m_Calls:
@@ -8465,6 +7777,12 @@ MonoBehaviour:
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
+    OnInputEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInputDisable:
+      m_PersistentCalls:
+        m_Calls: []
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
@@ -8473,16 +7791,18 @@ MonoBehaviour:
     OnPressedNormalized:
       m_PersistentCalls:
         m_Calls: []
-  - active:
+  - name: Speed --
+    active:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
-    name: Speed --
     type: 1
     input: SpeedDown
     key: 49
     GetPressed: 1
     InputValue: 0
+    ToggleValue: 0
+    ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
         m_Calls:
@@ -8509,6 +7829,12 @@ MonoBehaviour:
     OnInputChanged:
       m_PersistentCalls:
         m_Calls: []
+    OnInputEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInputDisable:
+      m_PersistentCalls:
+        m_Calls: []
     DoubleTapTime: 0.3
     LongPressTime: 0.5
     OnInputPressed:
@@ -8524,6 +7850,10 @@ MonoBehaviour:
   OnInputDisabled:
     m_PersistentCalls:
       m_Calls: []
+  IgnoreOnPause:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
   PlayerID: Player0
   Horizontal:
     active: 1
@@ -8564,13 +7894,26 @@ MonoBehaviour:
   showPivots: 1
   PivotPosDir: 0
   showStates: 1
-  ModeShowAbilities: 1
-  Editor_Tabs1: 4
-  Editor_Tabs2: 0
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 2148532224
-  triggerInteraction: 2
+  ModeShowEvents: 0
+  Editor_Tabs1: 1
+  Editor_Tabs2: 4
+  Editor_EventTabs: 0
+  SelectedMode: 0
+  SelectedState: 0
+  debugStates: 0
+  debugModes: 0
+  ShowAnimParametersOptional: 1
+  ShowAnimParameters: 1
+  ShowLockInputs: 0
+  ShowMisc: 0
+  ShowStateInInspector: 0
+  debugGizmos: 0
+  ShowMovement: 0
+  ShowGround: 1
+  showGeneral: 1
+  showExposedVariables: 0
+  showReferences: 1
+  showGravity: 1
   CloneStates: 1
   states:
   - {fileID: 11400000, guid: 376f4ba2e1c978545b3ac17f142a79e9, type: 2}
@@ -8580,15 +7923,20 @@ MonoBehaviour:
   OnEnterExitStates: []
   OnEnterExitStances: []
   OverrideStartState: {fileID: 0}
-  GroundLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  currentStance: 0
-  defaultStance: 0
   isPlayer:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  groundLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  height: 1
+  center: {x: 0, y: 0, z: 0}
+  currentStance: {fileID: 0}
+  defaultStance: {fileID: 0}
   AnimatorSpeed:
     UseConstant: 1
     ConstantValue: 1.05
@@ -8610,6 +7958,8 @@ MonoBehaviour:
     ConstantValue: 0
     Variable: {fileID: 0}
   MovementAxis: {x: 0, y: 0, z: 0}
+  MovementAxisRaw: {x: 0, y: 0, z: 0}
+  RawInputAxis: {x: 0, y: 0, z: 0}
   MovementAxisSmoothed: {x: 0, y: 0, z: 0}
   useCameraInput:
     UseConstant: 1
@@ -8619,8 +7969,11 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
-  AdditivePosition: {x: 0, y: 0, z: 0}
-  AdditiveRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_MainCamera:
+    UseConstant: 1
+    ConstantValue: {fileID: 0}
+    Variable: {fileID: 0}
+  additivePosLog: 0
   SmoothVertical:
     UseConstant: 1
     ConstantValue: 1
@@ -8637,18 +7990,38 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 15
     Variable: {fileID: 0}
+  AlignPosDelta:
+    UseConstant: 1
+    ConstantValue: 2.5
+    Variable: {fileID: 0}
+  AlignRotDelta:
+    UseConstant: 1
+    ConstantValue: 2.5
+    Variable: {fileID: 0}
   AlignRotLerp:
     UseConstant: 1
     ConstantValue: 10
     Variable: {fileID: 0}
+  AlignLoop:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
   maxAngleSlope: 40
   Rotator: {fileID: 0}
+  RootBone: {fileID: 0}
+  grounded:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   Anim: {fileID: 95003862721181554}
-  RB: {fileID: 0}
+  RB: {fileID: 54855191757384928}
+  StartWithMode:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   modes:
   - active: 1
     ignoreLowerModes: 0
-    AnimationTag: Attack1
     Input: Attack1
     ID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
     modifier: {fileID: 0}
@@ -8656,30 +8029,17 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    GlobalProperties:
-      Status: 0
-      HoldByTime:
-        UseConstant: 1
-        ConstantValue: 0
-        Variable: {fileID: 0}
-      affect: 0
-      affectStates: []
-      InterruptTime: 0
-      ShowEvents: 0
-      OnEnter:
-        m_PersistentCalls:
-          m_Calls: []
-      OnExit:
-        m_PersistentCalls:
-          m_Calls: []
     Abilities:
-    - Name: Front Legs
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Front Legs
       Index:
         UseConstant: 1
         ConstantValue: 1
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8687,7 +8047,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8695,13 +8057,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Legs
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Legs
       Index:
         UseConstant: 1
         ConstantValue: 2
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8709,7 +8074,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8717,13 +8084,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Leg
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Leg
       Index:
         UseConstant: 1
         ConstantValue: 3
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8731,7 +8101,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8739,13 +8111,13 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    abilityIndex:
+    m_AbilityIndex:
       UseConstant: 1
-      ConstantValue: -1
+      ConstantValue: -99
       Variable: {fileID: 0}
     DefaultIndex:
       UseConstant: 1
-      ConstantValue: -1
+      ConstantValue: -99
       Variable: {fileID: 0}
     OnAbilityIndex:
       m_PersistentCalls:
@@ -8753,9 +8125,18 @@ MonoBehaviour:
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    OnEnterMode:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitMode:
+      m_PersistentCalls:
+        m_Calls: []
+    ModeActivationTime: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
   - active: 1
     ignoreLowerModes: 0
-    AnimationTag: Damaged
     Input: 
     ID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
     modifier: {fileID: 11400000, guid: 6f757d5c1f4fbb941906a3f77727e4bd, type: 2}
@@ -8763,30 +8144,17 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    GlobalProperties:
-      Status: 0
-      HoldByTime:
-        UseConstant: 1
-        ConstantValue: 0
-        Variable: {fileID: 0}
-      affect: 0
-      affectStates: []
-      InterruptTime: 0
-      ShowEvents: 0
-      OnEnter:
-        m_PersistentCalls:
-          m_Calls: []
-      OnExit:
-        m_PersistentCalls:
-          m_Calls: []
     Abilities:
-    - Name: Front Right
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Front Right
       Index:
         UseConstant: 1
         ConstantValue: 1
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8794,7 +8162,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8802,13 +8172,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Right
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Right
       Index:
         UseConstant: 1
         ConstantValue: 2
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8816,7 +8189,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8824,13 +8199,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Right
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Right
       Index:
         UseConstant: 1
         ConstantValue: 3
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8838,7 +8216,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8846,13 +8226,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Front Left
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Front Left
       Index:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8860,7 +8243,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8868,13 +8253,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Left
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Left
       Index:
         UseConstant: 1
         ConstantValue: 5
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8882,7 +8270,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8890,13 +8280,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Back Left
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Back Left
       Index:
         UseConstant: 1
         ConstantValue: 6
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8904,7 +8297,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8912,13 +8307,13 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    abilityIndex:
+    m_AbilityIndex:
       UseConstant: 1
-      ConstantValue: -1
+      ConstantValue: -99
       Variable: {fileID: 0}
     DefaultIndex:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: -99
       Variable: {fileID: 0}
     OnAbilityIndex:
       m_PersistentCalls:
@@ -8926,9 +8321,18 @@ MonoBehaviour:
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    OnEnterMode:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitMode:
+      m_PersistentCalls:
+        m_Calls: []
+    ModeActivationTime: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
   - active: 1
     ignoreLowerModes: 0
-    AnimationTag: Action
     Input: Action
     ID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
     modifier: {fileID: 0}
@@ -8936,30 +8340,17 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    GlobalProperties:
-      Status: 0
-      HoldByTime:
-        UseConstant: 1
-        ConstantValue: 0
-        Variable: {fileID: 0}
-      affect: 0
-      affectStates: []
-      InterruptTime: 0
-      ShowEvents: 0
-      OnEnter:
-        m_PersistentCalls:
-          m_Calls: []
-      OnExit:
-        m_PersistentCalls:
-          m_Calls: []
     Abilities:
-    - Name: Eat
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Eat
       Index:
         UseConstant: 1
         ConstantValue: 2
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8967,7 +8358,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8975,13 +8368,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Drink
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Drink
       Index:
         UseConstant: 1
         ConstantValue: 7
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -8989,7 +8385,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -8997,13 +8395,16 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    - Name: Sleep
+    - active:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      Name: Sleep
       Index:
         UseConstant: 1
         ConstantValue: 6
         Variable: {fileID: 0}
-      OverrideProp: 0
-      OverrideProperties:
+      Properties:
         Status: 0
         HoldByTime:
           UseConstant: 1
@@ -9011,7 +8412,9 @@ MonoBehaviour:
           Variable: {fileID: 0}
         affect: 0
         affectStates: []
-        InterruptTime: 0
+        affect_Stance: 0
+        Stances: []
+        TransitionFrom: 
         ShowEvents: 0
         OnEnter:
           m_PersistentCalls:
@@ -9019,7 +8422,7 @@ MonoBehaviour:
         OnExit:
           m_PersistentCalls:
             m_Calls: []
-    abilityIndex:
+    m_AbilityIndex:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
@@ -9033,6 +8436,40 @@ MonoBehaviour:
     ResetToDefault: 0
     allowRotation: 0
     allowMovement: 0
+    OnEnterMode:
+      m_PersistentCalls:
+        m_Calls: []
+    OnExitMode:
+      m_PersistentCalls:
+        m_Calls: []
+    ModeActivationTime: 0
+    showGeneral: 1
+    showIndex: 1
+    showProperties: 1
+  sleep:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  OnStrafe:
+    m_PersistentCalls:
+      m_Calls: []
+  m_strafe:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  m_CanStrafe:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  m_StrafeNormalize:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  m_StrafeLerp:
+    UseConstant: 1
+    ConstantValue: 5
+    Variable: {fileID: 0}
+  Aimer: {fileID: 0}
   pivots:
   - name: Chest
     position: {x: 0, y: 1.33, z: 0.97}
@@ -9076,11 +8513,14 @@ MonoBehaviour:
     EditorModify: 0
     EditorDisplay: 0
     PivotColor: {r: 0, g: 0, b: 0, a: 0}
+  Has_Pivot_Hip: 0
+  Has_Pivot_Chest: 0
   speedSets:
   - name: Ground
     states:
     - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
     - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 3
@@ -9088,6 +8528,10 @@ MonoBehaviour:
     TopIndex:
       UseConstant: 1
       ConstantValue: 4
+      Variable: {fileID: 0}
+    BackSpeedMult:
+      UseConstant: 1
+      ConstantValue: 1.3111
       Variable: {fileID: 0}
     Speeds:
     - name: Walk
@@ -9104,6 +8548,22 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 20
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
       animator:
         UseConstant: 1
         ConstantValue: 1
@@ -9112,14 +8572,13 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 20
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Trot
       nameHash: 361272146
@@ -9135,6 +8594,22 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 50
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
       animator:
         UseConstant: 1
         ConstantValue: 1
@@ -9143,14 +8618,13 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 50
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Canter
       nameHash: 361272146
@@ -9164,6 +8638,22 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpPosition:
         UseConstant: 1
+        ConstantValue: 2
+        Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 50
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
       animator:
@@ -9172,16 +8662,15 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpAnimator:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 2
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 50
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Gallop
       nameHash: 361272146
@@ -9197,6 +8686,22 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 50
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
       animator:
         UseConstant: 1
         ConstantValue: 1
@@ -9205,14 +8710,13 @@ MonoBehaviour:
         UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 50
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
     - name: Sprint
       nameHash: 361272146
@@ -9226,6 +8730,22 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpPosition:
         UseConstant: 1
+        ConstantValue: 2
+        Variable: {fileID: 0}
+      lerpPosAnim:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      rotation:
+        UseConstant: 1
+        ConstantValue: 50
+        Variable: {fileID: 0}
+      lerpRotation:
+        UseConstant: 1
+        ConstantValue: 4
+        Variable: {fileID: 0}
+      lerpRotAnim:
+        UseConstant: 1
         ConstantValue: 4
         Variable: {fileID: 0}
       animator:
@@ -9234,16 +8754,15 @@ MonoBehaviour:
         Variable: {fileID: 0}
       lerpAnimator:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 2
         Variable: {fileID: 0}
-      rotation:
+      strafeSpeed:
         UseConstant: 1
-        ConstantValue: 50
+        ConstantValue: 0
         Variable: {fileID: 0}
-      sprint: 1
-      lerpRotation:
+      lerpStrafe:
         UseConstant: 1
-        ConstantValue: 4
+        ConstantValue: 0
         Variable: {fileID: 0}
   CustomSpeed: 0
   currentSpeedModifier:
@@ -9261,6 +8780,22 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 4
       Variable: {fileID: 0}
+    lerpPosAnim:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    rotation:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    lerpRotation:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
+    lerpRotAnim:
+      UseConstant: 1
+      ConstantValue: 4
+      Variable: {fileID: 0}
     animator:
       UseConstant: 1
       ConstantValue: 1
@@ -9269,32 +8804,39 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 4
       Variable: {fileID: 0}
-    rotation:
+    strafeSpeed:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    sprint: 1
-    lerpRotation:
+    lerpStrafe:
       UseConstant: 1
       ConstantValue: 4
       Variable: {fileID: 0}
-  gravityDirection:
+  m_gravityDir:
     UseConstant: 1
-    ConstantValue: {x: -0, y: -1, z: -0}
+    ConstantValue: {x: 0, y: -1, z: 0}
     Variable: {fileID: 0}
-  GravityForce:
+  m_gravityPower:
     UseConstant: 1
-    ConstantValue: 3
+    ConstantValue: 9.8
     Variable: {fileID: 0}
-  GravityMultiplier:
+  m_gravityTime:
     UseConstant: 1
-    ConstantValue: 1
+    ConstantValue: 10
+    Variable: {fileID: 0}
+  m_gravityTimeLimit:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  ground_Changes_Gravity:
+    UseConstant: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   rootMotion:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  RayCastRadius:
+  rayCastRadius:
     UseConstant: 1
     ConstantValue: 0.05
     Variable: {fileID: 0}
@@ -9315,6 +8857,11 @@ MonoBehaviour:
     ConstantValue: 1
     Variable: {fileID: 0}
   currentAnimTag: 0
+  platform: {fileID: 0}
+  FallForward:
+    UseConstant: 1
+    ConstantValue: 2
+    Variable: {fileID: 0}
   OnAnimationChange:
     m_PersistentCalls:
       m_Calls: []
@@ -9328,7 +8875,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114694550762835764}
-        m_MethodName: _PinStat
+        m_MethodName: Stat_Pin
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26,
@@ -9340,8 +8887,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 114694550762835764}
-        m_MethodName: _PinStatDegenerate
-        m_Mode: 0
+        m_MethodName: Stat_Pin_Degenerate
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9351,6 +8898,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   OnGrounded:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMovementDetected:
     m_PersistentCalls:
       m_Calls: []
   OnStateChange:
@@ -9368,26 +8918,32 @@ MonoBehaviour:
   OnSpeedChange:
     m_PersistentCalls:
       m_Calls: []
+  OnTeleport:
+    m_PersistentCalls:
+      m_Calls: []
   m_Vertical: Vertical
   m_Horizontal: Horizontal
   m_UpDown: UpDown
-  m_IDFloat: IDFloat
-  m_IDInt: IDInt
   m_Grounded: Grounded
   m_Movement: Movement
   m_State: State
+  m_StateStatus: StateStatus
+  m_StateExitStatus: StateExitStatus
+  m_StateFloat: StateFloat
   m_LastState: LastState
+  m_StateTime: StateTime
+  m_SpeedMultiplier: SpeedMultiplier
   m_Mode: Mode
+  m_ModeStatus: ModeStatus
+  m_ModePower: ModePower
   m_Stance: Stance
+  m_LastStance: LastStance
   m_Slope: Slope
   m_Type: Type
-  m_SpeedMultiplier: SpeedMultiplier
-  m_StateTime: StateTime
   m_Random: Random
   m_DeltaAngle: DeltaAngle
-  debugStates: 0
-  debugModes: 0
-  debugGizmos: 0
+  m_Strafe: Strafe
+  m_strafeAngle: StrafeAngle
 --- !u!114 &114694550762835764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9415,7 +8971,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    regenerate: 1
+    multiplier:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    regenerate:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
     RegenRate:
       UseConstant: 1
       ConstantValue: 12
@@ -9424,7 +8987,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
-    degenerate: 0
+    DegenWaitTime:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    degenerate:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
     DegenRate:
       UseConstant: 1
       ConstantValue: 10
@@ -9439,6 +9009,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnStatEmpty:
+      m_PersistentCalls:
+        m_Calls: []
+    OnStat:
       m_PersistentCalls:
         m_Calls: []
     Below: 10
@@ -9488,7 +9061,10 @@ MonoBehaviour:
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
-    OnDegenereate:
+    OnDegenerate:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRegenerate:
       m_PersistentCalls:
         m_Calls: []
   - active: 1
@@ -9505,7 +9081,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    regenerate: 1
+    multiplier:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    regenerate:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
     RegenRate:
       UseConstant: 1
       ConstantValue: 2
@@ -9514,7 +9097,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 3
       Variable: {fileID: 0}
-    degenerate: 0
+    DegenWaitTime:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    degenerate:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
     DegenRate:
       UseConstant: 1
       ConstantValue: 0
@@ -9555,6 +9145,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    OnStat:
+      m_PersistentCalls:
+        m_Calls: []
     Below: 0
     Above: 0
     OnStatBelow:
@@ -9580,7 +9173,10 @@ MonoBehaviour:
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
-    OnDegenereate:
+    OnDegenerate:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRegenerate:
       m_PersistentCalls:
         m_Calls: []
   PinnedStat:
@@ -9598,7 +9194,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    regenerate: 0
+    multiplier:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    regenerate:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
     RegenRate:
       UseConstant: 1
       ConstantValue: 0
@@ -9607,7 +9210,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    degenerate: 0
+    DegenWaitTime:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    degenerate:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
     DegenRate:
       UseConstant: 1
       ConstantValue: 0
@@ -9624,6 +9234,9 @@ MonoBehaviour:
     OnStatEmpty:
       m_PersistentCalls:
         m_Calls: []
+    OnStat:
+      m_PersistentCalls:
+        m_Calls: []
     Below: 0
     Above: 0
     OnStatBelow:
@@ -9638,7 +9251,10 @@ MonoBehaviour:
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
-    OnDegenereate:
+    OnDegenerate:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRegenerate:
       m_PersistentCalls:
         m_Calls: []
 --- !u!114 &114539414124773082
@@ -9655,10 +9271,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 1
   GroundLayer:
-    serializedVersion: 2
-    m_Bits: 1
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
   Tracks: {fileID: 198000013136168986, guid: 70fe502b33f22f9458eee8b3c5b3925b, type: 3}
   Dust: {fileID: 198000010737321038, guid: f0185de6019ebaa4db45528f37bad8d2, type: 3}
+  instantiateTracks: 0
   StepsVolume: 0.2
   DustParticles: 16
   Scale: {x: 1, y: 1, z: 1}
@@ -9753,6 +9373,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   showMeshesList: 1
+  changeHidden: 0
   random: 0
 --- !u!114 &114806512196013794
 MonoBehaviour:
@@ -9846,6 +9467,8 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 1
+    useComponent: 0
+    useSprite: 0
     Response:
       m_PersistentCalls:
         m_Calls:
@@ -9860,6 +9483,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
@@ -9869,6 +9495,12 @@ MonoBehaviour:
     ResponseBool:
       m_PersistentCalls:
         m_Calls: []
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -9876,6 +9508,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -9897,6 +9535,8 @@ MonoBehaviour:
           m_CallState: 2
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 13aebbaec2ec2004290a70fdf90eb6a6, type: 2}
     useInt: 1
     useFloat: 0
@@ -9907,7 +9547,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -9953,6 +9598,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -9960,6 +9611,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -9970,6 +9627,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 6a983ea4cab3ed347a77e3a1ec51a4ef, type: 2}
     useInt: 1
     useFloat: 0
@@ -9980,6 +9639,8 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
       m_PersistentCalls:
         m_Calls:
@@ -9994,6 +9655,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
@@ -10049,6 +9713,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -10056,6 +9726,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -10066,6 +9742,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: e0d2989fc8db01d41b4c1ae79bba109c, type: 2}
     useInt: 0
     useFloat: 0
@@ -10076,7 +9754,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -10111,6 +9794,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -10118,6 +9807,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -10128,6 +9823,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 8e5a46a73f5b5b54294d476418b3c09f, type: 2}
     useInt: 0
     useFloat: 0
@@ -10138,7 +9835,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -10161,6 +9863,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -10168,6 +9876,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -10178,6 +9892,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 6db0a93f790768f4abb1ada45c5ea4ca, type: 2}
     useInt: 0
     useFloat: 0
@@ -10188,6 +9904,8 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
       m_PersistentCalls:
         m_Calls:
@@ -10202,6 +9920,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseFloat:
       m_PersistentCalls:
         m_Calls: []
@@ -10222,6 +9943,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseString:
       m_PersistentCalls:
         m_Calls: []
@@ -10229,6 +9956,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
       m_PersistentCalls:
         m_Calls: []
     ResponseVector3:
@@ -10239,6 +9972,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
   - Event: {fileID: 11400000, guid: 7103f9e29505e9e43bf1027b033f56b2, type: 2}
     useInt: 0
     useFloat: 0
@@ -10249,7 +9984,12 @@ MonoBehaviour:
     useTransform: 0
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -10259,6 +9999,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ResponseBool:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
       m_PersistentCalls:
         m_Calls: []
     ResponseString:
@@ -10281,6 +10027,12 @@ MonoBehaviour:
     ResponseTransform:
       m_PersistentCalls:
         m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseVector3:
       m_PersistentCalls:
         m_Calls: []
@@ -10289,6 +10041,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
 --- !u!1 &1554242372523554
 GameObject:
   m_ObjectHideFlags: 0
@@ -10343,6 +10097,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -10354,6 +10109,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -10417,100 +10173,6 @@ CapsuleCollider:
   m_Height: 0.83
   m_Direction: 0
   m_Center: {x: -0.1, y: 0.05, z: 0}
---- !u!1 &1562107796446484
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4670530243170244}
-  - component: {fileID: 114232520791519094}
-  - component: {fileID: 65885715791323192}
-  m_Layer: 2
-  m_Name: Attack Trigger Front
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4670530243170244
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1562107796446484}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.925}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4323974921880596}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114232520791519094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1562107796446484}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4977ce6c4031944a4d6d786517e86e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 1
-  PushForce: 10
-  Trigger: {fileID: 65885715791323192}
-  SelfStatEnter:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  SelfStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  EnemyStatEnter:
-    ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
-    modify: 3
-    Value:
-      UseConstant: 1
-      ConstantValue: 10
-      Variable: {fileID: 0}
-  EnemyStatExit:
-    ID: {fileID: 0}
-    modify: 0
-    Value:
-      UseConstant: 1
-      ConstantValue: 1
-      Variable: {fileID: 0}
-  debug: 1
-  DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  hitLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  triggerInteraction: 2
---- !u!65 &65885715791323192
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1562107796446484}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.8834305, z: 1}
-  m_Center: {x: 0, y: 0.94171524, z: -0}
 --- !u!1 &1567228552598800
 GameObject:
   m_ObjectHideFlags: 0
@@ -10558,6 +10220,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -10569,6 +10232,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -10657,6 +10321,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -10668,6 +10333,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -10800,8 +10466,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MountAnimation: Mount Wagon Right
-  DismountID:
+  Montura: {fileID: 114941355186869462}
+  AutoMount:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Dismount:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  MountID:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: 12608fac768ea2b4081d32d615e23dec, type: 2}
+  m_DismountID:
     UseConstant: 0
     ConstantValue: 0
     Variable: {fileID: 11400000, guid: 12608fac768ea2b4081d32d615e23dec, type: 2}
@@ -10825,7 +10503,7 @@ MonoBehaviour:
   UseColliders: 1
   gizmoType: 0
   debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
+  DebugColor: {r: 1, g: 1, b: 1, a: 0.07058824}
   DrawAxis: 0
   AxisSize: 0.3
 --- !u!1 &1595032143673520
@@ -10944,6 +10622,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -10955,6 +10634,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -11045,41 +10725,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4105628623122458}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1632351112712220
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4959987382930054}
-  m_Layer: 2
-  m_Name: Mount Triggers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4959987382930054
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1632351112712220}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 4620294479217408}
-  - {fileID: 4912588593889662}
-  - {fileID: 4398076994947736}
-  - {fileID: 4172516525951040}
-  - {fileID: 4834235054601796}
-  m_Father: {fileID: 4489371312074098}
-  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1635972534170276
 GameObject:
@@ -11235,6 +10880,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -11246,6 +10892,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -11327,6 +10974,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -11338,6 +10986,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -11420,6 +11069,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -11431,6 +11081,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -11551,6 +11202,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -11562,6 +11214,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -11670,6 +11323,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -11681,6 +11335,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -11886,6 +11541,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -11897,6 +11553,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -11976,6 +11633,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -11987,6 +11645,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -12171,41 +11830,6 @@ CapsuleCollider:
   m_Height: 0.77
   m_Direction: 0
   m_Center: {x: 0, y: 0.05, z: 0}
---- !u!1 &1750677698771538
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4817263933339060}
-  m_Layer: 2
-  m_Name: Mount Triggers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4817263933339060
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750677698771538}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 4104507862288852}
-  - {fileID: 4148239200530116}
-  - {fileID: 4091380865855588}
-  - {fileID: 4363774267771794}
-  - {fileID: 4265637815765034}
-  m_Father: {fileID: 4323974921880596}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1753708158810100
 GameObject:
   m_ObjectHideFlags: 0
@@ -12352,6 +11976,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -12363,6 +11988,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -12404,7 +12030,7 @@ Transform:
   m_Children:
   - {fileID: 4173442955326258}
   m_Father: {fileID: 4323974921880596}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1813774481487994
 GameObject:
@@ -12555,7 +12181,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: -0.06, z: 1.08}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -0.21999997, z: -1.7499979}
+  m_ConnectedAnchor: {x: 0, y: -0.21999997, z: -1.749998}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: 1}
   m_XMotion: 0
@@ -12639,92 +12265,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!1 &1825528299347424
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4834235054601796}
-  - component: {fileID: 65325939717009164}
-  - component: {fileID: 114760094499712644}
-  - component: {fileID: 114024225227678074}
-  m_Layer: 2
-  m_Name: Front Right
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4834235054601796
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825528299347424}
-  m_LocalRotation: {x: 0, y: -0.9374492, z: 0, w: 0.34812212}
-  m_LocalPosition: {x: 0.53, y: 0, z: 0.99}
-  m_LocalScale: {x: 1.0000004, y: 1, z: 1.0000004}
-  m_Children: []
-  m_Father: {fileID: 4959987382930054}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: -139.255, z: 0}
---- !u!65 &65325939717009164
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825528299347424}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.99536467, y: 1.4, z: 0.7695775}
-  m_Center: {x: 0.1225843, y: 0.7, z: -0.20455527}
---- !u!114 &114760094499712644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825528299347424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal FrontRight
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 52aeed0db379ead45a77887c1e7cb26e, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: 1, y: 0, z: 1}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114024225227678074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825528299347424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1826783909407060
 GameObject:
   m_ObjectHideFlags: 0
@@ -12735,7 +12275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4406523523405412}
   - component: {fileID: 65073730249629372}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Body1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12968,6 +12508,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -12979,6 +12520,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -13055,7 +12597,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4991675070759694}
   - component: {fileID: 65273317939637236}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Body2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13147,6 +12689,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114909515922767934
@@ -13213,6 +12757,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -13224,6 +12769,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -13680,6 +13226,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -13691,6 +13238,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -13888,92 +13436,6 @@ Transform:
   m_Father: {fileID: 4177593236497212}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1905931777357054
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4265637815765034}
-  - component: {fileID: 65412131295647694}
-  - component: {fileID: 114324267168529094}
-  - component: {fileID: 114751968752730486}
-  m_Layer: 2
-  m_Name: Front Right
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4265637815765034
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905931777357054}
-  m_LocalRotation: {x: 0, y: -0.9374492, z: 0, w: 0.34812212}
-  m_LocalPosition: {x: 0.53, y: 0, z: 0.99}
-  m_LocalScale: {x: 1.0000004, y: 1, z: 1.0000004}
-  m_Children: []
-  m_Father: {fileID: 4817263933339060}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: -139.255, z: 0}
---- !u!65 &65412131295647694
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905931777357054}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.99536467, y: 1.4, z: 0.7695775}
-  m_Center: {x: 0.1225843, y: 0.7, z: -0.20455527}
---- !u!114 &114324267168529094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905931777357054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal FrontRight
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 52aeed0db379ead45a77887c1e7cb26e, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: 1, y: 0, z: 1}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114751968752730486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905931777357054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1922336603261086
 GameObject:
   m_ObjectHideFlags: 0
@@ -14243,92 +13705,6 @@ Transform:
   m_Father: {fileID: 4137827894330292}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1940346408911294
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4091380865855588}
-  - component: {fileID: 65566771031368070}
-  - component: {fileID: 114143662114774172}
-  - component: {fileID: 114561298889397908}
-  m_Layer: 2
-  m_Name: Back
-  m_TagString: Untagged
-  m_Icon: {fileID: -2663371497217273435, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4091380865855588
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940346408911294}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.85}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4817263933339060}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &65566771031368070
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940346408911294}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.69, y: 1.4, z: 1.0068741}
-  m_Center: {x: 0.0001309514, y: 0.7, z: 0.084121704}
---- !u!114 &114143662114774172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940346408911294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dad09d6bc60cf4b9645f97c5680934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MountAnimation: Mount Animal Back
-  DismountID:
-    UseConstant: 0
-    ConstantValue: 0
-    Variable: {fileID: 11400000, guid: 546c5af4b9225fc4ca870587992ae126, type: 2}
-  Direction:
-    UseConstant: 1
-    ConstantValue: {x: 0, y: 0, z: -1}
-    Variable: {fileID: 0}
-  Adjustment: {fileID: 0}
---- !u!114 &114561298889397908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940346408911294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b4de088e089c164bb239be84964ea4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseColliders: 0
-  gizmoType: 1
-  debugSize: 0.03
-  DebugColor: {r: 1, g: 1, b: 1, a: 1}
-  DrawAxis: 1
-  AxisSize: 0.3
 --- !u!1 &1941562995327822
 GameObject:
   m_ObjectHideFlags: 0
@@ -14417,6 +13793,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d28118109a4a004ea7f53889baf6f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StepsManager: {fileID: 0}
+  Tracks: {fileID: 0}
   WaitNextStep: 0.2
   StepAudio: {fileID: 0}
 --- !u!114 &114750575731628200
@@ -14491,6 +13869,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -14502,6 +13881,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -14645,6 +14025,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -14656,6 +14037,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -14696,7 +14078,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4489371312074098}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1973433501746070
 GameObject:
@@ -14783,6 +14165,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -14794,6 +14177,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -14852,6 +14236,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -14863,6 +14248,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -15274,3 +14660,94 @@ CapsuleCollider:
   m_Height: 0.49133804
   m_Direction: 0
   m_Center: {x: 0.02933087, y: 0.000000008183671, z: 0.000000012703401}
+--- !u!1 &3684849124739802304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1662164697408447679}
+  - component: {fileID: 8144201544807374499}
+  - component: {fileID: 2841215715051324077}
+  m_Layer: 0
+  m_Name: '- AI -'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1662164697408447679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684849124739802304}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.99}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4323974921880596}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8144201544807374499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684849124739802304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e018d88fdcd394a4c8254460a5394eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 2841215715051324077}
+  animal: {fileID: 114485282551010660}
+  stoppingDistance: 1
+  PointStoppingDistance: 0.6
+  walkDistance: 0
+  target: {fileID: 0}
+  nextTarget: {fileID: 0}
+  ResetOffMesh: []
+  AutoNextTarget: 1
+  MoveAgentOnMovingTarget: 1
+  LookAtTargetOnArrival: 0
+  MovingTargetInterval: 0.2
+  updateTargetPosition: 1
+  debug: 0
+  debugGizmos: 1
+  OnTargetPositionArrived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTargetArrived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTargetSet:
+    m_PersistentCalls:
+      m_Calls: []
+  Editor_Tabs1: 0
+--- !u!195 &2841215715051324077
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684849124739802304}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 1
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4

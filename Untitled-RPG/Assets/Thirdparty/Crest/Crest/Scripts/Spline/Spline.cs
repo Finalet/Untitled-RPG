@@ -1,20 +1,47 @@
 ﻿// Crest Ocean System
 
-// This file is subject to the MIT License as seen in the root of this folder structure (LICENSE)
+// Copyright 2020 Wave Harmonic Ltd
 
 using UnityEditor;
 using UnityEngine;
 
 namespace Crest.Spline
 {
+    public interface ISplinePointCustomDataSetup
+    {
+        bool AttachDataToSplinePoint(GameObject splinePoint);
+    }
+
     /// <summary>
     /// Simple spline object. Spline points are child gameobjects.
     /// </summary>
     [ExecuteAlways]
+    [AddComponentMenu(Internal.Constants.MENU_PREFIX_SPLINE + "Spline")]
+    [HelpURL(Internal.Constants.HELP_URL_BASE_USER + "wave-conditions.html" + Internal.Constants.HELP_URL_RP + "#wave-splines-preview")]
     public partial class Spline : MonoBehaviour
     {
+        /// <summary>
+        /// The version of this asset. Can be used to migrate across versions. This value should
+        /// only be changed when the editor upgrades the version.
+        /// </summary>
+        [SerializeField, HideInInspector]
+#pragma warning disable 414
+        int _version = 0;
+#pragma warning restore 414
+
         [Tooltip("Connect start and end point to close spline into a loop. Requires at least 3 spline points.")]
         public bool _closed = false;
+
+        [SerializeField]
+        float _radius = 20f;
+        [SerializeField, Delayed]
+        int _subdivisions = 1;
+        [SerializeField, Delayed]
+        int _smoothingIterations = 0;
+
+        public float Radius => _radius;
+        public int Subdivisions => _subdivisions;
+        public int SmoothingIterations => _smoothingIterations;
     }
 
 #if UNITY_EDITOR
@@ -22,18 +49,41 @@ namespace Crest.Spline
     {
         public void OnDrawGizmos()
         {
-            Gizmos.color = Color.black * 0.5f;
             var points = GetComponentsInChildren<SplinePoint>();
             for (int i = 0; i < points.Length - 1; i++)
             {
+                SetLineColor(points[i], points[i + 1], false);
                 Gizmos.DrawLine(points[i].transform.position, points[i + 1].transform.position);
             }
 
-            Gizmos.color = Color.white;
-
             if (_closed && points.Length > 2)
             {
+                SetLineColor(points[points.Length - 1], points[0], true);
                 Gizmos.DrawLine(points[points.Length - 1].transform.position, points[0].transform.position);
+            }
+
+            Gizmos.color = Color.white;
+        }
+
+        void SetLineColor(SplinePoint from, SplinePoint to, bool isClosing)
+        {
+            Gizmos.color = isClosing ? Color.white : Color.black * 0.5f;
+
+            if (Selection.activeObject == from.gameObject || Selection.activeObject == to.gameObject)
+            {
+                Gizmos.color = Color.yellow;
+            }
+        }
+
+        void FixAddSplinePoints(SerializedObject splineComponent)
+        {
+            var spline = splineComponent.targetObject as Spline;
+            var requiredPoints = spline._closed ? 3 : 2;
+            var needToAdd = requiredPoints - spline.GetComponentsInChildren<SplinePoint>().Length;
+
+            for (var i = 0; i < needToAdd; i++)
+            {
+                SplineEditor.ExtendSpline(spline);
             }
         }
 
@@ -41,14 +91,34 @@ namespace Crest.Spline
         {
             var isValid = true;
 
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (!transform.GetChild(i).TryGetComponent<SplinePoint>(out _))
+                {
+                    showMessage
+                    (
+                        $"All child GameObjects under <i>Spline</i> must have <i>SplinePoint</i> component added. Object <i>{transform.GetChild(i).gameObject.name}</i> does not have one.",
+                        $"Add a <i>SplinePoint</i> component to object {transform.GetChild(i).gameObject.name}, or move this object out in the hierarchy.",
+                        ValidatedHelper.MessageType.Error, this
+                    );
+
+                    isValid = false;
+
+                    // One error is enough probably - don't fill the Inspector with tons of errors
+                    break;
+                }
+            }
+
             var points = GetComponentsInChildren<SplinePoint>();
 
             if (points.Length < 2)
             {
                 showMessage
                 (
-                    "Spline must have at least 2 spline points. Click the <i>Add point</i> button in the Inspector, or add a child GameObject and attach <i>SplinePoint</i> component to it.",
-                    ValidatedHelper.MessageType.Error, this
+                    "Spline must have at least 2 spline points.",
+                    "Click the <i>Add Point</i> button in the Inspector, or add a child GameObject and attach <i>SplinePoint</i> component to it.",
+                    ValidatedHelper.MessageType.Error, this,
+                    FixAddSplinePoints
                 );
 
                 isValid = false;
@@ -57,24 +127,13 @@ namespace Crest.Spline
             {
                 showMessage
                 (
-                    "Closed splines must have at least 3 spline points. See the <i>Closed</i> parameter and tooltip. To add a point click the <i>Add point</i> button in the Inspector, or add a child GameObject and attach <i>SplinePoint</i> component to it.",
-                    ValidatedHelper.MessageType.Error, this
+                    "Closed splines must have at least 3 spline points. See the <i>Closed</i> parameter and tooltip.",
+                    "Add a point by clicking the <i>Add Point</i> button in the Inspector.",
+                    ValidatedHelper.MessageType.Error, this,
+                    FixAddSplinePoints
                 );
 
                 isValid = false;
-            }
-
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                if (!transform.GetChild(i).TryGetComponent<SplinePoint>(out _))
-                {
-                    showMessage
-                    (
-                        $"All child GameObjects under <i>Spline</i> must have <i>SplinePoint</i> component added. Object <i>{transform.GetChild(i).gameObject.name}</i> does not and should have one added, or be moved out of the hierarchy.",
-                        ValidatedHelper.MessageType.Error, this
-                    );
-
-                }
             }
 
             return isValid;
@@ -92,9 +151,7 @@ namespace Crest.Spline
 
             if (GUILayout.Button("Add point (extend)"))
             {
-                var newPoint = SplinePointEditor.AddSplinePointAfter(targetSpline.transform);
-
-                Undo.RegisterCreatedObjectUndo(newPoint, "Add Crest Spline Point");
+                ExtendSpline(targetSpline);
             }
 
             GUILayout.BeginHorizontal();
@@ -118,6 +175,13 @@ namespace Crest.Spline
                     targetSpline.transform.GetChild(i).SetSiblingIndex(0);
                 }
             }
+        }
+
+        public static void ExtendSpline(Spline spline)
+        {
+            var newPoint = SplinePointEditor.AddSplinePointAfter(spline.transform);
+
+            Undo.RegisterCreatedObjectUndo(newPoint, "Add Crest Spline Point");
         }
     }
 #endif

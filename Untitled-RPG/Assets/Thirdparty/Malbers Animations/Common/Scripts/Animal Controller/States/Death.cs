@@ -6,58 +6,67 @@ namespace MalbersAnimations.Controller
     [HelpURL("https://docs.google.com/document/d/1QBLQVWcDSyyWBDrrcS2PthhsToWkOayU0HUtiiSWTF8/edit#heading=h.kraxblx9518t")]
     public class Death : State
     {
+        public override string StateName => "Death";
+
         [Header("Death Parameters")]
         public bool DisableAllComponents = true;
-        public bool RemoveAllTriggers = false;
+        public bool RemoveAllColliders = false;
+        public bool RemoveAllTriggers = true;
+        public float RigidbodyDrag = 5;
+        public float RigidbodyAngularDrag = 15;
 
-        public bool QueueOnFly = true;
+        [Space]
+        public bool disableAnimal = true;
+        
+        [Hide("disableAnimal",true,false)] 
+        public float disableAnimalTime = 5f; 
+
+  
 
         public override void Activate()
         {
-            if (QueueOnFly)
-            {
-                if (animal.ActiveStateID == 6)//Means is  Flying
-                {
-                    if (animal.debugStates) Debug.Log(ID.name + " State has being Queue");
-                    animal.ActiveState.AllowExit();
-                    OnQueue = true;
-                    animal.QueueState(this);
-                    return;
-                }
-            }
-
             base.Activate();
 
-            IgnoreLowerStates = true;
+            if (OnQueue) return;
 
-            animal.Mode_Interrupt(); //Stop all modes;
-            //animal.Mode_Stop(); //Stop all modes;
+            animal.Mode_Interrupt();
+            animal.Mode_Disable_All();
+           
 
             if (DisableAllComponents)
             {
-                var AllComponents = animal.GetComponents<MonoBehaviour>();
+                var AllComponents = animal.GetComponentsInChildren<MonoBehaviour>();
                 foreach (var comp in AllComponents)
                 {
                     if (comp == animal) continue;
-
-                    comp.enabled = false;
+                    if (comp != null)comp.enabled = false;
                 }
-
             }
-            if (RemoveAllTriggers)
+
+            var AllTriggers = animal.GetComponentsInChildren<Collider>();
+
+            foreach (var trig in AllTriggers)
             {
-                var AllTriggers = animal.GetComponentsInChildren<Collider>();
-
-                foreach (var trig in AllTriggers)
+                if (RemoveAllColliders || RemoveAllTriggers &&  trig.isTrigger)
                 {
-                    if (trig.isTrigger)
-                    {
-                        Destroy(trig.gameObject);
-                    }
+                    Destroy(trig);
                 }
             }
+
+
+            animal.SetCustomSpeed(new MSpeed("Death"));
 
             animal.StopMoving();
+            animal.Mode_Interrupt();
+            animal.Mode_Stop();
+
+            if (animal.RB)
+            {
+                animal.RB.drag = RigidbodyDrag;
+                animal.RB.angularDrag = RigidbodyAngularDrag;
+            }
+
+           if (disableAnimal) animal.DisableAnimalComponent(disableAnimalTime); //Disable the Animal Component after x time
         }
 
 
@@ -65,7 +74,7 @@ namespace MalbersAnimations.Controller
         void Reset()
         {
            
-            ID = MalbersTools.GetInstance<StateID>("Death");
+            ID = MTools.GetInstance<StateID>("Death");
 
             General = new AnimalModifier()
             {
@@ -73,7 +82,7 @@ namespace MalbersAnimations.Controller
                 Persistent = true,
                 LockInput = true,
                 LockMovement = true,
-                Colliders = false,
+                AdditiveRotation = true,
             };
         }
 #endif

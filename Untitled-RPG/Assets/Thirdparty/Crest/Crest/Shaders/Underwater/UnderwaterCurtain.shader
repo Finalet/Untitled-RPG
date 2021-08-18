@@ -58,6 +58,7 @@ Shader "Crest/Underwater Curtain"
 			#include "../OceanShaderData.hlsl"
 			#include "../OceanHelpersNew.hlsl"
 			#include "../OceanShaderHelpers.hlsl"
+			#include "../OceanLightingHelpers.hlsl"
 			#include "UnderwaterShared.hlsl"
 
 			#include "../OceanEmission.hlsl"
@@ -204,7 +205,7 @@ Shader "Crest/Underwater Curtain"
 
 				const float meshScaleLerp = _CrestPerCascadeInstanceData[_LD_SliceIndex]._meshScaleLerp;
 				const float baseCascadeScale = _CrestCascadeData[0]._scale;
-				const half3 scatterCol = ScatterColour(depth, _WorldSpaceCameraPos, lightDir, view, shadow, true, true, lightCol, sss, meshScaleLerp, baseCascadeScale, cascadeData0);
+				const half3 scatterCol = ScatterColour(AmbientLight(), depth, _WorldSpaceCameraPos, lightDir, view, shadow, true, true, lightCol, sss, meshScaleLerp, baseCascadeScale, cascadeData0);
 
 				// Could have possibly used ComputeNonStereoScreenPos() instead when calculating grab pos and then not
 				// have needed to do this, but that function doesn't seem to exist in URP?
@@ -216,8 +217,8 @@ Shader "Crest/Underwater Curtain"
 				if (sceneZ01 != 0.0)
 				{
 					// flatten view in the camera direction to calculate the scenePos
-					float3 scenePos = (((rawView) / dot(rawView, _CameraForward)) * sceneZ) + _WorldSpaceCameraPos;
-					ApplyCaustics(scenePos, lightCol, lightDir, sceneZ, _Normals, true, sceneColour, cascadeData0, cascadeData1);
+					float3 scenePos = (((rawView) / dot(rawView, unity_CameraToWorld._m02_m12_m22)) * sceneZ) + _WorldSpaceCameraPos;
+					ApplyCaustics(scenePos, lightDir, sceneZ, _Normals, true, sceneColour, cascadeData0, cascadeData1);
 				}
 #endif // _CAUSTICS_ON
 

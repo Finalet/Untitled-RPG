@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20de7ec569e280e4dbc951b31fe6319e, type: 3}
   m_Name: Stop
   m_EditorClassIdentifier: 
-  Description: Stop the Animal (NOT THE AGENT) from moving
+  Description: Stop the Animal Agent from moving
   MessageID:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
-  task: 1
+  WaitForPreviousTask: 0
+  task: 3
   distance:
     UseConstant: 1
     ConstantValue: 10
@@ -34,5 +35,6 @@ MonoBehaviour:
   arcsCount: 12
   UpdateFleeMovingTarget: 0
   LookAtTarget: 1
+  Interact: 1
   interval: 0.2
   debugColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.25}

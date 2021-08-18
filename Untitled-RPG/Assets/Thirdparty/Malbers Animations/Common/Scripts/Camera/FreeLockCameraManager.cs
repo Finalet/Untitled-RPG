@@ -1,79 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using MalbersAnimations.Utilities;
-using MalbersAnimations.Scriptables;
+﻿using UnityEngine;
 
 namespace MalbersAnimations
 {
-    [CreateAssetMenu(menuName = "Malbers Animations/Camera/FreeLook Camera Manager")]
     public class FreeLockCameraManager : ScriptableObject
-    { 
-        [Header("Rider Aim States")]
+    {
+        [Header("Aim States")]
         public FreeLookCameraState AimRight;
         public FreeLookCameraState AimLeft;
 
         internal MFreeLookCamera mCamera;
 
-        public void SetCamera(MFreeLookCamera Freecamera) { mCamera = Freecamera; }
+        public void SetCamera(MFreeLookCamera Freecamera) => mCamera = Freecamera;
 
-        public void SetAimLeft(FreeLookCameraState state) { AimLeft = state; }
-        public void SetAimRight(FreeLookCameraState state) { AimRight = state; }
+        public void SetAimLeft(FreeLookCameraState state) => AimLeft = state;
 
-        public void ChangeTarget(Transform tranform)
-        {
-            mCamera.SetTarget(tranform);
-        }  
+        public void SetAimRight(FreeLookCameraState state) => AimRight = state;
+
+        public void Target_Set(Transform tranform) => mCamera?.Target_Set(tranform);
+        public void Target_Set_Temporal(Transform tranform) => mCamera?.Target_Set_Temporal(tranform);
+        public void Target_Restore() => mCamera?.Target_Restore();
+
+        public void ChangeFOV(float newFOV) => mCamera?.ChangeFOV(newFOV);
+
+        public void ToggleFOV(bool val) => mCamera?.ToggleSprintFOV(val);
 
 
-        public void ChangeFOV(float newFOV)
-        {
-            mCamera.ChangeFOV(newFOV); 
-        } 
-
-        public void ToggleFOV(bool val)
-        {
-            mCamera.ToggleSprintFOV(val);
-        } 
-
-       
         /// <summary> When the Rider is Aiming is necesary to change the Update Mode to Late Update</summary>
         public virtual void ForceUpdateMode(bool val)
         {
-            mCamera.updateType = val ? MFreeLookCamera.UpdateType.LateUpdate : mCamera.defaultUpdate;
+           if (mCamera)
+                mCamera.updateType = val ? UpdateType.LateUpdate : mCamera.defaultUpdate;
         }
 
         public virtual void SetAim(int ID)
         {
-            if (ID == -1)
-                SetTemporalState(AimLeft);
-            else if (ID == 1)
-                SetTemporalState(AimRight);
-            else
-                SetState(mCamera.DefaultState);
+            if (mCamera)
+            {
+                if (ID == -1)
+                    SetTemporalState(AimLeft);
+                else if (ID == 1)
+                    SetTemporalState(AimRight);
+                else
+                    SetState(mCamera.DefaultState);
+            }
         }
 
-        public virtual void SetState(FreeLookCameraState state) { SetState(state, false); }
+        public virtual void SetState(FreeLookCameraState state) => SetState(state, false);
 
-        public virtual void SetTemporalState(FreeLookCameraState state) { SetState(state, true); }
+        public virtual void SetStateInstant(FreeLookCameraState state) => mCamera?.SetState_Instant(state, false);
 
-        public virtual void MobileMovement(Vector2 input)
-        {
-            mCamera.XCam = input.x;
-            mCamera.YCam = input.y;
-        }
+        public virtual void SetTemporalState(FreeLookCameraState state) => SetState(state, true);
 
-        public virtual void CameraDefaultInput(bool enabled)
-        {
-            mCamera.Vertical.active = enabled;
-            mCamera.Horizontal.active = enabled;
-        }
+        public virtual void MobileMovement(Vector2 input) { if (mCamera) mCamera.MovementAxis.Value = input; }
 
-        private void SetState(FreeLookCameraState state, bool temporal)
-        {
-            if (state == null) return;
-            if (mCamera == null) return;
-            mCamera.SetState(state, temporal);
-        }
+        public virtual void Camera_EnableInput(bool enabled) => mCamera?.EnableInput(enabled);
+
+        private void SetState(FreeLookCameraState state, bool temporal) => mCamera?.SetState(state, temporal);
     }
 }

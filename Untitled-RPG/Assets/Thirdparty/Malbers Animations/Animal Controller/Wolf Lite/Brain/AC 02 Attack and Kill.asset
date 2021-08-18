@@ -1,5 +1,124 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8424466867942724737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9176d65901bdc7c4bbcc36cf5d310741, type: 3}
+  m_Name: Stance to Combat
+  m_EditorClassIdentifier: 
+  Description: Type Description Here
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  WaitForPreviousTask: 0
+  affect: 0
+  stance: {fileID: 11400000, guid: 5338df2a5c63c6b4a8049349b3eb0171, type: 2}
+--- !u!114 &-6709630623447902427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20de7ec569e280e4dbc951b31fe6319e, type: 3}
+  m_Name: Move to Target
+  m_EditorClassIdentifier: 
+  Description: Move to current Target
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  WaitForPreviousTask: 0
+  task: 0
+  distance:
+    UseConstant: 1
+    ConstantValue: 10
+    Variable: {fileID: 0}
+  distanceThreshold:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  stoppingDistance:
+    UseConstant: 1
+    ConstantValue: 0.5
+    Variable: {fileID: 0}
+  direction: 0
+  arcsCount: 12
+  UpdateFleeMovingTarget: 1
+  LookAtTarget: 1
+  Interact: 0
+  interval: 0.05
+  debugColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.25}
+--- !u!114 &-6682966666410970486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfcc53f890e3864b941cd0e3c01c970, type: 3}
+  m_Name: Play Main Attack
+  m_EditorClassIdentifier: 
+  Description: Play Main Attack Continuously
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  WaitForPreviousTask: 0
+  modeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
+  AbilityID:
+    UseConstant: 1
+    ConstantValue: -99
+    Variable: {fileID: 0}
+  ModePower:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  near: 1
+  affect: 0
+  Play: 1
+  CoolDown:
+    UseConstant: 1
+    ConstantValue: 3
+    Variable: {fileID: 0}
+  ModeAngle: 360
+  lookAtAlign: 1
+  alignTime: 0.3
+--- !u!114 &-3742761694754523325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d55f5af15654a1848a5d62c35156dfe9, type: 3}
+  m_Name: Speed to Run
+  m_EditorClassIdentifier: 
+  Description: Change the Speed on the Animal to Run
+  MessageID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  WaitForPreviousTask: 0
+  affect: 0
+  SpeedSet: Ground
+  SpeedIndex:
+    UseConstant: 1
+    ConstantValue: 3
+    Variable: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,18 +131,95 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e33e187dc72d4a48aaede99913c6393, type: 3}
   m_Name: AC 02 Attack and Kill
   m_EditorClassIdentifier: 
+  ID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   tasks:
-  - {fileID: 11400000, guid: e21030647b816a24e87409a863da005a, type: 2}
-  - {fileID: 11400000, guid: 278e0c7e44f77bb44914db658a5de9cd, type: 2}
-  - {fileID: 11400000, guid: 0ebfad3f1189700489e1c8ac0d3e2b47, type: 2}
+  - {fileID: -6709630623447902427}
+  - {fileID: -6682966666410970486}
+  - {fileID: -3742761694754523325}
+  - {fileID: -8424466867942724737}
   - {fileID: 11400000, guid: ff56f4762056add468aeb3b0679896b4, type: 2}
-  - {fileID: 11400000, guid: ae7fac85f19b9a9418c2e7f7841c5fe4, type: 2}
   - {fileID: 11400000, guid: b59e3d9f479a7c946ab9d83ef0251dd8, type: 2}
   transitions:
-  - decision: {fileID: 11400000, guid: d673b8d842b355949963f29d384e2043, type: 2}
-    trueState: {fileID: 11400000, guid: 2ecb231e39609524b9fd193fb84c5f26, type: 2}
+  - decision: {fileID: 2943419024565079828}
+    trueState: {fileID: 0}
     falseState: {fileID: 11400000, guid: 7aeddc7f19f7d9a48b115fe9c0581668, type: 2}
-  - decision: {fileID: 11400000, guid: e7e2645ff1542844db35d825c1af0d82, type: 2}
+  - decision: {fileID: 5589015711575567537}
     trueState: {fileID: 11400000, guid: 7aeddc7f19f7d9a48b115fe9c0581668, type: 2}
-    falseState: {fileID: 11400000, guid: 2ecb231e39609524b9fd193fb84c5f26, type: 2}
+    falseState: {fileID: 0}
   GizmoStateColor: {r: 0, g: 1, b: 0.1323154, a: 1}
+  CreateTaskAsset: 1
+  CreateDecisionAsset: 1
+--- !u!114 &2943419024565079828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00a63bfc37e3794ea3b0af5a3c6381e, type: 3}
+  m_Name: Is Target on Sight
+  m_EditorClassIdentifier: 
+  Description: The Animal will look for an Object using a cone view
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.3
+    Variable: {fileID: 0}
+  LookRange:
+    UseConstant: 1
+    ConstantValue: 15
+    Variable: {fileID: 0}
+  LookAngle: 360
+  lookFor: 6
+  ObstacleLayer:
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
+  AssignTarget: 0
+  MoveToTarget: 0
+  RemoveTarget: 0
+  UnityTag: 
+  GameObjectName: 
+  transform: {fileID: 0}
+  gameObject: {fileID: 0}
+  tags: []
+  zoneType: 0
+  ZoneID: 0
+  ZoneModeAbility: -1
+  debugColor: {r: 0.5849056, g: 0.041297972, b: 0, a: 0.039215688}
+--- !u!114 &5589015711575567537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13c3ae5af063c546a807790208b81bc, type: 3}
+  m_Name: Is Target Death
+  m_EditorClassIdentifier: 
+  Description: Is Target on the Death State
+  DecisionID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  send: 0
+  interval:
+    UseConstant: 1
+    ConstantValue: 0.2
+    Variable: {fileID: 0}
+  check: 1
+  when: 1
+  StateID: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9, type: 2}

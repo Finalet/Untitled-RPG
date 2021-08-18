@@ -1,42 +1,62 @@
 ﻿using UnityEngine;
-using MalbersAnimations;
-using MalbersAnimations.Utilities;
 using System.Collections.Generic;
 using MalbersAnimations.Events;
 using UnityEngine.Events;
 using MalbersAnimations.Scriptables; 
+using Cinemachine;
 
 namespace MalbersAnimations.Controller
 {
-    /// <summary>
-    /// This will controll all Animals Motion it is more Modular
-    /// Version 1.1
-    /// </summary>
-   // [RequireComponent(typeof(Animator))]
-   // [RequireComponent(typeof(Rigidbody))]
-   [HelpURL("https://malbersanimations.gitbook.io/animal-controller/main-components/manimal-controller")]
-    public partial class MAnimal : MonoBehaviour, IAnimatorListener, ICharacterMove, IGravity, IMDamage, IMHitLayer , IAnimatorParameters
+    /// <summary>  This will controll all Animals Motion
+    /// Version 1.2.6b </summary>
+    [HelpURL("https://malbersanimations.gitbook.io/animal-controller/main-components/manimal-controller")]
+    [DefaultExecutionOrder(-10)]
+    [AddComponentMenu("Malbers/Animal Controller/Animal")]
+    public partial class MAnimal : MonoBehaviour, 
+        IAnimatorListener, ICharacterMove, IGravity, /*IMLayer , */
+        IRandomizer, IMAnimator, ISleepController, IMDamagerSet, 
+        IAnimatorStateCycle, ICharacterAction// ITriggerInteract, IInteracter
     {
         //Animal Variables: All variables
         //Animal Movement:  All Locomotion Logic
         //Animal CallBacks: All public methods and behaviors that it can be called outside the script
 
         #region Editor Show 
+        [HideInInspector] public MountController mountController;
+
         [HideInInspector] public bool showPivots = true;
         [HideInInspector] public int PivotPosDir;
-        //[HideInInspector] public Color ShowpivotColor = Color.blue;
         [HideInInspector] public bool showStates = true;
-        [HideInInspector] public bool ModeShowAbilities;
+        [HideInInspector] public bool ModeShowEvents;
         [HideInInspector] public int Editor_Tabs1;
         [HideInInspector] public int Editor_Tabs2;
+        [HideInInspector] public int Editor_EventTabs;
         [HideInInspector] public int SelectedMode;
-        #endregion
+        [HideInInspector] public int SelectedState;
+        [HideInInspector] public bool debugStates;
+        [HideInInspector] public bool debugModes;
+        [HideInInspector] public bool ShowAnimParametersOptional = false;
+        [HideInInspector] public bool ShowAnimParameters = false;
+        [HideInInspector] public bool ShowLockInputs = false;
+        [HideInInspector] public bool ShowMisc = false;
+        [HideInInspector] public bool ShowStateInInspector = false;
+
+      
+        [HideInInspector] public bool debugGizmos = true;
+        [HideInInspector] public bool ShowMovement = false;
+        [HideInInspector] public bool ShowGround = true;
+        [HideInInspector] public bool showGeneral = true;
+        [HideInInspector] public bool showExposedVariables = false;
+        [HideInInspector] public bool showReferences = true;
+        [HideInInspector] public bool showGravity = true;
+        #endregion  
 
 #if UNITY_EDITOR
         void Reset()
         {
-            MalbersTools.SetLayer(transform, 20);     //Set all the Childrens to Animal Layer   .
-            gameObject.tag = "Animal";                //Set the Animal to Tag Animal
+
+            MTools.SetLayer(base.transform, 20);     //Set all the Childrens to Animal Layer   .
+            gameObject.tag = "Animal";                      //Set the Animal to Tag Animal
             AnimatorSpeed = 1;
 
             Anim = GetComponentInParent<Animator>();            //Cache the Animator
@@ -55,35 +75,31 @@ namespace MalbersAnimations.Controller
                 new MSpeedSet()
             {
                 name = "Ground",
-                    StartVerticalIndex = new Scriptables.IntReference(1),
-                    TopIndex = new Scriptables.IntReference(2),
-                    states =  new  List<StateID>(2) { MalbersTools.GetInstance<StateID>("Idle") , MalbersTools.GetInstance<StateID>("Locomotion")},
+                    StartVerticalIndex = new IntReference(1),
+                    TopIndex = new IntReference(3),
+                    states =  new  List<StateID>(2) { MTools.GetInstance<StateID>("Idle") , MTools.GetInstance<StateID>("Locomotion")},
                     Speeds =  new  List<MSpeed>(3) { new MSpeed("Walk",1,4,4) , new MSpeed("Trot", 2, 4, 4), new MSpeed("Run", 3, 4, 4) }
             }
             };
 
-            BoolVar useCameraInp = MalbersTools.GetInstance<BoolVar>("Global Camera Input");
-            BoolVar globalSmooth = MalbersTools.GetInstance<BoolVar>("Global Smooth Vertical");
-            FloatVar globalTurn = MalbersTools.GetInstance<FloatVar>("Global Turn Multiplier");
+            BoolVar useCameraInp = MTools.GetInstance<BoolVar>("Global Camera Input");
+            BoolVar globalSmooth = MTools.GetInstance<BoolVar>("Global Smooth Vertical");
+            FloatVar globalTurn = MTools.GetInstance<FloatVar>("Global Turn Multiplier");
 
             if (useCameraInp != null) useCameraInput.Variable = useCameraInp;
             if (globalSmooth != null) SmoothVertical.Variable = globalSmooth;
             if (globalTurn != null) TurnMultiplier.Variable = globalTurn;
-
-            CalculateHeight();
-
         }
 
         [ContextMenu("Create Event Listeners")]
         void CreateListeners()
         {
-
             MEventListener listener = GetComponent<MEventListener>();
 
             if (listener == null) listener = gameObject.AddComponent<MEventListener>();
             if (listener.Events == null) listener.Events = new List<MEventItemListener>();
 
-            MEvent MovementMobile = MalbersTools.GetInstance<MEvent>("Set Movement Mobile");
+            MEvent MovementMobile = MTools.GetInstance<MEvent>("Set Movement Mobile");
             if (listener.Events.Find(item => item.Event == MovementMobile) == null)
             {
                 var item = new MEventItemListener()
@@ -95,6 +111,7 @@ namespace MalbersAnimations.Controller
 
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseVector2, SetInputAxis);
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(item.Response, UseCameraBasedInput);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseFloat, SetUpDownAxis);
 
                 listener.Events.Add(item);
 
@@ -109,7 +126,7 @@ namespace MalbersAnimations.Controller
 
             /************************/
 
-            MEvent actionstatus = MalbersTools.GetInstance<MEvent>("Set Action Status");
+            MEvent actionstatus = MTools.GetInstance<MEvent>("Set Action Status");
             if (listener.Events.Find(item => item.Event == actionstatus) == null)
             {
                 var item = new MEventItemListener()
@@ -119,7 +136,7 @@ namespace MalbersAnimations.Controller
                     useInt = true, useFloat = true
                 };
 
-                ModeID ac = MalbersTools.GetInstance<ModeID>("Action");
+                ModeID ac = MTools.GetInstance<ModeID>("Action");
                 UnityEditor.Events.UnityEventTools.AddObjectPersistentListener(item.ResponseInt, Mode_Pin, ac);
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseInt, Mode_Pin_Status);
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseFloat, Mode_Pin_Time);
@@ -131,6 +148,48 @@ namespace MalbersAnimations.Controller
 
 
             /************************/
+
+
+
+            MEvent sprinting = MTools.GetInstance<MEvent>("Set Sprint");
+            if (listener.Events.Find(item => item.Event == sprinting) == null)
+            {
+                var item = new MEventItemListener()
+                {
+                    Event = sprinting,
+                    useVoid = false,
+                    useBool = true,
+                };
+
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseBool, SetSprint);
+
+                listener.Events.Add(item);
+
+                Debug.Log("<B>Sprint Listener</B> Added to the Event Listeners");
+            }
+
+
+
+
+            MEvent timeline = MTools.GetInstance<MEvent>("Timeline");
+            if (listener.Events.Find(item => item.Event == timeline) == null)
+            {
+                var item = new MEventItemListener()
+                {
+                    Event = timeline,
+                    useVoid = false,
+                    useBool = true,
+                };
+
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseBool,SetTimeline);
+
+                listener.Events.Add(item);
+
+                Debug.Log("<B>Timeline Listener</B> Added to the Event Listeners");
+            }
+
+
+            /************************/
             SetStateListeners(listener, "Set Jump", "Jump");
             SetStateListeners(listener, "Set Fly", "Fly");
             /************************/
@@ -138,7 +197,7 @@ namespace MalbersAnimations.Controller
 
         void SetModesListeners(MEventListener listener ,string EventName, string ModeName)
         {
-            MEvent e = MalbersTools.GetInstance<MEvent>(EventName);
+            MEvent e = MTools.GetInstance<MEvent>(EventName);
             if (listener.Events.Find(item => item.Event == e) == null)
             {
                 var item = new MEventItemListener()
@@ -147,7 +206,7 @@ namespace MalbersAnimations.Controller
                     useVoid = true, useInt = true, useBool = true,
                 };
 
-                ModeID att2 = MalbersTools.GetInstance<ModeID>(ModeName);
+                ModeID att2 = MTools.GetInstance<ModeID>(ModeName);
 
                 UnityEditor.Events.UnityEventTools.AddObjectPersistentListener<ModeID>(item.ResponseBool, Mode_Pin, att2);
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseBool, Mode_Pin_Input);
@@ -163,7 +222,7 @@ namespace MalbersAnimations.Controller
 
         void SetStateListeners(MEventListener listener, string EventName, string statename)
         {
-            MEvent e = MalbersTools.GetInstance<MEvent>(EventName);
+            MEvent e = MTools.GetInstance<MEvent>(EventName);
             if (listener.Events.Find(item => item.Event == e) == null)
             {
                 var item = new MEventItemListener()
@@ -174,7 +233,7 @@ namespace MalbersAnimations.Controller
                     useBool = true,
                 };
 
-                StateID ss = MalbersTools.GetInstance<StateID>(statename);
+                StateID ss = MTools.GetInstance<StateID>(statename);
 
                 UnityEditor.Events.UnityEventTools.AddObjectPersistentListener<StateID>(item.ResponseBool, State_Pin, ss);
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseBool, State_Pin_ByInput);
@@ -184,42 +243,20 @@ namespace MalbersAnimations.Controller
                 Debug.Log("<B>" + EventName + "</B> Added to the Event Listeners");
             }
         }
-
         private void OnDrawGizmosSelected()
         {
+            if (!debugGizmos) return;
             float sc = transform.localScale.y;
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(Center, 0.02f * sc);
+            Gizmos.DrawWireSphere(Center, 0.02f * sc);
         }
 
         void OnDrawGizmos()
         {
-            if (!debugGizmos) return;
-
             float sc = transform.localScale.y;
 
-            if (Application.isPlaying)
-            {
-                if (ActiveState != null) ActiveState.DebugState();
-
-                if (MainRay)
-                {
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawWireSphere(hit_Hip.point+AdditivePosition, RayCastRadius * sc);
-                    Debug.DrawRay(hit_Hip.point + AdditivePosition, hit_Hip.normal * 0.2f, Color.blue * sc);
-                }
-                if (FrontRay)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawWireSphere(hit_Chest.point + AdditivePosition, RayCastRadius * sc);
-                    Debug.DrawRay(hit_Chest.point + AdditivePosition, hit_Chest.normal * 0.2f, Color.red * sc);
-                }
-
-                Gizmos.color = Color.black;
-                Gizmos.DrawSphere(_transform.position + DeltaPos, 0.02f * sc);
-            }
-
-             
+            var pos = transform.position;
 
             if (showPivots)
             {
@@ -236,6 +273,47 @@ namespace MalbersAnimations.Controller
                         Gizmos.DrawWireSphere(pivot.World(transform), sc * RayCastRadius);
                         Gizmos.DrawRay(pivot.World(transform), pivot.WorldDir(transform) * pivot.multiplier * sc);
                     }
+                }
+            }
+
+            if (!debugGizmos) return;
+
+         
+
+
+            foreach (var st in states)    st.StateGizmos(this);
+
+            if (Application.isPlaying)
+            {
+
+                Gizmos.color = Color.green;
+               
+                MTools.Gizmo_Arrow(pos, TargetSpeed * 5 * sc);    //Draw the Target Direction 
+                Gizmos.color = Color.white;
+                MTools.Gizmo_Arrow(pos, InertiaPositionSpeed * 5 * sc);
+               
+                
+                Gizmos.color = Color.red;
+                MTools.Gizmo_Arrow(pos, Move_Direction * sc*2);
+
+                Gizmos.color = Color.black;
+                Gizmos.DrawSphere(pos + DeltaPos, 0.02f * sc);
+              
+                if (showPivots)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawWireSphere(Center, 0.02f * sc);
+                    Gizmos.DrawSphere(Center, 0.02f * sc);
+                }
+                // return;
+
+
+
+                if (CurrentExternalForce != Vector3.zero)
+                {
+                    Gizmos.color = Color.cyan;
+                    Gizmos.DrawRay(Center, CurrentExternalForce * sc /10);
+                    Gizmos.DrawSphere(Center + (CurrentExternalForce  * sc/10), 0.05f * sc);
                 }
             }
         }

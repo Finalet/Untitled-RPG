@@ -2,11 +2,17 @@
 
 // Copyright 2020 Wave Harmonic Ltd
 
+// BIRP fallback not really tested yet - shaders need fixing up.
+
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
+#if CREST_URP
 using UnityEngine.Rendering.Universal;
+#endif
+#if ENABLE_VR && ENABLE_VR_MODULE
 using UnityEngine.XR;
+#endif
 
 namespace Crest
 {
@@ -21,12 +27,21 @@ namespace Crest
         public override string SimName { get { return "Shadow"; } }
         protected override GraphicsFormat RequestedTextureFormat => GraphicsFormat.R8G8_UNorm;
         protected override bool NeedToReadWriteTextureData { get { return true; } }
+        static Texture2DArray s_nullTexture => TextureArrayHelpers.BlackTextureArray;
+        protected override Texture2DArray NullTexture => s_nullTexture;
+
+        internal const string MATERIAL_KEYWORD_PROPERTY = "_Shadows";
+        internal static readonly string MATERIAL_KEYWORD = MATERIAL_KEYWORD_PREFIX + "_SHADOWS_ON";
+        internal const string ERROR_MATERIAL_KEYWORD_MISSING = "Shadowing is not enabled on the ocean material and will not be visible.";
+        internal const string ERROR_MATERIAL_KEYWORD_MISSING_FIX = "Tick the <i>Shadowing</i> option in the <i>Scattering<i> parameter section on the material currently assigned to the <i>OceanRenderer</i> component.";
+        internal const string ERROR_MATERIAL_KEYWORD_ON_FEATURE_OFF = "The shadow feature is disabled on this component but is enabled on the ocean material.";
+        internal const string ERROR_MATERIAL_KEYWORD_ON_FEATURE_OFF_FIX = "If this is not intentional, either enable the <i>Create Shadow Data</i> option on this component to turn it on, or disable the <i>Shadowing</i> feature on the ocean material to save performance.";
 
         public static bool s_processData = true;
 
         Light _mainLight;
 
-        // URP version needs access to this externally, hence public get
+        // SRP version needs access to this externally, hence public get
         public CommandBuffer BufCopyShadowMap { get; private set; }
 
         RenderTexture _sources;
@@ -74,7 +89,8 @@ namespace Crest
                 }
             }
 
-            if (!SampleShadows.Created
+#if CREST_URP
+            if (RenderPipelineHelper.IsUniversal && !SampleShadowsURP.Created
 #if UNITY_EDITOR
                 // Not excited about this but it seems that the SampleShadows may not be immediately created when in edit mode. TODO - detect directly on render
                 // pipeline renderer asset?
@@ -82,22 +98,43 @@ namespace Crest
 #endif
                 )
             {
-                Debug.LogError("To support shadowing, a Custom renderer must be configured on the pipeline asset, and this custom renderer data must have the Sample Shadows feature added.", GraphicsSettings.renderPipelineAsset);
-            }
-
-#if UNITY_EDITOR
-            if (!OceanRenderer.Instance.OceanMaterial.IsKeywordEnabled("_SHADOWS_ON"))
-            {
-                Debug.LogWarning("Shadowing is not enabled on the current ocean material and will not be visible.", _ocean);
+                Debug.LogError("To support shadowing, a Custom renderer must be configured on the pipeline asset, and this custom renderer data must have the Sample Shadows feature added. "
+                    + $"See documentation here: {Internal.Constants.HELP_URL_BASE_USER}ocean-simulation.html#shadows", GraphicsSettings.renderPipelineAsset);
             }
 #endif
 
-            var asset = GraphicsSettings.renderPipelineAsset as UniversalRenderPipelineAsset;
-            if (asset && asset.shadowCascadeOption == ShadowCascadesOption.NoCascades)
+#if UNITY_EDITOR
+            if (OceanRenderer.Instance.OceanMaterial != null
+                && OceanRenderer.Instance.OceanMaterial.HasProperty(MATERIAL_KEYWORD_PROPERTY)
+                && !OceanRenderer.Instance.OceanMaterial.IsKeywordEnabled(MATERIAL_KEYWORD))
             {
-                Debug.LogError("Crest shadowing requires shadow cascades to be enabled on the pipeline asset.", asset);
+                Debug.LogWarning(ERROR_MATERIAL_KEYWORD_MISSING + " " + ERROR_MATERIAL_KEYWORD_MISSING_FIX, _ocean);
+            }
+#endif
+
+#if CREST_URP
+            var asset = GraphicsSettings.renderPipelineAsset as UniversalRenderPipelineAsset;
+            if (asset && asset.shadowCascadeCount < 2)
+            {
+                Debug.LogError("Crest shadowing requires shadow cascades to be enabled on the pipeline asset. "
+                    + $"See documentation here: {Internal.Constants.HELP_URL_BASE_USER}ocean-simulation.html#shadows", asset);
                 enabled = false;
                 return;
+            }
+#endif
+
+            // Enable sample shadows custom pass.
+            if (RenderPipelineHelper.IsHighDefinition)
+            {
+#if CREST_HDRP
+                SampleShadowsHDRP.Enable();
+#endif
+            }
+            else if (RenderPipelineHelper.IsUniversal)
+            {
+#if CREST_URP
+                SampleShadowsURP.Enable();
+#endif
             }
         }
 
@@ -218,10 +255,11 @@ namespace Crest
                 return;
             }
 
-            // TODO - this is in SRP, so i can't ifdef it? what is a good plan here - wait for it to be removed completely?
+#if CREST_SRP
 #pragma warning disable 618
             using (new ProfilingSample(BufCopyShadowMap, "CrestSampleShadows"))
 #pragma warning restore 618
+#endif
             {
                 var lt = OceanRenderer.Instance._lodTransform;
                 for (var lodIdx = lt.LodCount - 1; lodIdx >= 0; lodIdx--)
@@ -248,14 +286,13 @@ namespace Crest
                     BufCopyShadowMap.Blit(Texture2D.blackTexture, _targets, _renderMaterial[lodIdx].material, -1, lodIdx);
                 }
 
-                // Disable single pass double-wide stereo rendering for these commands since we are rendering to
-                // rendering texture. Otherwise, it will render double. Single pass instanced is broken here, but that
-                // appears to be a Unity bug only for the legacy VR system.
-                if (camera.stereoEnabled && XRSettings.stereoRenderingMode == XRSettings.StereoRenderingMode.SinglePass)
+#if ENABLE_VR && ENABLE_VR_MODULE
+                // Disable for XR SPI otherwise input will not have correct world position.
+                if (XRSettings.enabled && XRSettings.stereoRenderingMode == XRSettings.StereoRenderingMode.SinglePassInstanced)
                 {
-                    BufCopyShadowMap.SetSinglePassStereo(SinglePassStereoMode.None);
-                    BufCopyShadowMap.DisableShaderKeyword("UNITY_SINGLE_PASS_STEREO");
+                    BufCopyShadowMap.DisableShaderKeyword("STEREO_INSTANCING_ON");
                 }
+#endif
 
                 // Process registered inputs.
                 for (var lodIdx = lt.LodCount - 1; lodIdx >= 0; lodIdx--)
@@ -264,12 +301,13 @@ namespace Crest
                     SubmitDraws(lodIdx, BufCopyShadowMap);
                 }
 
-                // Restore single pass double-wide as we cannot rely on remaining pipeline to do it for us.
-                if (camera.stereoEnabled && XRSettings.stereoRenderingMode == XRSettings.StereoRenderingMode.SinglePass)
+#if ENABLE_VR && ENABLE_VR_MODULE
+                // Restore XR SPI as we cannot rely on remaining pipeline to do it for us.
+                if (XRSettings.enabled && XRSettings.stereoRenderingMode == XRSettings.StereoRenderingMode.SinglePassInstanced)
                 {
-                    BufCopyShadowMap.SetSinglePassStereo(SinglePassStereoMode.SideBySide);
-                    BufCopyShadowMap.EnableShaderKeyword("UNITY_SINGLE_PASS_STEREO");
+                    BufCopyShadowMap.EnableShaderKeyword("STEREO_INSTANCING_ON");
                 }
+#endif
 
                 // Set the target texture as to make sure we catch the 'pong' each frame
                 Shader.SetGlobalTexture(GetParamIdSampler(), _targets);
@@ -297,6 +335,19 @@ namespace Crest
             base.OnEnable();
 
             RemoveCommandBuffers();
+
+            if (RenderPipelineHelper.IsHighDefinition)
+            {
+#if CREST_HDRP
+                SampleShadowsHDRP.Enable();
+#endif
+            }
+            else if (RenderPipelineHelper.IsUniversal)
+            {
+#if CREST_URP
+                SampleShadowsURP.Enable();
+#endif
+            }
         }
 
         internal override void OnDisable()
@@ -304,6 +355,19 @@ namespace Crest
             base.OnDisable();
 
             RemoveCommandBuffers();
+
+            if (RenderPipelineHelper.IsHighDefinition)
+            {
+#if CREST_HDRP
+                SampleShadowsHDRP.Disable();
+#endif
+            }
+            else if (RenderPipelineHelper.IsUniversal)
+            {
+#if CREST_URP
+                SampleShadowsURP.Disable();
+#endif
+            }
         }
 
         void RemoveCommandBuffers()
@@ -320,12 +384,8 @@ namespace Crest
 
         readonly static string s_textureArrayName = "_LD_TexArray_Shadow";
         private static TextureArrayParamIds s_textureArrayParamIds = new TextureArrayParamIds(s_textureArrayName);
-        public static int ParamIdSampler(bool sourceLod = false) { return s_textureArrayParamIds.GetId(sourceLod); }
-
-        protected override int GetParamIdSampler(bool sourceLod = false)
-        {
-            return ParamIdSampler(sourceLod);
-        }
+        public static int ParamIdSampler(bool sourceLod = false) => s_textureArrayParamIds.GetId(sourceLod);
+        protected override int GetParamIdSampler(bool sourceLod = false) => ParamIdSampler(sourceLod);
 
         public static void Bind(IPropertyWrapper properties)
         {
@@ -335,13 +395,13 @@ namespace Crest
             }
             else
             {
-                properties.SetTexture(ParamIdSampler(), TextureArrayHelpers.BlackTextureArray);
+                properties.SetTexture(ParamIdSampler(), s_nullTexture);
             }
         }
 
-#if UNITY_2019_3_OR_NEWER
+        public static void BindNullToGraphicsShaders() => Shader.SetGlobalTexture(ParamIdSampler(), s_nullTexture);
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#endif
         static void InitStatics()
         {
             // Init here from 2019.3 onwards

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 namespace MalbersAnimations.Events
 {
     [Serializable] public class GameObjectEvent : UnityEvent<GameObject> { }
+    [Serializable] public class SpriteEvent : UnityEvent<Sprite> { }
 
     [Serializable] public class TransformEvent : UnityEvent<Transform> { }
 
@@ -18,6 +19,8 @@ namespace MalbersAnimations.Events
 
     [Serializable] public class IntEvent : UnityEvent<int> { }
 
+    [Serializable] public class Int2Event : UnityEvent<int,int> { }
+
     [Serializable] public class FloatEvent : UnityEvent<float> { }
 
     [Serializable] public class BoolEvent : UnityEvent<bool> { }
@@ -29,4 +32,12 @@ namespace MalbersAnimations.Events
     [Serializable] public class CollisionEvent : UnityEvent<Collision> { }
 
     [Serializable] public class ComponentEvent : UnityEvent<Component> { }
+
+    public delegate void PredictTrajectory(bool show);
+
+    //public delegate void BoolDelegate(bool value);
+    //public delegate void IntDelegate(int value);
+    //public delegate void IntIntDelegate(int value1, int value2);
+    //public delegate void FloatDelegate(float value);
+    //public delegate void StringDelegate(string value);
 }

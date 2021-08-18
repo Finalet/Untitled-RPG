@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using MalbersAnimations.Controller;
 
 namespace MalbersAnimations
 {
@@ -10,8 +9,13 @@ namespace MalbersAnimations
 
         override public void OnStateMachineEnter(Animator animator, int stateMachinePathHash)
         {
-            MAnimal animal = animator.GetComponent<MAnimal>();
-            animal?.SetRandomID(UnityEngine.Random.Range(1, Range + 1));
+            IRandomizer holder = animator.GetComponent<IRandomizer>();
+            holder?.SetRandom(Random.Range(1, Range + 1));
         }
+    }
+
+    public interface IRandomizer
+    {
+        void SetRandom(int value);
     }
 }

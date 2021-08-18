@@ -5,10 +5,8 @@
 #ifndef CREST_OCEAN_EMISSION_INCLUDED
 #define CREST_OCEAN_EMISSION_INCLUDED
 
-#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Version.hlsl"
-
 half3 ScatterColour(
-	in const half i_surfaceOceanDepth, in const float3 i_cameraPos,
+	in const half3 i_ambientLighting, in const half i_surfaceOceanDepth, in const float3 i_cameraPos,
 	in const half3 i_lightDir, in const half3 i_view, in const float i_shadow,
 	in const bool i_underwater, in const bool i_outscatterLight, const half3 lightColour, half sss,
 	in const float i_meshScaleLerp, in const float i_scaleBase,
@@ -75,9 +73,7 @@ half3 ScatterColour(
 		col = lerp(col, shallowCol, shallowness);
 #endif
 
-		// light
-		// use the constant term (0th order) of SH stuff - this is the average. it seems to give the right kind of colour
-		col *= half3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w) + lightColour;
+		col *= i_ambientLighting + lightColour;
 
 		// Approximate subsurface scattering - add light when surface faces viewer. Use geometry normal - don't need high freqs.
 		half towardsSun = pow(max(0., dot(i_lightDir, -i_view)), _SubSurfaceSunFallOff);
@@ -96,18 +92,19 @@ half3 ScatterColour(
 
 
 #if _CAUSTICS_ON
-void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const half3 i_lightDir, in const float i_sceneZ, in sampler2D i_normals, in const bool i_underwater, inout half3 io_sceneColour,
+void ApplyCaustics(in const float3 i_scenePos, in const half3 i_lightDir, in const float i_sceneZ, in sampler2D i_normals, in const bool i_underwater, inout half3 io_sceneColour,
 	in const CascadeParams cascadeData0, in const CascadeParams cascadeData1)
 {
 	// could sample from the screen space shadow texture to attenuate this..
 	// underwater caustics - dedicated to P
-	const float3 scenePosUV = WorldToUV(scenePos.xz, cascadeData1, _LD_SliceIndex + 1);
-	half3 disp = 0.;
+	const float3 scenePosUV = WorldToUV(i_scenePos.xz, cascadeData1, _LD_SliceIndex + 1);
+
+	float3 disp = 0.0;
 	// this gives height at displaced position, not exactly at query position.. but it helps. i cant pass this from vert shader
 	// because i dont know it at scene pos.
 	SampleDisplacements(_LD_TexArray_AnimatedWaves, scenePosUV, 1.0, disp);
 	half waterHeight = _OceanCenterPosWorld.y + disp.y;
-	half sceneDepth = waterHeight - scenePos.y;
+	half sceneDepth = waterHeight - i_scenePos.y;
 	// Compute mip index manually, with bias based on sea floor depth. We compute it manually because if it is computed automatically it produces ugly patches
 	// where samples are stretched/dilated. The bias is to give a focusing effect to caustics - they are sharpest at a particular depth. This doesn't work amazingly
 	// well and could be replaced.
@@ -116,7 +113,7 @@ void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const
 	// caustics come from many directions and don't exhibit such a strong directonality
 	// Removing the fudge factor (4.0) will cause the caustics to move around more with the waves. But this will also
 	// result in stretched/dilated caustics in certain areas. This is especially noticeable on angled surfaces.
-	float2 surfacePosXZ = scenePos.xz + i_lightDir.xz * sceneDepth / (4.*i_lightDir.y);
+	float2 surfacePosXZ = i_scenePos.xz + i_lightDir.xz * sceneDepth / (4.*i_lightDir.y);
 	float4 cuv1 = float4((surfacePosXZ / _CausticsTextureScale + float2(0.044*_CrestTime + 17.16, -0.169*_CrestTime)), 0., mipLod);
 	float4 cuv2 = float4((1.37*surfacePosXZ / _CausticsTextureScale + float2(0.248*_CrestTime, 0.117*_CrestTime)), 0., mipLod);
 
@@ -137,8 +134,8 @@ void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const
 	{
 		// Calculate projected position again as we do not want the fudge factor. If we include the fudge factor, the
 		// caustics will not be aligned with shadows.
-		const float2 shadowSurfacePosXZ = scenePos.xz + i_lightDir.xz * sceneDepth / i_lightDir.y;
-		real2 causticShadow = 0.0;
+		const float2 shadowSurfacePosXZ = i_scenePos.xz + i_lightDir.xz * sceneDepth / i_lightDir.y;
+		half2 causticShadow = 0.0;
 		// As per the comment for the underwater code in ScatterColour,
 		// LOD_1 data can be missing when underwater
 		if (i_underwater)
@@ -161,7 +158,7 @@ void ApplyCaustics(in const float3 scenePos, in const half3 i_lightCol, in const
 }
 #endif // _CAUSTICS_ON
 
-
+#if defined(UNITY_COMMON_INCLUDED)
 half3 OceanEmission(in const half3 i_view, in const half3 i_n_pixel, in const half3 i_lightCol, in const float3 i_lightDir,
 	in const real3 i_grabPosXYW, in const float i_pixelZ, in const half2 i_uvDepth, in const float i_sceneZ,
 	in const half3 i_bubbleCol, in sampler2D i_normals, in const bool i_underwater, in const half3 i_scatterCol,
@@ -209,24 +206,14 @@ half3 OceanEmission(in const half3 i_view, in const half3 i_n_pixel, in const ha
 		}
 
 		sceneColour = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, UnityStereoTransformScreenSpaceTex(uvBackgroundRefract)).rgb;
-
-		// TODO
 #if _CAUSTICS_ON
-// Was necessary before 7.4 but now breaks caustics. According to the changelog, Unity added some fixes to
-// UNITY_MATRIX_I_VP in 7.4.
-#if !VERSION_GREATER_EQUAL(7, 4)
-#if UNITY_UV_STARTS_AT_TOP
-		scenePosNDC.y = 1. - scenePosNDC.y;
-#endif
-#endif
 		// Refractions don't work correctly in single pass. Use same code from underwater instead for now.
 #if defined(UNITY_SINGLE_PASS_STEREO) || defined(UNITY_STEREO_INSTANCING_ENABLED)
-		float3 cameraForward = _CameraForward;
-		float3 scenePos = (((i_view) / dot(i_view, cameraForward)) * i_sceneZ) + _WorldSpaceCameraPos;
+		float3 scenePos = (((i_view) / dot(i_view, unity_CameraToWorld._m02_m12_m22)) * i_sceneZ) + _WorldSpaceCameraPos;
 #else
 		float3 scenePos = ComputeWorldSpacePosition(scenePosNDC, sceneZRefractDevice, UNITY_MATRIX_I_VP);
 #endif
-		ApplyCaustics(scenePos, i_lightCol, i_lightDir, i_sceneZ, i_normals, i_underwater, sceneColour, cascadeData0, cascadeData1);
+		ApplyCaustics(scenePos, i_lightDir, i_sceneZ, i_normals, i_underwater, sceneColour, cascadeData0, cascadeData1);
 #endif
 		alpha = 1.0 - exp(-_DepthFogDensity.xyz * depthFogDistance);
 	}
@@ -248,5 +235,6 @@ half3 OceanEmission(in const half3 i_view, in const half3 i_n_pixel, in const ha
 
 	return col;
 }
+#endif
 
 #endif // CREST_OCEAN_EMISSION_INCLUDED

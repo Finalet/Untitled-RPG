@@ -5,12 +5,15 @@ namespace MalbersAnimations.Controller.AI
 {
     public abstract class MAIDecision : BrainBase
     {
-        public enum WSend { SendTrue,SendFalse}
+        /// <summary>What name will be displayed while adding a new Decision</summary>
+        public abstract string DisplayName { get; }
+
+        public enum WSend { None, SendTrue, SendFalse}
 
         [Space, Tooltip("ID Used for sending messages to the Brain to see if the Decision was TRUE or FALSE")]
-        public IntReference MessageID = new IntReference(0);
-        [Tooltip("What to send if a Decision is successful")]
-        public WSend send = WSend.SendTrue;
+        public IntReference DecisionID = new IntReference(0);
+        [Tooltip("What to send to to the Brain.OnDecisionSucceeded() if a Decision is executed")]
+        public WSend send = WSend.None;
 
         /// <summary>Execute the Decide method every x Seconds</summary>
         [Tooltip("Execute the Decide method every x Seconds to improve performance")]

@@ -13,7 +13,7 @@ public class Equipment : Item
     public int MagicPower;
     public int HealingPower;
     public int Defense;
-    [Space]
+    [Header("Main stats")]
     public int Health;
     public int Stamina;
     [Header("Secondary Stats")]

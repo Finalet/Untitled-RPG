@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace MalbersAnimations.SA
 {
-
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
+    [AddComponentMenu("Malbers/Utilities/Standard Asset/Rigidbody FPS Controller")]
     public class MRigidbodyFPSController : MonoBehaviour
     {
         public Camera cam;
@@ -22,42 +22,17 @@ namespace MalbersAnimations.SA
         private CapsuleCollider m_Capsule;
         private Vector3 m_GroundContactNormal;
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
+        private float oldYRotation;
 
-        #region Properties
+        public bool LockMovement { get => lockMovement; set => lockMovement = value;  }
+        public Vector3 Velocity =>  m_RigidBody.velocity;
+      
+        public bool Grounded =>  m_IsGrounded;
 
-        public bool LockMovement
-        {
-            set { lockMovement = value; }
-            get { return lockMovement; }
-        }
+        public bool Jumping => m_Jumping;
 
-        public Vector3 Velocity
-        {
-            get { return m_RigidBody.velocity; }
-        }
-
-        public bool Grounded
-        {
-            get { return m_IsGrounded; }
-        }
-
-        public bool Jumping
-        {
-            get { return m_Jumping; }
-        }
-
-        public bool Running
-        {
-            get
-            {
-#if !MOBILE_INPUT
-                return movementSettings.Running;
-#else
-	            return false;
-#endif
-            }
-        }
-        #endregion
+        public bool Running => movementSettings.Running;
+ 
 
         private void Start()
         {
@@ -73,11 +48,7 @@ namespace MalbersAnimations.SA
         private void Update()
         {
             RotateView();
-
-            if (Input.GetButtonDown("Jump") && !m_Jump)
-            {
-                m_Jump = true;
-            }
+            if (Input.GetButtonDown("Jump") && !m_Jump)  m_Jump = true;
         }
 
         public void RestartMouseLook()
@@ -99,9 +70,9 @@ namespace MalbersAnimations.SA
                 Vector3 desiredMove = cam.transform.forward * input.y + cam.transform.right * input.x;
                 desiredMove = Vector3.ProjectOnPlane(desiredMove, m_GroundContactNormal).normalized;
 
-                desiredMove.x = desiredMove.x * movementSettings.CurrentTargetSpeed;
-                desiredMove.z = desiredMove.z * movementSettings.CurrentTargetSpeed;
-                desiredMove.y = desiredMove.y * movementSettings.CurrentTargetSpeed;
+                desiredMove.x *= movementSettings.CurrentTargetSpeed;
+                desiredMove.z *= movementSettings.CurrentTargetSpeed;
+                desiredMove.y *= movementSettings.CurrentTargetSpeed;
                 if (m_RigidBody.velocity.sqrMagnitude <
                     (movementSettings.CurrentTargetSpeed * movementSettings.CurrentTargetSpeed))
                 {
@@ -159,7 +130,6 @@ namespace MalbersAnimations.SA
 
         private Vector2 GetInput()
         {
-
             Vector2 input = new Vector2
             {
                 x = Input.GetAxis("Horizontal"),
@@ -174,8 +144,10 @@ namespace MalbersAnimations.SA
             //avoids the mouse looking if the game is effectively paused
             if (Mathf.Abs(Time.timeScale) < float.Epsilon) return;
 
+            mouseLook.Init(transform, cam.transform); //Restart because its needed
+
             // get the rotation before it's changed
-            float oldYRotation = transform.eulerAngles.y;
+            oldYRotation = transform.eulerAngles.y;
 
             mouseLook.LookRotation(transform, cam.transform);
 
@@ -224,9 +196,7 @@ namespace MalbersAnimations.SA
         [HideInInspector]
         public float CurrentTargetSpeed = 8f;
 
-#if !MOBILE_INPUT
         private bool m_Running;
-#endif
 
         public void UpdateDesiredTargetSpeed(Vector2 input)
         {
@@ -248,8 +218,7 @@ namespace MalbersAnimations.SA
                 //handled last as if strafing and moving forward at the same time forwards speed should take precedence
                 CurrentTargetSpeed = ForwardSpeed;
             }
-#if !MOBILE_INPUT
-            if (RunKey.GetInput)
+            if (RunKey.GetValue)
             {
                 CurrentTargetSpeed *= RunMultiplier;
                 m_Running = true;
@@ -258,15 +227,12 @@ namespace MalbersAnimations.SA
             {
                 m_Running = false;
             }
-#endif
         }
 
-#if !MOBILE_INPUT
         public bool Running
         {
             get { return m_Running; }
         }
-#endif
     }
 
     [Serializable]

@@ -3,7 +3,7 @@
 namespace MalbersAnimations
 {
     /// <summary>Used To change States from a camera to another</summary>
-    [CreateAssetMenu(menuName = "Malbers Animations/Camera/FreeLook Camera State")]
+   // [CreateAssetMenu(menuName = "Malbers Animations/Scriptables/FreeLook Camera State", order = 2000)]
     public class FreeLookCameraState : ScriptableObject
     {
         public Vector3 PivotPos;

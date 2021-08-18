@@ -5,6 +5,8 @@ using UnityEngine;
 namespace MalbersAnimations
 {
     [RequireComponent(typeof(MFreeLookCamera))]
+    [AddComponentMenu("Malbers/Utilities/Camera/Camera Wall Stop")]
+
     public class CameraWallStop : MonoBehaviour
     {
         public float clipMoveTime = 0.05f;              // time taken to move when avoiding cliping (low value = fast, which it should be)
@@ -23,29 +25,33 @@ namespace MalbersAnimations
         private Ray m_Ray = new Ray();                  // the ray used in the lateupdate for casting between the camera and the target
         private RaycastHit[] hits;                      // the hits between the camera and the target
         private RayHitComparer m_RayHitComparer;        // variable to compare raycast hit distances
-
+        private MFreeLookCamera M_FreeLookCamera;
 
 
 
         private void Start()
         {
-            var MFreeLookCamera = GetComponent<MFreeLookCamera>();
+            M_FreeLookCamera = GetComponent<MFreeLookCamera>();
 
-            m_Cam = MFreeLookCamera.CamT;     //find the camera in the object hierarchy
-            m_Pivot = MFreeLookCamera.Pivot;
-            m_OriginalDist = m_Cam.localPosition.magnitude;
-            m_CurrentDist = m_OriginalDist;
+            ResetWithState();
 
             m_RayHitComparer = new RayHitComparer();         // create a new RayHitComparer
 
-            MFreeLookCamera.OnStateChange.AddListener(SetOriginalDist);
+            M_FreeLookCamera.OnStateChange.AddListener(SetOriginalDist);
+        }
+
+        public virtual void ResetWithState()
+        {
+            m_Cam = M_FreeLookCamera.CamT;     //find the camera in the object hierarchy
+            m_Pivot = M_FreeLookCamera.Pivot;
+            m_OriginalDist = m_Cam.localPosition.magnitude;
+            m_CurrentDist = m_OriginalDist;
         }
 
         public virtual void SetOriginalDist()
         {
-            m_OriginalDist = m_Cam.localPosition.magnitude;
+            ResetWithState();
         }
-
 
         private void LateUpdate()
         {
@@ -61,7 +67,7 @@ namespace MalbersAnimations
 
             for (int i = 0; i < cols.Length; i++)                   // loop through all the collisions to check if something we care about
             {
-                if ((!cols[i].isTrigger) && !(MalbersTools.CollidersLayer(cols[i],dontClip)))   //is on a layer we don't want to clip
+                if ((!cols[i].isTrigger) && !(MTools.CollidersLayer(cols[i],dontClip)))   //is on a layer we don't want to clip
                 {
                     initialIntersect = true;
                     break;
@@ -88,7 +94,7 @@ namespace MalbersAnimations
             for (int i = 0; i < hits.Length; i++)                       // loop through all the collisions
             {
                 // only deal with the collision if it was closer than the previous one, not a trigger, not in the Layer Mask
-                if (hits[i].distance < nearest && (!hits[i].collider.isTrigger) &&  !MalbersTools.CollidersLayer(hits[i].collider,dontClip))
+                if (hits[i].distance < nearest && (!hits[i].collider.isTrigger) &&  !MTools.CollidersLayer(hits[i].collider,dontClip))
                 {
                     nearest = hits[i].distance;                                         // change the nearest collision to latest
                     targetDist = -m_Pivot.InverseTransformPoint(hits[i].point).z;

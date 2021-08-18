@@ -4,28 +4,31 @@ using UnityEngine;
 
 namespace MalbersAnimations.Controller.AI
 {
-    [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Decision/Check Scriptable Variable")]
+    [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Decision/Check Scriptable Variable", order = 6)]
     public class CheckScriptableVar : MAIDecision
     {
+        public override string DisplayName => "Variables/Check Scriptable Variable";
+
+
         [Space, Tooltip("Check on the Target or Self if it has a Listener Variable Component <Int><Bool><Float> and compares it with the local variable)")]
         public VarType varType = VarType.Bool;
 
 
-        [Space, ConditionalHide("showBoolValue", true)]
+        [ContextMenuItem("Create Bool", "CreateBoolVar"), Hide("showBoolValue", true),]
         public BoolVar Bool;
-        [Space, ConditionalHide("showIntValue", true)]
+        [ContextMenuItem("Create Int", "CreateIntVar"), Hide("showIntValue", true)]
         public IntVar Int;
-        [Space, ConditionalHide("showFloatValue", true)]
+        [ContextMenuItem("Create Float", "CreateFloatVar"), Hide("showFloatValue", true)]
         public FloatVar Float;
 
-        [ConditionalHide("showBoolValue", true,true)]
+        [Space(15), Hide("showBoolValue", true, true)]
         public ComparerInt compare;
 
-        [ConditionalHide("showBoolValue", true)]
+        [Hide("showBoolValue", true)]
         public bool boolValue = true;
-        [ConditionalHide("showIntValue", true)]
+        [Hide("showIntValue", true)]
         public int intValue = 0;
-        [ConditionalHide("showFloatValue", true)]
+        [Hide("showFloatValue", true)]
         public float floatValue = 0f;
 
         [HideInInspector] public bool showFloatValue;
@@ -62,27 +65,19 @@ namespace MalbersAnimations.Controller.AI
             switch (varType)
             {
                 case VarType.Bool:
-                    return Bool != null ? Bool.Value == boolValue : false;
+                    return Bool != null && Bool.Value == boolValue;
                 case VarType.Int:
-                    return Int != null ? CompareInteger(Int.Value) : false;
+                    return Int != null && CompareInteger(Int.Value);
                 case VarType.Float:
-                    return Float != null ? CompareFloat(Float.Value) : false;
+                    return Float != null && CompareFloat(Float.Value);
                 default:
                     return false;
             }
         }
 
-        public override void FinishDecision(MAnimalBrain brain, int Index)
-        {
-            //Reset all variables
-            Bool = null;
-            Int = null;
-            Float = null;
-        }
 
         public enum VarType { Bool, Int, Float }
         public enum BoolType { True, False }
-
 
         public bool CompareInteger(int IntValue)
         {
@@ -100,7 +95,6 @@ namespace MalbersAnimations.Controller.AI
                     return false;
             }
         }
-
         public bool CompareFloat(float IntValue)
         {
             switch (compare)
@@ -117,5 +111,13 @@ namespace MalbersAnimations.Controller.AI
                     return false;
             }
         }
+
+#if UNITY_EDITOR
+        private void CreateIntVar() => Int = (IntVar)MTools.CreateScriptableAsset(typeof(IntVar));
+
+        private void CreateFloat() => Float = (FloatVar)MTools.CreateScriptableAsset(typeof(FloatVar));
+
+        private void CreateBoolVar() => Bool = (BoolVar)MTools.CreateScriptableAsset(typeof(BoolVar));
+#endif
     }
 }

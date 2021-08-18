@@ -155,7 +155,7 @@ public class Characteristics : MonoBehaviour
                 timer = Time.time;
             }
             if (Time.time - timer >= 1f) {
-                CanvasScript.instance.HideStamina();
+                if (!PlayerControlls.instance.isMounted) CanvasScript.instance.HideStamina();
             }
             canUseStamina = true;
             return;
@@ -170,7 +170,7 @@ public class Characteristics : MonoBehaviour
             canRegenerateStamina = true;
         }
 
-        CanvasScript.instance.ShowStamina();
+        if (!PlayerControlls.instance.isMounted) CanvasScript.instance.ShowStamina();
         hidingStamina = false;
 
         if (canRegenerateStamina) {

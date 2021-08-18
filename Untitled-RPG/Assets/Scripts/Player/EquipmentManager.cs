@@ -32,6 +32,7 @@ public class EquipmentManager : MonoBehaviour, ISavable
     public UI_EquipmentSlot mainHand;
     public UI_EquipmentSlot secondaryHand;
     public UI_EquipmentSlot bow;
+    public UI_MountSlot mount;
 
     [Header("Rarity set buffs")]
     public Buff commonSetBuff;
@@ -88,6 +89,9 @@ public class EquipmentManager : MonoBehaviour, ISavable
         mainHand.LoadSlot();
         secondaryHand.LoadSlot();
         bow.LoadSlot();
+        mount.LoadSlot();
+        mount.saddleSlot.LoadSlot();
+        mount.armorSlot.LoadSlot();
 
         AddAllStats();
         Characteristics.instance.StatsCalculations();
@@ -418,6 +422,29 @@ public class EquipmentManager : MonoBehaviour, ISavable
         }
         return equiped;
     }
+    public bool isSlotEquiped (MountEquipmentType mountEquipmentType, out Item equipedItem) {
+        bool equiped = false;
+        equipedItem = null;
+        switch (mountEquipmentType) {
+            case MountEquipmentType.Saddle:
+                equiped = mount.saddleSlot.itemInSlot == null ? false : true;
+                equipedItem = equiped ? mount.saddleSlot.itemInSlot : null;
+                break;
+            case MountEquipmentType.Armor:
+                equiped = mount.armorSlot.itemInSlot == null ? false : true;
+                equipedItem = equiped ? mount.armorSlot.itemInSlot : null;
+                break;
+        }
+        return equiped;
+    }
+    public bool isMountEquiped (out Item equipedMount) {
+        equipedMount = mount.itemInSlot;
+        return mount.itemInSlot;
+    }
+
+    public Mount getMountItem (){
+        return (Mount)mount.itemInSlot;
+    }
 
     public void CheckEquipmentBuffs (){
         int numberOfCommonArmor = 0;
@@ -508,6 +535,9 @@ public class EquipmentManager : MonoBehaviour, ISavable
         mainHand.SaveSlot();
         secondaryHand.SaveSlot();
         bow.SaveSlot();
+        mount.SaveSlot();
+        mount.saddleSlot.SaveSlot();
+        mount.armorSlot.SaveSlot();
     }
     public void Load () {
         LoadEquip();

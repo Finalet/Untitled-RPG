@@ -13,7 +13,11 @@ float CrestLinearEyeDepth(const float i_rawDepth)
 {
 #if !defined(_PROJECTION_ORTHOGRAPHIC)
 	// Handles UNITY_REVERSED_Z for us.
+#if defined(UNITY_COMMON_INCLUDED)
 	float perspective = LinearEyeDepth(i_rawDepth, _ZBufferParams);
+#elif defined(UNITY_CG_INCLUDED)
+	float perspective = LinearEyeDepth(i_rawDepth);
+#endif
 #endif // _PROJECTION
 
 #if !defined(_PROJECTION_PERSPECTIVE)

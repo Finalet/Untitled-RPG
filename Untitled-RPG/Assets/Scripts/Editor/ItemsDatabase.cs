@@ -11,6 +11,8 @@ public class ItemsDatabase : EditorWindow
     bool showSkillbooks;
     bool showConsumables;
     bool showResources;
+    bool showMounts;
+    bool showMountEquipment;
 
     bool showAllWeapons;
     bool showSwords;
@@ -33,6 +35,10 @@ public class ItemsDatabase : EditorWindow
     bool showCraftingResources;
     bool showQuestItems;
     bool showMisc;
+
+    bool showAllMountEquipment;
+    bool showMountSaddles;
+    bool showMountArmor;
 
     Vector2 scrollPos;
     Vector2 scrollPosSelection;
@@ -96,6 +102,20 @@ public class ItemsDatabase : EditorWindow
             DrawResourcesList(ah);
             EditorGUILayout.Space(5, false);
         }
+
+        EditorGUI.indentLevel = 0;
+        showMounts = EditorGUILayout.Foldout(showMounts, "Mounts");
+        if (showMounts) {
+            DrawList(ah.mounts);
+            EditorGUILayout.Space(5, false);
+        }
+
+        EditorGUI.indentLevel = 0;
+        showMountEquipment = EditorGUILayout.Foldout(showMountEquipment, "Mount Equipment");
+        if (showMountEquipment) {
+            DrawMountEquipmentList(ah);
+            EditorGUILayout.Space(5, false);
+        }
         
         EditorGUI.indentLevel = 0;
         EditorGUILayout.Space(10);
@@ -130,7 +150,7 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.EndHorizontal();
 
             selectedWindow = Editor.CreateEditor(selectedItem);
-            selectedWindow.DrawDefaultInspector();
+            selectedWindow.OnInspectorGUI();
 
             EditorGUILayout.EndScrollView();
         } else {
@@ -392,6 +412,44 @@ public class ItemsDatabase : EditorWindow
         }
     }
 
+    void DrawMountEquipmentList (AssetHolder ah) {
+        List<Item> Saddles = new List<Item>();
+        List<Item> Armor = new List<Item>();
+
+        MountEquipment me;
+        foreach (Item item in ah.mountEquipment){
+            me = (MountEquipment)item;
+            switch (me.equipmentType) {
+                case MountEquipmentType.Saddle:
+                    Saddles.Add(me);
+                    break;
+                case MountEquipmentType.Armor:
+                    Armor.Add(me);
+                    break;
+            }
+        }
+
+        EditorGUI.indentLevel = 2;
+        DrawTitles(ah.mountEquipment);
+        
+        EditorGUI.indentLevel = 1;
+        showAllMountEquipment = EditorGUILayout.Foldout(showAllMountEquipment, "All mount equipment");
+        if(showAllMountEquipment) {
+            DrawList(ah.mountEquipment, true);
+        }
+
+        EditorGUI.indentLevel = 1;
+        showMountSaddles = EditorGUILayout.Foldout(showMountSaddles, "Saddles");
+        if (showMountSaddles) {
+            DrawList(Saddles, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showMountArmor = EditorGUILayout.Foldout(showMountArmor, "Armor");
+        if (showMountArmor) {
+            DrawList(Armor, true);
+        }
+    }
+
     void DrawAdditionalFieldsTitles (List<Item> list) {
         AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         
@@ -406,6 +464,11 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.LabelField("Consumable type", EditorStyles.boldLabel, GUILayout.Width(150));
         } else if (list[0] is Resource) {
             EditorGUILayout.LabelField("Resource type", EditorStyles.boldLabel, GUILayout.Width(150));
+        } else if (list[0] is Mount) {
+            EditorGUILayout.LabelField("Movement speed", EditorStyles.boldLabel, GUILayout.Width(150));
+            EditorGUILayout.LabelField("Stamina", EditorStyles.boldLabel, GUILayout.Width(80));
+        } else if (list[0] is MountEquipment) {
+            EditorGUILayout.LabelField("Type", EditorStyles.boldLabel, GUILayout.Width(80));
         }
     }
     void DrawAdditionalFields (Item item) {
@@ -425,6 +488,13 @@ public class ItemsDatabase : EditorWindow
         } else if (item is Resource) {
             Resource r = (Resource)item;
             EditorGUILayout.LabelField(r.resourceType.ToString(), GUILayout.Width(150));
+        } else if (item is Mount) {
+            Mount m = (Mount)item;
+            EditorGUILayout.LabelField(m.movementSpeed.ToString(), GUILayout.Width(150));
+            EditorGUILayout.LabelField(m.maxStamina.ToString(), GUILayout.Width(80));
+        } else if (item is MountEquipment) {
+            MountEquipment m = (MountEquipment)item;
+            EditorGUILayout.LabelField(m.equipmentType.ToString(), GUILayout.Width(80));
         }
     }
 
@@ -471,6 +541,22 @@ public class ItemsDatabase : EditorWindow
             r.itemName = "New Resource";
             ah.resources.Add(r);
             selectedItem = r;
+        } else if (list == ah.mounts) {
+            Mount m = ScriptableObject.CreateInstance<Mount>();
+            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Mounts/MO_New Mount.asset");
+            AssetDatabase.CreateAsset(m, name);
+            m.ID = list[list.Count-1].ID + 1;
+            m.itemName = "New Mount";
+            ah.mounts.Add(m);
+            selectedItem = m;
+        } else if (list == ah.mountEquipment) {
+            MountEquipment me = ScriptableObject.CreateInstance<MountEquipment>();
+            name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items/Mount Equipment/ME_New Mount Equipment.asset");
+            AssetDatabase.CreateAsset(me, name);
+            me.ID = list[list.Count-1].ID + 1;
+            me.itemName = "New Mount Equipment";
+            ah.mountEquipment.Add(me);
+            selectedItem = me;
         } else {
             //-------------Different types of Armor-------------//
             if (list != ah.armor && list[0] is Armor) {
@@ -510,6 +596,19 @@ public class ItemsDatabase : EditorWindow
                 ah.resources.Add(r);
                 selectedItem = r;
             }
+
+            //-------------Different types of Mount Equipment-------------//
+            if (list != ah.mountEquipment && list[0] is MountEquipment) {
+                MountEquipment existingMountEquipment = (MountEquipment)list[0];
+                MountEquipment me = ScriptableObject.CreateInstance<MountEquipment>();
+                name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath($"Assets/Items/Mount Equipment/RE_New {existingMountEquipment.equipmentType}.asset");
+                AssetDatabase.CreateAsset(me, name);
+                me.ID = list[list.Count-1].ID + 1;
+                me.itemName = $"New {existingMountEquipment.equipmentType}";
+                me.equipmentType = existingMountEquipment.equipmentType;
+                ah.mountEquipment.Add(me);
+                selectedItem = me;
+            }
         }
 
         ah.SortAllByID();
@@ -536,6 +635,12 @@ public class ItemsDatabase : EditorWindow
             } else if (list == ah.resources) {
                 folder = "Resources";
                 ah.resources.Remove(itemToDelete);
+            } else if (list == ah.mounts) {
+                folder = "Mounts";
+                ah.mounts.Remove(itemToDelete);
+            } else if (list == ah.mountEquipment) {
+                folder = "Mount Equipment";
+                ah.mountEquipment.Remove(itemToDelete);
             } else {
                 //-------------Different types of Armor-------------//
                 if (list != ah.armor && list[0] is Armor) {
@@ -553,6 +658,12 @@ public class ItemsDatabase : EditorWindow
                 if (list != ah.resources && list[0] is Resource) {
                     folder = "Resources";
                     ah.resources.Remove(itemToDelete);
+                }
+
+                //-------------Different types of Mount Equipment-------------//
+                if (list != ah.mountEquipment && list[0] is MountEquipment) {
+                    folder = "Mount Equipment";
+                    ah.mountEquipment.Remove(itemToDelete);
                 }
             }
             AssetDatabase.DeleteAsset($"Assets/Items/{folder}/{itemToDelete.name}.asset");

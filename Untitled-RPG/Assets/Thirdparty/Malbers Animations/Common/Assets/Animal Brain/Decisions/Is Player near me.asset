@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Is Player near me
   m_EditorClassIdentifier: 
   Description: Find the Player on a 6 unit Radius and Assign it as the Target.
-  MessageID:
+  DecisionID:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
@@ -29,14 +29,20 @@ MonoBehaviour:
   LookAngle: 360
   lookFor: 0
   ObstacleLayer:
-    serializedVersion: 2
-    m_Bits: 1
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
   AssignTarget: 1
-  MoveToTarget: 0
+  MoveToTarget: 1
   RemoveTarget: 0
   UnityTag: 
   GameObjectName: 
+  transform: {fileID: 0}
+  gameObject: {fileID: 0}
   tags: []
   zoneType: 0
   ZoneID: 0
+  ZoneModeAbility: -1
   debugColor: {r: 1, g: 0.0627451, b: 0, a: 0.24313726}

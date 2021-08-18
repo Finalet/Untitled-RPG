@@ -55,12 +55,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5292059259424572239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -73,6 +74,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &7414484618648933156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,7 +84,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5292059259424572239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1573420865, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
@@ -100,7 +102,7 @@ GameObject:
   - component: {fileID: 8151603084088236132}
   - component: {fileID: 8151603084088236135}
   m_Layer: 5
-  m_Name: Pick Up
+  m_Name: Pick Up UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,18 +135,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8151603084088236134}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2a678aa093696e44886619b4e971c6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainCamera: {fileID: 0}
   WorldTransform: {fileID: 0}
-  Lerp: 1
-  StartOff: 0
-  Smoothness: 20
-  FadeOut: {r: 0, g: 0, b: 0, a: 0}
-  FadeIn: {r: 1, g: 1, b: 1, a: 1}
-  time: 0.3
+  TextUI: {fileID: 8121271398479191648}
+  ResetOnDisable: 0
+  ClearText: 0
 --- !u!114 &8151603084088236135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,17 +158,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Events:
-  - Event: {fileID: 11400000, guid: 8783d4b69f9b8554b970e0d167e83a93, type: 2}
+  - Event: {fileID: 11400000, guid: 9b85b9985b117db4e861fc7539d2e225, type: 2}
     useInt: 0
     useFloat: 0
     useVoid: 0
-    useString: 0
+    useString: 1
     useBool: 1
     useGO: 0
     useTransform: 1
     useVector3: 0
     useVector2: 0
+    useComponent: 0
+    useSprite: 0
     Response:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseNull:
       m_PersistentCalls:
         m_Calls: []
     ResponseFloat:
@@ -191,9 +196,37 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    ResponseString:
+        - m_Target: {fileID: 8151603084088236132}
+          m_MethodName: set_enabled
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    ResponseBoolFalse:
       m_PersistentCalls:
         m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseString:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8121271398479191648}
+          m_MethodName: set_text
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     ResponseGO:
       m_PersistentCalls:
         m_Calls: []
@@ -211,6 +244,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
+      m_PersistentCalls:
+        m_Calls: []
     ResponseVector3:
       m_PersistentCalls:
         m_Calls:
@@ -230,6 +269,8 @@ MonoBehaviour:
         m_Calls: []
     IntEventList: []
     AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
 --- !u!1 &8153401642232077296
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,12 +326,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8153401642232077296}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -317,7 +359,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8153401642232077296}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1573420865, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.3647059}
@@ -429,12 +471,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8153655929631366606}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -461,7 +504,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8153655929631366606}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1573420865, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.234}

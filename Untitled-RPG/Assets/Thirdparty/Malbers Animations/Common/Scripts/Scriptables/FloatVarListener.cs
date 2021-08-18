@@ -4,25 +4,62 @@ using UnityEngine;
 
 namespace MalbersAnimations
 {
-    public class FloatVarListener : MonoBehaviour
+    [AddComponentMenu("Malbers/Variables/Float Listener")]
+    [HelpURL("https://malbersanimations.gitbook.io/animal-controller/secondary-components/variable-listeners-and-comparers")]
+    public class FloatVarListener : VarListener
     {
         public FloatReference value;
         public FloatEvent Raise = new FloatEvent();
 
-        public float Value { get => value; set => this.value.Value = value; }
+        public virtual float Value
+        {
+            get => value;
+            set
+            {
+                this.value.Value = value;
+                if (Auto) Invoke(value);
+            }
+        }
 
         void OnEnable()
         {
-            value.Variable?.OnValueChanged.AddListener(InvokeFloat);
-            Raise.Invoke(value ?? 0f);
+            if (value.Variable != null && Auto) value.Variable.OnValueChanged += Invoke;
+            Raise.Invoke(value);
         }
 
         void OnDisable()
         {
-            value.Variable?.OnValueChanged.RemoveListener(InvokeFloat);
+            if (value.Variable != null && Auto) value.Variable.OnValueChanged -= Invoke;
         }
 
-        public virtual void InvokeFloat(float value)   
-        {  Raise.Invoke(value);}
+        public virtual void Invoke(float value)
+        { if (Enable) Raise.Invoke(value); }
+
+        public virtual void InvokeFloat(float value) => Invoke(value);
+
+        public virtual void Invoke() => Invoke(Value);
     }
+
+
+
+    //INSPECTOR
+#if UNITY_EDITOR
+    [UnityEditor.CustomEditor(typeof(FloatVarListener)), UnityEditor.CanEditMultipleObjects]
+    public class FloatVarListenerEditor : VarListenerEditor
+    {
+        private UnityEditor.SerializedProperty  Raise;
+
+        private void OnEnable()
+        {
+            base.SetEnable();
+            Raise = serializedObject.FindProperty("Raise");
+        }
+
+        protected override void DrawEvents()
+        {
+            UnityEditor.EditorGUILayout.PropertyField(Raise);
+            base.DrawEvents();
+        }
+    }
+#endif
 }

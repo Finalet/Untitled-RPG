@@ -12,16 +12,17 @@ namespace MalbersAnimations.Utilities
     {
 
         private ReorderableList list;
-        private SerializedProperty EffectList;
+        private SerializedProperty EffectList, Owner;
         private EffectManager M;
-        private MonoScript script;
+        //private MonoScript script;
         bool eventss = true, offsets = true, parent = true, general = true;
 
         private void OnEnable()
         {
             M = ((EffectManager)target);
-            script = MonoScript.FromMonoBehaviour(target as MonoBehaviour);
+            //script = MonoScript.FromMonoBehaviour(target as MonoBehaviour);
 
+            Owner = serializedObject.FindProperty("Owner");
             EffectList = serializedObject.FindProperty("Effects");
 
             list = new ReorderableList(serializedObject, EffectList, true, true, true, true)
@@ -42,8 +43,8 @@ namespace MalbersAnimations.Utilities
             {
                 EditorGUILayout.BeginVertical(MalbersEditor.StyleGray);
                 {
-                    MalbersEditor.DrawScript(script);
-
+                    //MalbersEditor.DrawScript(script);
+                    EditorGUILayout.PropertyField(Owner);
                     list.DoLayoutList();
 
                     if (list.index != -1)
@@ -52,27 +53,16 @@ namespace MalbersAnimations.Utilities
 
                         SerializedProperty Element = EffectList.GetArrayElementAtIndex(list.index);
 
-                        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                        {
-                            EditorGUILayout.LabelField("* " + effect.Name + " *", EditorStyles.boldLabel);
-                        }
-                        EditorGUILayout.EndVertical();
+                        EditorGUILayout.LabelField("[" + effect.Name + "]", EditorStyles.boldLabel);
 
                         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                         {
-                            EditorGUI.indentLevel++;
-                            general = EditorGUILayout.Foldout(general, "General");
-                            EditorGUI.indentLevel--;
-
-                            if (general)
+                            if (MalbersEditor.Foldout(general, "General"))
                             {
                                 EditorGUILayout.PropertyField(Element.FindPropertyRelative("effect"), new GUIContent("Effect", "The Prefab or gameobject which holds the Effect(Particles, transforms)"));
 
-                                //  EditorGUILayout.PropertyField(Element.FindPropertyRelative("instantiate"), new GUIContent("Instantiate", "True you want to make a copy of the effect, or if the effect is a Prefab!"));
 
-                                //  if (Element.FindPropertyRelative("instantiate").boolValue) 
-
-                                if (effect.effect != null && !effect.effect.activeInHierarchy)
+                                if (effect.effect != null)
                                     EditorGUILayout.PropertyField(Element.FindPropertyRelative("life"), new GUIContent("Life", "Duration of the Effect. The Effect will be destroyed after the Life time has passed"));
 
                                 EditorGUILayout.PropertyField(Element.FindPropertyRelative("delay"), new GUIContent("Delay", "Time before playing the Effect"));
@@ -88,18 +78,19 @@ namespace MalbersAnimations.Utilities
 
                         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                         {
-                            EditorGUI.indentLevel++;
-                            parent = EditorGUILayout.Foldout(parent, "Parent");
-                            EditorGUI.indentLevel--;
-                            if (parent)
+                            if (MalbersEditor.Foldout(parent, "Parent"))
                             {
-                                SerializedProperty root = Element.FindPropertyRelative("root");
-                                EditorGUILayout.PropertyField(root, new GUIContent("Root", "Uses the Root transform to position the Effect"));
+                                var root = Element.FindPropertyRelative("root");
+
+                                EditorGUILayout.PropertyField(root, new GUIContent("Root", "Uses this transform to position the Effect"));
 
                                 if (root.objectReferenceValue != null)
                                 {
-                                    EditorGUILayout.PropertyField(Element.FindPropertyRelative("isChild"), new GUIContent("is Child", "Set the Effect as a child of the Root transform"));
-                                    EditorGUILayout.PropertyField(Element.FindPropertyRelative("useRootRotation"), new GUIContent("Use Root Rotation", "Orient the Effect using the root rotation."));
+                                    var isChild = Element.FindPropertyRelative("isChild");
+                                    var useRootRotation = Element.FindPropertyRelative("useRootRotation");
+
+                                    EditorGUILayout.PropertyField(isChild, new GUIContent("is Child", "Set the Effect as a child of the Root transform"));
+                                    EditorGUILayout.PropertyField(useRootRotation, new GUIContent("Use Root Rotation", "Orient the Effect using the root rotation."));
                                 }
                             }
                         }
@@ -107,70 +98,48 @@ namespace MalbersAnimations.Utilities
 
                         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                         {
-                            EditorGUI.indentLevel++;
-                            offsets = EditorGUILayout.Foldout(offsets, "Offsets");
-                            EditorGUI.indentLevel--;
-                            if (offsets)
+                            if (MalbersEditor.Foldout(offsets, "Offsets"))
                             {
-                                EditorGUILayout.PropertyField(Element.FindPropertyRelative("PositionOffset"), new GUIContent("Position", "Add additional offset to the Effect rotation"));
-                                EditorGUILayout.PropertyField(Element.FindPropertyRelative("RotationOffset"), new GUIContent("Rotation", "Add additional offset to the Effect position"));
-                                EditorGUILayout.PropertyField(Element.FindPropertyRelative("ScaleMultiplier"), new GUIContent("Scale", "Add additional offset to the Effect Scale"));
+                                var PositionOffset = Element.FindPropertyRelative("PositionOffset");
+                                var RotationOffset = Element.FindPropertyRelative("RotationOffset");
+                                var ScaleMultiplier = Element.FindPropertyRelative("ScaleMultiplier");
+
+
+                                EditorGUILayout.PropertyField(PositionOffset, new GUIContent("Position", "Add additional offset to the Effect rotation"));
+                                EditorGUILayout.PropertyField(RotationOffset, new GUIContent("Rotation", "Add additional offset to the Effect position"));
+                                EditorGUILayout.PropertyField(ScaleMultiplier, new GUIContent("Scale", "Add additional offset to the Effect Scale"));
                             }
                         }
                         EditorGUILayout.EndVertical();
 
                         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                         {
-                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("Modifier"), new GUIContent("Modifier", ""));
+                            var mod = Element.FindPropertyRelative("Modifier");
 
-                            if (effect.Modifier != null && effect.Modifier.Description != string.Empty)
+                            EditorGUILayout.PropertyField(mod, new GUIContent("Modifier", ""));
+
+                            if (effect.Modifier != null)
                             {
-                                SerializedObject modifier = new SerializedObject(effect.Modifier);
-                                var property = modifier.GetIterator();
+                                if (effect.Modifier.Description != string.Empty)
+                                    EditorGUILayout.HelpBox(effect.Modifier.Description, MessageType.None);
 
-                                property.NextVisible(true);                 //Don't Paint the first "Base thing"
-                                property.NextVisible(true);                 //Don't Paint the script
-                                property.NextVisible(true);                 //Don't Paint the Description I already painted
-
-                                EditorGUILayout.HelpBox(effect.Modifier.Description, MessageType.None);
-
-                                EditorGUI.BeginChangeCheck();
-                                {
-                                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                                    {
-                                        do
-                                        {
-                                            EditorGUILayout.PropertyField(property, true);
-                                        } while (property.NextVisible(false));
-                                    }
-                                    EditorGUILayout.EndVertical();
-                                }
-                                if (EditorGUI.EndChangeCheck())
-                                {
-                                    Undo.RecordObject(effect.Modifier, "Ability Changed");
-                                    modifier.ApplyModifiedProperties();
-                                    if (modifier != null)
-                                    {
-                                        EditorUtility.SetDirty(effect.Modifier);
-                                    }
-                                }
+                                MTools.DrawScriptableObject(effect.Modifier, false, 1);
                             }
                         }
                         EditorGUILayout.EndVertical();
 
                         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                         {
-                            EditorGUI.indentLevel++;
-                            eventss = EditorGUILayout.Foldout(eventss, "Events");
-                            EditorGUI.indentLevel--;
-                            if (eventss)
+                            if (MalbersEditor.Foldout(eventss, "Events"))
                             {
-                                EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnPlay"), new GUIContent("On Play"));
-                                EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnStop"), new GUIContent("On Stop"));
+                                var OnPlay = Element.FindPropertyRelative("OnPlay");
+                                var OnStop = Element.FindPropertyRelative("OnStop");
+
+                                EditorGUILayout.PropertyField(OnPlay);
+                                EditorGUILayout.PropertyField(OnStop);
                             }
                         }
                         EditorGUILayout.EndVertical();
-
                     }
                 }
                 EditorGUILayout.EndVertical();
@@ -178,7 +147,6 @@ namespace MalbersAnimations.Utilities
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(target, "Effect Manager");
-                //  EditorUtility.SetDirty(target);
             }
             serializedObject.ApplyModifiedProperties();
         }

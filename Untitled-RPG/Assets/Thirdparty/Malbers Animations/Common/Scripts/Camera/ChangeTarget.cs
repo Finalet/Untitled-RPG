@@ -2,7 +2,8 @@
 
 namespace MalbersAnimations
 {
-  public class ChangeTarget : MonoBehaviour
+    [AddComponentMenu("Malbers/Utilities/Camera/Change Camera Target")]
+    public class ChangeTarget : MonoBehaviour
     {
         public Transform[] targets;
         public KeyCode key = KeyCode.T;

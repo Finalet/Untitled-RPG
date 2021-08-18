@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MalbersAnimations.Controller
 {
@@ -11,9 +9,7 @@ namespace MalbersAnimations.Controller
 
         public virtual void OnModeMove(Mode mode, AnimatorStateInfo stateinfo, Animator anim, int Layer) { }
 
-        public virtual void OnModeExit(Mode mode) { }
-
-        public virtual void DebugMode(Mode mode) { }
+        public virtual void OnModeExit(Mode mode) { }  
     }
 }
 

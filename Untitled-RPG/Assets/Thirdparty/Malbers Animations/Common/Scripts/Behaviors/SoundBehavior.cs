@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Unity.Collections;
 
 namespace MalbersAnimations
 {
@@ -8,15 +9,18 @@ namespace MalbersAnimations
         public AudioClip[] sounds;
 
         public bool playOnEnter = true;
-        public bool playOnTime;
+        public bool Loop = false;
         public bool stopOnExit;
+        [Hide("playOnEnter",true,true)]
+        public bool playOnTime;
+        [Hide("playOnEnter",true,true)]
         [Range(0, 1)]
         public float NormalizedTime = 0.5f;
         [Space]
-        [Range(-0.5f, 3)]
-        public float pitch = 1;
-        [Range(0, 1)]
-        public float volume = 1;
+        [MinMaxRange(-3, 3)]
+        public RangedFloat pitch = new RangedFloat(1, 1);
+        [MinMaxRange(0, 1)]
+        public RangedFloat volume = new RangedFloat(1, 1);
 
         AudioSource _audio;
 
@@ -26,15 +30,16 @@ namespace MalbersAnimations
             _audio = animator.GetComponent<AudioSource>();
 
             if (!_audio)
-            {
                 _audio = animator.gameObject.AddComponent<AudioSource>();
-            }
+
             _audio.spatialBlend = 1; //Make it 3D
-
+            _audio.loop = Loop;
             if (playOnEnter)
+            {
                 PlaySound();
-
-            playOnTime = true;
+                playOnTime = false; //IMPORTANT
+            }
+            else playOnTime = true;
         }
 
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -52,7 +57,8 @@ namespace MalbersAnimations
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (stopOnExit && _audio) _audio.Stop();
+            if (stopOnExit && animator.GetCurrentAnimatorStateInfo(layerIndex).fullPathHash != stateInfo.fullPathHash) //dont stop the current animation if is this same animation
+                _audio?.Stop();
         }
 
         public virtual void PlaySound()
@@ -61,10 +67,15 @@ namespace MalbersAnimations
             {
                 if (sounds.Length > 0 && _audio.enabled)
                 {
+                    _audio.Stop();
                     _audio.clip = sounds[Random.Range(0, sounds.Length)];
-                    _audio.pitch = pitch;
-                    _audio.volume = volume;
-                    _audio.Play();
+                   
+                    if (_audio.clip != null)
+                    {
+                        _audio.pitch = pitch.RandomValue;
+                        _audio.volume = volume.RandomValue;
+                        _audio.Play();
+                    } 
                 }
             }
         }

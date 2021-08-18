@@ -1,52 +1,72 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace MalbersAnimations.Scriptables
 {
-    ///<summary>
-    /// Bool Scriptable Variable. Based on the Talk - Game Architecture with Scriptable Objects by Ryan Hipple
-    /// </summary>
-    [CreateAssetMenu(menuName = "Malbers Animations/Scriptables/Bool Var")]
+    ///<summary>  Bool Scriptable Variable. Based on the Talk - Game Architecture with Scriptable Objects by Ryan Hipple </summary>
+    [CreateAssetMenu(menuName = "Malbers Animations/Variables/Bool", order = 1000)]
     public class BoolVar : ScriptableVar
     {
         [SerializeField] private bool value;
 
-
         /// <summary>Invoked when the value changes </summary>
-        public Events.BoolEvent OnValueChanged = new Events.BoolEvent();
+        public Action<bool> OnValueChanged = delegate { };
 
-        /// <summary> Value of the Float Scriptable variable</summary>
+        /// <summary> Value of the Bool variable</summary>
         public virtual bool Value
         {
-            get { return value; }
+            get => value;
             set
             {
-                if (this.value != value)                                //If the value is diferent change it
+                if (this.value != value)                  //If the value is diferent change it
                 {
                     this.value = value;
-                    OnValueChanged.Invoke(value);         //If we are using OnChange event Invoked
+                    OnValueChanged(value);         //If we are using OnChange event Invoked
+#if UNITY_EDITOR
+                    if (debug) Debug.Log($"<B>{name} -> [<color=blue> {value} </color>] </B>", this);
+#endif
                 }
             }
         }
 
-        public virtual void SetValue(BoolVar var)
+        public virtual void SetValue(BoolVar var) => SetValue(var.Value);
+
+        public virtual void SetValue(bool var) => Value = var;
+        public virtual void Toggle() => Value ^= true;
+        public virtual void UpdateValue() => OnValueChanged?.Invoke(value);
+
+        public static implicit operator bool(BoolVar reference) => reference.Value;
+    }
+
+    [System.Serializable]
+    public class BoolReference
+    {
+        public bool UseConstant = true;
+
+        public bool ConstantValue;
+        [RequiredField] public BoolVar Variable;
+
+        public BoolReference() => Value = false;
+
+        public BoolReference(bool value) => Value = value;
+
+        public BoolReference(BoolVar value) => Value = value.Value;
+
+        public bool Value
         {
-            Value = var.Value;
-        }
-        public virtual void SetValue(bool var)
-        {
-            Value = var;
-        }
-
-
-
-        public static implicit operator bool(BoolVar reference)
-        {
-            return reference.Value;
+            get => UseConstant || Variable == null ? ConstantValue : Variable.Value;
+            set
+            {
+                // Debug.Log(value);
+                if (UseConstant || Variable == null)
+                    ConstantValue = value;
+                else
+                    Variable.Value = value;
+            }
         }
 
-        ///// <summary>When active OnValue changed will ve used every time the value changes (you can subscribe only at runtime .?)</summary>
-        //public bool UseEvent = true;
-        ///// <summary>Invoked when the value changes</summary>
-        //public Events.BoolEvent OnValueChanged = new Events.BoolEvent();
+        #region Operators
+        public static implicit operator bool(BoolReference reference) => reference.Value;
+        #endregion
     }
 }

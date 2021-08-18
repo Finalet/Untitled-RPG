@@ -6,73 +6,68 @@ namespace MalbersAnimations.HAP
     public class DismountBehavior : StateMachineBehaviour
     {
         private MRider rider;
-        private Transform transform;
         private Transform MountPoint;
         private TransformAnimation Fix;
         private Vector3 LastRelativeRiderPosition;
         private float ScaleFactor;
 
+
+
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            animator.SetInteger(Hash.MountSide, 0);                 //Remove the side of the mounted **IMPORTANT*** otherwise it will keep trying to dismount
+            MTools.ResetFloatParameters(animator);
 
-            rider = animator.GetComponent<MRider>();
-            ScaleFactor = rider.Montura.Animal.ScaleFactor;         //Get the scale Factor from the Montura
+            rider = animator.FindComponent<MRider>();
 
+            rider.SetMountSide(0);                                          //Remove the side of the mounted **IMPORTANT*** otherwise it will keep trying to dismount
+            ScaleFactor = rider.Montura.Animal.ScaleFactor;                 //Get the scale Factor from the Montura
             MountPoint = rider.Montura.MountPoint;
 
-            Fix = rider.MountTrigger.Adjustment;                    //Get the Fix fo the Dismount
+            Fix = rider.MountTrigger.Adjustment;                            //Get the Fix fo the Dismount
 
-            transform = animator.transform;
             rider.Start_Dismounting();
 
-            transform.position = rider.Montura.MountPoint.position;
-            transform.rotation = rider.Montura.MountPoint.rotation;
+            LastRelativeRiderPosition = MountPoint.InverseTransformPoint(rider.transform.position); //Get the Relative position of the Rider Position
 
-            LastRelativeRiderPosition = MountPoint.InverseTransformPoint(transform.position);
-
-            MalbersTools.ResetFloatParameters(animator);
         }
-
-
-        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        { rider.End_Dismounting(); }
 
         override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            #region OldWay
             var transition = animator.GetAnimatorTransitionInfo(layerIndex);
-           
-            float time = animator.updateMode == AnimatorUpdateMode.AnimatePhysics? Time.fixedDeltaTime : Time.deltaTime;
+            float deltaTime = animator.updateMode == AnimatorUpdateMode.AnimatePhysics? Time.fixedDeltaTime : Time.deltaTime;
 
-            transform.rotation = animator.rootRotation;
-            transform.position = MountPoint.TransformPoint(LastRelativeRiderPosition);              //Parent Position without Parenting
-            
-            transform.position += (animator.velocity * time * ScaleFactor * (Fix ? Fix.delay : 1));
-           
+            var TargetRot = animator.rootRotation;
+
+            var TargetPos = MountPoint.TransformPoint(LastRelativeRiderPosition);              //Parent Position without Parenting
+
+            TargetPos += (animator.velocity * deltaTime * ScaleFactor * (Fix ? Fix.delay : 1)); //Position Root Motion Animation (Delta)
+
             if (rider.Montura)  //Stop the Mountura from walking forward when Dismounting
             {
-             
-                if (rider.MountTrigger)   //Don't go under the floor
+                if (Physics.Raycast(rider.transform.position + rider.transform.up, -rider.transform.up, out RaycastHit hit, 1.5f, rider.Montura.Animal.GroundLayer))
                 {
-                    if (transform.position.y < rider.MountTrigger.transform.position.y)
-                        transform.position = new Vector3(transform.position.x, rider.MountTrigger.transform.position.y, transform.position.z);
+                    if (TargetPos.y < hit.point.y)
+                        TargetPos = new Vector3(TargetPos.x, hit.point.y, TargetPos.z);
                 }
 
-                rider.transform.rotation *= rider.Montura.Animal.AdditiveRotation;
+                //if (TargetPos.y < rider.Montura.transform.position.y)
+                //    TargetPos = new Vector3(TargetPos.x, rider.Montura.transform.position.y, TargetPos.z);
 
-                if (stateInfo.normalizedTime > 0.5f && animator.IsInTransition(layerIndex))
+                TargetRot *= rider.Montura.Animal.AdditiveRotation; //Keep Inertia
+
+                if (stateInfo.normalizedTime > 0.5f && animator.IsInTransition(layerIndex)) //if the Rider is in the Last Transition Put him Up Right 
                 {
-                    float transitionTime = transition.normalizedTime;
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation, transitionTime);
-                    transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, rider.MountTrigger.transform.position.y, transform.position.z), time * 5f);
+                    TargetRot = Quaternion.Lerp(TargetRot, Quaternion.FromToRotation(rider.transform.up, Vector3.up) * TargetRot, transition.normalizedTime); //Rotate him UpRight
                 }
             }
 
-            animator.rootPosition = transform.position;
+            LastRelativeRiderPosition = MountPoint.InverseTransformPoint(TargetPos);            //Keep the Relative Position of the Last Mounting
 
-            LastRelativeRiderPosition = MountPoint.InverseTransformPoint(transform.position);
-            #endregion
+            rider.MountRotation = TargetRot;
+            rider.MountPosition = TargetPos;
+            rider.Mount_TargetTransform();
         }
+
+        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) { rider.End_Dismounting(); }
     }
 }

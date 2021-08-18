@@ -10,22 +10,22 @@ namespace MalbersAnimations.Utilities
         private ReorderableList list;
         private SerializedProperty materialList, showMeshesList, random, changeHidden;
         private MaterialChanger M;
-        private MonoScript script;
 
         private void OnEnable()
         {
             M = ((MaterialChanger)target);
-            script = MonoScript.FromMonoBehaviour(target as MonoBehaviour);
 
             materialList = serializedObject.FindProperty("materialList");
             showMeshesList = serializedObject.FindProperty("showMeshesList");
             changeHidden = serializedObject.FindProperty("changeHidden");
             random = serializedObject.FindProperty("random");
 
-            list = new ReorderableList(serializedObject, materialList, true, true, true, true);
-            list.drawElementCallback = DrawElementCallback;
-            list.drawHeaderCallback = HeaderCallbackDelegate;
-            list.onAddCallback = OnAddCallBack;
+            list = new ReorderableList(serializedObject, materialList, true, true, true, true)
+            {
+                drawElementCallback = DrawElementCallback,
+                drawHeaderCallback = HeaderCallbackDelegate,
+                onAddCallback = OnAddCallBack
+            };
         }
         public override void OnInspectorGUI()
         {
@@ -37,8 +37,6 @@ namespace MalbersAnimations.Utilities
             {
                 EditorGUILayout.BeginVertical(MalbersEditor.StyleGray);
                 {
-                    MalbersEditor.DrawScript(script);
-
                     list.DoLayoutList();
                     EditorGUI.indentLevel++;
 
@@ -160,7 +158,8 @@ namespace MalbersAnimations.Utilities
                 {
                     if (e.materials.Length > e.current)
                     {
-                        buttonCap = e.mesh.gameObject.activeSelf ? (e.materials[e.current] == null ? "None" : e.materials[e.current].name) + " (" + (e.Linked ? "L" : e.current.ToString()) + ")" : "Is Hidden";
+                        buttonCap = /*e.mesh.gameObject.activeSelf ? */
+                            (e.materials[e.current] == null ? "None" : e.materials[e.current].name) + " (" + (e.Linked ? "L" : e.current.ToString()) + ")";//: "Is Hidden";
                     }
 
                     if (GUI.Button(R_2, buttonCap, EditorStyles.miniButton))

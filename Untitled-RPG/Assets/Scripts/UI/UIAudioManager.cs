@@ -24,11 +24,13 @@ public class UIAudioManager : MonoBehaviour
     public AudioClip EquipWeapon;
     public AudioClip EquipBow;
     public AudioClip EquipShield;
+    public AudioClip EquipMount;
     public AudioClip UnequipArmor;
     public AudioClip UnequipJewlery;
     public AudioClip UnequipWeapon;
     public AudioClip UnequipBow;
     public AudioClip UnequipShield;
+    public AudioClip UnequipMount;
     [Header("UI")]
     public AudioClip UI_Select;
 

@@ -2,20 +2,15 @@
 using MalbersAnimations.Scriptables;
 using System.Collections;
 using UnityEngine.Events;
+using UnityEditor;
 
-/// <summary>
-/// This is the same Camera FreeLookCam of the Stardard Assets Modify to Fit My Needs
-/// </summary>
+/// <summary> This is the same Camera FreeLookCam of the Stardard Assets Modify to Fit My Needs  </summary>
 namespace MalbersAnimations
 {
+    [AddComponentMenu("Malbers/Utilities/Camera/Free Look Camera")]
+
     public class MFreeLookCamera : MonoBehaviour
     {
-        public enum UpdateType                                      // The available methods of updating are:
-        {
-            FixedUpdate,                                            // Update in FixedUpdate (for tracking rigidbodies).
-            LateUpdate,                                             // Update in LateUpdate. (for tracking objects that are moved in Update)
-        }
-
 #if REWIRED
         [Header("Rewired Connection")]
 #else
@@ -25,7 +20,7 @@ namespace MalbersAnimations
 
         [Space]
 
-        public Transform m_Target;                                  // The target object to follow
+        public TransformReference m_Target;                                  // The target object to follow
         public UpdateType updateType = UpdateType.FixedUpdate;      // stores the selected update type
         /// <summary>Stores the Update type when the game starts </summary>
         internal UpdateType defaultUpdate;
@@ -40,13 +35,14 @@ namespace MalbersAnimations
         [Header("Camera Input Axis")]
         public InputAxis Vertical = new InputAxis("Mouse Y", true, false);
         public InputAxis Horizontal = new InputAxis("Mouse X", true, false);
+
+        public Vector2Reference MovementAxis = new Vector2Reference();
         private IGravity TargetGravity;
 
         [Space]
-        public bool m_LockCursor = false;                           // Whether the cursor should be hidden and locked.
-        [Space]
         public FreeLockCameraManager manager;
         public FreeLookCameraState DefaultState;
+        public Transform DefaultTarget { get; set; }
 
         [HideInInspector] public UnityEvent OnStateChange = new UnityEvent();
 
@@ -74,7 +70,12 @@ namespace MalbersAnimations
 
         public Transform Target
         {
-            get { return m_Target; }
+            get => m_Target.Value;
+            set
+            {
+                m_Target.Value = value;
+                GetTargetGravity();
+            }
         }
 
         /// <summary>Main Camera</summary>
@@ -86,11 +87,11 @@ namespace MalbersAnimations
         public Transform Pivot { get; private set; }
 
 
-        /// <summary>Camera Horizontal Input Value</summary>
-        public float XCam { get; set; }
+        ///// <summary>Camera Horizontal Input Value</summary>
+        //public float XCam { get; set; }
 
-        /// <summary>Camera Vertical Input Value</summary>
-        public float YCam { get; set; }
+        ///// <summary>Camera Vertical Input Value</summary>
+        //public float YCam { get; set; }
 
         /// <summary> Stores the Current FOV of the Camera</summary>
         public float ActiveFOV { get; internal set; }
@@ -100,7 +101,7 @@ namespace MalbersAnimations
         protected void Awake()
         {
             Cam = GetComponentInChildren<Camera>();
-            CamT = GetComponentInChildren<Camera>().transform;
+            CamT = Cam.transform;
             Pivot = Cam.transform.parent;
 
             currentState = null;
@@ -110,19 +111,17 @@ namespace MalbersAnimations
 
             if (DefaultState) Set_State(DefaultState);
 
-            Cursor.lockState = m_LockCursor ? CursorLockMode.Locked : CursorLockMode.None;  // Lock or unlock the cursor.
-            Cursor.visible = !m_LockCursor;
-
             m_PivotEulers = Pivot.rotation.eulerAngles;
             m_PivotTargetRot = Pivot.transform.localRotation;
             m_TransformTargetRot = transform.localRotation;
-
 
             ActiveFOV = Cam.fieldOfView;
 
             inputSystem = DefaultInput.GetInputSystem(PlayerID);
 
             Horizontal.InputSystem = Vertical.InputSystem = inputSystem;        //Update the Input System on the Axis
+
+
             defaultUpdate = updateType;
 
             if (DefaultState == null)
@@ -132,12 +131,11 @@ namespace MalbersAnimations
                 DefaultState.CamFOV = Cam.fieldOfView;
                 DefaultState.PivotPos = Pivot.localPosition;
                 DefaultState.CamPos = CamT.localPosition;
-
-
                 DefaultState.name = "Default State";
-
                 OnStateChange.Invoke();
             }
+
+            MovementAxis = Vector2.zero;
         }
 
         void Start()
@@ -147,74 +145,81 @@ namespace MalbersAnimations
 
         void GetTargetGravity()
         {
-            if (Target != null)
-            {
-                TargetGravity = Target.GetComponentInChildren<IGravity>();
-
-                if (TargetGravity == null)
-                {
-                    TargetGravity = Target.GetComponentInParent<IGravity>();
-                }
-            }
+            if (Target)
+                TargetGravity = Target.gameObject.FindInterface<IGravity>();
         }
 
 
-        public virtual void Set_State(FreeLookCameraState profile)
+        public virtual void Set_State(FreeLookCameraState state)
         {
-            Pivot.localPosition = profile.PivotPos;
-            Cam.transform.localPosition = profile.CamPos;
-            Cam.fieldOfView = ActiveFOV = profile.CamFOV;
+            Pivot.localPosition = state.PivotPos;
+            Cam.transform.localPosition = state.CamPos;
+            Cam.fieldOfView = ActiveFOV = state.CamFOV;
             OnStateChange.Invoke();
+
+          //  Debug.Log("Set_State" + state.name);
         }
 
         #region Private Methods
         protected void FollowTarget(float deltaTime)
         {
-            if (m_Target == null) return;
+            if (Target == null) return;
 
-            transform.position = Vector3.Lerp(transform.position, m_Target.position, deltaTime * m_MoveSpeed);  // Move the rig towards target position.
+            transform.position = Vector3.Lerp(transform.position, Target.position, deltaTime * m_MoveSpeed);  // Move the rig towards target position.
         }
 
-        private void UpdateState(FreeLookCameraState state)
+        internal void UpdateState(FreeLookCameraState state)
         {
-            if (state == null) return;
+            if (state == null || !enabled) return;
 
             Pivot.localPosition = state.PivotPos;
             CamT.localPosition = state.CamPos;
             Cam.fieldOfView = ActiveFOV = state.CamFOV;
+
+            //Debug.Log("UpdateState" + state.name);
             OnStateChange.Invoke();
         }
+
+
+        public void EnableInput(bool value)
+        {
+            Vertical.active = value;
+            Horizontal.active = value;
+        }
+
+
+        public virtual void SetInputAxis(Vector2 input) => MovementAxis.Value = input;
 
         private void HandleRotationMovement(float time)
         {
             if (Time.timeScale < float.Epsilon) return;
 
-            if (Horizontal.active) XCam = Horizontal.GetAxis;
-            if (Vertical.active) YCam = Vertical.GetAxis;
+            if (Horizontal.active) MovementAxis.x = Horizontal.GetAxis;
+            if (Vertical.active) MovementAxis.y = Vertical.GetAxis;
 
-            m_LookAngle += XCam * m_TurnSpeed;                                                     // Adjust the look angle by an amount proportional to the turn speed and horizontal input.
+            m_LookAngle += MovementAxis.x * m_TurnSpeed;                                                     // Adjust the look angle by an amount proportional to the turn speed and horizontal input.
 
             if (TargetGravity != null) m_UpVector = Vector3.Slerp(m_UpVector, TargetGravity.UpVector, time * 15);
-           // transform.rotation = Quaternion.FromToRotation(transform.up, m_UpVector) * transform.rotation; //This Make it f
+            // transform.rotation = Quaternion.FromToRotation(transform.up, m_UpVector) * transform.rotation; //This Make it f
             m_TransformTargetRot = Quaternion.FromToRotation(transform.up, m_UpVector) * Quaternion.Euler(0f, m_LookAngle, 0f);                       // Rotate the rig (the root object) around Y axis only:
 
-            m_TransformTargetRot =  Quaternion.Euler(0f, m_LookAngle, 0f);                       // Rotate the rig (the root object) around Y axis only:
+            m_TransformTargetRot = Quaternion.Euler(0f, m_LookAngle, 0f);                       // Rotate the rig (the root object) around Y axis only:
 
-            m_TiltAngle -= YCam * m_TurnSpeed;                                                 // on platforms with a mouse, we adjust the current angle based on Y mouse input and turn speed
+            m_TiltAngle -= MovementAxis.y * m_TurnSpeed;                                                 // on platforms with a mouse, we adjust the current angle based on Y mouse input and turn speed
             m_TiltAngle = Mathf.Clamp(m_TiltAngle, -m_TiltMin, m_TiltMax);                  // and make sure the new value is within the tilt range
 
             m_PivotTargetRot = Quaternion.Euler(m_TiltAngle, m_PivotEulers.y, m_PivotEulers.z); // Tilt input around X is applied to the pivot (the child of this object)
 
             Pivot.localRotation = Quaternion.Slerp(Pivot.localRotation, m_PivotTargetRot, m_TurnSmoothing * time);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, m_TransformTargetRot, m_TurnSmoothing * time) ;
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, m_TransformTargetRot, m_TurnSmoothing * time);
         }
- 
+
 
         void FixedUpdate()
         {
             if (updateType == UpdateType.FixedUpdate)
             {
-                FollowTarget(Time.fixedDeltaTime);   
+                FollowTarget(Time.fixedDeltaTime);
                 HandleRotationMovement(Time.fixedDeltaTime);
             }
         }
@@ -222,41 +227,53 @@ namespace MalbersAnimations
         void LateUpdate()
         {
             if (updateType == UpdateType.LateUpdate)
-            { 
+            {
                 FollowTarget(Time.deltaTime);
                 HandleRotationMovement(Time.deltaTime);
             }
         }
         #endregion
 
-        public void Set_State_Smooth(FreeLookCameraState state) { SetState(state, false); }
+        public void Set_State_Smooth(FreeLookCameraState state) => SetState(state, false);
 
-        public void Set_State_Temporal(FreeLookCameraState state) { SetState(state, true); }
+        public void Set_State_Temporal(FreeLookCameraState state) => SetState(state, true);
+
+
+        internal void SetState_Instant(FreeLookCameraState state, bool temporal)
+        {
+            if (state == null) return;
+            if (currentState && state == currentState) return;
+
+            NextState = state;
+
+            if (IChangeStates != null) StopCoroutine(IChangeStates);
+
+            if (!temporal) DefaultState = state; //Set the New Default State when is NOT temporal
+
+            UpdateState(state);
+        }
+
 
         internal void SetState(FreeLookCameraState state, bool temporal)
         {
             if (state == null) return;
+            if (currentState && state == currentState) return;
 
             NextState = state;
 
-            if (currentState && NextState == currentState) return;
-
             if (IChangeStates != null) StopCoroutine(IChangeStates);
 
-            if (!temporal) DefaultState = state; //Changes wth this
+            if (!temporal) DefaultState = state; //Set the New Default State when is NOT temporal
 
             IChangeStates = StateTransition(state.transition);
             StartCoroutine(IChangeStates);
         }
 
-        public virtual void Set_State_Default_Smooth() { SetState(DefaultState, true); }
+        public void Set_State_Default_Smooth() => SetState(DefaultState, true);
 
-        public virtual void Set_State_Default() { Set_State(DefaultState); }
+        public void Set_State_Default() => Set_State(DefaultState);
 
-        public virtual void ToggleSprintFOV(bool val)
-        {
-            ChangeFOV(val ? ActiveFOV + SprintFOV.Value : ActiveFOV);
-        }
+        public void ToggleSprintFOV(bool val) => ChangeFOV(val ? ActiveFOV + SprintFOV.Value : ActiveFOV);
 
         public void ChangeFOV(float newFOV)
         {
@@ -275,13 +292,12 @@ namespace MalbersAnimations
 
             while (elapsedTime < time)
             {
-
-          
                 Pivot.localPosition = Vector3.Lerp(Pivot.localPosition, NextState.PivotPos, Mathf.SmoothStep(0, 1, elapsedTime / time));
                 CamT.localPosition = Vector3.Lerp(CamT.localPosition, NextState.CamPos, Mathf.SmoothStep(0, 1, elapsedTime / time));
                 Cam.fieldOfView = ActiveFOV = Mathf.Lerp(Cam.fieldOfView, NextState.CamFOV, Mathf.SmoothStep(0, 1, elapsedTime / time));
                 OnStateChange.Invoke();
                 elapsedTime += Time.deltaTime;
+                //Debug.Log("StateTransition");
                 yield return null;
             }
 
@@ -302,23 +318,21 @@ namespace MalbersAnimations
                 yield return null;
             }
             Cam.fieldOfView = newFOV;
-           yield return null;
+            yield return null;
         }
         #endregion
 
 
-        public virtual void SetTarget(Transform newTransform)
-        {
-            m_Target = newTransform;
-            GetTargetGravity();
-        }
+        public virtual void Target_Set(Transform newTransform) => Target = DefaultTarget = newTransform;
 
-        public virtual void SetTarget(GameObject newGO) { SetTarget(newGO.transform); }
+        public virtual void Target_Set_Temporal(Transform newTransform) => Target = newTransform;
+
+        public virtual void Target_Restore() => Target = DefaultTarget;
+
+        public virtual void Target_Set(GameObject newGO) => Target_Set(newGO.transform);
+        public virtual void Target_Set_Temporal(GameObject newGO) => Target_Set_Temporal(newGO.transform);
 
         /// <summary> When the Rider is Aiming is necesary to change the Update Mode to Late Update</summary>
-        public virtual void ForceUpdateMode(bool val)
-        {
-            updateType = val ? UpdateType.LateUpdate : defaultUpdate;
-        }
+        public virtual void ForceUpdateMode(bool val) => updateType = val ? UpdateType.LateUpdate : defaultUpdate;
     }
 }

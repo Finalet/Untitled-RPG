@@ -21,7 +21,7 @@ half2 SampleNormalMaps
 	const float lodDataGridSize = cascadeData._texelWidth;
 	float2 normalScrollSpeeds = instanceData._normalScrollSpeeds;
 
-#if SHADERGRAPH_PREVIEW
+#ifdef SHADERGRAPH_PREVIEW
 	// sampler_TextureNormals is not defined in shader graph. Silence error.
 	SamplerState sampler_TextureNormals = LODData_linear_clamp_sampler;
 #endif
@@ -61,7 +61,7 @@ void ApplyNormalMapsWithFlow
 	const in float lodAlpha,
 	in const CascadeParams cascadeData,
 	in const PerCascadeInstanceData instanceData,
-	inout half3 io_n
+	inout float3 io_n
 )
 {
 	// When converting to Shader Graph, this code is already in the CrestFlow subgraph
@@ -80,7 +80,6 @@ void ApplyNormalMapsWithFlow
 	half2 io_n_2 = SampleNormalMaps(worldXZUndisplaced - (flow * sample2_offset), i_normals, i_normalsScale, i_normalsStrength, lodAlpha, cascadeData, instanceData);
 	io_n.xz += sample1_weight * io_n_1;
 	io_n.xz += sample2_weight * io_n_2;
-	io_n = normalize(io_n);
 }
 
 #endif // CREST_OCEAN_NORMAL_MAPPING_INCLUDED

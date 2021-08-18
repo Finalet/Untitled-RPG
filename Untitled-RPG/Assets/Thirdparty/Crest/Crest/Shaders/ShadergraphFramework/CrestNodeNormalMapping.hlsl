@@ -44,20 +44,20 @@ void OceanNormals_half
 	const float wt_smallerLod = (1.0 - i_lodAlpha) * i_oceanParams0.z;
 	const float wt_biggerLod = (1.0 - wt_smallerLod) * i_oceanParams1.z;
 	float3 dummy = 0.0;
-	real3 n_geom = half3(0.0, 1.0, 0.0);
-	if (wt_smallerLod > 0.001) SampleDisplacementsNormals(_LD_TexArray_AnimatedWaves, uv_slice_smallerLod, wt_smallerLod, i_oceanParams0.w, i_oceanParams0.x, dummy, n_geom.xz, o_sss);
-	if (wt_biggerLod > 0.001) SampleDisplacementsNormals(_LD_TexArray_AnimatedWaves, uv_slice_biggerLod, wt_biggerLod, i_oceanParams1.w, i_oceanParams1.x, dummy, n_geom.xz, o_sss);
-	n_geom = normalize(n_geom);
+	float3 n_pixel = float3(0.0, 1.0, 0.0);
+	if (wt_smallerLod > 0.001) SampleDisplacementsNormals(_LD_TexArray_AnimatedWaves, uv_slice_smallerLod, wt_smallerLod, i_oceanParams0.w, i_oceanParams0.x, dummy, n_pixel.xz, o_sss);
+	if (wt_biggerLod > 0.001) SampleDisplacementsNormals(_LD_TexArray_AnimatedWaves, uv_slice_biggerLod, wt_biggerLod, i_oceanParams1.w, i_oceanParams1.x, dummy, n_pixel.xz, o_sss);
 
-	real3 n_pixel = n_geom;
 //#if _APPLYNORMALMAPPING_ON
 #if defined(CREST_FLOW_ON)
 	ApplyNormalMapsWithFlow(i_flow, i_positionXZWSUndisplaced, i_normals, i_normalsScale, i_normalsStrength, i_lodAlpha, cascadeData0, instanceData, n_pixel);
 #else
 	n_pixel.xz += SampleNormalMaps(i_positionXZWSUndisplaced, i_normals, i_normalsScale, i_normalsStrength, i_lodAlpha, cascadeData0, instanceData);
-	n_pixel = normalize(n_pixel);
 #endif
 //#endif
+
+	// Finalise normal
+	n_pixel = normalize(n_pixel);
 
 	// We do not flip n_geom because we do not use it.
 	if (i_isUnderwater) n_pixel = -n_pixel;
@@ -86,6 +86,9 @@ void OceanNormals_half
 
 	o_normalTS = n_pixel.xzy;
 
-	// Seems like the tangent frame has a different handedness - this seems to work well in SRP.
-	o_normalTS.y *= -1.0;
+	if (!i_isUnderwater)
+	{
+		// Seems like the tangent frame has a different handedness - this seems to work well in SRP.
+		o_normalTS.y *= -1.0;
+	}
 }

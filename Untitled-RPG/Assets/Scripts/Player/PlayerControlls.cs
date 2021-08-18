@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using ECM.Controllers;
 using UnityEngine.SceneManagement;
+using MalbersAnimations.HAP;
 
 public class PlayerControlls : MonoBehaviour, ISavable
 {
@@ -56,8 +57,9 @@ public class PlayerControlls : MonoBehaviour, ISavable
     float rollDirection;
     float desiredRollDirection;
 
-    [System.NonSerialized] public Rigidbody rb;
+    [System.NonSerialized] public MRider rider;
     [System.NonSerialized] public Camera playerCamera;
+    [System.NonSerialized] public Rigidbody rb;
     [System.NonSerialized] public CameraControll cameraControl;
     [System.NonSerialized] public CinemachineFreeLook CM_Camera;
     [System.NonSerialized] public PlayerAudioController audioController;
@@ -85,23 +87,27 @@ public class PlayerControlls : MonoBehaviour, ISavable
     public bool treeAnimRest;
     public bool upperBodyTreeAnimRest;
 
+    float startedHoldingKeyTime;
+    bool holdingButton;
+
     void Awake() {
         if (instance == null) 
             instance = this;
-    }
-
-    void Start()
-    {
+        
+        rider = GetComponent<MRider>();
         animator = GetComponent<Animator>();
         audioController = GetComponent<PlayerAudioController>();
         characterController = GetComponent<PlayerCharacterController>();
         rb = GetComponent<Rigidbody>();
-
+        
         playerCamera = Camera.main;
-        CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
         cameraControl = playerCamera.GetComponent<CameraControll>();
-        walkSpeed = Characteristics.instance.walkSpeed;
+        CM_Camera = playerCamera.GetComponent<CameraControll>().CM_cam;
+    }
 
+    void Start()
+    {
+        walkSpeed = Characteristics.instance.walkSpeed;
         SaveManager.instance.saveObjects.Add(this);
     }
 
@@ -109,6 +115,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
     {
         isGrounded = characterController.isGrounded; //IsGrounded(); LEGACY
         isJumping = characterController.isJumping;
+        isMounted = rider.Mounted;
 
         if (!isMounted && !isFlying && !disableControl) {
             GroundMovement();
@@ -125,6 +132,8 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
         if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Toggle walk"]))
             toggleRunning = !toggleRunning;
+
+        MountingInput();
 
         if ( (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical") && !isAttacking) || isSitting) {
             isIdle = true;
@@ -154,6 +163,31 @@ public class PlayerControlls : MonoBehaviour, ISavable
             lookDirection = desiredLookDirection;
         }
 
+    }
+    
+    void MountingInput () {
+        if (isFlying) return;
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Interact"])) {
+            if (!isMounted) {
+                holdingButton = false;
+                rider.MountAnimal();
+                SprintOff();
+            } else {
+                startedHoldingKeyTime = Time.time;
+                holdingButton = true; 
+                PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], InterractionIcons.Horse);
+            }
+        }
+        if (Input.GetKeyUp(KeybindsManager.instance.currentKeyBinds["Interact"])){
+            holdingButton = false;
+            PeaceCanvas.instance.HideKeySuggestion();
+        }
+        if (Time.time - startedHoldingKeyTime > 0.5f && isMounted && holdingButton) {
+            rider.DismountAnimal();
+            holdingButton = false;
+            PeaceCanvas.instance.HideKeySuggestion();
+        }
+        if (holdingButton) PeaceCanvas.instance.UpdateKeySuggestionProgress( (Time.time - startedHoldingKeyTime) / 0.5f );
     }
 
 #region Ground movement
@@ -230,6 +264,11 @@ public class PlayerControlls : MonoBehaviour, ISavable
     }
 
     void UpdateRotation () {
+        if (rider.IsMountingDismounting) {
+            desiredLookDirection = transform.eulerAngles.y;
+            return;
+        } 
+
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, lookDirection + sprintingDirection + rollDirection, transform.eulerAngles.z);
         
         if ( (!PeaceCanvas.instance.anyPanelOpen && !isIdle) || cameraControl.isAiming || cameraControl.isShortAiming) { 

@@ -1,66 +1,108 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using MalbersAnimations.Utilities;
-using UnityEngine.Events;
 using MalbersAnimations.Events;
-using System;
+ 
 using UnityEngine.AI;
+using MalbersAnimations.Scriptables;
+using System.Collections.Generic;
 
 namespace MalbersAnimations.Controller
 {
-    public class MAnimalAIControl : MonoBehaviour, IAIControl, IAITarget
+    [AddComponentMenu("Malbers/Animal Controller/AI/AI Control")]
+    public class MAnimalAIControl : MonoBehaviour, IAIControl, IAITarget,  IAnimatorListener
     {
-        [HideInInspector] public int Editor_Tabs1;
-
         #region Components References
-        private NavMeshAgent agent;                 //The NavMeshAgent
-        protected MAnimal animal;                    //The Animal Script
+        /// <summary> Reference for the Agent</summary>
+        [SerializeField, RequiredField] private NavMeshAgent agent;     
+
+        /// <summary> Reference for the Animal</summary>
+        [RequiredField] public MAnimal animal;
+
+
+        /// <summary>Check if this Animal has an Interactor Component</summary>
+        public IInteractor Interactor { get; internal set; }
         #endregion
 
         #region Internal Variables
-        /// <summary>The way to know if there no Target Position vector to go to</summary>
-        protected static Vector3 NullVector = MalbersTools.NullVector;
-
         /// <summary>Target Last Position (Useful to know if the Target is moving)</summary>
-        protected Vector3 TargetLastPosition = NullVector;
+        protected Vector3 TargetLastPosition;
 
         /// <summary>Stores the Remainin distance to the Target's Position</summary>
-        public float RemainingDistance { get; private set; }
+        public virtual float RemainingDistance  { get; internal set; }
+        //{
+        //    get => m_RemainingDistance;
+        //    set
+        //    {
+        //        m_RemainingDistance = value;
+        //        Debug.Log($"m_RemainingDistance: {m_RemainingDistance} ");
+        //    }
+        //}
+        //private float m_RemainingDistance;
 
         /// <summary>Stores the Remainin distance to the Target's Position</summary>
         protected float DefaultStopDistance;
+        public bool InOffMeshLink { get; protected set; }
 
-        /// <summary>When Assigning a Target it will automatically start moving</summary>       
-        public bool MoveAgent { get; set; }
-       
+        /// <summary>Changes the value of the Agent.isStopped</summary>       
+        public virtual bool MoveAgent 
+        {
+            get => moveAgent;
+            set
+            {
+                moveAgent = value; 
+                if (Agent.isOnNavMesh)  Agent.isStopped = !value;
+               // Debug.Log($"MoveAgent: {MoveAgent} ");
+            }
+        }
+        private bool moveAgent;
+
+
+
+        /// <summary>Has the animal Arrived to their current destination</summary>
+        public bool HasArrived  { get; internal set; }
+        //{
+        //    get => hasArriv;
+        //    internal set
+        //    {
+        //        hasArriv = value;
+        //        Debug.Log("HasArrived: " + hasArriv);
+        //    }
+        //}
+        //private bool hasArriv;
+
+
         private IEnumerator I_WaitToNextTarget;
-        private IEnumerator IFlyOffMesh;
+        private IEnumerator IFreeMoveOffMesh;
         private IEnumerator IClimbOffMesh;
         #endregion
 
         #region Public Variables
         [SerializeField] protected float stoppingDistance = 0.6f;
+        [SerializeField] protected float PointStoppingDistance = 0.6f;
 
         /// <summary>The animal will change automatically to Walk if the distance to the target is this value</summary>
         [SerializeField] protected float walkDistance = 1f;
 
         internal void ResetStoppingDistance() { StoppingDistance = DefaultStopDistance; }
 
-
-        /// <summary>Default Speed Stored for the Animal while is using the AI Control/summary>
-        private int defaultGroundIndex;
         [SerializeField] private Transform target;
+        [SerializeField] private Transform nextTarget;
+
+        [Tooltip("States that will reset the Offmesh link, in case the animal was in one.")]
+        [SerializeField] private List<StateID> ResetOffMesh = new List<StateID>();
 
         /// <summary>Means the Animal will go to a next Target when it reaches the current target automatically</summary>
         public bool AutoNextTarget = true;
-        /// <summary>Means the Animal will interact to any Waypoint automatically when he arrived to it</summary>
-        public bool AutoInteract = true;
+
+        ///// <summary>Means the Animal will interact to any Waypoint automatically when he arrived to it</summary>
+        //public bool AutoInteract = true;
 
         /// <summary>If the Target Moves the Agent will move too ... to the given destination</summary>
         public bool MoveAgentOnMovingTarget = true;
 
-        /// <summary>If the Target Moves the Agent will move too ... to the given destination</summary>
+        public void SetMoveAgentOnMovingTarget(bool value) => MoveAgentOnMovingTarget = value;
+
+        /// <summary>The Animal will Rotate/Look at the Target when he arrives to it</summary>
         public bool LookAtTargetOnArrival = false;
 
         /// <summary>Check if the Animal Moved every x Seconds</summary>
@@ -75,39 +117,52 @@ namespace MalbersAnimations.Controller
 
         #region Properties 
         /// <summary>is the Animal, Flying, swimming, On Free Mode?</summary>
-        public bool FreeMove { get; private set; }
+        public  bool FreeMove  { get; private set; }
+        //{
+        //    get => freeMove;
+        //    internal set
+        //    {
+        //        freeMove = value;
+        //        Debug.Log(freeMove);
+        //    }
+        //}
+        //private bool freeMove;
+
+
+        /// <summary>Current Stopping Distance for the Next Waypoint</summary>
+        public virtual float StoppingDistance
+        {
+            get => stoppingDistance;
+            set
+            {
+                Agent.stoppingDistance = stoppingDistance = value;
+                //Debug.Log("StoppingDistance: "+ value);
+            }
+        }
+
+
 
         /// <summary>Is the Animal Playing a mode</summary>
         public bool IsOnMode { get; private set; }
 
+     
 
 
-        /// <summary>Has the animal Arrived to their current destination</summary>
-        public bool HasArrived  { get; internal set; }
-        //{
-        //    get => hasArriv;
-        //    internal set
-        //    {
-        //        hasArriv = value;
-        //        Debug.Log(hasArriv);
-        //    }
-        //}
-        //private bool hasArriv;
+        public virtual bool IsGrounded { get; protected set; }
 
-
-        public bool IsGrounded { get; private set; }
-
-        public bool IsMovingOffMesh { get; private set; }
+        public virtual bool IsMovingOffMesh { get; protected set; }
 
         /// <summary>Is the Target a WayPoint?</summary>
-        public IWayPoint IsWayPoint { get; private set; }
+        public IWayPoint IsWayPoint { get; protected set; }
+      
+        /// <summary>Is the Target an AITarget</summary>
+        public IAITarget IsAITarget { get; protected set; }
 
-        /// <summary>Destination Point == NullVector which means that the Point is Empty </summary>
-      //  public bool NullDestination => DestinationPosition == NullVector;
-
+        /// <summary>AITarget Position</summary>
+        public Vector3 AITargetPos { get; protected set; }
 
         /// <summary>Is the Target an AITarget</summary>
-        public IAITarget IsAITarget { get; private set; }
+        public IInteractable IsTargetInteractable { get; protected set; }
         #endregion 
 
         #region Events
@@ -118,120 +173,125 @@ namespace MalbersAnimations.Controller
         #endregion
 
         #region Properties
-
-        public WayPointType pointType = WayPointType.Ground;
-
-        public WayPointType TargetType => pointType;
-
+     
 
         /// <summary>Reference of the Nav Mesh Agent</summary>
-        public NavMeshAgent Agent
-        {
-            get
-            {
-                if (agent == null)
-                    agent = GetComponentInChildren<NavMeshAgent>();
-                return agent;
-            }
-        }
+        public virtual NavMeshAgent Agent => agent; 
 
-        /// <summary>Current Stopping Distance for the Next Waypoint</summary>
-        public float StoppingDistance
-        {
-            get { return stoppingDistance; }
-            set { Agent.stoppingDistance = stoppingDistance = value; }
-        }
+        /// <summary>Self AI Target Position</summary>
+        public virtual Vector3 GetPosition() => animal.Center;
 
-        /// <summary>Get the Position of this AI target</summary>
-        public Vector3 GetPosition() { return Agent.transform.position; }
+        /// <summary> Self Target Type </summary>
+        public virtual WayPointType TargetType => animal.FreeMovement ? WayPointType.Air : WayPointType.Ground;
 
 
         /// <summary>is the Target transform moving??</summary>
-        public bool TargetIsMoving { get; private set; }
+        public virtual bool TargetIsMoving { get; internal set; }
 
 
         /// <summary> Is the Animal waiting x time to go to the Next waypoint</summary>
-        public bool IsWaiting { get; private set; }
+        public virtual bool IsWaiting { get; internal set; }
 
         /// <summary>Destination Position to use on Agent.SetDestination()</summary>
-        public Vector3 DestinationPosition { get; private set; }
+        public virtual Vector3 DestinationPosition { get; set; }
+        //{
+        //    get => m_DestinationPosition;
+        //    set
+        //    {
+        //        m_DestinationPosition = value;
+        //        if (debug)  Debug.Log($"DP ={m_DestinationPosition} IsAI <{IsAITarget != null}>  Targ<{Target}>");
+        //    }
+        //}
+        //Vector3 m_DestinationPosition;
 
-        public Transform NextTarget { get; private set; }
-        public Transform Target => target;
+        public virtual Transform NextTarget { get => nextTarget; set => nextTarget = value; }
+        public virtual Transform Target => target;
+
+        /// Height Diference from the Target and the Agent
+        public virtual float TargetHeight => Mathf.Abs(DestinationPosition.y - Agent.transform.position.y);
 
         /// <summary>Update The Target Position from the Target. This should be false if the Position you want to go is different than the Target's position</summary>
-        public bool UpdateTargetPosition { get => updateTargetPosition; set => updateTargetPosition = value; }
+        public virtual bool UpdateTargetPosition { get => updateTargetPosition; set => updateTargetPosition = value; }
+
+        #endregion 
+        public virtual void SetActive(bool value) => enabled = value;
 
 
-        #endregion
-
-        #region Unity Functions
-
-        void Awake() { animal = GetComponent<MAnimal>(); }
+        #region Unity Functions 
+        public virtual bool OnAnimatorBehaviourMessage(string message, object value) =>  this.InvokeWithParams(message, value);
 
 
-        void Start() { StartAgent(); }
-        void OnEnable()
+        private void Awake()
         {
-            animal.OnStateChange.AddListener(OnState);           
-            animal.OnModeStart.AddListener(OnModeStart);
-            animal.OnModeEnd.AddListener(OnModeEnd);
-            animal.OnGrounded.AddListener(OnGrounded);
+            if (animal == null) animal = this.FindComponent<MAnimal>();
+
+            Interactor = animal.FindInterface<IInteractor>();
+
+            DefaultStopDistance = StoppingDistance;                             //Store the Started Stopping Distance
+            AgentPosition = Agent.transform.localPosition;
         }
 
-       
+        protected Vector3 AgentPosition;
 
-        void OnDisable()
+        protected virtual void OnEnable()
+        { 
+            animal.OnStateChange.AddListener(OnState);
+            animal.OnModeStart.AddListener(OnModeStart);
+            animal.OnModeEnd.AddListener(OnModeEnd);
+            animal.OnGrounded.AddListener(OnGrounded);     
+
+            Invoke(nameof(StartAgent),0.1f);
+        }
+
+        protected virtual void OnDisable()
         {
             animal.OnStateChange.RemoveListener(OnState);           //Listen when the Animations changes..
             animal.OnModeStart.RemoveListener(OnModeStart);           //Listen when the Animations changes..
             animal.OnModeEnd.RemoveListener(OnModeEnd);           //Listen when the Animations changes..
             animal.OnGrounded.RemoveListener(OnGrounded);           //Listen when the Animations changes..
-                                                                    //  animal.OnStateChange.RemoveListener(OnStateChanged);           //Listen when the Animations changes..
+
+            Stop();
+            StopAllCoroutines();
         }
 
-      
-
-        void Update() { Updating(); }
+        protected virtual void Update() { Updating(); }
         #endregion
 
-        protected virtual void StartAgent()
+        public virtual void StartAgent()
         {
+            FreeMove = (animal.ActiveState.General.FreeMovement);
+            if (FreeMove) Agent.enabled = false;
+            IsWaiting = true;
+
+            if (agent == null) agent.FindComponent<NavMeshAgent>();
+
             Agent.updateRotation = false;                                       //The Animal will control the rotation . NOT THE AGENT
             Agent.updatePosition = false;                                       //The Animal will control the  postion . NOT THE AGENT
-            DefaultStopDistance = StoppingDistance;                             //Store the Started Stopping Distance
+         
             Agent.stoppingDistance = StoppingDistance;
 
-            animal.UseSmoothVertical = false;                               //IMPORTANT ... This Avoid the Animal to stop when they are turinng
+          
+            OnGrounded(animal.Grounded);
 
             HasArrived = false;
             TargetIsMoving = false;
             var targ = target;
-
             target = null;
             SetTarget(targ);                                                  //Set the first Target (IMPORTANT)  it also set the next future targets
 
-            IsWaiting = false;
-            MoveAgent = true;
-
-            var locomotion = animal.State_Get(StateEnum.Locomotion);
-
-            if (locomotion != null && locomotion.SpeedSet != null)
-            {
-                defaultGroundIndex = locomotion.SpeedSet.StartVerticalIndex;
-            }
-
-            InvokeRepeating("CheckMovingTarget", 0f, MovingTargetInterval);
+            InvokeRepeating(nameof(CheckMovingTarget), 0f, MovingTargetInterval);
         }
 
-        protected virtual void Updating()
+        public virtual void Updating()
         {
-            if (IsMovingOffMesh) return;                                    //Do nothing while is moving ofmesh (THE Coroutine is in charge of the movement)
-
             Agent.nextPosition = agent.transform.position;                  //Update the Agent Position to the Transform position   IMPORTANT!!!!
+            agent.transform.localPosition = AgentPosition;                       //Important! Reset the Agent Position to the default Position
+          
+            if (IsMovingOffMesh) return;                                    //Do nothing while is moving ofmesh (THE Coroutine is in charge of the movement)
+            if (IsWaiting) return;                                          //Do nothing while is waiting
 
-            if (MovingTargetInterval == 0)
-                CheckMovingTarget();
+            if (MovingTargetInterval <= 0) CheckMovingTarget();
+
 
             if (FreeMove)
             {
@@ -240,49 +300,86 @@ namespace MalbersAnimations.Controller
             }
             else if (IsGrounded)                                               //if we are on a NAV MESH onGround
             {
-                if (IsWaiting || IsOnMode)
+                if (IsOnMode)
                 {
                     return;    //If the Animal is Waiting do nothing . .... he is doing something else... wait until he's finish
                 }
                 else
+                {
+                  
+
+                   
+
                     UpdateAgent();
+                }
             }
         }
 
         /// <summary> Check if the Target is moving </summary>
-        private void CheckMovingTarget()
+        public virtual void CheckMovingTarget()
         {
             if (target)
             {
-                TargetIsMoving = (target.position - TargetLastPosition).magnitude > 0.005f;
+               // TargetIsMoving = (target.position -  TargetLastPosition).sqrMagnitude > 0.005f;
+                TargetIsMoving = (target.position != TargetLastPosition);
                 TargetLastPosition = target.position;
-
-                if (TargetIsMoving)
-                    Update_TargetPos();
+                if (TargetIsMoving)    Update_TargetPos();
             }
         }
 
 
-        /// <summary> Updates the Agents using he animation root motion </summary>
-        protected virtual void UpdateAgent()
+        public virtual void Move()
         {
-            if (Agent.pathPending || !Agent.isOnNavMesh)
-                return;    //Means is still calculating the path to go
+            if (!MoveAgent)
+                ResumeAgent();                              //Only Resume the Agent in case the Animal is set to move on moving Target.
+            else
+             if (Agent.isOnNavMesh) Agent.SetDestination(DestinationPosition);  //Go to the Current Destination;
+        }
+
+        /// <summary>Update The Target Position </summary>
+        protected virtual void Update_TargetPos()
+        {
+            if (UpdateTargetPosition)
+            {
+               if (IsAITarget != null) AITargetPos = IsAITarget.GetPosition(); //Update the AI Target Pos if the Target moved
+
+                DestinationPosition = GetTargetPosition();              //Update the Target Position 
+
+                var DistanceOnMovingTarget = Vector3.Distance(DestinationPosition, Agent.transform.position); //Double check if the Animal is far from the target
+
+                if (DistanceOnMovingTarget >= StoppingDistance)
+                {
+                    HasArrived = false; //Check if the animal hasn't arrived to a moving target
+                }
+
+                if (MoveAgentOnMovingTarget)  Move();
+            }
+        }
+
+
+
+        /// <summary> Updates the Agents using he animation root motion </summary>
+        public virtual void UpdateAgent()
+        {
+            if (Agent.pathPending || !Agent.isOnNavMesh) return;    //Means is still calculating the path to go
+
+            if (HasArrived || !MoveAgent)
+            {
+                if (LookAtTargetOnArrival)
+                {
+                    var LookAtDir = (target != null ? target.position : DestinationPosition) - transform.position;
+                    animal.RotateAtDirection(LookAtDir);
+                }
+                return;
+            }
+
+         //   Debug.Log("UpdateAgent");
 
             RemainingDistance = Agent.remainingDistance;                //Store the remaining distance -- but if navMeshAgent is still looking for a path Keep Moving
 
-            if (RemainingDistance <= StoppingDistance)                   //if We Arrive to the Destination
+            if (!HasArrived && RemainingDistance <= StoppingDistance)                   //if We Arrive to the Destination
             {
-                if (!HasArrived)
-                    Arrive_Destination();
-                else //HasArrived == true
-                {
-                    if (LookAtTargetOnArrival)
-                    {
-                        var LookAtDir = (target != null ? target.position : DestinationPosition) - transform.position;
-                        animal.LookAtDirection(LookAtDir);
-                    }
-                }
+                Arrive_Destination();
             }
             else
             {
@@ -294,71 +391,88 @@ namespace MalbersAnimations.Controller
             }
         }
 
-
-
         #region Set Assing Target and Next Targets
-        public virtual void SetTarget(GameObject target) { SetTarget(target.transform, true); }
+        public virtual void SetTarget(GameObject target) => SetTarget(target, true);
+        public virtual void SetTarget(GameObject target, bool move) => SetTarget(target != null ? target.transform : null, move); //Null reference added
 
-        public virtual void SetTarget(Transform target) { SetTarget(target, true); }
+        public virtual void SetTarget(Transform target) => SetTarget(target, true);
+
+        /// <summary>Remove the current Target and stop the Agent </summary>
+        public virtual void ClearTarget() => SetTarget((Transform)null, false);
+
+        /// <summary>Remove the current Target </summary>
+        public virtual void NullTarget() => target = null;
 
         /// <summary>Assign a new Target but it does not move it to it</summary>
-        public virtual void SetTargetOnly(Transform target) { SetTarget(target, false); }
-
-
-        /// <summary>Moves to the Assigned Target</summary>
-        public virtual void MoveToDestination()
-        {
-            CheckAirTarget();
-            Debuging("is travelling to : <B>" + target.name + "</B>");
-            MoveAgent = true;
-            ResumeAgent();
-        }
+        public virtual void SetTargetOnly(Transform target) => SetTarget(target, false);
 
         /// <summary>Set the next Target</summary>   
         public virtual void SetTarget(Transform target, bool Move)
         {
-            IsWaiting = false;
-            animal.Mode_Interrupt();             //In Case it was making any Mode;
+            if (target == Target  && !HasArrived) return;           //Don't assign the same target if we are travelling to that target
+
             this.target = target;
+         
+            IsWaiting = false;
+            RemainingDistance = float.MaxValue; //Set the Remaining Distance as the Max Float Value
+            HasArrived = false;
 
-            IsAITarget = null; //Reset the AI Target
-            OnTargetSet.Invoke(target);
-            //Debug.LogWarning("SetTarget:", target);
+            OnTargetSet.Invoke(target);         //Invoked that the Target has changed.
 
-            if (target != null)
+            if (this.target != null)
             {
-                TargetLastPosition = target.position; //Since is a new Target "Reset the Target last position"
-                DestinationPosition = target.position;                           //Update the Target Position 
-                IsAITarget = target.GetComponentInParent<IAITarget>();
+                TargetLastPosition = target.position;                   //Since is a new Target "Reset the Target last position"
+                DestinationPosition = target.position;                  //Update the Target Position 
 
-                HasArrived = false;
+                if (animal.IsPlayingMode) animal.Mode_Interrupt();      //In Case it was making any Mode Interrupt it because there's a new target to go to.
+
+
+                IsAITarget = target.gameObject.FindInterface<IAITarget>();
+                if (IsAITarget != null) AITargetPos = IsAITarget.GetPosition();
+
+                IsTargetInteractable = target.FindInterface<IInteractable>();
+                IsWayPoint = target.FindInterface<IWayPoint>(); 
 
                 StoppingDistance = GetTargetStoppingDistance();
                 DestinationPosition = GetTargetPosition();
 
-                IsWayPoint = target.GetComponent<IWayPoint>();
-                NextTarget = IsWayPoint?.NextTarget();
-                RemainingDistance = float.MaxValue;
-                MoveAgent = Move;
+                NextTarget = null;
+                if (IsWayPoint != null) NextTarget = IsWayPoint.NextTarget(); //Find the Next Target on the Waypoint
 
-                MoveToDestination();
+                StopWaitCoroutine(); //If the Animal was waiting Reset the waiting IMPORTANT!!
+
+                CheckAirTarget();
+
+                //Resume the Agent is MoveAgent is true
+                if (Move) ResumeAgent(); //THe Agent will move if the move parameter is true... if not it will only calculate all the logic without moving
+
+                if (MoveAgent) Debuging($"<color=yellow>is travelling to [NEW TARGET]: <B>{target.name}</B>  - {DestinationPosition} </color>");
             }
             else
             {
+
+                IsAITarget = null;                  //Reset the AI Target
+                IsTargetInteractable = null;        //Reset the AI Target Interactable
+                IsWayPoint = null;                  //Reset the Waypoint
+
                 Stop(); //Means the Target is null so Stop the Animal
             }
         }
 
-
-        public Vector3 GetTargetPosition()
+        public virtual Vector3 GetTargetPosition()
         {
-            return IsAITarget != null ? IsAITarget.GetPosition() : target.position;
+            var TargetPos = (IsAITarget != null) ? AITargetPos : target.position;
+            if (TargetPos == Vector3.zero) TargetPos = target.position; //HACK FOR WHEN THE TARGET REMOVED THEIR AI TARGET COMPONENT
+            return TargetPos;
         }
 
-        public float GetTargetStoppingDistance()
-        {
-            return IsAITarget != null ? IsAITarget.StopDistance() : DefaultStopDistance;
-        }
+
+        public void TargetArrived(GameObject target) { }
+
+        public virtual float GetTargetStoppingDistance() => IsAITarget != null ? IsAITarget.StopDistance() : DefaultStopDistance;
+
+        public virtual void SetNextTarget(GameObject next) => NextTarget = next.transform;
+
 
         /// <summary>Set the Target from  on the NextTargets Stored on the Waypoints or Zones</summary>
         public virtual void SetNextTarget()
@@ -372,190 +486,242 @@ namespace MalbersAnimations.Controller
 
             if (IsWayPoint != null)
             {
-                if (I_WaitToNextTarget != null) StopCoroutine(I_WaitToNextTarget); //if there's a coroutine active then stop it
+                StopWaitCoroutine();
 
-                I_WaitToNextTarget = C_WaitToNextTarget(IsWayPoint.WaitTime, NextTarget); //IMPORTANT YOU NEED TO WAIT 1 FRAME ALWAYS TO GO TO THE NEXT WAYPOINT
-                StartCoroutine(I_WaitToNextTarget);
+                I_WaitToNextTarget = C_WaitToNextTarget(IsWayPoint.WaitTime, NextTarget);   //IMPORTANT YOU NEED TO WAIT 1 FRAME ALWAYS TO GO TO THE NEXT WAYPOINT
+                StartCoroutine(I_WaitToNextTarget); 
+            }
+            else
+            {
+                Debuging("SetTarget(NextTarget);");
+                SetTarget(NextTarget);
             }
         }
 
-        /// <summary> Check if the Next Target is a Air Target</summary>
-        private void CheckAirTarget()
+        internal void StopWaitCoroutine()
         {
-            if (IsWayPoint != null && IsWayPoint.TargetType == WayPointType.Air)    //If the animal can fly, there's a new wayPoint & is on the Air
+            if (I_WaitToNextTarget != null) StopCoroutine(I_WaitToNextTarget);          //if there's a coroutine active then stop it
+        }
+
+        /// <summary> Check if the Next Target is a Air Target, if true then go to it</summary>
+        internal virtual bool CheckAirTarget()
+        {
+            if (IsAirDestination && !FreeMove)    //If the animal can fly, there's a new wayPoint & is on the Air
             {
-                Debuging(name + ": NextTarget is AIR", NextTarget.gameObject);
+               if (NextTarget) Debuging(": Next Waypoint is AIR",  NextTarget.gameObject);
                 animal.State_Activate(StateEnum.Fly);
                 FreeMove = true;
+                MoveAgent = false; //Stop the Agent
             }
+
+            return IsAirDestination;
         }
+
+        internal bool IsAirDestination  => IsAITarget != null && IsAITarget.TargetType == WayPointType.Air;
+        internal bool IsGroundDestination  => IsAITarget != null && IsAITarget.TargetType == WayPointType.Ground;
         #endregion
 
-        public virtual void SetDefaultGroundIndex(int val)
-        { defaultGroundIndex = val; }
 
         /// <summary>Set the next Destination Position without having a target</summary>   
         public virtual void SetDestination(Vector3 newDestination, bool Move)
         {
             if (newDestination == DestinationPosition) return; //Means that you're already going to the same point
 
-
+            StoppingDistance = PointStoppingDistance; //Reset the stopping distance when Set Destination is used.
+            //target = null;
+            HasArrived = false;
             IsWaiting = false;
             animal.Mode_Interrupt();             //In Case it was making any Mode;
 
-            if (!target) ResetStoppingDistance(); //If there's no target reset the Stopping Distance
 
-
-            Debuging("is travelling to : " + newDestination);
-
+            if (MoveAgent) Debuging($"<color=yellow>is travelling to: {DestinationPosition} </color>");
+             
             IsWayPoint = null;
 
             if (I_WaitToNextTarget != null)
                 StopCoroutine(I_WaitToNextTarget);                          //if there's a coroutine active then stop it
-
-            MoveAgent = Move;
-
+            
             DestinationPosition = newDestination;                           //Update the Target Position 
-            ResumeAgent();
+           
+            if (Move) ResumeAgent();
         }
 
+        /// <summary>Set the next Destination Position without having a target</summary>   
+        public virtual void SetDestination(Vector3Var newDestination) => SetDestination(newDestination.Value);
+        public virtual void SetDestination(Vector3 PositionTarget) => SetDestination(PositionTarget, true);
 
-        public void SetDestination(Vector3 PositionTarget) { SetDestination(PositionTarget, true); }
+        public virtual void SetDestinationClearTarget(Vector3 PositionTarget)
+        {
+            target = null;
+            SetDestination(PositionTarget, true);
+        }
 
         /// <summary> Stop the Agent and the Animal</summary>
         public virtual void Stop()
         {
-           //Debug.Log("Stop");
+            MoveAgent = false; //Stop the Agent from Moving
 
-            if (Agent.isOnNavMesh)
-                Agent.isStopped = true;
-
-            if (IsOnMode) animal.Mode_Interrupt(); //Only Stop if the Animal was on a mode
+            if (Agent.isOnNavMesh) Agent.ResetPath();
 
             animal.StopMoving();
-
-           // IsWaiting = false;
-            MoveAgent = false;
         }
 
 
         /// <summary>Check the Status of the Next Target</summary>
-        private void Arrive_Destination()
+        protected virtual void Arrive_Destination()
         {
-            HasArrived = true;
+            if (!FreeMove && Agent.pathStatus != NavMeshPathStatus.PathComplete) //Check when the Agent is trapped on an NavMesh that cannot exit
+            {
+                Debuging($"[{Agent.pathStatus}] - Destination <Actions> Ignored. Force Stop");
+                Stop();
+                return;
+            }
 
+            HasArrived = true;
             RemainingDistance = 0;
 
-           if (target)  Debuging("has arrived to Destination: "+ target.name);
+            OnTargetArrived.Invoke(target);                                 //Invoke the Event On Target Arrived
+            OnTargetPositionArrived.Invoke(DestinationPosition);            //Invoke the Event On Target Position Arrived
 
-            if (IsWayPoint != null)     //If we have arrived to a WayPoint
+            if (target)
             {
-                if (IsWayPoint.TargetType == WayPointType.Ground) FreeMove = false;         //if the next waypoing is on the Ground then set the free Movement to false
-                if (AutoInteract) IsWayPoint.TargetArrived(gameObject);                     //Call the method that the Target has arrived to the destination
+                Debuging($"<color=green>has arrived to: <B>{target.name}</B> - {DestinationPosition} </color>");
+
+                if (IsTargetInteractable != null && IsTargetInteractable.Auto) //If the interactable is set to Auto!!!!!!!
+                {
+                    if (Interactor != null)
+                    {
+                        Interactor.Interact(IsTargetInteractable);
+                    }
+                    else IsTargetInteractable.Interact(0, animal.gameObject); //Do an Empty Interaction
+
+                    Debuging($"Interact with : <b><{IsTargetInteractable.Owner.name}></b>");
+                }
+            }
+            else
+            {
+                Debuging($"<color=green>has arrived to: <B>{DestinationPosition}</B></color>");
+
+                Stop(); //The target was removed
+                return;
+            }
+
+            IsAITarget?.TargetArrived(animal.gameObject);              //Call the method that the Target has arrived to the destination
+
+            if (IsWayPoint != null)   //If we have arrived to a WayPoint
+            {
+                if (IsAITarget.TargetType == WayPointType.Ground) FreeMove = false;         //if the next waypoing is on the Ground then set the free Movement to false
                 if (AutoNextTarget) SetNextTarget();                                        //Set Next Target
-               
+
             }
             else
             {
                 Stop();
             }
-
-            OnTargetArrived.Invoke(target);                                 //Invoke the Event On Target Arrived
-            IsWayPoint?.TargetArrived(gameObject);                          //Send to the Waypoint that the we have Arrived
-            OnTargetPositionArrived.Invoke(DestinationPosition);            //Invoke the Event On Target Position Arrived
         }
+
+
+        /// <summary>  Resets the global parameters for a Target </summary>
+        public virtual void DefaultMoveToTarget()
+        {
+            UpdateTargetPosition = true;           // Make Sure to update the Target position on the Animal
+            MoveAgentOnMovingTarget = true;        // Check if the Target moves
+            LookAtTargetOnArrival = true;
+            animal.LockMovement = false;
+        }
+
 
         /// <summary>Resume the Agent component</summary>
-        public void ResumeAgent()
+        public virtual void ResumeAgent()
         {
-           if (!FreeMove)
-                Agent.enabled = true;
-
-            if (!Agent.isOnNavMesh) return;                             //No nothing if we are not on a Nav mesh or the Agent is disabled
-
-           // if (!NullDestination)
+            if (!FreeMove)
             {
-                Agent.SetDestination(DestinationPosition);                       //If there's a position to go to set it as destination
-                Agent.isStopped = !MoveAgent;                                    //Start the Agent again
-            } 
+                Agent.enabled = true;                               //Enable the Agent first before checking if its on a NavMesh
+                if (!Agent.isOnNavMesh) return;                     //No nothing if we are not on a Nav mesh or the Agent is disabled
 
-          //  Debug.LogWarning("ResumeAgent:"+ DestinationPosition); 
-        }
-
-        /// <summary>Update The Target Position </summary>
-        protected virtual void Update_TargetPos()
-        {
-            if (UpdateTargetPosition)
-            {
-               // StoppingDistance = GetTargetStoppingDistance();         //Update also the Stopping Distance
-                DestinationPosition = GetTargetPosition();              //Update the Target Position 
-                MoveAgent = MoveAgentOnMovingTarget;
-
-                ResumeAgent();
+                Agent.SetDestination(DestinationPosition);          //If there's a position to go to set it as destination
+                MoveAgent = true;                                   //Start the Agent again
+                CompleteOffMeshLink();
             }
         }
 
 
+
+
         protected virtual void FreeMovement()
         {
-            if (IsWaiting) return;
-            if (!target /*|| NullDestination*/) return;      //If we have no were to go then Skip the code
+            RemainingDistance = Vector3.Distance(animal.transform.position, DestinationPosition);
 
-            RemainingDistance = target ? Vector3.Distance(animal.transform.position, target.position) : 0;
-
-            var Direction = (target.position - animal.transform.position).normalized;
-
-            animal.Move(Direction);
+            animal.Move((DestinationPosition - animal.transform.position).normalized); //Important to be normalized!!
 
             if (RemainingDistance < StoppingDistance)   //We arrived to our destination
-                Arrive_Destination();
+            {
+                if (IsGroundDestination && !IsGrounded)
+                {
+                    //Keep Moving
+                }
+                else
+                {
+                    Arrive_Destination();
+                }
+            }
         }
 
         protected virtual void CheckOffMeshLinks()
         {
-            if (Agent.isOnOffMeshLink /*&& !EnterOFFMESH*/)                         //Check if the Agent is on a OFF MESH LINK
+            if (Agent.isOnOffMeshLink && !InOffMeshLink)                         //Check if the Agent is on a OFF MESH LINK
             {
-               // EnterOFFMESH = true;                                            //Just to avoid entering here again while we are on a OFF MESH LINK
+                 InOffMeshLink = true;                                            //Just to avoid entering here again while we are on a OFF MESH LINK
                 OffMeshLinkData OMLData = Agent.currentOffMeshLinkData;
-
+              
                 if (OMLData.linkType == OffMeshLinkType.LinkTypeManual)              //Means that it has a OffMesh Link component
                 {
                     OffMeshLink CurrentOML = OMLData.offMeshLink;                    //Check if the OffMeshLink is a Manually placed  Link
 
-                    Zone IsOffMeshZone =
+                    if (CurrentOML)
+                    {
+                        Zone IsOffMeshZone =
                         CurrentOML.GetComponentInParent<Zone>();                     //Search if the OFFMESH IS An ACTION ZONE (EXAMPLE CRAWL)
 
-                    if (IsOffMeshZone)                                               //if the OffmeshLink is a zone and is not making an action
-                    {
-                        IsOffMeshZone.CurrentAnimal = animal;
-                        IsOffMeshZone.ActivateZone(true);                            //Activate the Zone
-                        return;
-                    }
+                        if (IsOffMeshZone)                                           //if the OffmeshLink is a zone and is not making an action
+                        {
+                            if (debug) Debuging($"<color=white>is On a <b>[OffmeshLink]</b> -> [{IsOffMeshZone.name}]</color>");
+
+                            IsOffMeshZone.ActivateZone(animal);                      //Activate the Zone
+                            return;
+                        }
 
 
-                    var DistanceEnd = (transform.position - CurrentOML.endTransform.position).sqrMagnitude;
-                    var DistanceStart = (transform.position - CurrentOML.startTransform.position).sqrMagnitude;
+                        var DistanceEnd = (transform.position - CurrentOML.endTransform.position).sqrMagnitude;
+                        var DistanceStart = (transform.position - CurrentOML.startTransform.position).sqrMagnitude;
 
 
-                    //Debug.Log("OMMESH FLY");
-
-                    if (CurrentOML.CompareTag("Fly"))
-                    {
-                        var FarTransform = DistanceEnd > DistanceStart ? CurrentOML.endTransform : CurrentOML.startTransform;
                         //Debug.Log("OMMESH FLY");
 
-                        FlyOffMesh(FarTransform);
-                    }
-                    else if (CurrentOML.CompareTag("Climb"))
-                    {
-                        StartCoroutine(MalbersTools.AlignTransform_Rotation(transform, CurrentOML.transform.rotation, 0.15f));         //Aling the Animal to the Link Position
-                        ClimbOffMesh();
-                    }
-                    else if (CurrentOML.area == 2)  //2 is Off mesh Jump
-                    {
-                        var NearTransform = DistanceEnd < DistanceStart ? CurrentOML.endTransform : CurrentOML.startTransform;
-                        StartCoroutine(MalbersTools.AlignTransform_Rotation(transform, NearTransform.rotation, 0.15f));         //Aling the Animal to the Link Position
-                        animal.State_Activate(StateEnum.Jump); //2 is Jump State                                                              //if the OffMesh Link is a Jump type
+                        if (CurrentOML.CompareTag("Fly"))
+                        {
+                            var FarTransform = DistanceEnd > DistanceStart ? CurrentOML.endTransform : CurrentOML.startTransform;
+                            //Debug.Log("OMMESH FLY");
+                            Debuging($"<color=white>is On a <b>[OffmeshLink]</b> -> [Fly]</color>");
+                            FlyOffMesh(FarTransform);
+                        }
+                        else if (CurrentOML.CompareTag("Climb"))
+                        {
+                            Debuging($"<color=white>is On a <b>[OffmeshLink]</b> -> [Climb] -> { CurrentOML.transform.name}</color>");
+                            //StartCoroutine(MTools.AlignTransform_Rotation(transform, CurrentOML.transform.rotation, 0.15f));         //Aling the Animal to the Link Position
+                            StartCoroutine(MTools.AlignTransform(transform, CurrentOML.transform, 0.15f));         //Aling the Animal to the Link Position
+
+                            Debug.DrawRay(CurrentOML.transform.position, CurrentOML.transform.forward, Color.white, 3);
+
+                            ClimbOffMesh();
+                        }
+                        else if (CurrentOML.area == 2)  //2 is Off mesh Jump
+                        {
+                            var NearTransform = DistanceEnd < DistanceStart ? CurrentOML.endTransform : CurrentOML.startTransform;
+                            StartCoroutine(MTools.AlignTransform_Rotation(transform, NearTransform.rotation, 0.15f));         //Aling the Animal to the Link Position
+                            animal.State_Activate(StateEnum.Jump);       //if the OffMesh Link is a Jump type activate the jump
+                            Debuging($"<color=white>is On a <b>[OffmeshLink]</b> -> [Jump]</color>");
+                        }
                     }
                 }
                 else if (OMLData.linkType == OffMeshLinkType.LinkTypeJumpAcross)             //Means that it has a OffMesh Link component
@@ -566,128 +732,142 @@ namespace MalbersAnimations.Controller
         }
 
         /// <summary>Called when the Animal Enter an Action, Attack, Damage or something similar</summary>
-        private void OnModeStart(int ModeID)
+        public virtual void OnModeStart(int ModeID, int ability)
         {
-            IsOnMode = true;
-            animal.StopMoving();     //Means the Animal is making a Mode
             Debuging("has Started a Mode: <B>" + animal.ActiveMode.ID.name + "</B>. Ability: <B>" + animal.ActiveMode.ActiveAbility.Name + "</B>");
-            Agent.enabled = false;
+            if (animal.ActiveMode.AllowMovement) return; //Don't stop the Animal Movevemt if the Mode can make movements
+            IsOnMode = true;
+            
+            if (MoveAgent) Stop(); //If the Agent was moving Stop it
+
+            Agent.enabled = false; //Disable it when doing a Mode that does not move!
         }
 
-        private void OnModeEnd(int ModeID)
-        { 
-            IsOnMode = false;
-
-            if (Agent.isOnOffMeshLink) 
-                Agent.CompleteOffMeshLink();
-
-
-            ResumeAgent();
-        }
-
-        private void OnState(int stateID)
+       //private bool wasMovingBeforeMode;
+        /// <summary>  Listen if the Animal Has finished a mode  </summary>
+        public virtual void OnModeEnd(int ModeID, int ability)
         {
-            if (animal.ActiveStateID == StateEnum.Swim) 
-                OnGrounded(true); //Force Grounded to true when is swimming the animal
+            IsOnMode = false;
+            //MoveAgent = wasMovingBeforeMode;
+            ResumeAgent();
+
+            CompleteOffMeshLink();
+        }
+
+        /// <summary> Completes the OffmeshLink in case the animal was in one  </summary>
+        private void CompleteOffMeshLink()
+        {
+            if (Agent.isOnOffMeshLink)
+            {
+                Agent.CompleteOffMeshLink();
+            }
+            InOffMeshLink = false;
+        }
+
+        public virtual void OnState(int stateID)
+        {
+            if (animal.ActiveStateID == StateEnum.Swim)  OnGrounded(true); //Force Grounded to true when is swimming the animal *HACK*
+
+            if (ResetOffMesh != null && ResetOffMesh.Exists(x=> x.ID == stateID))
+            {
+                CompleteOffMeshLink();
+            }
+
         }
 
         /// <summary>Check when the Animal changes the Grounded State</summary>
         protected virtual void OnGrounded(bool grounded)
         {
-            IsGrounded = grounded;
-
-            //Checking if we are swimming
-
-            if (animal.ActiveStateID == StateEnum.Swim) IsGrounded = true; //Force Grounded to true when is swimming the animal
-
-            if (IsGrounded)
+            if (IsGrounded != grounded)
             {
-                CheckAirTarget();        //Check again the Air Target in case it was a miss Grounded.
-                Agent.enabled = true;
+                IsGrounded = grounded;
 
-                if (!Agent.isOnNavMesh) 
-                    return;
 
-                ResetFlyingOffMesh();
+                if (animal.ActiveStateID == StateEnum.Swim) IsGrounded = true; //Force Grounded to true when is swimming the animal
 
-                // EnterOFFMESH = false;
+                if (IsGrounded)
+                {
+                    FreeMove = false; //Check if the Current target is an Air Target (Bug)
 
-                if (Agent.isOnOffMeshLink)
-                    Agent.CompleteOffMeshLink();
+                    if (!Agent.enabled && !IsOnMode)//If it just landed or it was flying
+                    {
+                        Agent.enabled = true;
+                        ResetFreeMoveOffMesh();
 
-                FreeMove = false;
+                        if (!Agent.isOnNavMesh) return;
 
-                ResumeAgent();
-            }
-            else
-            {
-                if (Agent.isOnNavMesh)                  //Needs to pause the AGENT since the animal is no longer on the ground and NavMesh
-                    Agent.isStopped = true;
+                        ResumeAgent();
+                    }
+                }
+                else
+                {
+                    Agent.enabled = false;      //Disable the Agent when the animal is not grounded
+                    animal.DeltaAngle = 0;      //???
 
-                Agent.enabled = false;
-                animal.DeltaAngle = 0;
+                    CheckAirTarget();        //Check again the Air Target in case it was a miss Grounded.
+                }
             }
         }
-        protected void FlyOffMesh(Transform target)
+        protected virtual void FlyOffMesh(Transform target)
         {
-            ResetFlyingOffMesh();
-
-            IFlyOffMesh = C_FlyOffMesh(target);
-            StartCoroutine(IFlyOffMesh);
+            ResetFreeMoveOffMesh();
+            IFreeMoveOffMesh = C_FreeMoveOffMesh(target);
+            StartCoroutine(IFreeMoveOffMesh);
         }
 
-        protected void ClimbOffMesh()
+        protected virtual void ClimbOffMesh()
         {
             if (IClimbOffMesh != null) StopCoroutine(IClimbOffMesh);
             IClimbOffMesh = C_Climb_OffMesh();
             StartCoroutine(IClimbOffMesh);
         }
 
-        public float StopDistance()
-        { return DefaultStopDistance; }
+        public virtual float StopDistance() => DefaultStopDistance;
 
-        private void ResetFlyingOffMesh()
+        protected virtual void ResetFreeMoveOffMesh()
         {
-            if (IFlyOffMesh != null)
+            if (IFreeMoveOffMesh != null)
             {
                 IsMovingOffMesh = false;
-                StopCoroutine(IFlyOffMesh);
-                IFlyOffMesh = null;
+                StopCoroutine(IFreeMoveOffMesh);
+                IFreeMoveOffMesh = null;
             }
         }
 
         /// <summary>Change to walking when the Animal is near the Target Radius (To Avoid going forward(by intertia) while stoping </summary>
-        private void CheckWalkDistance()
+        protected virtual void CheckWalkDistance()
         {
             if (IsGrounded && walkDistance > 0)
             {
                 if (walkDistance > RemainingDistance)
                 {
-                    animal.CurrentSpeedIndex = 1;
+                    animal.CurrentSpeedIndex = 1; //Set to the lowest speed.
                 }
                 else
                 {
-                    if (animal.CurrentSpeedIndex != defaultGroundIndex)
-                        animal.CurrentSpeedIndex = defaultGroundIndex;
+                    if (animal.CurrentSpeedSet != null &&
+                        animal.CurrentSpeedIndex != animal.CurrentSpeedSet.StartVerticalIndex.Value)
+                        animal.CurrentSpeedIndex = animal.CurrentSpeedSet.StartVerticalIndex.Value;  //Restore the Current Speed Index to the Speed Set
                 }
             }
         }
 
-        protected IEnumerator C_WaitToNextTarget(float time, Transform NextTarget)
+        protected virtual IEnumerator C_WaitToNextTarget(float time, Transform NextTarget)
         {
             IsWaiting = true;
-            Debuging("is waiting " + time.ToString("F2") + " seconds");
+            Debuging("<color=white>is waiting " + time.ToString("F2") + " seconds</color>");
             Stop();
+           
 
             yield return null; //SUUUUUUUUUPER  IMPORTANT!!!!!!!!!
 
             if (time > 0)
-                yield return new WaitForSeconds(time);
+                yield return new WaitForSeconds(time); 
 
             SetTarget(NextTarget);
         }
 
-        internal IEnumerator C_FlyOffMesh(Transform target)
+        protected virtual IEnumerator C_FreeMoveOffMesh(Transform target)
         {
             animal.State_Activate(StateEnum.Fly); //Set the State to Fly
             IsMovingOffMesh = true;
@@ -701,15 +881,12 @@ namespace MalbersAnimations.Controller
             }
             animal.ActiveState.AllowExit();
 
-            Debuging("Exit Fly State Off Mesh");
+            Debuging("Exit Fly State Off Mesh");  
 
-            
-            
-            
             IsMovingOffMesh = false;
         }
 
-        internal IEnumerator C_Climb_OffMesh()
+        protected virtual IEnumerator C_Climb_OffMesh()
         {
             animal.State_Activate(StateEnum.Climb); //Set the State to Climb
             IsMovingOffMesh = true;
@@ -719,8 +896,7 @@ namespace MalbersAnimations.Controller
 
             while (animal.ActiveState.ID == StateEnum.Climb)
             {
-                animal.MoveWorld(Vector3.forward); //Move Upwards on the Climb
-               // distance = Vector3.Distance(animal.transform.position, target.position);
+                animal.SetInputAxis(Vector3.forward); //Move Upwards on the Climb
                 yield return null;
             }
 
@@ -729,22 +905,28 @@ namespace MalbersAnimations.Controller
             IsMovingOffMesh = false;
         }
 
+        protected virtual void Debuging(string Log) { if (debug) Debug.Log($"<B>{animal.name}:</B> " + Log); }
 
-        protected void Debuging(string Log) { if (debug) Debug.Log($"<B>{name}:</B> " + Log); }
-
-        protected void Debuging(string Log, GameObject obj) { if (debug) Debug.Log(Log, obj); }
+        protected virtual void Debuging(string Log, GameObject obj) { if (debug) Debug.Log($"<B>{animal.name}:</B> "+ Log, obj); }
 
 #if UNITY_EDITOR
-        void OnDrawGizmos()
+
+        [HideInInspector] public int Editor_Tabs1;
+      
+
+        protected virtual void Reset()
         {
-            if (!debugGizmos) return;
-            if (Agent == null) { return; }
-            if (Agent.path == null) { return; }
+            agent = gameObject.FindComponent<NavMeshAgent>();
+            animal = gameObject.FindComponent<MAnimal>();
+        }
+
+        protected virtual void OnDrawGizmos()
+        {
+            if (!debugGizmos || Agent == null || Agent.path == null) return; 
 
             Gizmos.color = Color.yellow;
 
-            Vector3 pos = Agent ? Agent.transform.position : transform.position;
-
+          
             for (int i = 1; i < Agent.path.corners.Length; i++)
             {
                 Gizmos.DrawLine(Agent.path.corners[i - 1], Agent.path.corners[i]);
@@ -755,9 +937,9 @@ namespace MalbersAnimations.Controller
 
             var Pos = (Application.isPlaying && target) ? target.position : Agent.transform.position;
 
-            if (Application.isPlaying && IsAITarget != null)
+            if (Application.isPlaying && target != null && IsAITarget != null)
             {
-                Pos = IsAITarget.GetPosition();
+                Pos = AITargetPos;
             }
 
             UnityEditor.Handles.color = Color.cyan;
@@ -768,13 +950,15 @@ namespace MalbersAnimations.Controller
 
             if (Application.isPlaying/* && !NullDestination*/)
             {
-                if (IsWayPoint != null && IsWayPoint.TargetType == WayPointType.Air)
+                if (IsAirDestination)
                     Gizmos.DrawWireSphere(DestinationPosition, StoppingDistance);
                 else
                     UnityEditor.Handles.DrawWireDisc(DestinationPosition, Vector3.up, StoppingDistance);
             }
         }
-      
+
+     
+
 #endif
     }
 }

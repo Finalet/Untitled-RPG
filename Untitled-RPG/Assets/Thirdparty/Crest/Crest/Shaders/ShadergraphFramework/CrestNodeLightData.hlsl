@@ -12,7 +12,7 @@ void CrestNodeLightData_half
 	out half3 o_colour
 )
 {
-#if SHADERGRAPH_PREVIEW
+#ifdef SHADERGRAPH_PREVIEW
 	//Hardcoded data, used for the preview shader inside the graph
 	//where light functions are not available
 	o_direction = -normalize(float3(-0.5, 0.5, -0.5));

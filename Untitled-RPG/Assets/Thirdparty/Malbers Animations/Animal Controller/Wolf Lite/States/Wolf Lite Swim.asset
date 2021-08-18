@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -12,51 +12,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd54a30a356f0054191dc28152ed2a45, type: 3}
   m_Name: Wolf Lite Swim
   m_EditorClassIdentifier: 
-  Index: 0
   Active: 1
   ID: {fileID: 11400000, guid: 7e364e53b77644c47aa3abdaa2e2c08c, type: 2}
   Input: 
+  Priority: 4
   General:
-    modify: -3585
-    RootMotion: 0
+    modify: -1
+    RootMotion: 1
     Sprint: 1
     Gravity: 0
     Grounded: 0
     OrientToGround: 0
     CustomRotation: 1
     FreeMovement: 0
-    AdditivePosition: 0
+    AdditivePosition: 1
+    AdditiveRotation: 1
     Persistent: 0
     IgnoreLowerStates: 1
     LockMovement: 0
     LockInput: 0
-    Colliders: 1
-  ExitFrame: 1
-  SleepFromState:
-  - {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3, type: 2}
+  SleepFromState: []
   SleepFromMode: []
   QueueFrom: []
-  TagModifiers:
-  - AnimationTag: Swim Enter
-    modifier:
-      modify: -3585
-      RootMotion: 0
-      Sprint: 1
-      Gravity: 0
-      Grounded: 0
-      OrientToGround: 0
-      CustomRotation: 1
-      FreeMovement: 0
-      AdditivePosition: 0
-      Persistent: 0
-      IgnoreLowerStates: 1
-      LockMovement: 0
-      LockInput: 0
-      Colliders: 1
-  debug: 0
-  AlignSmooth: 10
-  Bounce: 5
+  TagModifiers: []
+  TryLoop:
+    UseConstant: 1
+    ConstantValue: 1
+    Variable: {fileID: 0}
+  EnterTag:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  ExitTag:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  ExitFrame: 1
+  ExitOnMain: 1
+  ExitCooldown:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  CanStrafe: 0
+  MovementStrafe: 1
+  IdleStrafe: 1
+  debug: 1
+  WaterLayer:
+    serializedVersion: 2
+    m_Bits: 16
+  AlignSmooth: 5
+  Bounce: 20
   TryExitTime: 0.5
   WaterIsStatic: 1
   KeepInertia: 1
-  Radius: 0.03
+  m_Radius: 0.1
+  FrontRayLength: 1

@@ -5,18 +5,16 @@ using MalbersAnimations.Controller;
 namespace MalbersAnimations.HAP
 {
     [RequireComponent(typeof(Rigidbody))]
+    [AddComponentMenu("Malbers/Riding/Pulling Horses")]
     public class PullingHorses : MonoBehaviour
     {
         public MAnimal MainAnimal;
         public MAnimal SecondAnimal;
         public Rigidbody RB { get; private set; }
 
-        [HideInInspector]
-        public Vector3 PullingDirection;          //Calculation for the Animator Velocity converted to RigidBody Velocityble
-        [HideInInspector]
-        public bool CurrentAngleSide;             //True if is in the Right Side ... False if is in the Left Side
-        [HideInInspector]
-        public bool CanRotateInPlace;
+        public Vector3 PullingDirection { get; set; }          //Calculation for the Animator Velocity converted to RigidBody Velocityble
+        public bool CurrentAngleSide { get; set; }               //True if is in the Right Side ... False if is in the Left Side
+        public bool CanRotateInPlace { get; set; }
 
         public Vector3 RotationOffset;
 
@@ -73,8 +71,9 @@ namespace MalbersAnimations.HAP
 
             if (SecondAnimal != null && SecondAnimal != MainAnimal)
             {
-                SecondAnimal.MovementAxis = MainAnimal.MovementAxis; //??????????
-                SecondAnimal.Sprint = MainAnimal.Sprint;
+                SecondAnimal.RawInputAxis = MainAnimal.RawInputAxis;
+                SecondAnimal.UseRawInput = MainAnimal.UseRawInput;
+                SecondAnimal.Sprint = MainAnimal.sprint;
                 SecondAnimal.CurrentSpeedIndex = MainAnimal.CurrentSpeedIndex;
                 SecondAnimal.MovementDetected = MainAnimal.MovementDetected;
             }

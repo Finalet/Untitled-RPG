@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MalbersAnimations.HAP;
 using Cinemachine;
 
 
@@ -140,7 +139,6 @@ public class PlayerControlls_old : MonoBehaviour
             FlyingAnimations();
         }
         Sprinting();
-        MountAnimal();
         SetAnimatorVarialbes();
         InputMagnitudeFunc();
         CheckIsAttacking();
@@ -489,18 +487,6 @@ public class PlayerControlls_old : MonoBehaviour
     }
     public void SprintOff () {
         isSprinting = false;
-    }
-
-    void MountAnimal () {
-        if (Input.GetKeyDown(KeyCode.F)) {
-            if (!isMounted && !isFlying) {
-                GetComponent<MRider>().MountAnimal();
-                SprintOff();
-            }
-            else {
-                GetComponent<MRider>().DismountAnimal();
-            } 
-        }
     }
 
 #endregion

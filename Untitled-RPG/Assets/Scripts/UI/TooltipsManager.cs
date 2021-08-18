@@ -65,7 +65,7 @@ public class TooltipsManager : MonoBehaviour
             yield break;
         
         Item compareItem = null;
-        bool shouldCompare = shouldCompareEquipment(focusItem, out compareItem, slotTransform);
+        bool shouldCompare = shouldCompareItem(focusItem, out compareItem, slotTransform);
 
         Vector2 pivot = Vector2.one;
         Vector2 anchoredShift = new Vector2(-slotTransform.sizeDelta.x/2 - 10, +slotTransform.sizeDelta.y/2);
@@ -175,9 +175,9 @@ public class TooltipsManager : MonoBehaviour
         }
     }
 
-    bool shouldCompareEquipment (Item item, out Item comparedItem, RectTransform slot) {
+    bool shouldCompareItem (Item item, out Item comparedItem, RectTransform slot) {
         comparedItem = null;
-        if (!(item is Equipment) || slot.GetComponent<UI_EquipmentSlot>() != null) {
+        if (!(item is Equipment || item is Mount || item is MountEquipment) || (slot.GetComponent<UI_EquipmentSlot>() != null || slot.GetComponent<UI_MountSlot>() != null || slot.GetComponent<UI_MountEquipmentSlot>() != null)) {
             return false;
         }
         
@@ -191,7 +191,17 @@ public class TooltipsManager : MonoBehaviour
             if (EquipmentManager.instance.isSlotEquiped(ar.armorType, out comparedItem)) {
                 return true;
             }
+        } else if (item is Mount) {
+            if (EquipmentManager.instance.isMountEquiped(out comparedItem)) {
+                return true;
+            }
+        } else if (item is MountEquipment) {
+            MountEquipment me = (MountEquipment)item;
+            if (EquipmentManager.instance.isSlotEquiped(me.equipmentType, out comparedItem)) {
+                return true;
+            }
         }
+        
         return false;
     }
 }

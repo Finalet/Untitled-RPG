@@ -62,9 +62,10 @@ namespace Crest
         public static readonly int sp_AttenuationInShallows = Shader.PropertyToID("_AttenuationInShallows");
         const string s_textureArrayName = "_LD_TexArray_AnimatedWaves";
 
-        static List<ShapeGerstner> _gerstners = new List<ShapeGerstner>();
-        public static void RegisterUpdatable(ShapeGerstner updatable) => _gerstners.Add(updatable);
-        public static void DeregisterUpdatable(ShapeGerstner updatable) => _gerstners.RemoveAll(candidate => candidate == updatable);
+        public interface IShapeUpdatable { void CrestUpdate(CommandBuffer buf); }
+        static List<IShapeUpdatable> _updatables = new List<IShapeUpdatable>();
+        public static void RegisterUpdatable(IShapeUpdatable updatable) => _updatables.Add(updatable);
+        public static void DeregisterUpdatable(IShapeUpdatable updatable) => _updatables.RemoveAll(candidate => candidate == updatable);
 
         SettingsType _defaultSettings;
         public SettingsType Settings
@@ -228,7 +229,7 @@ namespace Crest
                 OceanRenderer.Instance._lodTransform._renderData[lodIdx].Validate(0, SimName);
             }
 
-            foreach (var gerstner in _gerstners)
+            foreach (var gerstner in _updatables)
             {
                 gerstner.CrestUpdate(buf);
             }
@@ -292,14 +293,10 @@ namespace Crest
                 }
 
                 // Dynamic waves
-                LodDataMgrDynWaves.Bind(_combineMaterial[lodIdx]);
                 if (OceanRenderer.Instance._lodDataDynWaves != null)
                 {
                     OceanRenderer.Instance._lodDataDynWaves.BindCopySettings(_combineMaterial[lodIdx]);
                 }
-
-                // Flow
-                LodDataMgrFlow.Bind((_combineMaterial[lodIdx]));
 
                 _combineMaterial[lodIdx].SetInt(sp_LD_SliceIndex, lodIdx);
 
@@ -434,11 +431,8 @@ namespace Crest
         }
 
         private static TextureArrayParamIds s_textureArrayParamIds = new TextureArrayParamIds(s_textureArrayName);
-        public static int ParamIdSampler(bool sourceLod = false) { return s_textureArrayParamIds.GetId(sourceLod); }
-        protected override int GetParamIdSampler(bool sourceLod = false)
-        {
-            return ParamIdSampler(sourceLod);
-        }
+        public static int ParamIdSampler(bool sourceLod = false) => s_textureArrayParamIds.GetId(sourceLod);
+        protected override int GetParamIdSampler(bool sourceLod = false) => ParamIdSampler(sourceLod);
 
         public static void Bind(IPropertyWrapper properties)
         {
@@ -452,16 +446,14 @@ namespace Crest
             }
         }
 
-#if UNITY_2019_3_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#endif
         static void InitStatics()
         {
             // Init here from 2019.3 onwards
             sp_LD_SliceIndex = Shader.PropertyToID("_LD_SliceIndex");
             sp_LODChange = Shader.PropertyToID("_LODChange");
             s_textureArrayParamIds = new TextureArrayParamIds(s_textureArrayName);
-            _gerstners.Clear();
+            _updatables.Clear();
         }
     }
 }

@@ -7,6 +7,11 @@ namespace MalbersAnimations.Controller.AI
     [CreateAssetMenu(menuName = "Malbers Animations/Pluggable AI/Tasks/Play Animal State")]
     public class PlayStateTask : MTask
     {
+        public override string DisplayName => "Animal/Set State";
+
+
+
+
         [Space, Tooltip("State to play")]
         public StateID StateID;
         [Tooltip("Play the State only when the animal has arrived to the target")]
@@ -27,19 +32,19 @@ namespace MalbersAnimations.Controller.AI
             if (Play == ExecuteTask.OnStart)
             {
                 StateActivate(brain);
+                brain.TaskDone(index);
             }
-            brain.TasksTimeElapsed[index] = CoolDown;       //Set this so the first attack does need to wait for the cooldown
         }
 
 
         public override void UpdateTask(MAnimalBrain brain, int index)
         {
-            if (Play ==  ExecuteTask.OnUpdate) //If the animal is in range of the Target
+            if (Play == ExecuteTask.OnUpdate) //If the animal is in range of the Target
             {
-                if (brain.CheckIfTasksCountDownElapsed(CoolDown,index))
+                if (MTools.ElapsedTime(brain.TasksTime[index], CoolDown))
                 {
                     StateActivate(brain);
-                    brain.ResetTaskTimeElapsed(index);
+                    brain.SetElapsedTaskTime(index);
                 }
             }
         }
@@ -85,17 +90,17 @@ namespace MalbersAnimations.Controller.AI
                     break;
             }
         }
-            
 
-        public override void ExitTask(MAnimalBrain brain, int index)
+
+        public override void ExitAIState(MAnimalBrain brain, int index)
         {
             if (Play == ExecuteTask.OnExit) //If the animal is in range of the Target
+            {
                 StateActivate(brain);
+            }
+            brain.TaskDone(index);
         }
 
-        void Reset()
-        {
-            Description = "Plays a State on the Animal(Self or the Target)";
-        }
+        void Reset() => Description = "Plays a State on the Animal(Self or the Target)";
     }
 }

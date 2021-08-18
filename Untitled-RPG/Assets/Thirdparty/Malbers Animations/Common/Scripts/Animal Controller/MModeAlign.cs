@@ -1,28 +1,35 @@
-﻿using MalbersAnimations;
-using MalbersAnimations.Controller;
-using MalbersAnimations.Events;
-using MalbersAnimations.Utilities;
-using System.Collections;
+﻿using MalbersAnimations.Controller;
+using MalbersAnimations.Scriptables;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MalbersAnimations
 {
+    [AddComponentMenu("Malbers/Animal Controller/Mode Align")]
     public class MModeAlign : MonoBehaviour
     {
+        [RequiredField] public MAnimal animal;
         [Tooltip("Which mode should listen this script, so it can start Aligning when the mode start")]
         public ModeID ModeID;
+
+        public List<ModeID> extraModes;
+
+
         [Tooltip("Search only for Animals on the Radius. If is set to false then it will search for all colliders using the Layer Mask: Hit Layer from this Animal")]
         public bool AnimalsOnly = true;
+        public LayerReference Layer = new LayerReference(-1);
         [Tooltip("Radius used for the Search")]
         public float LookRadius = 2f;
-        [Tooltip("Time needed to complete the aligment")]
-        public float AlignTime = 0.15f;
+        [Tooltip("Radius used push closer/farther the Target when playing the Mode")]
+        public float DistanceRadius = 0;
+        [Tooltip("Time needed to complete the Position aligment")]
+        public float AlignTime = 0.3f;
+        [Tooltip("Time needed to complete the Rotation aligment")]
+        public float LookAtTime = 0.15f;
         public Color debugColor = new Color(1, 0.5f, 0, 0.2f);
-        [SerializeField,HideInInspector] private MAnimal animal;
 
         void Awake()
-        { animal = GetComponent<MAnimal>(); }
+        { if (animal == null)  animal = this.FindComponent<MAnimal>(); }
 
         void OnEnable()
         { animal.OnModeStart.AddListener(FindMode); }
@@ -30,9 +37,11 @@ namespace MalbersAnimations
         void OnDisable()
         { animal.OnModeStart.RemoveListener(FindMode); }
 
-        void FindMode(int ModeID)
+        void FindMode(int ModeID, int ability)
         {
-            if (this.ModeID.ID == ModeID)
+            if (!isActiveAndEnabled) return;
+
+            if (this.ModeID.ID == ModeID || (extraModes?.Find(x => x.ID == ModeID) != null))
             {
                 if (AnimalsOnly)
                     AlignAnimalsOnly();
@@ -48,9 +57,9 @@ namespace MalbersAnimations
 
             foreach (var a in MAnimal.Animals)
             {
-                if (a == animal) continue; //Don't Find yourself
+                if (a == animal || a.ActiveStateID.ID == StateEnum.Death || a.Sleep) continue; //Don't Find yourself or don't find death animals
 
-                var animalsDistance = Vector3.Distance(animal.Center, a.Center);
+                var animalsDistance = Vector3.Distance(transform.position, a.Center);
 
                 if (LookRadius >= animalsDistance && ClosestDistance >= animalsDistance)
                 {
@@ -59,14 +68,15 @@ namespace MalbersAnimations
                 }
             }
 
-            if (ClosestAnimal) StartAligning(ClosestAnimal.Center);
+            if (ClosestAnimal)
+                StartAligning(ClosestAnimal.Center);
         }
 
         private void Align()
         {
             var pos = animal.Center;
 
-            var AllColliders = Physics.OverlapSphere(pos, LookRadius, animal.HitLayer);
+            var AllColliders = Physics.OverlapSphere(pos, LookRadius,  Layer.Value);
 
             Collider ClosestCollider = null;
             float ClosestDistance = float.MaxValue;
@@ -75,7 +85,7 @@ namespace MalbersAnimations
             {
                 if (col.transform.root == animal.transform.root) continue; //Don't Find yourself
 
-                var DistCol = Vector3.Distance(animal.Center, col.bounds.center);
+                var DistCol = Vector3.Distance(transform.position, col.bounds.center);
 
                 if (ClosestDistance > DistCol)
                 {
@@ -88,16 +98,17 @@ namespace MalbersAnimations
 
         private void StartAligning(Vector3 TargetCenter)
         {
-            Debug.DrawLine(animal.Center, TargetCenter, Color.red, 3f);
-            StartCoroutine(MalbersTools.AlignLookAtTransform(animal.transform, TargetCenter, AlignTime));
+            TargetCenter.y = animal.transform.position.y;
+            Debug.DrawLine(transform.position, TargetCenter, Color.red, 3f);
+            StartCoroutine(MTools.AlignLookAtTransform(animal.transform, TargetCenter, LookAtTime));
+            if (DistanceRadius > 0) StartCoroutine(MTools.AlignTransformRadius(animal.transform, TargetCenter, AlignTime, DistanceRadius*animal.ScaleFactor));  //Align Look At the Zone
         }
 
 #if UNITY_EDITOR
         void Reset()
         {
-            ModeID modeID = MalbersTools.GetInstance<ModeID>("Attack1");
+            ModeID modeID = MTools.GetInstance<ModeID>("Attack1");
             animal = GetComponent<MAnimal>();
-            animal?.CalculateHeight();
 
             if (modeID != null)
             {
@@ -111,10 +122,14 @@ namespace MalbersAnimations
             if (animal)
             {
                 UnityEditor.Handles.color = debugColor;
-                UnityEditor.Handles.DrawSolidDisc(animal.Center, Vector3.up, LookRadius);
+                UnityEditor.Handles.DrawSolidDisc(transform.position, Vector3.up, LookRadius);
                 var c = debugColor; c.a = 1;
                 UnityEditor.Handles.color =c;
-                UnityEditor.Handles.DrawWireDisc(animal.Center, Vector3.up, LookRadius);
+                UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, LookRadius);
+
+                UnityEditor.Handles.color = (c + Color.white)/2;
+                UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, DistanceRadius);
+
             }
         }
 #endif

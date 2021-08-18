@@ -116,6 +116,7 @@ namespace Crest
 
         public void SetViewProjectionMatrices(int lodIdx, CommandBuffer buf)
         {
+            // This will work for CG but not for HDRP hlsl files
             buf.SetViewProjectionMatrices(GetWorldToCameraMatrix(lodIdx), GetProjectionMatrix(lodIdx));
         }
 

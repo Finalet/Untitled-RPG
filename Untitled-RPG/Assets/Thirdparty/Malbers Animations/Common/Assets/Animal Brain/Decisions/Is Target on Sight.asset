@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00a63bfc37e3794ea3b0af5a3c6381e, type: 3}
   m_Name: Is Target on Sight
   m_EditorClassIdentifier: 
-  Description: Keep Target on Sight. If the sight is lost then Remove the Target on
-    the Ai Control Component
-  MessageID:
+  Description: Keep Current Target on Sight.
+  DecisionID:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
@@ -25,21 +24,27 @@ MonoBehaviour:
     Variable: {fileID: 0}
   LookRange:
     UseConstant: 1
-    ConstantValue: 10
+    ConstantValue: 15
     Variable: {fileID: 0}
   LookAngle: 360
   lookFor: 6
   ObstacleLayer:
-    serializedVersion: 2
-    m_Bits: 1
+    UseConstant: 1
+    ConstantValue:
+      serializedVersion: 2
+      m_Bits: 1
+    Variable: {fileID: 0}
   AssignTarget: 0
   MoveToTarget: 0
-  RemoveTarget: 1
+  RemoveTarget: 0
   UnityTag: 
   GameObjectName: 
+  transform: {fileID: 0}
+  gameObject: {fileID: 0}
   tags:
   - {fileID: 11400000, guid: 67f766f57bb0b4849a687729032dab98, type: 2}
   - {fileID: 11400000, guid: cdeba0555f612f54e876822607c9df10, type: 2}
   zoneType: 0
   ZoneID: 0
+  ZoneModeAbility: -1
   debugColor: {r: 0.5849056, g: 0.041297972, b: 0, a: 0.039215688}

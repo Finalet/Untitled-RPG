@@ -92,6 +92,8 @@ namespace MalbersAnimations.SA
         }
     }
 
+    [AddComponentMenu("Malbers/Utilities/Standard Asset/Head Bob")]
+
     public class MHeadBob : MonoBehaviour
     {
         public Camera Camera;

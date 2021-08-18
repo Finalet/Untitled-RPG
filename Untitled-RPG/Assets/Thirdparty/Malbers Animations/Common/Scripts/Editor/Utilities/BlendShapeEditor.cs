@@ -9,14 +9,14 @@ namespace MalbersAnimations.Utilities
     public class BlendShapeEditor : Editor
     {
         BlendShape M;
-        private MonoScript script;
+       // private MonoScript script;
         protected int index = 0;
         SerializedProperty blendShapes, preset, LODs, mesh, random, LoadPresetOnStart;
 
         private void OnEnable()
         {
             M = (BlendShape)target;
-            script = MonoScript.FromMonoBehaviour(M);
+           // script = MonoScript.FromMonoBehaviour(M);
             blendShapes = serializedObject.FindProperty("blendShapes");
             preset = serializedObject.FindProperty("preset");
             LODs = serializedObject.FindProperty("LODs");
@@ -35,7 +35,7 @@ namespace MalbersAnimations.Utilities
             {
                 EditorGUILayout.BeginVertical(MalbersEditor.StyleGray);
                 {
-                    MalbersEditor.DrawScript(script);
+                 //   MalbersEditor.DrawScript(script);
 
                     EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                     {
@@ -56,7 +56,7 @@ namespace MalbersAnimations.Utilities
 
                     int Length = 0;
                     if (mesh.objectReferenceValue != null)
-                        Length = M.mesh.sharedMesh.blendShapeCount;
+                        Length = blendShapes.arraySize;
 
                     EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                     {
@@ -80,9 +80,12 @@ namespace MalbersAnimations.Utilities
 
                             for (int i = 0; i < Length; i++)
                             {
+                                if (i >= M.mesh.sharedMesh.blendShapeCount) continue;
+
                                 var bs = blendShapes.GetArrayElementAtIndex(i);
                                 if (bs != null && M.mesh.sharedMesh != null)
                                 {
+
                                     bs.floatValue = EditorGUILayout.Slider("(" + i.ToString("D2") + ") " + M.mesh.sharedMesh.GetBlendShapeName(i), bs.floatValue, 0, 100);
                                 }
                                 //EditorUtility.SetDirty(M.mesh);
@@ -149,14 +152,14 @@ namespace MalbersAnimations.Utilities
                                         serializedObject.ApplyModifiedProperties();
 
                                         Debug.Log("New Blend Shape Preset Created");
-                                        M.SaveBlendShapePreset();
+                                        M.SavePreset();
 
                                     }
                                     else
                                     {
                                         if (EditorUtility.DisplayDialog("Overwrite Blend Shape Preset", "Are you sure to overwrite the preset?", "Yes", "No"))
                                         {
-                                            M.SaveBlendShapePreset();
+                                            M.SavePreset();
                                         }
                                     }
                                     //EditorUtility.SetDirty(M);
@@ -173,7 +176,7 @@ namespace MalbersAnimations.Utilities
                                                 Debug.LogWarning("The preset " + M.preset.name + " is empty, Please use a Valid Preset");
                                             else
                                             {
-                                                M.LoadBlendShapePreset();
+                                                M.LoadPreset();
                                                 EditorUtility.SetDirty(target);
                                             }
                                         }

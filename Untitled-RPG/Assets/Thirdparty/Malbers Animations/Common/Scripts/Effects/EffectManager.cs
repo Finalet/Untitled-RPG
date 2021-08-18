@@ -6,10 +6,14 @@ using UnityEngine.Events;
 
 namespace MalbersAnimations.Utilities
 {
+    [AddComponentMenu("Malbers/Utilities/Effects - Audio/Effect Manager")]
+
     public class EffectManager : MonoBehaviour, IAnimatorListener
     {
-        public List<Effect> Effects;
+        [RequiredField, Tooltip("Root Gameobject of the Hierarchy")]
+        public Transform Owner;
 
+        public List<Effect> Effects;
 
         /// <summary>Plays an Effect using its ID value</summary>
         public virtual void PlayEffect(int ID)
@@ -21,15 +25,15 @@ namespace MalbersAnimations.Utilities
         }
 
         /// <summary>Stops an Effect using its ID value</summary>
-        public virtual void StopEffect(int ID) { Effect_Stop(ID); }
+        public virtual void StopEffect(int ID) => Effect_Stop(ID);
 
         /// <summary>Plays an Effect using its ID value</summary>
-        public virtual void Effect_Play(int ID) { PlayEffect(ID); }
+        public virtual void Effect_Play(int ID) => PlayEffect(ID);
 
         /// <summary>Stops an Effect using its ID value</summary>
         public virtual void Effect_Stop(int ID)
         {
-            List<Effect> effects = Effects.FindAll(effect => effect.ID == ID && effect.active == true);
+            var effects = Effects.FindAll(effect => effect.ID == ID && effect.active == true);
 
             if (effects != null)
             {
@@ -37,7 +41,6 @@ namespace MalbersAnimations.Utilities
                 {
                     e.Modifier?.StopEffect(e);              //Play Modifier when the effect play
                     e.OnStop.Invoke();
-                  //  e.On = false;
                 }
             }
         }
@@ -47,12 +50,12 @@ namespace MalbersAnimations.Utilities
             if (e.delay > 0)
                 yield return new WaitForSeconds(e.delay);
 
-            yield return new WaitForEndOfFrame();                   //Wait until the Animation Cyle has pass (LateUpdate)
+            yield return new WaitForEndOfFrame();           //Wait until the Animation Cyle has pass (LateUpdate)
 
 
-            if (!e.effect.activeInHierarchy)                        //If instantiate is active (meaning is a prefab)
+            if (e.effect.IsPrefab())                        //If instantiate is active (meaning is a prefab)
             {
-                e.Instance = Instantiate(e.effect);                 //Instantiate!
+                e.Instance = Instantiate(e.effect);         //Instantiate!
                 e.effect.gameObject.SetActive(false);
             }
             else
@@ -60,8 +63,8 @@ namespace MalbersAnimations.Utilities
                 e.Instance = e.effect;                              //Use the effect as the gameobject
             }
 
-
-            e.Owner = transform;  //Save in all effects that the owner of the effects is this transform
+            if (Owner == null) Owner = transform.root;
+            if (e.Owner == null) e.Owner = Owner;  //Save in all effects that the owner of the effects is this transform
 
 
             if (e.Instance && e.root)
@@ -83,7 +86,7 @@ namespace MalbersAnimations.Utilities
             {
                 if (e.isChild)
                 {
-                    e.Instance.transform.parent = e.root;  
+                    e.Instance.transform.parent = e.root;
 
                     e.Instance.transform.localPosition += e.PositionOffset;
                     e.Instance.transform.localRotation *= Quaternion.Euler(e.RotationOffset);
@@ -91,7 +94,7 @@ namespace MalbersAnimations.Utilities
                 else
                 {
                     e.Instance.transform.position = e.root.TransformPoint(e.PositionOffset);
-                   // e.Instance.transform.rotation  = Quaternion.Euler(e.RotationOffset) * e.root.rotation;
+                    // e.Instance.transform.rotation  = Quaternion.Euler(e.RotationOffset) * e.root.rotation;
                 }
 
                 if (e.useRootRotation) e.Instance.transform.rotation = e.root.rotation;     //Orient to the root rotation
@@ -99,7 +102,7 @@ namespace MalbersAnimations.Utilities
             }
 
             //Apply Offsets
-        
+
 
             if (e.Modifier) e.Modifier.StartEffect(e);              //Apply  Modifier when the effect play
 
@@ -118,8 +121,8 @@ namespace MalbersAnimations.Utilities
                 e.OnStop.Invoke();
 
 
-                if (!e.effect.activeInHierarchy)        //Means the effect is a Prefab
-                    Destroy(e.Instance);
+                if (e.effect.IsPrefab()) Destroy(e.Instance);       //Means the effect is a Prefab destroy the Instance
+
             }
 
             yield return null;
@@ -135,10 +138,8 @@ namespace MalbersAnimations.Utilities
 
 
         /// <summary>IAnimatorListener function </summary>
-        public virtual void OnAnimatorBehaviourMessage(string message, object value)
-        {
-            this.InvokeWithParams(message, value);
-        }
+        public virtual bool OnAnimatorBehaviourMessage(string message, object value)
+        { return this.InvokeWithParams(message, value); }
 
         //─────────────────────────────────CALLBACKS METHODS───────────────────────────────────────────────────────────────────
 
@@ -203,24 +204,31 @@ namespace MalbersAnimations.Utilities
             }
         }
 
+        private void Reset()
+        {
+            Owner = transform.root;
+        }
+
 #if UNITY_EDITOR
         [ContextMenu("Create Event Listeners")]
         void CreateListeners()
         {
-            MEventListener listener = GetComponent<MEventListener>();
+            MEventListener listener = gameObject.FindComponent<MEventListener>();
 
             if (listener == null) listener = gameObject.AddComponent<MEventListener>();
             if (listener.Events == null) listener.Events = new List<MEventItemListener>();
 
-            MEvent effectEnable = MalbersTools.GetInstance<MEvent>("Effect Enable");
-            MEvent effectDisable = MalbersTools.GetInstance<MEvent>("Effect Disable");
+            MEvent effectEnable = MTools.GetInstance<MEvent>("Effect Enable");
+            MEvent effectDisable = MTools.GetInstance<MEvent>("Effect Disable");
 
             if (listener.Events.Find(item => item.Event == effectEnable) == null)
             {
                 var item = new MEventItemListener()
                 {
                     Event = effectEnable,
-                    useVoid = false, useString = true, useInt = true
+                    useVoid = false,
+                    useString = true,
+                    useInt = true
                 };
 
                 UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseInt, Effect_Enable);
@@ -246,6 +254,8 @@ namespace MalbersAnimations.Utilities
 
                 Debug.Log("<B>Effect Disable</B> Added to the Event Listeners");
             }
+
+            UnityEditor.EditorUtility.SetDirty(listener);
         }
 #endif
 
@@ -255,11 +265,11 @@ namespace MalbersAnimations.Utilities
     [System.Serializable]
     public class Effect
     {
-        public string Name  = "EffectName";
+        public string Name = "EffectName";
         public int ID;
         public bool active = true;
         public Transform root;
-       
+
         public bool isChild;
         public bool useRootRotation = true;
         public GameObject effect;
@@ -267,17 +277,11 @@ namespace MalbersAnimations.Utilities
         public Vector3 PositionOffset;
         public Vector3 ScaleMultiplier = Vector3.one;
 
-
         /// <summary>Life of the Effect</summary>
         public float life = 10f;
 
         /// <summary>Delay Time to execute the effect after is called.</summary>
         public float delay;
-        ///// <summary>When Toggleable is on the Effect will not be destroy or instantiated.. instead you can use the events for enabling/disabling options on the effect </summary>
-        //public bool toggleable = false;
-       
-        ///// <summary>Is the Effect Active?</summary>
-        //public bool On;
 
         /// <summary>Scriptable Object to Modify anything you want before, during or after the effect is invoked</summary>
         public EffectModifier Modifier;
@@ -286,23 +290,16 @@ namespace MalbersAnimations.Utilities
         public UnityEvent OnPlay;
         public UnityEvent OnStop;
 
-        protected Transform owner;
-
-
         /// <summary>Returns the Owner of the Effect </summary>
-        public Transform Owner
-        {
-            get { return owner; }
-            set { owner = value; }
-        }
+#pragma warning disable CA2235 // Mark all non-serializable fields
+        public Transform Owner { get; set; }
+#pragma warning restore CA2235 // Mark all non-serializable fields
+
 
         /// <summary>Returns the Instance of the Effect Prefab </summary>
-        public GameObject Instance
-        {
-            get { return instance; }
-            set { instance = value; }
-        }
+        public GameObject Instance { get => instance; set => instance = value; }
 
-        protected GameObject instance;
+        [System.NonSerialized]
+        private GameObject instance;
     }
 }

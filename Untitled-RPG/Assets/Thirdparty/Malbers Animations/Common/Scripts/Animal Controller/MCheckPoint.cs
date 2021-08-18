@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.Events; 
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace MalbersAnimations.Controller
 {
+    [AddComponentMenu("Malbers/Animal Controller/Check Point")]
     public class MCheckPoint : MonoBehaviour
     {
         /// <summary>List of all the CheckPoint on the Scene</summary>
@@ -12,8 +14,9 @@ namespace MalbersAnimations.Controller
         /// <summary>Last CheckPoint the Animal use</summary>
         public static MCheckPoint LastCheckPoint;
 
-        public UnityEvent OnActive = new UnityEvent();
         public UnityEvent OnEnter = new UnityEvent();
+        [FormerlySerializedAs("OnActive")]
+        public UnityEvent OnReset = new UnityEvent();
 
         public Collider Collider { get; set; } 
 
@@ -40,9 +43,9 @@ namespace MalbersAnimations.Controller
             }
             else
             {
-                Debug.LogError(name + " Needs a Collider");
+                Debug.LogError(name + " needs a Collider");
             }
-            OnActive.Invoke();
+            OnReset.Invoke();
         }
 
 
@@ -55,14 +58,12 @@ namespace MalbersAnimations.Controller
 
             if (animal != MAnimal.MainAnimal) return; //Skip if there's no the Player Animal
 
-            MRespawner.instance.transform.position = transform.position;        //Set on the Respawner to this Position
-            MRespawner.instance.transform.rotation = transform.rotation;        //Set on the Respawner to this Position
-            MRespawner.instance.RespawnState = animal.ActiveStateID;            //Set on the Respawner the Last Animal State
+            MRespawner.instance.transform.position = transform.position;
+            MRespawner.instance.transform.rotation = transform.rotation;
+            MRespawner.instance.RespawnState = animal.ActiveStateID;        //Set on the Respawner the Last Animal State
 
-            if (LastCheckPoint)
-            {
-                LastCheckPoint.OnActive.Invoke();
-            }
+            if (LastCheckPoint)  LastCheckPoint.OnReset.Invoke();
+           
 
             LastCheckPoint = this;                                  //Check that the last check Point of entering was this one
             OnEnter.Invoke();
@@ -75,7 +76,7 @@ namespace MalbersAnimations.Controller
             if (LastCheckPoint)
             {
                 LastCheckPoint.Collider.enabled = true;
-                LastCheckPoint.OnActive.Invoke();
+                LastCheckPoint.OnReset.Invoke();
                 LastCheckPoint = null;
             }
         }
