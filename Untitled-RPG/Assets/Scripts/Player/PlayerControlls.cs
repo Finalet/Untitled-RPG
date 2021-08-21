@@ -5,6 +5,7 @@ using Cinemachine;
 using ECM.Controllers;
 using UnityEngine.SceneManagement;
 using MalbersAnimations.HAP;
+using NaughtyAttributes;
 
 public class PlayerControlls : MonoBehaviour, ISavable
 {
@@ -15,21 +16,21 @@ public class PlayerControlls : MonoBehaviour, ISavable
     public bool toggleRunning = false;
     public int staminaReqToRoll = 50;
 
-    [Header("State")]
-    public bool isIdle;
-    public bool isRunning;
-    public bool isSprinting;
-    public bool isCrouch;
-    public bool isJumping;
-    public bool isRolling;
-    public bool isMounted;
-    public bool isAttacking;
-    public bool isGettingHit;
-    public bool isGrounded;
-    public bool isCasting;
-    public bool isFlying;
-    public bool isPickingArea;
-    public bool isAimingSkill;
+    [Foldout("States"), ReadOnly] public bool isIdle;
+    [Foldout("States"), ReadOnly] public bool isRunning;
+    [Foldout("States"), ReadOnly] public bool isSprinting;
+    [Foldout("States"), ReadOnly] public bool isCrouch;
+    [Foldout("States"), ReadOnly] public bool isJumping;
+    [Foldout("States"), ReadOnly] public bool isRolling;
+    [Foldout("States"), ReadOnly] public bool isMounted;
+    [Foldout("States"), ReadOnly] public bool isAttacking;
+    [Foldout("States"), ReadOnly] public bool isGettingHit;
+    [Foldout("States"), ReadOnly] public bool isGrounded;
+    [Foldout("States"), ReadOnly] public bool isCasting;
+    [Foldout("States"), ReadOnly] public bool isFlying;
+    [Foldout("States"), ReadOnly] public bool isPickingArea;
+    [Foldout("States"), ReadOnly] public bool isAimingSkill;
+
     [Space]
     public bool isSitting;
     [Header("Battle")]
@@ -47,6 +48,10 @@ public class PlayerControlls : MonoBehaviour, ISavable
     }
     [Space]
     public int disableControlRequests;
+    [SerializeField, DisplayWithoutEdit] bool overridePosRot;
+    [SerializeField, ReadOnly, ShowIf("overridePosRot")] Vector3 overridePos;
+    [SerializeField, ReadOnly, ShowIf("overridePosRot")] float overrideRotAngle;
+    Transform overrideTransform;
 
     float sprintingDirection;
     float desiredSprintingDirection;
@@ -56,6 +61,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     float rollDirection;
     float desiredRollDirection;
+
 
     [System.NonSerialized] public MRider rider;
     [System.NonSerialized] public Camera playerCamera;
@@ -82,10 +88,10 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     SittingSpot currentSittingSpot;
 
-    public bool upperBodyLayerAnimRest;
-    public bool layerAnimRest;
-    public bool treeAnimRest;
-    public bool upperBodyTreeAnimRest;
+    [Foldout("Animation states")] public bool upperBodyLayerAnimRest;
+    [Foldout("Animation states")] public bool layerAnimRest;
+    [Foldout("Animation states")] public bool treeAnimRest;
+    [Foldout("Animation states")] public bool upperBodyTreeAnimRest;
 
     float startedHoldingKeyTime;
     bool holdingButton;
@@ -264,6 +270,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
     }
 
     void UpdateRotation () {
+        
         if (rider.IsMountingDismounting) {
             desiredLookDirection = transform.eulerAngles.y;
             return;
@@ -275,14 +282,44 @@ public class PlayerControlls : MonoBehaviour, ISavable
             desiredLookDirection = CM_Camera.m_XAxis.Value; //rotate player with camera, unless idle, aiming, or in inventory
         }
 
-        if (isSitting) {
-            desiredSprintingDirection = 0;
-            desiredRollDirection = 0;
-            transform.position = Vector3.MoveTowards(transform.position, currentSittingSpot.transform.position, Time.deltaTime * 7f);
-            desiredLookDirection = currentSittingSpot.transform.eulerAngles.y;
-        }
+        if (overridePosRot) SetOverridePosRot();
     }
 
+    void SetOverridePosRot() {
+        desiredSprintingDirection = 0;
+        desiredRollDirection = 0;
+        transform.position = Vector3.MoveTowards(transform.position, overrideTransform ? overrideTransform.position : overridePos, Time.deltaTime * 7f);
+        desiredLookDirection = overrideTransform ? overrideTransform.rotation.eulerAngles.y : overrideRotAngle;
+    }
+
+    public void OverridePosRot (bool _enableOverride) {
+        OverridePosRot(_enableOverride, transform.position, transform.rotation.eulerAngles.y);
+    }
+    public void OverridePosRot (Vector3 _overridePos) {
+        OverridePosRot(true, _overridePos, transform.rotation.eulerAngles.y);
+    }
+    public void OverridePosRot (float _overrideYRot) {
+        OverridePosRot(true, transform.position, _overrideYRot);
+    }
+    public void OverridePosRot (Vector3 _overridePos, float _overrideYRot) {
+        OverridePosRot(true, _overridePos, _overrideYRot);
+    }
+    public void OverridePosRot (Transform posRotTransform) {
+        OverridePosRot(true, posRotTransform);
+    }
+    
+    void OverridePosRot (bool _enableOverride, Vector3 _overridePos, float _overrideYRot) {
+        overridePosRot = _enableOverride;
+        overridePos = _overridePos;
+        overrideRotAngle = _overrideYRot;
+        overrideTransform = null;
+    }
+    void OverridePosRot (bool _enableOverride, Transform _overrideTransform) {
+        overridePosRot = _enableOverride;
+        overridePos = Vector3.zero;
+        overrideRotAngle = 0;
+        overrideTransform = _overrideTransform;
+    }
 
     //Animation variables
     float InputDirection;
@@ -536,6 +573,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
         spot.isTaken = true;
         timeSat = Time.time;
         currentSittingSpot = spot;
+        OverridePosRot(currentSittingSpot.transform.position, currentSittingSpot.transform.eulerAngles.y);
     }
     public void Unsit(SittingSpot spot) {
         if (Time.time-timeSat < 2)
@@ -543,6 +581,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
         isSitting = false;
         spot.isTaken = false;
         currentSittingSpot = null;
+        OverridePosRot(false);
     }
 
     void PushEnemies() {

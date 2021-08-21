@@ -98,8 +98,8 @@ namespace Crest
 #endif
                 )
             {
-                Debug.LogError("To support shadowing, a Custom renderer must be configured on the pipeline asset, and this custom renderer data must have the Sample Shadows feature added. "
-                    + $"See documentation here: {Internal.Constants.HELP_URL_BASE_USER}ocean-simulation.html#shadows", GraphicsSettings.renderPipelineAsset);
+                // Debug.LogError("To support shadowing, a Custom renderer must be configured on the pipeline asset, and this custom renderer data must have the Sample Shadows feature added. "
+                    //+ $"See documentation here: {Internal.Constants.HELP_URL_BASE_USER}ocean-simulation.html#shadows", GraphicsSettings.renderPipelineAsset);
             }
 #endif
 

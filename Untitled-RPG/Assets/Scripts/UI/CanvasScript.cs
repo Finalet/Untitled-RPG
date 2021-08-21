@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+using NaughtyAttributes;
 
 public class CanvasScript : MonoBehaviour
 {
@@ -25,18 +27,29 @@ public class CanvasScript : MonoBehaviour
     public TextMeshProUGUI enemyName;
     public TextMeshProUGUI enemyHealth;
 
-    [Header("Middle Skill Panel")]
+    [Header("Skillpanel")]
+    public CanvasGroup skillpanel;
     public UI_MiddleSkillPanelButtons LMB;
     public UI_MiddleSkillPanelButtons RMB;
     public Sprite cancelSprite;
 
     [Header("Quick access menu")]
+    [DisplayWithoutEdit] public bool isQuickAccessMenuOpen;
     public QuickAccessMenu quickAccessMenu;
-    [DisplayWithoutEdit] public bool quickAccessMenuIsOpen;
     float quickAccessMenuTimer;
 
-
     Characteristics characteristics;
+
+    public bool ShowSkillpanel {
+        get {
+            return skillpanel.alpha > 0.9f;
+        }
+        set {
+            if (value) FadeinSkillpanel();
+            else FadeoutSkillpanel();
+        }
+    }
+
 
     void Awake() {
         if (instance == null) 
@@ -226,20 +239,20 @@ public class CanvasScript : MonoBehaviour
     }
 
     void OpenQuickAccessMenu(){
-        if (PeaceCanvas.instance.anyPanelOpen || Time.time - quickAccessMenuTimer < 0.5f || quickAccessMenuIsOpen)
+        if (PeaceCanvas.instance.anyPanelOpen || Time.time - quickAccessMenuTimer < 0.5f || isQuickAccessMenuOpen)
             return;
 
         quickAccessMenuTimer = Time.time;
         quickAccessMenu.gameObject.SetActive(true);
         PlayerControlls.instance.cameraControl.stopInput = true;
-        quickAccessMenuIsOpen = true;
+        isQuickAccessMenuOpen = true;
     }
     public void CloseQuickAccessMenu () {
-        if (!quickAccessMenuIsOpen)
+        if (!isQuickAccessMenuOpen)
             return;
             
         PlayerControlls.instance.cameraControl.stopInput = false;
-        quickAccessMenuIsOpen = false;
+        isQuickAccessMenuOpen = false;
         quickAccessMenu.Close();
     }
 
@@ -253,5 +266,14 @@ public class CanvasScript : MonoBehaviour
         }
         rowNumberLeftLabel.text = (Combat.instanace.currentSkillSlotsRow + 1).ToString();
         rowNumberRightLabel.text = (Combat.instanace.currentSkillSlotsRow + 1).ToString();
+    }
+
+    void FadeoutSkillpanel (float duration = 1) {
+        if (duration <= 0) skillpanel.alpha = 0;
+        else skillpanel.DOFade(0, duration);
+    }
+    void FadeinSkillpanel (float duration = 1) {
+        if (duration <= 0) skillpanel.alpha = 1;
+        else skillpanel.DOFade(1, duration);
     }
 }

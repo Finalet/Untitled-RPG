@@ -7,7 +7,7 @@ using Cinemachine;
 using DG.Tweening;
 using Funly.SkyStudio;
 
-public enum InterractionIcons {Bag, Chest, Coins, Craft, Horse, HandPickup, HandShake,HandPray}
+public enum InterractionIcons {Bag, Chest, Coins, Craft, Horse, HandPickup, HandShake,HandPray, Ship}
 
 
 public class PeaceCanvas : MonoBehaviour
@@ -73,6 +73,7 @@ public class PeaceCanvas : MonoBehaviour
     public Sprite handPickup;
     public Sprite handshake;
     public Sprite handpray;
+    public Sprite ship;
 
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
@@ -113,7 +114,7 @@ public class PeaceCanvas : MonoBehaviour
                 Cursor.visible = false;
                 if (notRequestedYet) PlayerControlls.instance.disableControlRequests --;
                 Cursor.lockState = CursorLockMode.Locked;
-                if (!CanvasScript.instance.quickAccessMenuIsOpen) {
+                if (!CanvasScript.instance.isQuickAccessMenuOpen) {
                     PlayerControlls.instance.cameraControl.stopInput = false;
                 }
                 notRequestedYet = false;
@@ -412,6 +413,9 @@ public class PeaceCanvas : MonoBehaviour
                 break;
             case InterractionIcons.HandPray:
                 buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = handpray; //Action icon
+                break;
+            case InterractionIcons.Ship:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = ship; //Action icon
                 break;
         }
         buttonSuggestionUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = key; //Key label

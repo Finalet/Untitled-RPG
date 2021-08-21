@@ -115,10 +115,12 @@ public class CameraControll : MonoBehaviour
     }
     void MatchMountCameraSettings(){
         if (CM_mounted == null) CM_mounted = PlayerControlls.instance.rider.Montura.Animal.GetComponentInChildren<CinemachineFreeLook>();
-        
-        CM_mounted.m_XAxis.m_MaxSpeed = baseMouseXsensitivity;
-        CM_mounted.m_YAxis.m_MaxSpeed = baseMouseYsensitivity;
-        CM_mounted.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
+        MatchCameraSettings (ref CM_mounted);
+    }
+    public void MatchCameraSettings (ref CinemachineFreeLook CM_cam) {
+        CM_cam.m_XAxis.m_MaxSpeed = baseMouseXsensitivity;
+        CM_cam.m_YAxis.m_MaxSpeed = baseMouseYsensitivity;
+        CM_cam.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
     }
 
     float rotationX;

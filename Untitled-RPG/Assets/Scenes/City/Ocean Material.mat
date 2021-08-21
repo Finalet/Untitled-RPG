@@ -10,8 +10,9 @@ Material:
   m_Name: Ocean Material
   m_Shader: {fileID: 4800000, guid: 986f7c6732e8a6e4881407d7f15f25c3, type: 3}
   m_ShaderKeywords: _APPLYNORMALMAPPING_ON _CAUSTICS_ON _CLIPSURFACE_ON _COMPUTEDIRECTIONALLIGHT_ON
-    _DEBUGMULTIPLYBYLIGHT0COLOR_ON _FOAM3DLIGHTING_ON _FOAM_ON _SUBSURFACEHEIGHTLERP_ON
-    _SUBSURFACESCATTERING_ON _SUBSURFACESHALLOWCOLOUR_ON _TRANSPARENCY_ON _VARYSMOOTHNESSOVERDISTANCE_ON
+    _DEBUGMULTIPLYBYLIGHT0COLOR_ON _FOAM3DLIGHTING_ON _FOAM_ON _SHADOWS_ON _SUBSURFACEHEIGHTLERP_ON
+    _SUBSURFACESCATTERING_ON _SUBSURFACESHALLOWCOLOUR_ON _TRANSPARENCY_ON _UNDERWATER_ON
+    _VARYSMOOTHNESSOVERDISTANCE_ON
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -85,7 +86,7 @@ Material:
     - _Caustics: 1
     - _CausticsBase: 0.07
     - _CausticsBias: 0.7
-    - _CausticsDepthOfField: 0.33
+    - _CausticsDepthOfField: 1
     - _CausticsDistortionScale: 10
     - _CausticsDistortionStrength: 0.075
     - _CausticsFocalDepth: 2
@@ -96,7 +97,7 @@ Material:
     - _ClipUnderTerrain: 0
     - _CompileShaderWithDebugInfo: 0
     - _ComputeDirectionalLight: 1
-    - _CullMode: 2
+    - _CullMode: 0
     - _DebugDisableMultiplyByLight0Color: 0
     - _DebugDisableShapeTextures: 0
     - _DebugDisableSmoothLOD: 0
@@ -111,7 +112,7 @@ Material:
     - _Foam3DLighting: 1
     - _FoamBubbleParallax: 0.1
     - _FoamScale: 5
-    - _ForceUnderwater: 1
+    - _ForceUnderwater: 0
     - _FresnelPower: 5
     - _Invert: 1
     - _LightIntensityMultiplier: 2
@@ -133,7 +134,7 @@ Material:
     - _RefractiveIndexOfWater: 1.333
     - _Roughness: 0
     - _S: 1
-    - _Shadows: 0
+    - _Shadows: 1
     - _ShorelineFoamMinDepth: 0.27
     - _SkyDirectionality: 0.875
     - _Smoothness: 0.8
@@ -156,7 +157,7 @@ Material:
     - _TexelSize: 0.125
     - _TextureRes: 1024
     - _Transparency: 1
-    - _Underwater: 0
+    - _Underwater: 1
     - _Update: 0.083
     - _VarySmoothnessOverDistance: 1
     - _WaveFoamBubblesCoverage: 1.68
@@ -175,7 +176,7 @@ Material:
     m_Colors:
     - _DepthFogDensity: {r: 0.4, g: 0.25, b: 0.3, a: 1}
     - _Diffuse: {r: 0, g: 0.1390455, b: 0.32199997, a: 1}
-    - _DiffuseGrazing: {r: 0.14440188, g: 0.3571362, b: 0.51886785, a: 1}
+    - _DiffuseGrazing: {r: 0.07097722, g: 0.17072253, b: 0.2735849, a: 1}
     - _DiffuseShadow: {r: 0, g: 0.35599995, b: 0.56499994, a: 1}
     - _FoamBubbleColor: {r: 0.6383054, g: 0.8301887, b: 0.8243741, a: 1}
     - _FoamWhiteColor: {r: 1, g: 0.99634784, b: 0.97199994, a: 0.6862745}
@@ -183,8 +184,8 @@ Material:
     - _SkyBase: {r: 0.55200005, g: 0.85242355, b: 1, a: 1}
     - _SkyTowardsSun: {r: 2.6390157, g: 1.8217498, b: 0.9236555, a: 1}
     - _SubSurface: {r: 0, g: 0.48, b: 0.36, a: 1}
-    - _SubSurfaceColour: {r: 0.082352884, g: 0.42745095, b: 0.37568617, a: 1}
-    - _SubSurfaceShallowCol: {r: 0.552, g: 1, b: 1, a: 1}
+    - _SubSurfaceColour: {r: 0.07008723, g: 0.3301887, b: 0.29176462, a: 1}
+    - _SubSurfaceShallowCol: {r: 0.19975968, g: 0.4803469, b: 0.6320754, a: 1}
     - _SubSurfaceShallowColShadow: {r: 0.14417937, g: 0.22641507, b: 0.21173012, a: 1}
     - _SubSurfaceShallowColour: {r: 0.41999996, g: 0.75, b: 0.69, a: 1}
   m_BuildTextureStacks: []
