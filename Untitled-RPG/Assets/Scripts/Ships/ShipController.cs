@@ -57,7 +57,7 @@ public class ShipController : MonoBehaviour
     [ReadOnly] public DeckCollider deckCollider;
     float turnInput;
     
-    [SerializeField] RotationContainer rudderRot;
+    RotationContainer rudderRot;
     RotationContainer wheelRot;
     RotationContainer[] mastsRot;
 
@@ -120,7 +120,7 @@ public class ShipController : MonoBehaviour
         for (int i = 0; i < sails.Length; i++) {
             sails[i].externalAcceleration = Vector3.MoveTowards(sails[i].externalAcceleration, transform.right * mastRotation * sailsStretchStrength * speedRatio, 30 * Time.deltaTime);
         }
-
+        
         flag.externalAcceleration = windVector * flagStretchStrength;
         flag.randomAcceleration = Quaternion.Euler(Vector3.up * 90) * windVector * flagStretchStrength * 0.2f;
 
@@ -138,14 +138,14 @@ public class ShipController : MonoBehaviour
             masts[i].localRotation = Quaternion.Lerp(masts[i].localRotation, desRotation, Time.deltaTime * mastsLerpValue);
         }
     }
-    
+
     void SetInitialRotations () {
-        rudderRot = new RotationContainer(rudder, rudder.localRotation, Quaternion.Euler(-rudder.up * maxRudderAngle) * rudder.localRotation); 
-        wheelRot = new RotationContainer(steeringWheel, steeringWheel.localRotation, Quaternion.Euler(steeringWheel.InverseTransformDirection(-steeringWheel.forward) * maxWheelRotationAngle) * steeringWheel.localRotation);
+        rudderRot = new RotationContainer(rudder, rudder.localRotation, rudder.localRotation * Quaternion.Euler(-Vector3.up * maxRudderAngle)); 
+        wheelRot = new RotationContainer(steeringWheel, steeringWheel.localRotation, steeringWheel.localRotation * Quaternion.Euler(-Vector3.forward * maxWheelRotationAngle));
 
         mastsRot = new RotationContainer[masts.Length];
         for (int i = 0; i < mastsRot.Length; i++) {
-            mastsRot[i] = new RotationContainer(masts[i], masts[i].localRotation, Quaternion.Euler(-masts[i].up * maxMastRotationAngle) * masts[i].localRotation);
+            mastsRot[i] = new RotationContainer(masts[i], masts[i].localRotation, masts[i].localRotation * Quaternion.Euler(Vector3.up * maxMastRotationAngle));
         }
     }
 
