@@ -18,16 +18,18 @@ public class BodyOnDeck {
 public class DeckCollider : MonoBehaviour
 {
     Transform sourceDeck;
+    public ShipController sourceShip;
 
     float unparentFromDeckDelay = 0.6f;
     public List<BodyOnDeck> bodiesOnDeck = new List<BodyOnDeck>();
 
     public void Init (ShipController _sourceShip) {
         sourceDeck = _sourceShip.deckMesh.transform;
+        sourceShip = _sourceShip;
 
+        gameObject.layer = LayerMask.NameToLayer("ShipPlayerCollider");
         transform.position = _sourceShip.deckMesh.transform.position;
         transform.rotation = _sourceShip.deckMesh.transform.rotation;
-        gameObject.layer = LayerMask.NameToLayer("ShipPlayerCollider");
         gameObject.AddComponent<MeshCollider>().sharedMesh = _sourceShip.deckMesh.GetComponent<MeshFilter>().mesh;
         gameObject.name = $"{_sourceShip.shipName} Deck Collider";
     }

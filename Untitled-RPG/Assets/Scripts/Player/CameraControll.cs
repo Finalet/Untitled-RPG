@@ -103,6 +103,7 @@ public class CameraControll : MonoBehaviour
         freeCam.enabled = !freeCam.enabled;
 
         PlayerControlls.instance.disableControlRequests += freeCam.enabled ? 1 : -1;
+        CanvasScript.instance.ShowSkillpanel = !freeCam.enabled;
     }
 
     void UpdateMouseSettings() {

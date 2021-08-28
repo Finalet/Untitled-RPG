@@ -6,6 +6,7 @@ using Crest;
 public class FreeCameraController : MonoBehaviour
 {
     public float speed = 1;
+    public KeyCode takeScreenshot = KeyCode.F12;
     Vector3 move;
     
     float xRotation = 0f;
@@ -38,5 +39,7 @@ public class FreeCameraController : MonoBehaviour
 
         speed += Input.mouseScrollDelta.y * 0.5f;
         speed = Mathf.Clamp(speed, 0, Mathf.Infinity);
+
+        if (Input.GetKeyDown(takeScreenshot)) ScreenCapture.CaptureScreenshot($"{Application.dataPath}/Screenshots/{System.DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")} screenshot.png", 3);
     }
 }

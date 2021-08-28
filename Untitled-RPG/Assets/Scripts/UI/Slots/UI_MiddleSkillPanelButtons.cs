@@ -108,7 +108,7 @@ public class UI_MiddleSkillPanelButtons : UI_SkillPanelSlot
     }
 
     protected override void DetectKeyPress() {
-        if (PeaceCanvas.instance.anyPanelOpen)
+        if (PeaceCanvas.instance.anyPanelOpen || PlayerControlls.instance.disableControl)
             return;
         //If not picking area, not aiming skill, or no overrides then act like a regular skill slot
         if (!PlayerControlls.instance.isPickingArea && !PlayerControlls.instance.isAimingSkill && overrideSkill == null) {

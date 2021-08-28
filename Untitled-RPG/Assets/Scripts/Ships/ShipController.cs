@@ -18,6 +18,13 @@ public struct RotationContainer {
         this.maxRotation = maxRotation;
     }
 }
+public enum SailDirection {ForwardFacing, SideFacing};
+[System.Serializable]
+public struct Sail {
+    public SailDirection sailDirection;
+    public Cloth sailCloth;
+    [UnityEngine.Range(0,1)] public float followWindDirection;
+}
 
 public class ShipController : MonoBehaviour
 {
@@ -27,7 +34,8 @@ public class ShipController : MonoBehaviour
     public string shipName;
     public float baseSpeed;
     public float baseTurnPower;
-    [DisplayWithoutEdit, SerializeField, Space] int currentSpeedIndex; int maxSpeedIndex = 2;
+    public int maxSpeedIndex = 2;
+    [Space, DisplayWithoutEdit, SerializeField] int currentSpeedIndex;
     [DisplayWithoutEdit] public bool isControlled;
     float speedRatio {
         get {
@@ -52,6 +60,7 @@ public class ShipController : MonoBehaviour
     public Transform rudder;
     public Cloth flag;
     public Transform[] masts;
+    public Sail[] sails;
 
     [Space]
     [ReadOnly] public DeckCollider deckCollider;
@@ -62,18 +71,18 @@ public class ShipController : MonoBehaviour
     RotationContainer[] mastsRot;
 
     BoatProbes boatProbe;
-    Cloth[] sails;
     CinemachineFreeLook CM_cam;
+    ShipAttachements shipAttachements;
 
     KeyCode increaseSpeedIndex = KeyCode.Alpha2;
     KeyCode decreaseSpeedIndex = KeyCode.Alpha1;
+    KeyCode shootAll = KeyCode.Mouse0;
+    KeyCode shootOne = KeyCode.Space;
 
     void Awake() {
         boatProbe = GetComponent<BoatProbes>();
-        sails = GetComponentsInChildren<Cloth>();
         CM_cam = GetComponentInChildren<CinemachineFreeLook>();
-
-        boatProbe._enginePower = baseSpeed;
+        shipAttachements = GetComponent<ShipAttachements>();
 
         InitializeColliderDummy();
         SetInitialRotations();
@@ -85,8 +94,6 @@ public class ShipController : MonoBehaviour
         RunVisuals();
     
         CM_cam.Priority = isControlled ? 50 : 0;
-        
-        if (isControlled) PlayerControlls.instance.cameraControl.MatchCameraSettings(ref CM_cam);
     }
 
     void HandleInput () {
@@ -96,6 +103,8 @@ public class ShipController : MonoBehaviour
         else if (Input.GetKeyDown(decreaseSpeedIndex)) DecreaseSpeed();
 
         turnInput = !isControlled || currentSpeedIndex == 0 ? 0 : Input.GetKey(KeyCode.A) ? -1f : Input.GetKey(KeyCode.D) ? 1f : 0;
+
+        if (Input.GetKeyDown(shootAll) && shipAttachements.areCannonsInstalled) shipAttachements.ShootAll(); 
     }
 
     void IncreaseSpeed () {
@@ -109,6 +118,8 @@ public class ShipController : MonoBehaviour
     }
 
     void SyncSpeed () {
+        boatProbe._enginePower = baseSpeed;
+        boatProbe._turnPower = baseTurnPower;
         boatProbe._engineBias = speedRatio;
         boatProbe._turnBias = Mathf.MoveTowards(boatProbe._turnBias, turnInput, Time.deltaTime * 2);
     }
@@ -117,35 +128,45 @@ public class ShipController : MonoBehaviour
         if (!boatProbe) boatProbe = GetComponent<BoatProbes>();
         if (mastsRot == null) SetInitialRotations();
 
-        for (int i = 0; i < sails.Length; i++) {
-            sails[i].externalAcceleration = Vector3.MoveTowards(sails[i].externalAcceleration, transform.right * mastRotation * sailsStretchStrength * speedRatio, 30 * Time.deltaTime);
+        if (sails.Length > 0) {
+            for (int i = 0; i < sails.Length; i++) {
+                Vector3 dir = sails[i].sailDirection == SailDirection.ForwardFacing ? transform.forward : transform.right;
+                dir = Vector3.Lerp(dir, windVector, sails[i].followWindDirection);
+                sails[i].sailCloth.externalAcceleration = Vector3.MoveTowards(sails[i].sailCloth.externalAcceleration,  dir * mastRotation * sailsStretchStrength * speedRatio, 30 * Time.deltaTime);
+            }
         }
         
-        flag.externalAcceleration = windVector * flagStretchStrength;
-        flag.randomAcceleration = Quaternion.Euler(Vector3.up * 90) * windVector * flagStretchStrength * 0.2f;
+        if (flag) flag.externalAcceleration = windVector * flagStretchStrength;
+        if (flag) flag.randomAcceleration = Quaternion.Euler(Vector3.up * 90) * windVector * flagStretchStrength * 0.2f;
 
-        rudder.localRotation = Quaternion.LerpUnclamped(rudderRot.initialRotation, rudderRot.maxRotation, boatProbe._turnBias);
-        steeringWheel.localRotation = Quaternion.LerpUnclamped(wheelRot.initialRotation, wheelRot.maxRotation, boatProbe._turnBias);
+        if (rudder) rudder.localRotation = Quaternion.LerpUnclamped(rudderRot.initialRotation, rudderRot.maxRotation, boatProbe._turnBias);
+        if (steeringWheel) steeringWheel.localRotation = Quaternion.LerpUnclamped(wheelRot.initialRotation, wheelRot.maxRotation, boatProbe._turnBias);
 
         windVector = new Vector3(Mathf.Sin(globalWindDirection*Mathf.Deg2Rad), 0, Mathf.Cos(globalWindDirection*Mathf.Deg2Rad));
         angleToWind = Vector3.SignedAngle(transform.forward, windVector, transform.up);
-        
-        mastRotation = ( (angleToWind > 0 ? angleToWind-180 : angleToWind+180) - (maxMastRotationAngle) ) / (-maxMastRotationAngle*2) * 2 - 1;
-        mastRotation = Mathf.Clamp(mastRotation, -1, 1);
 
-        for (int i = 0; i < mastsRot.Length; i++) {
-            Quaternion desRotation = Quaternion.LerpUnclamped(mastsRot[i].initialRotation, mastsRot[i].maxRotation, mastRotation);
-            masts[i].localRotation = Quaternion.Lerp(masts[i].localRotation, desRotation, Time.deltaTime * mastsLerpValue);
+        if (masts.Length > 0) {
+            mastRotation = ( (angleToWind > 0 ? angleToWind-180 : angleToWind+180) - (maxMastRotationAngle) ) / (-maxMastRotationAngle*2) * 2 - 1;
+            mastRotation = Mathf.Clamp(mastRotation, -1, 1);
+
+            for (int i = 0; i < mastsRot.Length; i++) {
+                Quaternion desRotation = Quaternion.LerpUnclamped(mastsRot[i].initialRotation, mastsRot[i].maxRotation, mastRotation);
+                masts[i].localRotation = Quaternion.Lerp(masts[i].localRotation, desRotation, Time.deltaTime * mastsLerpValue);
+            }
+        } else {
+            mastRotation = 1;
         }
     }
 
     void SetInitialRotations () {
-        rudderRot = new RotationContainer(rudder, rudder.localRotation, rudder.localRotation * Quaternion.Euler(-Vector3.up * maxRudderAngle)); 
-        wheelRot = new RotationContainer(steeringWheel, steeringWheel.localRotation, steeringWheel.localRotation * Quaternion.Euler(-Vector3.forward * maxWheelRotationAngle));
+        if (rudder) rudderRot = new RotationContainer(rudder, rudder.localRotation, rudder.localRotation * Quaternion.Euler(-Vector3.up * maxRudderAngle)); 
+        if (steeringWheel) wheelRot = new RotationContainer(steeringWheel, steeringWheel.localRotation, steeringWheel.localRotation * Quaternion.Euler(-Vector3.forward * maxWheelRotationAngle));
 
-        mastsRot = new RotationContainer[masts.Length];
-        for (int i = 0; i < mastsRot.Length; i++) {
-            mastsRot[i] = new RotationContainer(masts[i], masts[i].localRotation, masts[i].localRotation * Quaternion.Euler(Vector3.up * maxMastRotationAngle));
+        if (masts.Length > 0) {
+            mastsRot = new RotationContainer[masts.Length];
+            for (int i = 0; i < mastsRot.Length; i++) {
+                mastsRot[i] = new RotationContainer(masts[i], masts[i].localRotation, masts[i].localRotation * Quaternion.Euler(-Vector3.up * maxMastRotationAngle));
+            }
         }
     }
 

@@ -175,7 +175,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     protected virtual void DetectKeyPress() {
-        if (PeaceCanvas.instance.anyPanelOpen || PeaceCanvas.instance.isGamePaused)
+        if (PeaceCanvas.instance.anyPanelOpen || PeaceCanvas.instance.isGamePaused || PlayerControlls.instance.disableControl)
             return;
 
         if (Input.GetKeyDown(assignedKey)) {
