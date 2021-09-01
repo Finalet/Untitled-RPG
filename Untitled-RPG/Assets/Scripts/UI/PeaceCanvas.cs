@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using DG.Tweening;
 using Funly.SkyStudio;
+using QFSW.QC;
 
 public enum InterractionIcons {Bag, Chest, Coins, Craft, Horse, HandPickup, HandShake,HandPray, Ship}
 
@@ -16,6 +17,7 @@ public class PeaceCanvas : MonoBehaviour
 
     [Space]
     public bool isGamePaused;
+    public bool blockInput;
     public bool anyPanelOpen;
     public bool forceAnyPanelOpen {
         get {
@@ -99,6 +101,11 @@ public class PeaceCanvas : MonoBehaviour
         SaveManager.instance.saveObjects.Add(settingsView.GetComponent<SettingsManager>());
         BlackoutFade(false, 1f, 1);
         SetSuggestionKeys();
+
+        if (QuantumConsole.Instance) {
+            QuantumConsole.Instance.OnActivate += OpenDevConsole;
+            QuantumConsole.Instance.OnDeactivate += CloseDevConsole;
+        }
     }
 
     bool notRequestedYet;
@@ -138,7 +145,7 @@ public class PeaceCanvas : MonoBehaviour
     }
 
     void HandleInputs () {
-        if (blackout.color.a >= 0.5f || isGamePaused)
+        if (blackout.color.a >= 0.5f || isGamePaused || blockInput)
             return;
 
         if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Skillbook"])) {
@@ -436,5 +443,14 @@ public class PeaceCanvas : MonoBehaviour
             blackout.color = Color.black;
             blackout.DOFade(0, fadeDuration).SetDelay(delay);
         }
+    }
+
+    void OpenDevConsole () {
+        openPanels ++;
+        blockInput = true;
+    }
+    void CloseDevConsole () {
+        openPanels --;
+        blockInput = false;
     }
 }

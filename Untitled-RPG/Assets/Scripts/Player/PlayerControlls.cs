@@ -14,7 +14,8 @@ public class PlayerControlls : MonoBehaviour, ISavable
     [Header("Movement")]
     public float walkSpeed;
     public bool toggleRunning = false;
-    public int staminaReqToRoll = 50;
+    int staminaReqToRoll = 50;
+    int staminaReqToSprint = 1;
 
     [Foldout("States"), ReadOnly] public bool isIdle;
     [Foldout("States"), ReadOnly] public bool isRunning;
@@ -252,7 +253,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
             }
 
             if (Time.time - runningStaminaTimer >= 0.02f) {
-                Characteristics.instance.UseOrRestoreStamina(1);
+                Characteristics.instance.UseOrRestoreStamina(staminaReqToSprint);
                 runningStaminaTimer = Time.time;
             }
         } else {

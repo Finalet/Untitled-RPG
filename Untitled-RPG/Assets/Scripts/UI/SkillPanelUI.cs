@@ -112,6 +112,19 @@ public class SkillPanelUI : MonoBehaviour
         }
     }
     
+    public void ResetLearnedSkills () {
+        if (KnightRow) Destroy(KnightRow.gameObject);
+        if (HunterRow) Destroy(HunterRow.gameObject);
+        if (MageRow) Destroy(MageRow.gameObject);
+        if (AngelRow) Destroy(AngelRow.gameObject);
+        if (StealhRow) Destroy(StealhRow.gameObject);
+        if (DefenseRow) Destroy(DefenseRow.gameObject);
+        if (SummonerRow) Destroy(SummonerRow.gameObject);
+
+        generatedTrees.Clear();
+        generatedSkills.Clear();
+    }
+
     public void UpdatePickedSkill () {
         for (int i = 0; i < pickedSkillsIcons.Length; i++) {
             if (i < Combat.instanace.currentPickedSkills.Count) {
@@ -142,9 +155,9 @@ public class SkillPanelUI : MonoBehaviour
 
     string currentSkillTreesText () {
         string text = $"Skill trees: ";
-        for (int i = 0; i < Combat.instanace.currentSkillTrees.Length; i++) {
+        for (int i = 0; i < Combat.instanace.currentSkillTrees.Count; i++) {
             text += Combat.instanace.currentSkillTrees[i].ToString();
-            if (i != Combat.instanace.currentSkillTrees.Length-1)
+            if (i != Combat.instanace.currentSkillTrees.Count-1)
                 text += " | ";
         }
         return text;

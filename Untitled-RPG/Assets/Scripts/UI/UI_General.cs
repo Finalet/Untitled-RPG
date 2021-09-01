@@ -18,9 +18,9 @@ public static class UI_General
     public static Color highlightTextColor = new Color (1, 0.74f, 0.35f);
     public static Color secondaryHighlightTextColor = new Color (0, 0.9f, 0);
 
+    static float animationDepth = 0.85f;
+    static float animationSpeed = 10f;
     public static IEnumerator PressAnimation (RectTransform rect, KeyCode pressedKey) {
-        float animationDepth = 0.85f;
-        float animationSpeed = 10f;
         Vector2 currentSize = rect.localScale;
         while (currentSize.x > animationDepth) {
             rect.localScale = Vector2.MoveTowards(currentSize, Vector2.one * animationDepth, Time.deltaTime * animationSpeed);

@@ -11,7 +11,7 @@ public class Combat : MonoBehaviour, ISavable
     [Space]
     public int maxSkillPoints = 10;
     public int availableSkillPoints;
-    public SkillTree[] currentSkillTrees = new SkillTree[2];
+    public List<SkillTree> currentSkillTrees = new List<SkillTree>();
     public List<Skill> learnedSkills = new List<Skill>();
     public List<Skill> currentPickedSkills = new List<Skill>(); 
     public List<Skill> currentSkillsFromEquipment = new List<Skill>();
@@ -78,7 +78,7 @@ public class Combat : MonoBehaviour, ISavable
     public void ValidateCurrentSkills () {
         for (int i = currentPickedSkills.Count-1; i >= 0; i--) { //for each skill
             bool valid = false;
-            for (int i1 = 0; i1 < currentSkillTrees.Length; i1++){ //for each skill tree
+            for (int i1 = 0; i1 < currentSkillTrees.Count; i1++){ //for each skill tree
                 if (currentPickedSkills[i].skillTree == currentSkillTrees[i1])
                     valid = true;
             }
@@ -92,6 +92,8 @@ public class Combat : MonoBehaviour, ISavable
         }
     }
     public void SwitchSkillRows (int row = -1) {
+        if (PeaceCanvas.instance.anyPanelOpen) return;
+        
         if (PeaceCanvas.instance.isDraggingItemOrSkill || PeaceCanvas.instance.isGamePaused) return;
         
         currentSkillSlotsRow = row == -1 ? (currentSkillSlotsRow + 1) % numberOfSkillSlotsRows : row;
@@ -105,13 +107,15 @@ public class Combat : MonoBehaviour, ISavable
         }
     }
     public void ForgetSkill(Skill skillToForget) {
-        if (learnedSkills.Contains(skillToForget))
+        if (learnedSkills.Contains(skillToForget)) {
             learnedSkills.Remove(skillToForget);
+            PeaceCanvas.instance.SkillsPanel.GetComponent<SkillPanelUI>().ResetLearnedSkills();
+        }
     }
 
     public bool isPickedSkillTree (SkillTree skillTree) {
         bool p = false;
-        for (int i = 0; i < currentSkillTrees.Length; i++){
+        for (int i = 0; i < currentSkillTrees.Count; i++){
             if (currentSkillTrees[i] == skillTree)
                 p = true;
         }
@@ -249,11 +253,11 @@ public class Combat : MonoBehaviour, ISavable
     }
     public void Load() {
         //Load current skill trees
-        SkillTree[] defaultSkilltrees = new SkillTree[2];
-        defaultSkilltrees[0] = SkillTree.Knight;
-        defaultSkilltrees[1] = SkillTree.Hunter;
+        List<SkillTree> defaultSkilltrees = new List<SkillTree>();
+        defaultSkilltrees.Add(SkillTree.Knight);
+        defaultSkilltrees.Add(SkillTree.Hunter);
 
-        currentSkillTrees = ES3.Load<SkillTree[]>("currentSkillTrees", savefilePath(), defaultSkilltrees);
+        currentSkillTrees = ES3.Load<List<SkillTree>>("currentSkillTrees", savefilePath(), defaultSkilltrees);
         
         //Load learned skills
         List<int> skillIDs = ES3.Load<List<int>>("learnedSkillsIDs", savefilePath(), new List<int>());

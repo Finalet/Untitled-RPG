@@ -388,7 +388,7 @@ public class Characteristics : MonoBehaviour
         recurringEffects.Remove(effectToRemove);
     }
 
-    void Die() {
+    public void Die() {
         if (isDead)
             return;
 

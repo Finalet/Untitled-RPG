@@ -110,6 +110,29 @@ public class AssetHolder : MonoBehaviour
         return null;
     }
 
+    public Item getItem (string itemName) {
+        List<Item> allItems = new List<Item>();
+
+        allItems.AddRange(weapons);
+        allItems.AddRange(armor);
+        allItems.AddRange(skillbooks);
+        allItems.AddRange(consumables);
+        allItems.AddRange(resources);
+        allItems.AddRange(mounts);
+        allItems.AddRange(mountEquipment);
+
+        foreach (Item item in allItems)
+            if(item.itemName == itemName) return item;
+
+        throw new System.Exception($"Item with name \"{itemName}\" was not found.");
+    }
+    public Skill getSkill (string skillName) {
+        foreach (Skill skill in Skills) 
+            if (skill.skillName == skillName) return skill;
+        
+        throw new System.Exception($"Skill with name \"{skillName}\" was not found.");
+    }
+
     public void SortAllByID () {
         consumables.Sort((x, y) => x.ID.CompareTo(y.ID));
         weapons.Sort((x, y) => x.ID.CompareTo(y.ID));
