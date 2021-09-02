@@ -153,52 +153,108 @@ public static class ItemsCommands {
 [CommandPrefix("player.")]
 public static class PlayerCommands {
     
+    static AssetHolder assetHolder {
+        get {
+            if (!AssetHolder.instance) throw new Exception("Could not find \"Asset Holder\" instance.");
+            return AssetHolder.instance;
+        }
+    }
+    static PlayerControlls playerControlls {
+        get {
+            if (!PlayerControlls.instance) throw new Exception("Could not find \"Player Controlls\" instance.");
+            return PlayerControlls.instance;
+        }
+    }
+    static Combat combat {
+        get {
+            if (!Combat.instanace) throw new Exception("Could not find \"Combat\" instance.");
+            return Combat.instanace;
+        }
+    }
+    static PeaceCanvas peaceCanvas {
+        get {
+            if (!PeaceCanvas.instance) throw new Exception("Could not find \"Peace Canvas\" instance.");
+            return PeaceCanvas.instance;
+        }
+    }
+    static Characteristics characteristics {
+        get {
+            if (!Characteristics.instance) throw new Exception("Could not find \"Characteristics\" instance.");
+            return Characteristics.instance;
+        }
+    }
+    static InventoryManager inventoryManager {
+        get {
+            if (!InventoryManager.instance) throw new Exception("Could not find \"Inventory Manager\" instance.");
+            return InventoryManager.instance;
+        }
+    }
+
+
     [CommandPrefix("skills.")]
     public static class SkillsCommands {
 
         [Command("learn", "Learns specified skill.")]
         static void LearnSkill (string skillName) {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
-
-            Combat.instanace.LearnSkill(AssetHolder.instance.getSkill(skillName));
+            combat.LearnSkill(assetHolder.getSkill(skillName));
             
-            PeaceCanvas.instance.CloseSkillsPanel();
+            peaceCanvas.CloseSkillsPanel();
         }
 
         [Command("learn-all", "Learns all skills.")]
         static void LearnAllSkills () {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
-
-            foreach (Skill skill in AssetHolder.instance.Skills){
+            foreach (Skill skill in assetHolder.Skills){
                 if (skill.skillTree == SkillTree.Independent)
                     continue;
-                Combat.instanace.LearnSkill(skill);
+                combat.LearnSkill(skill);
             }
 
-            PeaceCanvas.instance.CloseSkillsPanel();
+            peaceCanvas.CloseSkillsPanel();
         }
 
         [Command("forget", "Forgets specified skill.")]
         static void ForgetSkill (string skillName) {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
+            combat.ForgetSkill(AssetHolder.instance.getSkill(skillName));
             
-            Combat.instanace.ForgetSkill(AssetHolder.instance.getSkill(skillName));
-            
-            PeaceCanvas.instance.CloseSkillsPanel();
+            peaceCanvas.CloseSkillsPanel();
         }
 
         [Command("forget-all", "Forgets all skills.")]
         static void ForgetAllSkill () {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
-            
-            foreach (Skill skill in AssetHolder.instance.Skills){
+            foreach (Skill skill in assetHolder.Skills){
                 if (skill.skillTree == SkillTree.Independent)
                     continue;
-                Combat.instanace.ForgetSkill(skill);
+                combat.ForgetSkill(skill);
             }
             
-            PeaceCanvas.instance.CloseSkillsPanel();
+            peaceCanvas.CloseSkillsPanel();
         }
+
+        [Command("set-cooldown", "Set cooldown in seconds for a specified skill.")]
+        static void SetCooldown (string skill, float value) {
+            Skill s = assetHolder.getSkill(skill);
+            Debug.Log("got here");
+            if (!s) throw new Exception($"Could not find \"{skill}\" skill.");
+    
+            s.coolDown = value;
+        }
+        [Command("set-cooldown-all", "Set all skills' cooldown to a certain value.")]
+        static void SetAllSkillsCooldown (float value) {
+            foreach (Skill s in assetHolder.Skills) {
+                s.coolDown = value;
+            }
+        }
+
+        [Command("set-damage-base-percentage", "Set base damage percentage for a specific skill.")]
+        static void SetBDP (string skill, int value) {
+            assetHolder.getSkill(skill).baseDamagePercentage = value;
+        }
+
+        [Command("set-damage-type", "Set damage type for a specified skill.")]
+        static void SetDamageType (string skill, DamageType type) {
+            assetHolder.getSkill(skill).damageType = type;
+        }
+
 
     }
 
@@ -207,67 +263,55 @@ public static class PlayerCommands {
 
         [Command("unlock-all", "Unlocks all skilltrees.")]
         static void UnlockAllSkilltrees() {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
-
             foreach (SkillTree s in System.Enum.GetValues(typeof(SkillTree))) {
                 if (s == SkillTree.Independent) continue;
 
-                if (!Combat.instanace.currentSkillTrees.Contains(s)) Combat.instanace.currentSkillTrees.Add(s);
+                if (!combat.currentSkillTrees.Contains(s)) combat.currentSkillTrees.Add(s);
             }
         }
 
         [Command("unlock", "Unlocks specified skilltree.")]
         static void UnlockSkilltree (SkillTree skillTree) {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
-
-            if (!Combat.instanace.currentSkillTrees.Contains(skillTree)) Combat.instanace.currentSkillTrees.Add(skillTree);
+            if (!combat.currentSkillTrees.Contains(skillTree)) combat.currentSkillTrees.Add(skillTree);
         }
 
         [Command("forget", "Forgets specified skilltree.")]
         static void ForgetSkilltree (SkillTree skillTree) {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
-            
-            if (Combat.instanace.currentSkillTrees.Contains(skillTree)) Combat.instanace.currentSkillTrees.Remove(skillTree);
+            if (combat.currentSkillTrees.Contains(skillTree)) combat.currentSkillTrees.Remove(skillTree);
         }
 
         [Command("forget-all", "Forgets all skilltrees.")]
         static void ForgetAllSkilltrees() {
-            if (!PlayerControlls.instance || !Combat.instanace) throw new System.Exception("No player instance was found.");
-
             foreach (SkillTree s in System.Enum.GetValues(typeof(SkillTree))) {
                 if (s == SkillTree.Independent) continue;
 
-                if (Combat.instanace.currentSkillTrees.Contains(s)) Combat.instanace.currentSkillTrees.Remove(s);
+                if (combat.currentSkillTrees.Contains(s)) combat.currentSkillTrees.Remove(s);
             }
         }
     }
 
     [Command("suicide")]
     static void Suicide () {
-        if (!PlayerControlls.instance || !Characteristics.instance) throw new System.Exception("No player instance was found.");
-
-        Characteristics.instance.health = 0;
-        Characteristics.instance.Die();
+        characteristics.health = 0;
+        characteristics.Die(new DamageInfo(0, DamageType.Raw, false, "suicide."));
+    }
+    [Command("revive")]
+    static void REvive () {
+        characteristics.Revive();
     }
 
     [Command("give-item")]
     static void GiveItem (string itemName, int itemAmount = 1) {
-        if (!PlayerControlls.instance || !InventoryManager.instance) throw new System.Exception("No player instance was found.");
-        if (!AssetHolder.instance) throw new System.Exception("No Asset Holder was found.");
-            
-        Item itemToGive = AssetHolder.instance.getItem(itemName);
-        InventoryManager.instance.AddItemToInventory(itemToGive, itemAmount, null);
+        Item itemToGive = assetHolder.getItem(itemName);
+        inventoryManager.AddItemToInventory(itemToGive, itemAmount, null);
 
         if (itemAmount > itemToGive.maxStackAmount) Debug.LogWarning($"Item amount was limited to the maximum stack size {itemToGive.maxStackAmount}");
     }
 
     [Command("give-item-by-id")]
     static void GiveItem (int itemID, int itemAmount = 1) {
-        if (!PlayerControlls.instance || !InventoryManager.instance) throw new System.Exception("No player instance was found.");
-        if (!AssetHolder.instance) throw new System.Exception("No Asset Holder was found.");
-        
-        Item itemToGive = AssetHolder.instance.getItem(itemID);
-        InventoryManager.instance.AddItemToInventory(itemToGive, itemAmount, null);
+        Item itemToGive = assetHolder.getItem(itemID);
+        inventoryManager.AddItemToInventory(itemToGive, itemAmount, null);
 
         if (itemAmount > itemToGive.maxStackAmount) Debug.LogWarning($"Item amount was limited to the maximum stack size {itemToGive.maxStackAmount}");
     }
@@ -276,57 +320,57 @@ public static class PlayerCommands {
 
 public static class UtilityCommands  {
 
-    [Command("call-variable")]
-    static string CallVariable (Type type, string variable, string value = null) {
-        if (value == null) return ReadVariable(type, variable);
-        else return SetVariable(type, variable, value);
+    [Command("call-field", "Get or set specified field in a specified class.")]
+    static string CallVariable ([CommandParameterDescription("Class containing the field.")] Type classType, [CommandParameterDescription("Field name")] string variable, [CommandParameterDescription("Set value for the field.")] string value = null) {
+        if (value == null) return ReadVariable(classType, variable);
+        else return SetVariable(classType, variable, value);
     }
 
-    static string ReadVariable (Type type, string variable) {
-        Object target = CommandsHelper.FindObject(type);
-        FieldInfo field = CommandsHelper.FindField(type, variable);
+    static string ReadVariable (Type classType, string variable) {
+        Object target = CommandsHelper.FindObject(classType);
+        FieldInfo field = CommandsHelper.FindField(classType, variable);
 
         string value = field.GetValue(target).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor);
 
-        return $"[{target.name} - {type}] {field.Name}: {value.ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";
+        return $"[{target.name} - {classType}] {field.Name}: {value.ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";
     }
 
-    static string SetVariable (Type type, string variable, string value) {
-        Object target = CommandsHelper.FindObject(type);
-        FieldInfo field = CommandsHelper.FindField(type, variable);
+    static string SetVariable (Type classType, string variable, string value) {
+        Object target = CommandsHelper.FindObject(classType);
+        FieldInfo field = CommandsHelper.FindField(classType, variable);
 
         object setValue = CommandsHelper.Parser.Parse(value, field.FieldType);
         
         field.SetValue(target, setValue);
 
-        return $"[{target.name} - {type}] Set {field.Name} to {field.GetValue(target).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";        
+        return $"[{target.name} - {classType}] Set {field.Name} to {field.GetValue(target).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";        
     }
 
     [Command("call-variable-static")]
-    static string CallStaticVariable (Type type, string variable, string value = null) {
-        if (value == null) return ReadStaticVariable(type, variable);
-        else return SetStaticVariable(type, variable, value);
+    static string CallStaticVariable (Type classType, string variable, string value = null) {
+        if (value == null) return ReadStaticVariable(classType, variable);
+        else return SetStaticVariable(classType, variable, value);
     }
 
-    static string ReadStaticVariable (Type type, string variable) {
-        FieldInfo field = CommandsHelper.FindField(type, variable);
+    static string ReadStaticVariable (Type classType, string variable) {
+        FieldInfo field = CommandsHelper.FindField(classType, variable);
 
-        return $"[{type}] {field.Name}: {field.GetValue(null).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";
+        return $"[{classType}] {field.Name}: {field.GetValue(null).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";
     }
 
-    static string SetStaticVariable (Type type, string variable, string value) {
-        FieldInfo field = CommandsHelper.FindField(type, variable);
+    static string SetStaticVariable (Type classType, string variable, string value) {
+        FieldInfo field = CommandsHelper.FindField(classType, variable);
 
         object setValue = CommandsHelper.Parser.Parse(value, field.FieldType);
 
         field.SetValue(null, setValue);
         
-        return $"[{type}] Set {field.Name} to {field.GetValue(null).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";        
+        return $"[{classType}] Set {field.Name} to {field.GetValue(null).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";        
     }
 
-    [Command("call-variable-help", "Display all available fields in a class.")]
-    public static string CallVariableHelp (Type type) {
-        FieldInfo[] fields = CommandsHelper.FindAllFields(type);
+    [Command("call-field-help", "Display all available fields in a class.")]
+    public static string CallVariableHelp ([CommandParameterDescription("Class containings the fields.")] Type classType) {
+        FieldInfo[] fields = CommandsHelper.FindAllFields(classType);
 
         string output = "\n--- Available Fields ---\n\n";
 
@@ -335,6 +379,80 @@ public static class UtilityCommands  {
         return output;
     }
 
+    [Command("call-instance-help", "Display all available methods in a class.")]
+    private static string CallInstanceHelp ([CommandParameterDescription("Class containing the methods.")] Type classType) {
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | /*| BindingFlags.InvokeMethod | */
+                                    BindingFlags.Static | BindingFlags.Instance;// | BindingFlags.FlattenHierarchy;
+        
+        MethodInfo[] methods = classType.GetMethods(flags);
+
+        string output = "\n --- Available Methods ---\n";
+
+        foreach (MethodInfo method in methods) {
+            ParameterInfo[] parameters = method.GetParameters();
+            output += $"\n- {method.Name}{ (parameters.Length > 0 ? ":" : "")}";
+
+            for (int i = 0; i < parameters.Length; i++) {
+                output += $" {parameters[i].GetType().ToString()}: {parameters[i].Name}{ (i != parameters.Length-1 ? "," : "") }";
+            }
+        }
+
+        return output;
+    }
+
+    [Command("create-object")]
+    static string CreateObject (string name) {
+        return CreateObject(name, "", "");
+    }
+
+    [Command("create-object")]
+    static string CreateObject (string name, string component) {
+        return CreateObject(name, component, "");
+    }
+
+    [Command("create-object", "Creates an object with specified name and adds a component from an assembly.")]
+    static string CreateObject ([CommandParameterDescription("Name to set")] string name, [CommandParameterDescription("Component to add")]string component, string assembly) {
+        GameObject createdObject = new GameObject();
+        createdObject.name = name;
+
+        string output = "";
+
+        if (!string.IsNullOrEmpty(assembly)) {
+            if (Type.GetType($"{assembly}.{component}, {assembly}") == null) {
+                GameObject.Destroy(createdObject);
+                throw new Exception($"Could not get \"{component}\" in \"{assembly}\" assembly.");
+            }
+            
+            createdObject.AddComponent(Type.GetType($"{assembly}.{component}, {assembly}"));
+        
+            output = $"Created new object {createdObject.name.ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)} and added component {createdObject.GetComponent(Type.GetType($"{assembly}.{component}, {assembly}")).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}.";
+        } else if (!string.IsNullOrEmpty(component)) {
+            if (Type.GetType(component) == null) {
+                GameObject.Destroy(createdObject);
+                throw new Exception($"Could not get \"{component}\". Try specifying an assembly.");
+            }
+
+            createdObject.AddComponent(Type.GetType(component));
+
+            output = $"Created new object {createdObject.name.ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)} and added component {createdObject.GetComponent(Type.GetType(component)).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}.";
+        }
+
+        return output;
+    }
+
+    [Command("cursor.show")]
+    static void ShowCursor (bool _lock = false) {
+        ToggleCursor(true, _lock ? CursorLockMode.Locked : CursorLockMode.None);
+    }
+    [Command("cursor.hide")]
+    static void HideCursor (bool _lock = true) {
+        ToggleCursor(true, _lock ? CursorLockMode.Locked : CursorLockMode.None);
+    }
+
+    static void ToggleCursor (bool visible, CursorLockMode lockMode) {
+        Cursor.visible = visible;
+        Cursor.lockState = lockMode;
+    }
 }
 
 [CommandPrefix("vegetation.")]
@@ -385,21 +503,46 @@ public static class VegetationCommands {
 
 }
 
+[CommandPrefix("console.")]
+public static class ConsoleCommands {
+    
+    [Command("keybinds-help")]
+    static string ConsoleKeysHelp () {
+        string output = "";
+
+        FieldInfo[] fields = CommandsHelper.FindAllFields(QuantumConsole.Instance.KeyConfig.GetType());
+        
+        output += "\n--- Console Keybinds ---\n";
+        Type keycodeType = new KeyCode().GetType(); 
+        Type keyConfigtype = new ModifierKeyCombo().GetType();
+        foreach (FieldInfo field in fields){
+            if (field.FieldType == keycodeType) output += $"\n- {field.Name}: {field.GetValue(QuantumConsole.Instance.KeyConfig).ToString()}";
+
+            if (field.FieldType == keyConfigtype) {
+                ModifierKeyCombo k = (ModifierKeyCombo)field.GetValue(QuantumConsole.Instance.KeyConfig);
+                string keyText = $"{(k.Ctrl ? "Ctrl+" : "")}{(k.Alt ? "Alt+" : "")}{(k.Shift ? "Shift+" : "")}{k.Key}";
+                output += $"\n- {field.Name}: {keyText}";
+            }
+        }
+        return output;
+    }
+}
+
 public static class CommandsHelper {
 
     public static readonly QuantumParser Parser = new QuantumParser();
 
-    public static FieldInfo FindField (Type type, string variable) {
+    public static FieldInfo FindField (Type type, string field) {
 
         const BindingFlags flags =  BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod |
                                        BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
 
         
-        FieldInfo field = type.GetField(variable, flags);
+        FieldInfo field1 = type.GetField(field, flags);
 
-        if (field == null) throw new Exception($"Could not find variable \"{variable}\" inside \"{type}\".");
+        if (field1 == null) throw new Exception($"Could not find field \"{field}\" inside \"{type}\".");
 
-        return field;
+        return field1;
     }
 
     public static FieldInfo[] FindAllFields (Type type) {

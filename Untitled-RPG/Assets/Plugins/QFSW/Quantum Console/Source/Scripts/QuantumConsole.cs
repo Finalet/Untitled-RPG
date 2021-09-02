@@ -1,6 +1,7 @@
 ﻿using QFSW.QC.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -269,10 +270,12 @@ namespace QFSW.QC
         }
 
         private void ProcessCommandHistory()
-        {
-            if (InputHelper.GetKeyDown(_keyConfig.NextCommandKey) || InputHelper.GetKeyDown(_keyConfig.PreviousCommandKey))
+        {   
+            // if (InputHelper.GetKeyDown(_keyConfig.NextCommandKey.IsPressed) || InputHelper.GetKeyDown(_keyConfig.PreviousCommandKey))  //Finale
+            if (_keyConfig.NextCommandKey.IsPressed() || _keyConfig.PreviousCommandKey.IsPressed())
             {
-                if (InputHelper.GetKeyDown(_keyConfig.NextCommandKey)) { _selectedPreviousCommandIndex++; }
+                // if (InputHelper.GetKeyDown(_keyConfig.NextCommandKey)) { _selectedPreviousCommandIndex++; }  //Finale
+                if (_keyConfig.NextCommandKey.IsPressed()) { _selectedPreviousCommandIndex++; }
                 else if (_selectedPreviousCommandIndex > 0) { _selectedPreviousCommandIndex--; }
                 _selectedPreviousCommandIndex = Mathf.Clamp(_selectedPreviousCommandIndex, -1, _previousCommands.Count - 1);
 
@@ -298,7 +301,7 @@ namespace QFSW.QC
         {
             suggestedCommands.AddRange(QuantumConsoleProcessor.GetCommandSuggestions(_currentText, _useFuzzySearch, _caseSensitiveSearch, true));
         }
-
+        
         private void ProcessAutocomplete()
         {
             if ((_keyConfig.SuggestNextCommandKey.IsPressed() || _keyConfig.SuggestPreviousCommandKey.IsPressed()) && !string.IsNullOrWhiteSpace(_currentText))
@@ -311,14 +314,23 @@ namespace QFSW.QC
 
                 if (_suggestedCommands.Count > 0)
                 {
-                    if (_keyConfig.SuggestPreviousCommandKey.IsPressed()) { _selectedSuggestionCommandIndex--; }
+                    // if (_keyConfig.SuggestPreviousCommandKey.IsPressed()) { _selectedSuggestionCommandIndex--; } 
+                    if (_keyConfig.SuggestPreviousCommandKey.IsPressed()) { if (_selectedSuggestionCommandIndex >= 0) _selectedSuggestionCommandIndex--; }//Added by Finale
                     else if (_keyConfig.SuggestNextCommandKey.IsPressed()) { _selectedSuggestionCommandIndex++; }
 
                     _selectedSuggestionCommandIndex += _suggestedCommands.Count;
                     _selectedSuggestionCommandIndex %= _suggestedCommands.Count;
                     SetCommandSuggestion(_selectedSuggestionCommandIndex);
                 }
+                //Added by Finale
+                _consoleInput.MoveToEndOfLine(false, true); 
             }
+
+            //---Added by Finale---//
+            if (_keyConfig.AutocompleteKey.IsPressed() && !string.IsNullOrWhiteSpace(_currentText) && _selectedSuggestionCommandIndex >= 0) {
+                if (_suggestedCommands.Count > 0) SetCommandSuggestion(_suggestedCommands[_selectedSuggestionCommandIndex]);
+            }
+            //---Finale End---//
         }
 
         private string FormatSuggestion(CommandData command, bool selected)
@@ -399,12 +411,14 @@ namespace QFSW.QC
             }
 
             _selectedSuggestionCommandIndex = suggestionIndex;
-            SetCommandSuggestion(_suggestedCommands[_selectedSuggestionCommandIndex]);
+            //--- Commented out by Finale ---// SetCommandSuggestion(_suggestedCommands[_selectedSuggestionCommandIndex]);
+            ProcessPopupDisplay();
         }
 
         private void SetCommandSuggestion(CommandData command)
         {
-            OverrideConsoleInput(command.CommandName);
+            //--- Changed by Finale---// OverrideConsoleInput(command.CommandName);
+            OverrideConsoleInput(command);
             Color suggestionColor = _theme ? _theme.SuggestionColor : Color.gray;
             _consoleSuggestionText.text = $"{command.CommandName.ColorText(Color.clear)}{command.GenericSignature.ColorText(suggestionColor)} {command.ParameterSignature.ColorText(suggestionColor)}";
         }
@@ -427,6 +441,20 @@ namespace QFSW.QC
 
             OnTextChange();
         }
+        //---Finale Method---//
+        public void OverrideConsoleInput (CommandData command, bool shouldFocus = true) {
+            _currentText = command.CommandName + (command.ParamCount > 0 ? " " : "");
+            _previousText = command.CommandName + (command.ParamCount > 0 ? " " : "");
+            _consoleInput.text = command.CommandName + (command.ParamCount > 0 ? " " : "");
+
+            if (shouldFocus)
+            {
+                FocusConsoleInput();
+            }
+
+            OnTextChange();
+        }
+        //---Finale End---//
 
         /// <summary>
         /// Selects and focuses the input field for the console.
@@ -855,7 +883,7 @@ namespace QFSW.QC
                     if (Instance == null)
                     {
                         Instance = this;
-                        //DontDestroyOnLoad(gameObject);
+                        DontDestroyOnLoad(gameObject);
                     }
                     else if (Instance != this)
                     {

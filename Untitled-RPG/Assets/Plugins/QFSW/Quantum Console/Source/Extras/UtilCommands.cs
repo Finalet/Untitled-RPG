@@ -132,7 +132,7 @@ namespace QFSW.QC.Extras
         private static void DestroyComponent<T>(T target) where T : Component { GameObject.Destroy(target); }
 
         [Command("destroy", "Destroys a GameObject")]
-        private static void DestroyGO(GameObject target) { GameObject.Destroy(target); }
+        private static void DestroyGO(GameObject target) { GameObject.Destroy(target); } 
 
         [Command("instantiate", "Instantiates a GameObject")]
         private static void InstantiateGO(

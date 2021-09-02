@@ -335,7 +335,7 @@ public class Characteristics : MonoBehaviour
             PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(cameraShakeFrequency, cameraShakeAmplitude, 0.1f, transform.position);
 
         if (health <= 0)
-            Die();
+            Die(enemyDamageInfo);
     }
     public void RunRecurringEffects () {
         for (int i = recurringEffects.Count-1; i >= 0; i--) {
@@ -388,7 +388,7 @@ public class Characteristics : MonoBehaviour
         recurringEffects.Remove(effectToRemove);
     }
 
-    public void Die() {
+    public void Die(DamageInfo enemyDamageInfo) {
         if (isDead)
             return;
 
@@ -397,6 +397,9 @@ public class Characteristics : MonoBehaviour
         PlayerControlls.instance.cameraControl.isShortAiming = false;
         TeleportManager.instance.ShowReviveWindow();
         isDead = true;
+
+        string color = "#" + ColorUtility.ToHtmlStringRGB(UI_General.highlightTextColor);
+        PeaceCanvas.instance.DebugChat($"{getCurrentTime()} <color={color}>{Characteristics.instance.playerName}</color> died from {enemyDamageInfo.sourceName}</color>.");
     }
     public void Revive () {
         if (!isDead)

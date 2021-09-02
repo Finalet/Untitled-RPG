@@ -11,11 +11,15 @@ namespace QFSW.QC
         public ModifierKeyCombo HideConsoleKey = KeyCode.None;
         public ModifierKeyCombo ToggleConsoleVisibilityKey = KeyCode.Escape;
 
+        public ModifierKeyCombo AutocompleteKey = KeyCode.Tab;
         public ModifierKeyCombo SuggestNextCommandKey = KeyCode.Tab;
         public ModifierKeyCombo SuggestPreviousCommandKey = new ModifierKeyCombo { Key = KeyCode.Tab, Shift = true };
 
-        public KeyCode NextCommandKey = KeyCode.UpArrow;
-        public KeyCode PreviousCommandKey = KeyCode.DownArrow;
+        // public KeyCode NextCommandKey = KeyCode.UpArrow;
+        // public KeyCode PreviousCommandKey = KeyCode.DownArrow;
+
+        public ModifierKeyCombo NextCommandKey = KeyCode.UpArrow;
+        public ModifierKeyCombo PreviousCommandKey = KeyCode.DownArrow;
 
         public ModifierKeyCombo CancelActionsKey = new ModifierKeyCombo { Key = KeyCode.C, Ctrl = true };
     }

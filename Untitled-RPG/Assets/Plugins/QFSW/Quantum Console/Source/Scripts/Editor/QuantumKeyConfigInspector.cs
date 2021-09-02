@@ -14,6 +14,7 @@ namespace QFSW.QC.Editor
         private SerializedProperty _showConsoleKeyProperty;
         private SerializedProperty _toggleConsoleVisibilityKeyProperty;
 
+        private SerializedProperty _autocompleteKeyProperty;
         private SerializedProperty _suggestNextCommandKeyProperty;
         private SerializedProperty _suggestPreviousCommandKeyProperty;
 
@@ -34,6 +35,7 @@ namespace QFSW.QC.Editor
             _showConsoleKeyProperty = serializedObject.FindProperty("ShowConsoleKey");
             _toggleConsoleVisibilityKeyProperty = serializedObject.FindProperty("ToggleConsoleVisibilityKey");
 
+            _autocompleteKeyProperty = serializedObject.FindProperty("AutocompleteKey");
             _suggestNextCommandKeyProperty = serializedObject.FindProperty("SuggestNextCommandKey");
             _suggestPreviousCommandKeyProperty = serializedObject.FindProperty("SuggestPreviousCommandKey");
 
@@ -57,6 +59,7 @@ namespace QFSW.QC.Editor
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField(new GUIContent("Command Suggestions"), EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_autocompleteKeyProperty, new GUIContent("Autocomplete", "The key to show and suggest commands based on the current console input."));
             EditorGUILayout.PropertyField(_suggestNextCommandKeyProperty, new GUIContent("Show Suggested Commands", "The key to show and suggest commands based on the current console input."));
             EditorGUILayout.PropertyField(_suggestPreviousCommandKeyProperty, new GUIContent("Show Previous Suggestion", "The key to show the previous suggestion."));
             EditorGUILayout.Space();
