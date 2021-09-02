@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using QFSW.QC.Actions;
 
 namespace QFSW.QC.Extras
 {
@@ -58,15 +59,15 @@ namespace QFSW.QC.Extras
             Screen.SetResolution(x, y, fullscreen);
         }
 
-        [Command("capture-screenshot")]
-        [CommandDescription("Captures a screenshot and saves it to the supplied file path as a PNG.\n" +
-                            "If superSize is supplied the screenshot will be captured at a higher than native resolution.")]
-        private static void CaptureScreenshot(
-            [CommandParameterDescription("The name of the file to save the screenshot in")] string filename,
-            [CommandParameterDescription("Factor by which to increase resolution")] int superSize = 1
-        )
-        {
-            ScreenCapture.CaptureScreenshot(filename, superSize);
-        }
+        // [Command("capture-screenshot")]
+        // [CommandDescription("Captures a screenshot and saves it to the supplied file path as a PNG.\n" +
+        //                     "If superSize is supplied the screenshot will be captured at a higher than native resolution.")]
+        // private static void CaptureScreenshot(
+        //     [CommandParameterDescription("The name of the file to save the screenshot in")] string filename,
+        //     [CommandParameterDescription("Factor by which to increase resolution")] int superSize = 1
+        // )
+        // {
+        //     ScreenCapture.CaptureScreenshot("Assets/Screenshots/" + filename + ".png", superSize);
+        // }
     }
 }

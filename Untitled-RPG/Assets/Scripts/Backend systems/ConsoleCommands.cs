@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using QFSW.QC;
 using QFSW.QC.Utilities;
+using QFSW.QC.Actions;
 using Funly.SkyStudio;
 using System;
 using System.Reflection;
 using Object = UnityEngine.Object;
 using AwesomeTechnologies.VegetationSystem;
+using Crest;
 
 namespace Finale.ConsoleCommands {
 
@@ -402,39 +404,26 @@ public static class UtilityCommands  {
 
     [Command("create-object")]
     static string CreateObject (string name) {
-        return CreateObject(name, "", "");
-    }
-
-    [Command("create-object")]
-    static string CreateObject (string name, string component) {
-        return CreateObject(name, component, "");
+        return CreateObject(name, "");
     }
 
     [Command("create-object", "Creates an object with specified name and adds a component from an assembly.")]
-    static string CreateObject ([CommandParameterDescription("Name to set")] string name, [CommandParameterDescription("Component to add")]string component, string assembly) {
+    static string CreateObject ([CommandParameterDescription("Name to set")] string name, [CommandParameterDescription("Component to add")]string component) {
         GameObject createdObject = new GameObject();
         createdObject.name = name;
 
-        string output = "";
+        string output = $"Created new object: {createdObject.ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";
 
-        if (!string.IsNullOrEmpty(assembly)) {
-            if (Type.GetType($"{assembly}.{component}, {assembly}") == null) {
+        if (!string.IsNullOrEmpty(component)) {
+            Type getType = GetTypeWithAssembly(component);
+            if (getType == null) {
                 GameObject.Destroy(createdObject);
-                throw new Exception($"Could not get \"{component}\" in \"{assembly}\" assembly.");
-            }
-            
-            createdObject.AddComponent(Type.GetType($"{assembly}.{component}, {assembly}"));
-        
-            output = $"Created new object {createdObject.name.ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)} and added component {createdObject.GetComponent(Type.GetType($"{assembly}.{component}, {assembly}")).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}.";
-        } else if (!string.IsNullOrEmpty(component)) {
-            if (Type.GetType(component) == null) {
-                GameObject.Destroy(createdObject);
-                throw new Exception($"Could not get \"{component}\". Try specifying an assembly.");
+                throw new Exception($"Could not get \"{component}\".");
             }
 
-            createdObject.AddComponent(Type.GetType(component));
+            createdObject.AddComponent(getType);
 
-            output = $"Created new object {createdObject.name.ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)} and added component {createdObject.GetComponent(Type.GetType(component)).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}.";
+            output = $"Created new object: {createdObject.GetComponent(getType).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}.";
         }
 
         return output;
@@ -449,10 +438,58 @@ public static class UtilityCommands  {
         ToggleCursor(true, _lock ? CursorLockMode.Locked : CursorLockMode.None);
     }
 
+
+    [Command("capture-screenshot")]
+    [CommandDescription("Captures a screenshot and saves it to the supplied file path as a PNG.\n" +
+                        "If superSize is supplied the screenshot will be captured at a higher than native resolution.")]
+    private static IEnumerator<ICommandAction> CaptureScreenshot(
+        [CommandParameterDescription("The name of the file to save the screenshot in")] string filename,
+        [CommandParameterDescription("Factor by which to increase resolution")] int superSize = 1
+    )
+    {
+        QuantumConsole.Instance.ToggleVisibility(false);
+        yield return new WaitFrame();
+        ScreenCapture.CaptureScreenshot("Assets/Screenshots/" + filename + ".png", superSize);
+        Debug.Log("Saved screenshot to: Assets/Screenshots/" + filename + ".png");
+        yield return new WaitFrame();
+        QuantumConsole.Instance.ToggleVisibility(true);
+    }
+
     static void ToggleCursor (bool visible, CursorLockMode lockMode) {
         Cursor.visible = visible;
         Cursor.lockState = lockMode;
     }
+
+    public static Type GetTypeWithAssembly( string TypeName ) {
+    
+        // Try Type.GetType() first. This will work with types defined
+        // by the Mono runtime, etc.
+        var type = Type.GetType( TypeName );
+    
+        // If it worked, then we're done here
+        if( type != null )
+            return type;
+    
+        // Get the name of the assembly (Assumption is that we are using
+        // fully-qualified type names)
+        string assemblyName = "";
+        try {
+            assemblyName = TypeName.Substring( 0, TypeName.LastIndexOf( '.' ) );
+        }
+        catch {
+            throw new Exception($"Could not find type {TypeName}. Try specifying an assembly.");
+        }
+
+        // Attempt to load the indicated Assembly
+        var assembly = Assembly.Load(assemblyName);// LoadWithPartialName( assemblyName );
+        if( assembly == null ) {
+            throw new Exception($"Could not load {assembly} assembly.");
+        }
+    
+        // Ask that assembly to return the proper Type
+        return assembly.GetType( TypeName );
+    
+    }   
 }
 
 [CommandPrefix("vegetation.")]
@@ -499,6 +536,37 @@ public static class VegetationCommands {
     [Command("settings-help", "Display all available settings.")]
     static string GetAllSettings () {
         return UtilityCommands.CallVariableHelp(new VegetationSettings().GetType());
+    }
+
+}
+
+[CommandPrefix("ocean.")]
+public static class OceanCommands {
+
+    static OceanRenderer oceanRenderer {
+        get {
+            if (!OceanRenderer.Instance) throw new Exception("Could not find \"Ocean Renderer\" instance.");
+            return OceanRenderer.Instance;
+        }
+    }
+
+    [Command("create-camera")]
+    static string CreateOceanCamera (string name = "") {
+        Camera newCam = new GameObject().AddComponent<Camera>();
+        newCam.gameObject.name = string.IsNullOrEmpty(name) ? "Ocean Camera" : name;
+
+        oceanRenderer.ViewCamera = newCam;
+
+        return $"Created new camera {newCam.ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)} and assigned it to the ocean renderer.";
+    }
+    [Command("assign-camera")]
+    static string AssignOceanCamera (GameObject camera) {
+        Camera newCam = camera.GetComponent<Camera>();
+        if (!newCam) throw new Exception ($"{camera} does not contain a camera component.");
+
+        oceanRenderer.ViewCamera = newCam;
+
+        return $"Assigned {newCam.ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)} to the ocean renderer.";
     }
 
 }

@@ -7,7 +7,8 @@ namespace QFSW.QC.Parsers
     {
         public override GameObject Parse(string value)
         {
-            GameObject obj = GameObjectExtensions.Find(value, true);
+            string name = ParseRecursive<string>(value);
+            GameObject obj = GameObjectExtensions.Find(name, true);
 
             if (!obj)
             {

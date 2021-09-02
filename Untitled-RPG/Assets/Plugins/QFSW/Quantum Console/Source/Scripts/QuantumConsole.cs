@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace QFSW.QC
 {
@@ -148,6 +149,10 @@ namespace QFSW.QC
 
         private readonly Type _voidTaskType = typeof(Task<>).MakeGenericType(Type.GetType("System.Threading.Tasks.VoidTaskResult"));
 
+        public void ToggleVisibility(bool show = true) {
+            _containerRect.gameObject.SetActive(show);
+        }
+
         /// <summary>Applies a theme to the Quantum Console.</summary>
         /// <param name="theme">The desired theme to apply.</param>
         public void ApplyTheme(QuantumTheme theme, bool forceRefresh = false)
@@ -246,6 +251,22 @@ namespace QFSW.QC
                     ProcessAutocomplete();
                 }
             }
+
+            CheckForEventSystem(); //Finale
+        }
+
+        [SerializeField] bool checkForEventSystem = true;
+        void CheckForEventSystem() { //Finale
+            if (!checkForEventSystem) return;
+
+            if (!UnityEngine.EventSystems.EventSystem.current) {
+                EventSystem newEventSystem = new GameObject().AddComponent<EventSystem>();
+                newEventSystem.name = "QCEmergencyEventSystem";
+                newEventSystem.gameObject.AddComponent<StandaloneInputModule>();
+                Debug.LogWarning($"Quantum console failed to detect an event system. This should not happen. Created a new {newEventSystem.name.ColorText(Theme.DefaultReturnValueColor)} (EventSystem) to keep control of the console.");
+                Debug.LogWarning($"If you don't want Quantum Console to automaticly create emergency event systems, set QuantomConsole.checkForEventSystem to false.");
+            }
+
         }
 
 
