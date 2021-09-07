@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,6 +12,7 @@ public class AssetHolder : MonoBehaviour
     public static AssetHolder instance;
     
     public GameObject ddText;
+    public Volume mainCameraPPVolume;
     
     public Skill[] Skills;
 

@@ -343,15 +343,7 @@ namespace QFSW.QC
                     _selectedSuggestionCommandIndex %= _suggestedCommands.Count;
                     SetCommandSuggestion(_selectedSuggestionCommandIndex);
                 }
-                //Added by Finale
-                _consoleInput.MoveToEndOfLine(false, true); 
             }
-
-            //---Added by Finale---//
-            if (_keyConfig.AutocompleteKey.IsPressed() && !string.IsNullOrWhiteSpace(_currentText) && _selectedSuggestionCommandIndex >= 0) {
-                if (_suggestedCommands.Count > 0) SetCommandSuggestion(_suggestedCommands[_selectedSuggestionCommandIndex]);
-            }
-            //---Finale End---//
         }
 
         private string FormatSuggestion(CommandData command, bool selected)
@@ -432,14 +424,13 @@ namespace QFSW.QC
             }
 
             _selectedSuggestionCommandIndex = suggestionIndex;
-            //--- Commented out by Finale ---// SetCommandSuggestion(_suggestedCommands[_selectedSuggestionCommandIndex]);
+            SetCommandSuggestion(_suggestedCommands[_selectedSuggestionCommandIndex]);
             ProcessPopupDisplay();
         }
 
         private void SetCommandSuggestion(CommandData command)
         {
-            //--- Changed by Finale---// OverrideConsoleInput(command.CommandName);
-            OverrideConsoleInput(command);
+            OverrideConsoleInput(command.CommandName);
             Color suggestionColor = _theme ? _theme.SuggestionColor : Color.gray;
             _consoleSuggestionText.text = $"{command.CommandName.ColorText(Color.clear)}{command.GenericSignature.ColorText(suggestionColor)} {command.ParameterSignature.ColorText(suggestionColor)}";
         }
@@ -462,20 +453,6 @@ namespace QFSW.QC
 
             OnTextChange();
         }
-        //---Finale Method---//
-        public void OverrideConsoleInput (CommandData command, bool shouldFocus = true) {
-            _currentText = command.CommandName + (command.ParamCount > 0 ? " " : "");
-            _previousText = command.CommandName + (command.ParamCount > 0 ? " " : "");
-            _consoleInput.text = command.CommandName + (command.ParamCount > 0 ? " " : "");
-
-            if (shouldFocus)
-            {
-                FocusConsoleInput();
-            }
-
-            OnTextChange();
-        }
-        //---Finale End---//
 
         /// <summary>
         /// Selects and focuses the input field for the console.

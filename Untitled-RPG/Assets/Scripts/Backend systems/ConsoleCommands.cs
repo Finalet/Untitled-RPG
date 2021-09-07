@@ -449,8 +449,11 @@ public static class UtilityCommands  {
     {
         QuantumConsole.Instance.ToggleVisibility(false);
         yield return new WaitFrame();
-        ScreenCapture.CaptureScreenshot("Assets/Screenshots/" + filename + ".png", superSize);
-        Debug.Log("Saved screenshot to: Assets/Screenshots/" + filename + ".png");
+
+        if (!UnityEngine.Windows.Directory.Exists(Application.persistentDataPath + "/Screenshots")) UnityEngine.Windows.Directory.CreateDirectory(Application.persistentDataPath + "/Screenshots");
+        
+        ScreenCapture.CaptureScreenshot(Application.persistentDataPath + "/Screenshots/" + filename + ".png", superSize);
+        Debug.Log("Saved screenshot to: " + Application.persistentDataPath + "/Screenshots/" + filename + ".png");
         yield return new WaitFrame();
         QuantumConsole.Instance.ToggleVisibility(true);
     }
