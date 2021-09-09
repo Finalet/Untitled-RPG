@@ -1298,6 +1298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 0}
   value: 1
 --- !u!1 &6213254962857831130
 GameObject:
@@ -1869,7 +1870,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6213787271338914290}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 176724f165ed631408775764c436d474, type: 2}
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.48463202
@@ -1942,6 +1943,8 @@ MonoBehaviour:
   itemsLoot: []
   goldLootAmount: 0
   currentState: 0
+  distanceToPlayer: 0
+  agr: 0
   isCoolingDown: 0
   attackCoolDown: 3
   agrTime: 10
@@ -1951,8 +1954,8 @@ MonoBehaviour:
   isDead: 0
   isKnockedDown: 0
   isRagdoll: 0
+  isStunned: 0
   canGetHit: 1
-  agr: 0
   healthBar: {fileID: 1688562339371453867}
   hitParticles: {fileID: 0}
   getHitSounds: []

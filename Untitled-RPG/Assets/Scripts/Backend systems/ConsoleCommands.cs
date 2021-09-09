@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 using QFSW.QC;
 using QFSW.QC.Utilities;
 using QFSW.QC.Actions;
@@ -10,6 +11,8 @@ using System.Reflection;
 using Object = UnityEngine.Object;
 using AwesomeTechnologies.VegetationSystem;
 using Crest;
+using UnityEngine.SceneManagement;
+using Tayx.Graphy;
 
 namespace Finale.ConsoleCommands {
 
@@ -323,9 +326,9 @@ public static class PlayerCommands {
 public static class UtilityCommands  {
 
     [Command("call-field", "Get or set specified field in a specified class.")]
-    static string CallVariable ([CommandParameterDescription("Class containing the field.")] Type classType, [CommandParameterDescription("Field name")] string variable, [CommandParameterDescription("Set value for the field.")] string value = null) {
-        if (value == null) return ReadVariable(classType, variable);
-        else return SetVariable(classType, variable, value);
+    static string CallVariable ([CommandParameterDescription("Class containing the field.")] Type classType, [CommandParameterDescription("Field name")] string field, [CommandParameterDescription("Set value for the field.")] string value = null) {
+        if (value == null) return ReadVariable(classType, field);
+        else return SetVariable(classType, field, value);
     }
 
     static string ReadVariable (Type classType, string variable) {
@@ -348,10 +351,10 @@ public static class UtilityCommands  {
         return $"[{target.name} - {classType}] Set {field.Name} to {field.GetValue(target).ToString().ColorText(QuantumConsole.Instance.Theme.DefaultReturnValueColor)}";        
     }
 
-    [Command("call-variable-static")]
-    static string CallStaticVariable (Type classType, string variable, string value = null) {
-        if (value == null) return ReadStaticVariable(classType, variable);
-        else return SetStaticVariable(classType, variable, value);
+    [Command("call-field-static")]
+    static string CallStaticVariable (Type classType, string field, string value = null) {
+        if (value == null) return ReadStaticVariable(classType, field);
+        else return SetStaticVariable(classType, field, value);
     }
 
     static string ReadStaticVariable (Type classType, string variable) {
@@ -380,6 +383,7 @@ public static class UtilityCommands  {
 
         return output;
     }
+
 
     [Command("call-instance-help", "Display all available methods in a class.")]
     private static string CallInstanceHelp ([CommandParameterDescription("Class containing the methods.")] Type classType) {
@@ -450,12 +454,58 @@ public static class UtilityCommands  {
         QuantumConsole.Instance.ToggleVisibility(false);
         yield return new WaitFrame();
 
-        if (!UnityEngine.Windows.Directory.Exists(Application.persistentDataPath + "/Screenshots")) UnityEngine.Windows.Directory.CreateDirectory(Application.persistentDataPath + "/Screenshots");
+        if (!Directory.Exists(Application.persistentDataPath + "/Screenshots")) Directory.CreateDirectory(Application.persistentDataPath + "/Screenshots");
         
         ScreenCapture.CaptureScreenshot(Application.persistentDataPath + "/Screenshots/" + filename + ".png", superSize);
         Debug.Log("Saved screenshot to: " + Application.persistentDataPath + "/Screenshots/" + filename + ".png");
         yield return new WaitFrame();
         QuantumConsole.Instance.ToggleVisibility(true);
+    }
+
+    [Command("get-transform-hierarchy")]
+    static string GetTransformHierarchy (string parent = null) {
+        string output = $"\n--- {(!string.IsNullOrEmpty(parent) ? parent : "Scene")} Hierarchy ---\n";
+        
+        if (string.IsNullOrEmpty(parent)) {
+            List<GameObject> sceneObjects = new List<GameObject>(); 
+            for (int i = 0; i < SceneManager.sceneCount; i++){
+                sceneObjects.AddRange(SceneManager.GetSceneAt(i).GetRootGameObjects());
+            }
+
+            for (int i = 0; i < sceneObjects.Count; i++) {
+                output += $"\n{sceneObjects[i].transform.name}";
+            }
+
+            return output;
+        }
+
+        Transform p = null;
+
+        if (parent.Contains("-")){
+            string[] words = parent.Split('-');
+            
+            for (int i = 0; i<words.Length; i++) {
+                if (i == 0) {
+                    p = GameObject.Find(words[i]).transform;
+                    continue;
+                }
+                p = p.Find(words[i]).transform;
+            }
+        } else {
+            p = GameObject.Find(parent).transform;
+        }
+
+        for (int i = 0; i < p.childCount; i++) {
+            output += $"\n{p.GetChild(i).name}";
+        }
+
+        return output;
+    }
+
+    [Command("performance-monitor", "Show or hide the performance monitor.")]
+    static void TogglePerformanceMonitor () {
+        if (!GraphyManager.Instance) GameObject.Instantiate(Resources.Load<GameObject>("Performance Monitor"));
+        else GameObject.Destroy(GraphyManager.Instance.gameObject);
     }
 
     static void ToggleCursor (bool visible, CursorLockMode lockMode) {
@@ -599,6 +649,57 @@ public static class ConsoleCommands {
     }
 }
 
+[CommandPrefix("watchers.")]
+public static class WatcherCommans {
+
+    [Command("create", "Create a watcher that will show a field value updated each frame.")]
+    public static void CreateWatcher ([CommandParameterDescription("Target object to watch")] GameObject target, [CommandParameterDescription("Class of the field to watch")] Type classType, [CommandParameterDescription("Which field to watch")] string field, [CommandParameterDescription("Name of the watcher")] string watcherName = "") {
+        Object target1 = target ? CommandsHelper.FindObjectOnGameobject(target, classType) : CommandsHelper.FindObject(classType);
+        
+        FieldInfo field1 = null;
+        PropertyInfo propertyInfo1 = null;
+        try {
+            field1 = CommandsHelper.FindField(classType, field);
+        } catch {
+            try {
+            propertyInfo1 = CommandsHelper.FindProperty(classType, field);
+            } catch {
+                throw new Exception($"Could not find neither field nor property called \"{field}\" in \"{classType}\".");
+            }
+        }
+
+        DEBUG_Watchers watcherPrefab = GameObject.FindObjectOfType<DEBUG_Watchers>();
+        if (!watcherPrefab) watcherPrefab = GameObject.Instantiate(Resources.Load<GameObject>("WatcherPrefab"), QuantumConsole.Instance.transform).GetComponent<DEBUG_Watchers>();
+        
+        
+        if (field1 != null) watcherPrefab.CreateWatcher(watcherName, field1, target1);
+        else if (propertyInfo1 != null) watcherPrefab.CreateWatcher(watcherName, propertyInfo1, target1);
+        
+    }
+
+    [Command("create")]
+    public static void CreateWatcher (Type classType, string field, string watcherName = "") {
+        CreateWatcher(null, classType, field, watcherName);
+    }
+
+    [Command("delete")]
+    public static void DeleteWatcher (string watcher) {
+        DEBUG_Watchers watcherPrefab = GameObject.FindObjectOfType<DEBUG_Watchers>();
+        if (!watcherPrefab) throw new Exception("There are no active watchers.");
+
+        watcherPrefab.DeleteWatcher(watcher);
+    }
+
+    [Command("delete-all")]
+    public static void DeleteAllWatchers () {
+        DEBUG_Watchers watcherPrefab = GameObject.FindObjectOfType<DEBUG_Watchers>();
+        if (!watcherPrefab) throw new Exception("There are no active watchers.");
+
+        GameObject.Destroy(watcherPrefab.gameObject);
+    }
+
+}
+
 public static class CommandsHelper {
 
     public static readonly QuantumParser Parser = new QuantumParser();
@@ -633,6 +734,26 @@ public static class CommandsHelper {
         if (!target) throw new Exception($"No target of type \"{type}\" was found."); 
 
         return target;
+    }
+
+    public static Object FindObjectOnGameobject (GameObject gameObject, Type type) {
+        Object target = gameObject.GetComponent(type);
+        if (!target) throw new Exception($"No target of type \"{type}\" was found."); 
+
+        return target;
+    }
+
+    public static PropertyInfo FindProperty (Type type, string property) {
+
+        const BindingFlags flags =  BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod |
+                                       BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+
+        
+        PropertyInfo property1 = type.GetProperty(property, flags);
+
+        if (property1 == null) throw new Exception($"Could not find property \"{property1}\" inside \"{type}\".");
+
+        return property1;
     }
 }
 

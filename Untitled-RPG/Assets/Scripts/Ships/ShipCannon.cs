@@ -36,6 +36,6 @@ public class ShipCannon : MonoBehaviour
     }
 
     void OnDestroy() {
-        if (playerCollider.gameObject) Destroy(playerCollider.gameObject);
+        if (playerCollider && playerCollider.gameObject) Destroy(playerCollider.gameObject);
     }
 }

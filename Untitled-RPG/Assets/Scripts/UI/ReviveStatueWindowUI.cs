@@ -40,22 +40,22 @@ public class ReviveStatueWindowUI : MonoBehaviour
     public void SelectFirstSkillTree (int index) {
         switch (index) {
             case 0:
-                firstSkillTree = SkillTree.Knight;
+                firstSkillTree = SkillTree.Swordplay;
                 break;
             case 1:
-                firstSkillTree = SkillTree.Hunter;
+                firstSkillTree = SkillTree.Archery;
                 break;
             case 2:
-                firstSkillTree = SkillTree.Mage;
+                firstSkillTree = SkillTree.Sorcery;
                 break;
             case 3:
-                firstSkillTree = SkillTree.Summoner;
+                firstSkillTree = SkillTree.Summoning;
                 break;
             case 4:
-                firstSkillTree = SkillTree.Stealth;
+                firstSkillTree = SkillTree.Mobility;
                 break;
             case 5:
-                firstSkillTree = SkillTree.Angel;
+                firstSkillTree = SkillTree.Vitality;
                 break;
             case 6:
                 firstSkillTree = SkillTree.Defense;
@@ -68,22 +68,22 @@ public class ReviveStatueWindowUI : MonoBehaviour
     public void SelectSecondSkillTree (int index) {
         switch (index) {
             case 0:
-                secondSkillTree = SkillTree.Knight;
+                secondSkillTree = SkillTree.Swordplay;
                 break;
             case 1:
-                secondSkillTree = SkillTree.Hunter;
+                secondSkillTree = SkillTree.Archery;
                 break;
             case 2:
-                secondSkillTree = SkillTree.Mage;
+                secondSkillTree = SkillTree.Sorcery;
                 break;
             case 3:
-                secondSkillTree = SkillTree.Summoner;
+                secondSkillTree = SkillTree.Summoning;
                 break;
             case 4:
-                secondSkillTree = SkillTree.Stealth;
+                secondSkillTree = SkillTree.Mobility;
                 break;
             case 5:
-                secondSkillTree = SkillTree.Angel;
+                secondSkillTree = SkillTree.Vitality;
                 break;
             case 6:
                 secondSkillTree = SkillTree.Defense;

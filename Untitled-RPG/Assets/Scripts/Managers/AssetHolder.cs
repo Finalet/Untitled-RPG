@@ -12,7 +12,6 @@ public class AssetHolder : MonoBehaviour
     public static AssetHolder instance;
     
     public GameObject ddText;
-    public Volume mainCameraPPVolume;
     
     public Skill[] Skills;
 

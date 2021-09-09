@@ -15,13 +15,13 @@ public class SkillPanelUI : MonoBehaviour
     public Image[] pickedSkillsIcons;
     public Image[] equipmentSkillsIcons;
 
-    Transform KnightRow;
-    Transform HunterRow;
-    Transform MageRow;
-    Transform AngelRow;
-    Transform StealhRow;
+    Transform SwordplayRow;
+    Transform ArcheryRow;
+    Transform SorceryRow;
+    Transform VitailityRow;
+    Transform MobilityRow;
     Transform DefenseRow;
-    Transform SummonerRow;
+    Transform SummoningRow;
 
     void OnEnable() {
         UpdateLearnedSkills();
@@ -48,26 +48,26 @@ public class SkillPanelUI : MonoBehaviour
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, generatedTrees.Count * (-rt.sizeDelta.y - 20));
             rt.gameObject.SetActive(true);
             switch (sk.skillTree) {
-                case SkillTree.Knight:
-                    KnightRow = rt.transform;
+                case SkillTree.Swordplay:
+                    SwordplayRow = rt.transform;
                     break;
-                case SkillTree.Hunter:
-                    HunterRow = rt.transform;
+                case SkillTree.Archery:
+                    ArcheryRow = rt.transform;
                     break;
-                case SkillTree.Mage:
-                    MageRow = rt.transform;
+                case SkillTree.Sorcery:
+                    SorceryRow = rt.transform;
                     break;
-                case SkillTree.Angel:
-                    AngelRow = rt.transform;
+                case SkillTree.Vitality:
+                    VitailityRow = rt.transform;
                     break;
-                case SkillTree.Stealth:
-                    StealhRow = rt.transform;
+                case SkillTree.Mobility:
+                    MobilityRow = rt.transform;
                     break;
                 case SkillTree.Defense:
                     DefenseRow = rt.transform;
                     break;
-                case SkillTree.Summoner:
-                    SummonerRow = rt.transform;
+                case SkillTree.Summoning:
+                    SummoningRow = rt.transform;
                     break;
             }
             generatedTrees.Add(sk.skillTree);
@@ -81,29 +81,29 @@ public class SkillPanelUI : MonoBehaviour
                 continue;
 
             switch (sk.skillTree) {
-                case SkillTree.Knight:
-                    row = KnightRow;
+                case SkillTree.Swordplay:
+                    row = SwordplayRow;
                     break;
-                case SkillTree.Hunter:
-                    row = HunterRow;
+                case SkillTree.Archery:
+                    row = ArcheryRow;
                     break;
-                case SkillTree.Mage:
-                    row = MageRow;
+                case SkillTree.Sorcery:
+                    row = SorceryRow;
                     break;
-                case SkillTree.Angel:
-                    row = AngelRow;
+                case SkillTree.Vitality:
+                    row = VitailityRow;
                     break;
-                case SkillTree.Stealth:
-                    row = StealhRow;
+                case SkillTree.Mobility:
+                    row = MobilityRow;
                     break;
                 case SkillTree.Defense:
                     row = DefenseRow;
                     break;
-                case SkillTree.Summoner:
-                    row = SummonerRow;
+                case SkillTree.Summoning:
+                    row = SummoningRow;
                     break;
                 default:
-                    row = KnightRow;
+                    row = SwordplayRow;
                     break;
             }
             SkillOnPanel sop = Instantiate(SkillOnPanePrefab, row).GetComponent<SkillOnPanel>();
@@ -113,13 +113,13 @@ public class SkillPanelUI : MonoBehaviour
     }
     
     public void ResetLearnedSkills () {
-        if (KnightRow) Destroy(KnightRow.gameObject);
-        if (HunterRow) Destroy(HunterRow.gameObject);
-        if (MageRow) Destroy(MageRow.gameObject);
-        if (AngelRow) Destroy(AngelRow.gameObject);
-        if (StealhRow) Destroy(StealhRow.gameObject);
+        if (SwordplayRow) Destroy(SwordplayRow.gameObject);
+        if (ArcheryRow) Destroy(ArcheryRow.gameObject);
+        if (SorceryRow) Destroy(SorceryRow.gameObject);
+        if (VitailityRow) Destroy(VitailityRow.gameObject);
+        if (MobilityRow) Destroy(MobilityRow.gameObject);
         if (DefenseRow) Destroy(DefenseRow.gameObject);
-        if (SummonerRow) Destroy(SummonerRow.gameObject);
+        if (SummoningRow) Destroy(SummoningRow.gameObject);
 
         generatedTrees.Clear();
         generatedSkills.Clear();

@@ -229,7 +229,7 @@ public class Combat : MonoBehaviour, ISavable
 
     public void Save () {
         //Save skill tress
-        ES3.Save<SkillTree[]>("currentSkillTrees", currentSkillTrees, savefilePath());
+        ES3.Save<List<SkillTree>>("currentSkillTrees", currentSkillTrees, savefilePath());
         
         //Save learned skills
         List<int> skillIDs = new List<int>();
@@ -254,8 +254,8 @@ public class Combat : MonoBehaviour, ISavable
     public void Load() {
         //Load current skill trees
         List<SkillTree> defaultSkilltrees = new List<SkillTree>();
-        defaultSkilltrees.Add(SkillTree.Knight);
-        defaultSkilltrees.Add(SkillTree.Hunter);
+        defaultSkilltrees.Add(SkillTree.Swordplay);
+        defaultSkilltrees.Add(SkillTree.Archery);
 
         currentSkillTrees = ES3.Load<List<SkillTree>>("currentSkillTrees", savefilePath(), defaultSkilltrees);
         

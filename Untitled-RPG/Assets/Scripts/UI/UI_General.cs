@@ -6,16 +6,6 @@ using UnityEngine.UI;
 [System.Serializable]
 public static class UI_General
 {
-    public static Dictionary<SkillTree, string> skilltreeDictionary = new Dictionary<SkillTree, string>() {
-        {SkillTree.Knight, "Swordplay"},
-        {SkillTree.Hunter, "Archery"},
-        {SkillTree.Mage, "Sourcery"},
-        {SkillTree.Defense, "Defense"},
-        {SkillTree.Angel, "Healing"},
-        {SkillTree.Stealth, "Mobility"},
-        {SkillTree.Summoner, "Summoning"}
-    };
-
     public static Color commonRarityColor = Color.white;
     public static Color uncommonRarityColor = new Color(0.0f, 0.8f, 0);
     public static Color rareRarityColor = new Color(0.2f, 0.45f, 0.76f);

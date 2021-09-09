@@ -48,37 +48,37 @@ public class SkillsDatabase : EditorWindow
         }
 
         EditorGUI.indentLevel = 0;
-        showKnight = EditorGUILayout.Foldout(showKnight, "Knight");
+        showKnight = EditorGUILayout.Foldout(showKnight, "Swordplay");
         if (showKnight) {
-            DrawSkills(SkillTree.Knight);
+            DrawSkills(SkillTree.Swordplay);
             EditorGUILayout.Space(5, false);
         }
 
         EditorGUI.indentLevel = 0;
-        showHunter = EditorGUILayout.Foldout(showHunter, "Hunter");
+        showHunter = EditorGUILayout.Foldout(showHunter, "Archery");
         if (showHunter) {
-            DrawSkills(SkillTree.Hunter);
+            DrawSkills(SkillTree.Archery);
             EditorGUILayout.Space(5, false);
         }
 
         EditorGUI.indentLevel = 0;
-        showMage = EditorGUILayout.Foldout(showMage, "Mage");
+        showMage = EditorGUILayout.Foldout(showMage, "Sorcery");
         if (showMage) {
-            DrawSkills(SkillTree.Mage);
+            DrawSkills(SkillTree.Sorcery);
             EditorGUILayout.Space(5, false);
         }
 
         EditorGUI.indentLevel = 0;
-        showAngel = EditorGUILayout.Foldout(showAngel, "Angel");
+        showAngel = EditorGUILayout.Foldout(showAngel, "Vitality");
         if (showAngel) {
-            DrawSkills(SkillTree.Angel);
+            DrawSkills(SkillTree.Vitality);
             EditorGUILayout.Space(5, false);
         }
 
         EditorGUI.indentLevel = 0;
-        showStealth = EditorGUILayout.Foldout(showStealth, "Stealth");
+        showStealth = EditorGUILayout.Foldout(showStealth, "Mobility");
         if (showStealth) {
-            DrawSkills(SkillTree.Stealth);
+            DrawSkills(SkillTree.Mobility);
             EditorGUILayout.Space(5, false);
         }
 
@@ -90,9 +90,9 @@ public class SkillsDatabase : EditorWindow
         }
 
         EditorGUI.indentLevel = 0;
-        showSummoner = EditorGUILayout.Foldout(showSummoner, "Summoner");
+        showSummoner = EditorGUILayout.Foldout(showSummoner, "Summoning");
         if (showSummoner) {
-            DrawSkills(SkillTree.Summoner);
+            DrawSkills(SkillTree.Summoning);
             EditorGUILayout.Space(5, false);
         }
 

@@ -2,7 +2,7 @@
 
 public enum ConsumableType {Health, Stamina, Buff};
 
-public enum SkillTree {Knight, Hunter, Mage, Angel, Stealth, Defense, Summoner, Independent}
+public enum SkillTree {Swordplay, Archery, Sorcery, Vitality, Mobility, Defense, Summoning, Independent}
 public enum SkillType {Damaging, Healing, Buff }
 public enum DamageType {Melee, Ranged, Magic, Healing, Defensive, Enemy, NoDamage, Raw}
 
