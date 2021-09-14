@@ -19,6 +19,8 @@ public class PlayerAudioController : MonoBehaviour
     [Header("Footsteps")]
     public AudioClip[] walkFootstepsGrass;
     public AudioClip[] runFootstepsGrass;
+    public AudioClip[] walkFootstepsStone;
+    public AudioClip[] runFootstepsStone;
     [Space]
     public AudioClip[] jumpingRollingGunts;
     [Header("GetHit")]
@@ -45,19 +47,23 @@ public class PlayerAudioController : MonoBehaviour
     }
 
     void Update() {
-        CheckSounds();
+        CheckFootstepSounds();
         CheckFootsteps();
         UpdateThreashold();
     }
 
-    void CheckSounds () {
+    void CheckFootstepSounds () {
         if (!PlayerControlls.instance.isRunning) { // If walking play walking sounds
-            if (groundType == GroundType.Grass) {
-                currentArray = walkFootstepsGrass;
+            switch (groundType)
+            {
+                case GroundType.Grass: currentArray = walkFootstepsGrass; break;
+                case GroundType.Stone: currentArray = walkFootstepsStone; break;
             }
         } else { //If running, play running sounds
-            if (groundType == GroundType.Grass) {
-                currentArray = runFootstepsGrass;
+            switch (groundType)
+            {
+                case GroundType.Grass: currentArray = runFootstepsGrass; break;
+                case GroundType.Stone: currentArray = runFootstepsStone; break;
             }
         }
     }

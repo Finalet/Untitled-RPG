@@ -56,6 +56,7 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
     }
 
     public virtual void ValidateSkillSlot() {
+        GrabSlotContents();
         if (currentSlotSkill == null)
             return;
 
@@ -259,6 +260,8 @@ public class UI_SkillPanelSlot : UI_InventorySlot, IDropHandler, IDragHandler, I
         skillsInRows[row] = skill;
         itemsAndAmontsInRows[row].item1 = null;
         itemsAndAmontsInRows[row].amount1 = 0;
+
+        ValidateSkillSlot();
     }
 
     public override void AddItem (Item item, int amount, UI_InventorySlot initialSlot) {
