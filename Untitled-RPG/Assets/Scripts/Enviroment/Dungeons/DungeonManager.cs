@@ -9,6 +9,9 @@ public class DungeonManager : MonoBehaviour
 
     public bool isPlayerInsideFightingRoom;
 
+    float delayFromStartup = 2;
+    float timeStarted;
+
     EnemyWaveGenerator waveGenerator;
 
     void Awake() {
@@ -22,10 +25,11 @@ public class DungeonManager : MonoBehaviour
         }
         PlayerAudioController.instance.groundType = GroundType.Stone;
         PlayerControlls.instance.InstantOverridePosRot(playerSpawnPoint);
+        timeStarted = Time.time;
     }
 
     public void LaunchFight() {
-        if (waveGenerator.isActive) return;
+        if (waveGenerator.isActive || Time.time - timeStarted < delayFromStartup) return;
 
         StartCoroutine(LaunchFightDelayed());
     }

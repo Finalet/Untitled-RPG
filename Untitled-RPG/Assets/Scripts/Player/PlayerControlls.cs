@@ -617,7 +617,12 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     public void Save()
     {
-        ES3.Save<Vector3>("pos", transform.position, SaveManager.instance.getCurrentCharacterFolderPath("playerTrans"));
+        for (int i = 0; i < SceneManager.sceneCount; i++) {
+            if (SceneManager.GetSceneAt(i).name == "City") {
+                ES3.Save<Vector3>("pos", transform.position, SaveManager.instance.getCurrentCharacterFolderPath("playerTrans"));
+                return;
+            }
+        }
     }
 
     public void Load()

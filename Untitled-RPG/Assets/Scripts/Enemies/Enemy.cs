@@ -62,7 +62,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     public ParticleSystem hitParticles;
     public AudioClip[] getHitSounds;
     public AudioClip[] stabSounds;
-    public AudioClip[] stepsSounds;
     public AudioClip[] attackSounds;
 
     protected Animator animator;
@@ -74,6 +73,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     protected FieldOfView fieldOfView;
     protected RagdollController ragdollController;
     protected EnemyController enemyController;
+    protected FootstepManager footstepManager;
     protected float baseControllerSpeed;
 
     protected float agrDelay; 
@@ -90,6 +90,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         audioSource = GetComponent<AudioSource>();
         fieldOfView = GetComponent<FieldOfView>();
         fieldOfView.InitForEnemy();
+        footstepManager = GetComponentInChildren<FootstepManager>();
+
         currentHealth = maxHealth;
         baseControllerSpeed = enemyController.speed;
 
@@ -298,7 +300,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     protected IEnumerator HitStop (bool isCrit) {
         float timeStarted = Time.realtimeSinceStartup;
         float time = isCrit ? 0.4f : 0.12f;
-        Time.timeScale = 0.3f;
+        Time.timeScale = 0.2f;
         Time.fixedDeltaTime = 0.006f;
         while(Time.realtimeSinceStartup - timeStarted < time) {
             yield return null;
@@ -456,12 +458,18 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     }
 
     public virtual void FootStep () {
-        if (stepsSounds.Length == 0)
+        if (!footstepManager)
             return;
 
-        int playID = Random.Range(0, stepsSounds.Length);
-        audioSource.pitch = 1 + Random.Range(-0.1f, 0.1f);
-        audioSource.PlayOneShot(stepsSounds[playID]);
+        footstepManager.PlayFootstepSound();
+    }
+    public void SetGroundType (GroundType groundType) {
+        if (!footstepManager) footstepManager = GetComponentInChildren<FootstepManager>();
+
+        if (!footstepManager)
+            return;
+
+        footstepManager.currentGroundType = groundType;
     }
 
     public virtual void PlayAttackSound (AnimationEvent animationEvent) {

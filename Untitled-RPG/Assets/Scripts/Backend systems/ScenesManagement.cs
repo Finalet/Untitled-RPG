@@ -82,6 +82,12 @@ public class ScenesManagement : MonoBehaviour
     }
 
     IEnumerator Loading (string worldScene) {
+        if (PeaceCanvas.instance) {
+            PeaceCanvas.instance.BlackoutFade();
+            PlayerControlls.instance.disableControlRequests++;
+            yield return new WaitForSeconds(1);
+        }
+        
         blackout.color = Color.black;
         blackout.DOFade(0, 1);
         
@@ -94,8 +100,9 @@ public class ScenesManagement : MonoBehaviour
         loadingScreen.SetActive(true);
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("SceneManagement"));
         isLoading = true;
-        
-        for (int i = 0; i < SceneManager.sceneCount; i++) {
+
+        for (int i = SceneManager.sceneCount-1; i >= 0; i--) {
+            string sceneName = SceneManager.GetSceneAt(i).name;
             if (SceneManager.GetSceneAt(i).name != "SceneManagement") {
                 AsyncOperation unloadScene = SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i).name);
                 yield return unloadScene;

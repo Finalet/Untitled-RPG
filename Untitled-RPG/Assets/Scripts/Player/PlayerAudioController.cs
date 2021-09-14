@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GroundType {Grass, Stone};
 public enum GetHitType {Hit, Block, Invincibility};
 
 public class PlayerAudioController : MonoBehaviour

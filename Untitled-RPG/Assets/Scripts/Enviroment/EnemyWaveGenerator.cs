@@ -116,18 +116,20 @@ public class EnemyWave {
     void SpawnEnemy (WaveEnemy enemyToSpawn) {
        Vector3 spawnPos = getSpawnPos(enemyToSpawn); 
        
-
         for (int i = 0; i < spawnedEnemies.Count; i++) {
             if (spawnedEnemies[i].relatedEnemyPrefab == enemyToSpawn.enemyPrefab) {
-                spawnedEnemies[i].spawnedGameObjects.Add(Object.Instantiate(enemyToSpawn.enemyPrefab, spawnPos, getSpawnRot(spawnPos), waveGenerator.transform));
-                totalSpawnedEnemies ++;        
+                InstanciateEnemy(i, enemyToSpawn.enemyPrefab, spawnPos);
                 return;
             }
         }
+    }
 
-        spawnedEnemies.Add(new SpawnedEnemy(new List<GameObject>(), enemyToSpawn.enemyPrefab));    
-        spawnedEnemies[spawnedEnemies.Count-1].spawnedGameObjects.Add(Object.Instantiate(enemyToSpawn.enemyPrefab, spawnPos, getSpawnRot(spawnPos), waveGenerator.transform));
-        totalSpawnedEnemies ++; 
+    void InstanciateEnemy (int index, GameObject prefab, Vector3 pos) {
+        Enemy en = Object.Instantiate(prefab, pos, getSpawnRot(pos), waveGenerator.transform).GetComponent<Enemy>();
+        en.SetGroundType(GroundType.Stone);
+
+        spawnedEnemies[index].spawnedGameObjects.Add(en.gameObject);
+        totalSpawnedEnemies ++;        
     }
 
     void CleanSpawnedEnemies () {
@@ -161,6 +163,10 @@ public class EnemyWave {
                 spawnPos.x += (Random.value <= 0.5f ? 1 : -1) * Random.Range(0, enemyToSpawn.spawnRadius.y) * waveGenerator.SpawnVolumeSize.x / 2;
                 spawnPos.z += (Random.value <= 0.5f ? 1 : -1) * (Random.Range(enemyToSpawn.spawnRadius.x, enemyToSpawn.spawnRadius.y) * waveGenerator.SpawnVolumeSize.z / 2);
             }
+        }
+        RaycastHit hit;
+        if (Physics.Raycast(spawnPos, Vector3.down, out hit, waveGenerator.SpawnVolumeSize.y * 2, waveGenerator.groundLayers)) {
+            spawnPos.y = hit.point.y;
         }
         return spawnPos;
     }
@@ -207,6 +213,7 @@ public class EnemyWave {
 public class EnemyWaveGenerator : MonoBehaviour
 {
     public float delayBetweenWaves = 5;
+    public LayerMask groundLayers;
     
     [Space]
     public Vector3 SpawnVolumeSize;
