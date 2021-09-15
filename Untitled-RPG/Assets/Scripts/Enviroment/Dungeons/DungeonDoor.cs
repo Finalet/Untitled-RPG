@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DungeonDoor : MonoBehaviour
 {
-    private bool _isOpen;
+    [SerializeField, DisplayWithoutEdit] private bool _isOpen;
     public bool isOpen {
         set {
             _isOpen = value;

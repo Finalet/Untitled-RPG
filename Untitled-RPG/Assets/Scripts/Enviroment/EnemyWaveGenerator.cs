@@ -244,6 +244,11 @@ public class EnemyWaveGenerator : MonoBehaviour
         }
     }
 
+    public bool isDone;
+
+    //Events
+    public event System.Action OnAllWavesDone;
+
     void Awake() {
         foreach (EnemyWave wave in waves) wave.waveGenerator = this;
     }
@@ -263,8 +268,10 @@ public class EnemyWaveGenerator : MonoBehaviour
                 yield return null;
             }
             yield return new WaitForSeconds(delayBetweenWaves);
-
         }
+
+        isDone = true;
+        OnAllWavesDone?.Invoke();
     }
 
     #if UNITY_EDITOR
