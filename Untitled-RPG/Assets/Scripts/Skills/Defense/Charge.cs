@@ -11,6 +11,7 @@ public class Charge : Skill
 
     public ParticleSystem sprintingTrails;
     public ParticleSystem lastParticles;
+    public ParticleSystem hitVFX;
     public AudioClip soundFX;
     
     bool charging;
@@ -81,6 +82,11 @@ public class Charge : Skill
 
         en.GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), false, false, HitType.Kickback, new Vector3(), 30);
         damagablesHit.Add(en);
+
+        MonoBehaviour mb = en as MonoBehaviour;
+        ParticleSystem ps = Instantiate(hitVFX, mb.transform.position + Vector3.up * 1.2f, Quaternion.identity);
+        ps.Play();
+        Destroy(ps.gameObject, 1);
     }
 
     public override bool skillActive()

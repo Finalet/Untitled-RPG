@@ -9,6 +9,7 @@ public class KO : Skill
     [Header("Custom vars")]
     public AudioClip[] sounds;
     public ParticleSystem twohandedSwordVFX;
+    public ParticleSystem hitVFX;
 
     Vector3 colliderSize;
     public Vector3 colliderSizeDualSwords;
@@ -84,6 +85,10 @@ public class KO : Skill
             } else {
                 damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName), true, true, HitType.Normal);
             }
+            MonoBehaviour mb = damagablesInTrigger[i] as MonoBehaviour;
+            ParticleSystem ps = Instantiate(hitVFX, mb.transform.position + Vector3.up * 1.4f, Quaternion.identity);
+            ps.Play();
+            Destroy(ps.gameObject, 1);
         }
         if (WeaponsController.instance.bothHandsStatus == BothHandsStatus.TwoHanded)
             twohandedSwordVFX.Play();

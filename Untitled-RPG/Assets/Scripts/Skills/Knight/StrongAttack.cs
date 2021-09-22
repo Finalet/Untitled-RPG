@@ -13,6 +13,7 @@ public class StrongAttack : Skill
     public AudioClip[] sounds;
     public Vector3 colliderSizeDualSwords;
     public Vector3 colliderSizeTwohandedSword;
+    public ParticleSystem hitVFX;
 
     protected override void Update() {
         base.Update();
@@ -61,6 +62,10 @@ public class StrongAttack : Skill
     public void Hit () {
         for (int i = 0; i < damagablesInTrigger.Count; i++) {
             damagablesInTrigger[i].GetHit(CalculateDamage.damageInfo(damageType, baseDamagePercentage, skillName, critChance), true, true, HitType.Kickback);
+            MonoBehaviour mb = damagablesInTrigger[i] as MonoBehaviour;
+            ParticleSystem ps = Instantiate(hitVFX, mb.transform.position + Vector3.up * 1.4f, Quaternion.identity);
+            ps.Play();
+            Destroy(ps.gameObject, 1);
         }
     }
 

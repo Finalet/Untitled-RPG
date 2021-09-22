@@ -141,13 +141,13 @@ public class UI_EquipmentSlot : UI_InventorySlot
             return;
         }
         Weapon mw = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-        if (mw != null && (mw.weaponHand == WeaponHand.TwoHanded) ) { //if main hand is busy with a who handed weapon, remove two handed weapon
+        if (mw != null && (mw.weaponHand == WeaponHand.TwoHanded) ) { //if main hand is busy with a tho handed weapon, remove two handed weapon
             InventoryManager.instance.AddItemToInventory(EquipmentManager.instance.mainHand.itemInSlot, EquipmentManager.instance.mainHand.itemAmount, initialSlot);
             EquipmentManager.instance.mainHand.ClearSlot();
         }
         
         Weapon wInSlot = (Weapon)itemInSlot;
-        if (wInSlot != null && wInSlot.weaponHand == WeaponHand.SecondaryHand) { // if slot already contains item that only for the secondary hand, return it to inventory
+        if (wInSlot != null && wInSlot.weaponHand == WeaponHand.SecondaryHand) { // if slot already contains item that only for the secondary hand, return it initial slot or inventory
             InventoryManager.instance.AddItemToInventory(itemInSlot, itemAmount, initialSlot);
             ClearSlot();
         }

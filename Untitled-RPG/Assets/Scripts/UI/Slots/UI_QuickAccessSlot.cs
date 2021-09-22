@@ -47,6 +47,7 @@ public class UI_QuickAccessSlot : UI_InventorySlot
             return;
 
         base.ClearSlot();
+        if (!isParentSlot) pairedSlot.ClearSlot();
         SyncItem();
     }
     public override void UseItem()

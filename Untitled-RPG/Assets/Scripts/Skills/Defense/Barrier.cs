@@ -12,6 +12,7 @@ public class Barrier : Skill
 
     public Transform[] shields;
     public AudioClip sfx;
+    public ParticleSystem castEndVFX;
 
     float raiseSpeed = 0.5f;
 
@@ -23,6 +24,7 @@ public class Barrier : Skill
     IEnumerator use () {
         PlaySound(sfx, 0, characteristics.attackSpeed.y);
         yield return new WaitForSeconds(0.56f * characteristics.attackSpeed.x);
+        castEndVFX.Play();
         barrier.transform.SetParent(null);
         barrier.SetActive(true);
         barrierMaterial.SetFloat("Progress", 0);

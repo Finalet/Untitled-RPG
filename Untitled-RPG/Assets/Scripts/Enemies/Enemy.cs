@@ -26,9 +26,10 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
     public int goldLootAmount;
 
     [Header("AI")]
+    [DisplayWithoutEdit] public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
     [DisplayWithoutEdit] public EnemyState currentState;
     [DisplayWithoutEdit] [SerializeField] protected float distanceToPlayer;
-    [DisplayWithoutEdit] public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
+    [DisplayWithoutEdit] [SerializeField] protected float distanceToDestination;
     
     [Header("Attack")]
     public bool isCoolingDown;
@@ -100,7 +101,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         initialPos = transform.position;
         //if spawned in the air - drop on the floor
         RaycastHit hit;
-        if (Physics.Raycast(initialPos, -Vector3.up, out hit, 10f)) 
+        if (Physics.Raycast(initialPos + Vector3.up, -Vector3.up, out hit, 10f)) 
             initialPos = hit.point + Vector3.up * 0.05f;
     }
 
@@ -119,6 +120,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         AttackCoolDown();
 
         distanceToPlayer = fieldOfView.distanceToTarget;
+        if (navAgent) distanceToDestination = navAgent.remainingDistance;
     
         CheckAgr();
     
@@ -163,7 +165,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
             }
 
         } else if (currentState != EnemyState.Celebrating || ( (Time.time - startedCelebratingTime > celebrationDuration) || distanceToPlayer > 20) ) {
-            currentState = Vector3.Distance(transform.position, initialPos) > enemyController.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
+            currentState = navAgent.remainingDistance > enemyController.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
         }
 
         if (isStunned) currentState = EnemyState.Stunned;
@@ -213,11 +215,11 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         FaceTarget(instant);
     }
     protected abstract void FaceTarget (bool instant = false);
+    
     protected virtual void ReturnToPosition() {
         if (PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Contains(this))
             PlayerControlls.instance.GetComponent<Combat>().enemiesInBattle.Remove(this);
 
-        
         if(navAgent.enabled) {
             navAgent.destination = initialPos;
             navAgent.isStopped = false;

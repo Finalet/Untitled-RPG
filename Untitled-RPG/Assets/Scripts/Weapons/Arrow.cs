@@ -12,6 +12,7 @@ public class Arrow : MonoBehaviour
     public TrailRenderer trail;
     [System.NonSerialized] public bool instantShot = false;
     public AudioClip[] impactSounds;
+    [SerializeField] ParticleSystem hitVFX;
 
     protected float timeShot;
     protected bool shot = false;
@@ -98,6 +99,10 @@ public class Arrow : MonoBehaviour
         if (!damagablesHit.Contains(en)) {
             en.GetHit(damageInfo, false, false, HitType.Interrupt, transform.position);
             damagablesHit.Add(en);
+
+            ParticleSystem ps = Instantiate(hitVFX, transform.position, Quaternion.identity);
+            ps.Play();
+            Destroy(ps.gameObject, 1);
 
             bl_UCrosshair.Instance.OnHit();
         }

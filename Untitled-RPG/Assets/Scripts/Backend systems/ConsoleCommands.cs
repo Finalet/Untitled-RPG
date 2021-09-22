@@ -207,7 +207,7 @@ public static class PlayerCommands {
         }
 
         [Command("learn-all", "Learns all skills.")]
-        static void LearnAllSkills () {
+        public static void LearnAllSkills () {
             foreach (Skill skill in assetHolder.Skills){
                 if (skill.skillTree == SkillTree.Independent)
                     continue;
@@ -244,7 +244,7 @@ public static class PlayerCommands {
             s.coolDown = value;
         }
         [Command("set-cooldown-all", "Set all skills' cooldown to a certain value.")]
-        static void SetAllSkillsCooldown (float value) {
+        public static void SetAllSkillsCooldown (float value) {
             foreach (Skill s in assetHolder.Skills) {
                 s.coolDown = value;
             }
@@ -267,7 +267,7 @@ public static class PlayerCommands {
     public static class SkilltreesCommands {
 
         [Command("unlock-all", "Unlocks all skilltrees.")]
-        static void UnlockAllSkilltrees() {
+        public static void UnlockAllSkilltrees() {
             foreach (SkillTree s in System.Enum.GetValues(typeof(SkillTree))) {
                 if (s == SkillTree.Independent) continue;
 
@@ -301,7 +301,7 @@ public static class PlayerCommands {
         characteristics.Die(new DamageInfo(0, DamageType.Raw, false, "suicide."));
     }
     [Command("revive")]
-    static void REvive () {
+    static void Revive () {
         characteristics.Revive();
     }
 
@@ -321,12 +321,25 @@ public static class PlayerCommands {
         if (itemAmount > itemToGive.maxStackAmount) Debug.LogWarning($"Item amount was limited to the maximum stack size {itemToGive.maxStackAmount}");
     }
 
+    [Command("godmode")]
+    static void Godmode () {
+        SkillsCommands.SetAllSkillsCooldown(0);
+        UtilityCommands.CallVariable(playerControlls.GetType(), "staminaReqToRoll", "0");
+        UtilityCommands.CallVariable(playerControlls.GetType(), "staminaReqToSprint", "0");
+        SkillsCommands.LearnAllSkills();
+        SkilltreesCommands.UnlockAllSkilltrees();
+
+        Debug.Log("All skills cooldown set to 0.");
+        Debug.Log("Stamina use set to 0.");
+        Debug.Log("Unlocked all trees and learned all skills.");
+    }
+
 }
 
 public static class UtilityCommands  {
 
     [Command("call-field", "Get or set specified field in a specified class.")]
-    static string CallVariable ([CommandParameterDescription("Class containing the field.")] Type classType, [CommandParameterDescription("Field name")] string field, [CommandParameterDescription("Set value for the field.")] string value = null) {
+    public static string CallVariable ([CommandParameterDescription("Class containing the field.")] Type classType, [CommandParameterDescription("Field name")] string field, [CommandParameterDescription("Set value for the field.")] string value = null) {
         if (value == null) return ReadVariable(classType, field);
         else return SetVariable(classType, field, value);
     }
