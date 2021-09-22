@@ -16778,15 +16778,22 @@ MonoBehaviour:
   immuneToKnockDown: 0
   immuneToKickBack: 1
   localEnemyBounds: {x: 0.6, y: 1.8, z: 0.5}
-  itemsLoot:
-  - item: {fileID: 11400000, guid: bb310d68194c59043995d763197685aa, type: 2}
-    amount: 10
-    probability: 1
-    amountVariability: 0.3
-  - item: {fileID: 11400000, guid: 029e0d8f4ca12354fa9416b780e7f0a2, type: 2}
-    amount: 1
-    probability: 1
-    amountVariability: 0
+  loot:
+    possibleLoot:
+      WeightedEntries:
+      - item:
+          item: {fileID: 11400000, guid: bb310d68194c59043995d763197685aa, type: 2}
+          amount: 10
+          amountVariability: 0.3
+        weight: 1
+      - item:
+          item: {fileID: 11400000, guid: 029e0d8f4ca12354fa9416b780e7f0a2, type: 2}
+          amount: 1
+          amountVariability: 0
+        weight: 1
+    minLoot: 2
+    maxLoot: 2
+    expectedValue: 222
   goldLootAmount: 0
   currentState: 0
   distanceToPlayer: 0
@@ -16811,11 +16818,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5a88b8140230be34d8924f439f9ee659, type: 3}
   stabSounds:
   - {fileID: 8300000, guid: 2db3ed5e94d584f4899d41a0f5bc1160, type: 3}
-  stepsSounds:
-  - {fileID: 8300000, guid: ec7c81b910943c74ab13cdee24930da3, type: 3}
-  - {fileID: 8300000, guid: fb7f063b231c0dc4db4a97d6c4aede82, type: 3}
-  - {fileID: 8300000, guid: 6ca4b3f80ed880946839b0ce574c8e59, type: 3}
-  - {fileID: 8300000, guid: 0d886e947efb0b24e929bb73cd159fde, type: 3}
   attackSounds:
   - {fileID: 8300000, guid: c464e8ab418dcf34aa741a473410aefd, type: 3}
   - {fileID: 8300000, guid: a9a3d3e930a9c4e859328622d529a04d, type: 3}
@@ -22384,6 +22386,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fb7f063b231c0dc4db4a97d6c4aede82, type: 3}
   - {fileID: 8300000, guid: 6ca4b3f80ed880946839b0ce574c8e59, type: 3}
   - {fileID: 8300000, guid: 0d886e947efb0b24e929bb73cd159fde, type: 3}
+  currentGroundType: 0
 --- !u!1001 &3286176125187224729
 PrefabInstance:
   m_ObjectHideFlags: 0

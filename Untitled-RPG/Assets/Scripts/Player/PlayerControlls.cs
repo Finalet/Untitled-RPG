@@ -185,6 +185,9 @@ public class PlayerControlls : MonoBehaviour, ISavable
                 PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], InterractionIcons.Horse);
             }
         }
+        
+        if (!isMounted) return;
+
         if (Input.GetKeyUp(KeybindsManager.instance.currentKeyBinds["Interact"])){
             holdingButton = false;
             PeaceCanvas.instance.HideKeySuggestion();

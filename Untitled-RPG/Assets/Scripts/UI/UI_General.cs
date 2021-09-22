@@ -108,4 +108,18 @@ public static class UI_General
             amount = Input.GetKey(KeyCode.LeftControl) ? (maxAmount >= 100 ? 100 : maxAmount) : Input.GetKey(KeyCode.LeftShift) ? (maxAmount >= 10 ? 10 : maxAmount) : amount;
         return amount;
     }
+
+    public static string FormatPrice (int price) {
+        string output = "";
+
+        if (price < 1000) {
+            output = price.ToString();
+        } else if (price < 1000000) {
+            output = Mathf.Round(10 * (float)price / 1000)/10 + "K" ;
+        } else {
+            output = Mathf.Round(10 * (float)price / 1000000)/10 + "M" ;
+        }
+
+        return output;
+    }
 }

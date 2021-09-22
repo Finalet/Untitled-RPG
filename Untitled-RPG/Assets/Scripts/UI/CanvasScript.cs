@@ -68,7 +68,7 @@ public class CanvasScript : MonoBehaviour
         else if (Input.GetKeyUp(KeybindsManager.instance.currentKeyBinds["Quick access menu"]))
             CloseQuickAccessMenu();
 
-        if (Input. GetKeyDown(KeybindsManager.instance.currentKeyBinds["Switch skill rows"])) {
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Switch skill rows"])) {
             Combat.instanace.SwitchSkillRows();
         }
     }

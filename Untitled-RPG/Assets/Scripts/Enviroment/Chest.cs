@@ -66,20 +66,6 @@ public class Chest : Container
             TryOpenContainer(1.5f);
     }
 
-    void OnTriggerStay(Collider other) {
-        if (other.CompareTag("Player")) {
-            PeaceCanvas.instance.ShowKeySuggestion(KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Interact"]], InterractionIcons.Chest);
-            playerInTrigger = true; //Doing this because OnTriggerStay is not called every frame
-        }
-    }
-
-    void OnTriggerExit(Collider other) {        
-        if (other.CompareTag("Player")) {
-            PeaceCanvas.instance.HideKeySuggestion();
-            playerInTrigger = false;
-        }
-    }
-
     protected override void OpenAnimation() {
         PlayerControlls.instance.PlayGeneralAnimation(0);
         lid.transform.DOLocalRotate(new Vector3(-20, 0, 0), 1).SetEase(Ease.InOutElastic).SetDelay(1);

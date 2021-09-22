@@ -4653,9 +4653,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 132750365}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a1e2afacd9f4a14d896c7b51020b452, type: 3}
+  m_Script: {fileID: 11500000, guid: 56aae38d329374c4d9390686fcf026de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerDetected: 0
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1804768663}
+        m_TargetAssemblyTypeName: DungeonManager, Assembly-CSharp
+        m_MethodName: LaunchFight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &132750368
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6337,7 +6356,7 @@ PrefabInstance:
     - target: {fileID: 8551913144352028970, guid: 28c875d9a7d308c419e1da517dbc8f27,
         type: 3}
       propertyPath: m_Name
-      value: Portal Prefab
+      value: Dungeon Exit
       objectReference: {fileID: 0}
     - target: {fileID: 8551913144352028970, guid: 28c875d9a7d308c419e1da517dbc8f27,
         type: 3}
@@ -6399,7 +6418,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7482027158139246030, guid: 28c875d9a7d308c419e1da517dbc8f27, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 28c875d9a7d308c419e1da517dbc8f27, type: 3}
 --- !u!1001 &186036059
 PrefabInstance:
@@ -8788,7 +8808,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &251456239
 Transform:
@@ -9437,6 +9457,7 @@ Transform:
   - {fileID: 1070747206}
   - {fileID: 550702473}
   - {fileID: 196357733}
+  - {fileID: 1072756816}
   - {fileID: 233918140}
   - {fileID: 76560407}
   - {fileID: 257225839}
@@ -9496,7 +9517,6 @@ Transform:
   - {fileID: 1913388176}
   - {fileID: 25292134}
   - {fileID: 1365827460}
-  - {fileID: 1072756816}
   - {fileID: 1862583164}
   - {fileID: 1998133223}
   - {fileID: 1092187412}
@@ -10555,7 +10575,7 @@ GameObject:
   - component: {fileID: 299188883}
   - component: {fileID: 299188882}
   - component: {fileID: 299188881}
-  m_Layer: 4
+  m_Layer: 8
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11315,7 +11335,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &344553419
 Transform:
@@ -18668,7 +18688,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &615470980
 Transform:
@@ -25456,50 +25476,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chest
       objectReference: {fileID: 0}
-    - target: {fileID: 1598821189013963533, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 5250420325013068819, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
     - target: {fileID: 5250420325013109355, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
         type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5250420325013109355, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
     - target: {fileID: 6079721138298362758, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 6079721138298370724, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 8792747842271480502, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8792747842271480502, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
         type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 8792747842271663066, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a33eaaf2ee09fc4449f8525e31fd06e7, type: 3}
@@ -30887,7 +30877,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &1019698010
 Transform:
@@ -33070,7 +33060,7 @@ Transform:
   m_Children:
   - {fileID: 1064176129}
   m_Father: {fileID: 268252668}
-  m_RootOrder: 84
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &1072756817
 MeshCollider:
@@ -35257,7 +35247,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 770fcf53c59d5a2479955114c6c46166, type: 3}
 --- !u!1001 &1164382184
@@ -35576,7 +35566,7 @@ GameObject:
   - component: {fileID: 1175037084}
   - component: {fileID: 1175037086}
   - component: {fileID: 1175037085}
-  m_Layer: 4
+  m_Layer: 8
   m_Name: Underwater floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46596,7 +46586,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &1490420683
 Transform:
@@ -47028,6 +47018,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1502471926}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1506693882 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1598821189013963531, guid: a33eaaf2ee09fc4449f8525e31fd06e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 870526272}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 199ffff617fe5b643a7806cedf364f5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1507711840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47971,7 +47973,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &1527755897
 Transform:
@@ -52797,7 +52799,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &1698604825
 Transform:
@@ -55423,6 +55425,55 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 939f27c57ef13654eafcf37ff873a454, type: 3}
+--- !u!1 &1789903356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8551913144352028970, guid: 28c875d9a7d308c419e1da517dbc8f27,
+    type: 3}
+  m_PrefabInstance: {fileID: 183136736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1789903358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789903356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56aae38d329374c4d9390686fcf026de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerDetected: 0
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1789903361}
+        m_TargetAssemblyTypeName: DungeonExit, Assembly-CSharp
+        m_MethodName: Exit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1789903361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789903356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64f78eae4246df64e9d392482b6cdd61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1791171556
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55838,9 +55889,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2a31bf6252820409bbb0e616534397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rewards:
+    possibleLoot:
+      WeightedEntries:
+      - item:
+          item: {fileID: 11400000, guid: 91d76885dc4d3ca438c683526a4c7176, type: 2}
+          amount: 1
+          amountVariability: 0
+        weight: 10
+      - item:
+          item: {fileID: 11400000, guid: bd8d37d16898faf47bb70706120d760b, type: 2}
+          amount: 1
+          amountVariability: 0
+        weight: 3
+      - item:
+          item: {fileID: 11400000, guid: 6bcc9c6492808b944a19653cc117ac01, type: 2}
+          amount: 5
+          amountVariability: 0.5
+        weight: 40
+      - item:
+          item: {fileID: 11400000, guid: efd960b9497df3c419eaf7b5a609cffc, type: 2}
+          amount: 5
+          amountVariability: 0.5
+        weight: 40
+      - item:
+          item: {fileID: 11400000, guid: 50f7b75f1557f324186da6bba05f2cc6, type: 2}
+          amount: 5
+          amountVariability: 0.5
+        weight: 20
+      - item:
+          item: {fileID: 11400000, guid: fbab714bf19636542b1fcd601fc04b95, type: 2}
+          amount: 5
+          amountVariability: 0.5
+        weight: 20
+      - item:
+          item: {fileID: 11400000, guid: e47354288f0418548a5b1a7b14a6d7cf, type: 2}
+          amount: 1
+          amountVariability: 0
+        weight: 30
+      - item:
+          item: {fileID: 11400000, guid: 526e8e7aae075ce4e89abfd3642c3762, type: 2}
+          amount: 3
+          amountVariability: 0.5
+        weight: 40
+    minLoot: 3
+    maxLoot: 6
+    expectedValue: 38.4K
+  chestQuality: 2
   playerSpawnPoint: {fileID: 717011798}
-  dungeonDoor: {fileID: 1698604829}
-  isPlayerInsideFightingRoom: 0
+  dungeonEntranceDoor: {fileID: 1698604829}
+  dungeonExitDoors:
+  - {fileID: 615470981}
+  - {fileID: 1527755898}
+  rewardChest: {fileID: 1506693882}
 --- !u!114 &1804768664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55857,60 +55958,83 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 2305
+  canEnemiesDropLoot: 0
   SpawnVolumeSize: {x: 40, y: 4, z: 40}
   SpawnVolumeCenter: {x: 0, y: 2.5, z: 0}
   waves:
   - isActive: 0
     durationType: 0
     waveDuration: 30
-    totalNumerOfEnemies: 20
+    totalNumerOfEnemies: 5
     enemies:
     - enemyPrefab: {fileID: 3546369989262933049, guid: fe861f779636e5c4fa723cceb9b7da6d,
         type: 3}
-      simultaiousEnemies: 15
+      simultaiousEnemies: 5
       spawnRadius: {x: 0.1, y: 0.3}
     spawnedEnemies: []
   - isActive: 0
     durationType: 0
     waveDuration: 30
-    totalNumerOfEnemies: 25
+    totalNumerOfEnemies: 8
     enemies:
     - enemyPrefab: {fileID: 3546369989262933049, guid: fe861f779636e5c4fa723cceb9b7da6d,
         type: 3}
-      simultaiousEnemies: 7
+      simultaiousEnemies: 5
       spawnRadius: {x: 0.1, y: 0.3}
     - enemyPrefab: {fileID: 3546369989262933049, guid: 4d12f13020cefbb4da85ff34ed97b588,
         type: 3}
       simultaiousEnemies: 3
-      spawnRadius: {x: 0.5, y: 0.5}
+      spawnRadius: {x: 0.3, y: 0.5}
     spawnedEnemies: []
   - isActive: 0
     durationType: 0
-    waveDuration: 60
-    totalNumerOfEnemies: 30
+    waveDuration: 30
+    totalNumerOfEnemies: 10
     enemies:
-    - enemyPrefab: {fileID: 6063976787320910979, guid: d9991078c70fb224ab753eeb2b06f5f4,
+    - enemyPrefab: {fileID: 3546369989262933049, guid: fe861f779636e5c4fa723cceb9b7da6d,
         type: 3}
-      simultaiousEnemies: 1
-      spawnRadius: {x: 0, y: 0}
+      simultaiousEnemies: 5
+      spawnRadius: {x: 0.1, y: 0.3}
     - enemyPrefab: {fileID: 3546369989262933049, guid: 4d12f13020cefbb4da85ff34ed97b588,
         type: 3}
       simultaiousEnemies: 3
-      spawnRadius: {x: 0, y: 0}
-    - enemyPrefab: {fileID: 3546369989262933049, guid: fe861f779636e5c4fa723cceb9b7da6d,
+      spawnRadius: {x: 0.3, y: 0.5}
+    - enemyPrefab: {fileID: 6213787271338914290, guid: 933d0c7d1d20da44da5b81c76620ed7d,
         type: 3}
-      simultaiousEnemies: 6
-      spawnRadius: {x: 0, y: 0}
+      simultaiousEnemies: 2
+      spawnRadius: {x: 0.3, y: 0.5}
     spawnedEnemies: []
   - isActive: 0
     durationType: 0
-    waveDuration: 60
+    waveDuration: 30
+    totalNumerOfEnemies: 15
+    enemies:
+    - enemyPrefab: {fileID: 3546369989262933049, guid: fe861f779636e5c4fa723cceb9b7da6d,
+        type: 3}
+      simultaiousEnemies: 5
+      spawnRadius: {x: 0.1, y: 0.3}
+    - enemyPrefab: {fileID: 3546369989262933049, guid: 4d12f13020cefbb4da85ff34ed97b588,
+        type: 3}
+      simultaiousEnemies: 3
+      spawnRadius: {x: 0.3, y: 0.5}
+    - enemyPrefab: {fileID: 6213787271338914290, guid: 933d0c7d1d20da44da5b81c76620ed7d,
+        type: 3}
+      simultaiousEnemies: 2
+      spawnRadius: {x: 0.3, y: 0.5}
+    - enemyPrefab: {fileID: 6063976787320910979, guid: d9991078c70fb224ab753eeb2b06f5f4,
+        type: 3}
+      simultaiousEnemies: 1
+      spawnRadius: {x: 0.3, y: 0.5}
+    spawnedEnemies: []
+  - isActive: 0
+    durationType: 0
+    waveDuration: 30
     totalNumerOfEnemies: 1
     enemies:
     - enemyPrefab: {fileID: 7733160689187920706, guid: 0231bb4343355d64ab1e3311e004450d,
         type: 3}
       simultaiousEnemies: 1
-      spawnRadius: {x: 0, y: 0}
+      spawnRadius: {x: 0.1, y: 0.3}
     spawnedEnemies: []
   currentWaveIndex: 0
   waveUIPrefab: {fileID: 4680701931881931014, guid: 801c217ac8aa9df46a52e6bef394deef,
@@ -59882,7 +60006,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &1941039389
 Transform:
@@ -63923,7 +64047,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 123
   m_IsActive: 1
 --- !u!4 &2088470668
 Transform:

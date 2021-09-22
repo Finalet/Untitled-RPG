@@ -92,7 +92,7 @@ public class Combat : MonoBehaviour, ISavable
         }
     }
     public void SwitchSkillRows (int row = -1) {
-        if (PeaceCanvas.instance.anyPanelOpen) return;
+        if (PeaceCanvas.instance.anyPanelOpen && !PeaceCanvas.instance.SkillsPanel.activeInHierarchy) return;
         
         if (PeaceCanvas.instance.isDraggingItemOrSkill || PeaceCanvas.instance.isGamePaused) return;
         

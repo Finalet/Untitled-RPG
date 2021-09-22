@@ -2,6 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable] public struct Loot {
+    public Item item;
+    public int amount;
+    [Range(0,1)] public float amountVariability;
+}
+
+[System.Serializable] public struct RandomLoot {
+    public WeightedRandomBag<Loot> possibleLoot;
+    public int minLoot;
+    public int maxLoot;
+    [System.NonSerialized] public double ev;
+    [DisplayWithoutEdit, SerializeField] string expectedValue;
+
+    public void OnValidate() {
+        minLoot = Mathf.Clamp(minLoot, 0, 1000);
+        maxLoot = Mathf.Clamp(maxLoot, 0, 1000);
+        if (minLoot > maxLoot) minLoot = maxLoot;
+        ev = GetExpectedValue();
+        expectedValue = UI_General.FormatPrice(Mathf.RoundToInt((float)ev));
+    }
+
+    public ItemAmountPair[] GetLoot() {
+        int numberOfLoot = Random.Range(minLoot, maxLoot);
+
+        List<ItemAmountPair> list = new List<ItemAmountPair>();
+
+        for (int i = 0; i < numberOfLoot; i++) {
+            Loot reward = possibleLoot.GetRandom();
+            int amount = Mathf.RoundToInt( Random.Range(reward.amount * (1-reward.amountVariability), reward.amount * (1+reward.amountVariability)));
+            if (amount <= 0) continue;
+            list.Add(new ItemAmountPair(reward.item, amount));
+        }
+
+        return list.ToArray();
+    }
+
+    double GetExpectedValue () {
+        double ev = 0;
+        double totalWeight = possibleLoot.totalWeight;
+
+        if (totalWeight <= 0) return 0;
+
+        for (int i = 0; i < possibleLoot.WeightedEntries.Count; i++) {
+            if (!possibleLoot.WeightedEntries[i].item.item) continue;
+
+            ev += possibleLoot.WeightedEntries[i].item.item.itemBasePrice * possibleLoot.WeightedEntries[i].item.amount * possibleLoot.WeightedEntries[i].weight / totalWeight;
+        }
+
+        return ev * (minLoot+maxLoot)/2;
+    }
+}
+
 public class LootManager : MonoBehaviour
 {
     public static LootManager instance;
@@ -80,4 +132,11 @@ public class LootManager : MonoBehaviour
 
         return genericLootPrefab;
     }
+}
+
+
+public interface ILootable {
+    bool canDropLoot { get; set; }
+    
+    void DropLoot();
 }

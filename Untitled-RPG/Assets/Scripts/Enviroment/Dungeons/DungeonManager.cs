@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class DungeonManager : MonoBehaviour
 {
-    public Transform playerSpawnPoint;
-    public DungeonDoor dungeonDoor;
+    [SerializeField] RandomLoot rewards;
+    [SerializeField] ChestQuality chestQuality;
 
-    public bool isPlayerInsideFightingRoom;
+    [Header("Setup")]
+    [SerializeField] Transform playerSpawnPoint;
+    [SerializeField] DungeonDoor dungeonEntranceDoor;
+    [SerializeField] DungeonDoor[] dungeonExitDoors;
+    [SerializeField] Chest rewardChest;
 
     float delayFromStartup = 2;
     float timeStarted;
@@ -19,7 +24,8 @@ public class DungeonManager : MonoBehaviour
     }
 
     IEnumerator Start() {
-        dungeonDoor.isOpen = true;
+        ToggleAllDoors(true);
+        rewardChest.isLocked = true;
         while (!PlayerControlls.instance) {
             yield return null;
         }
@@ -29,13 +35,38 @@ public class DungeonManager : MonoBehaviour
     }
 
     public void LaunchFight() {
-        if (waveGenerator.isActive || Time.time - timeStarted < delayFromStartup) return;
+        if (waveGenerator.isDone || waveGenerator.isActive || Time.time - timeStarted < delayFromStartup) return;
 
         StartCoroutine(LaunchFightDelayed());
     }
     IEnumerator LaunchFightDelayed () {
         yield return new WaitForSeconds (2);
         waveGenerator.StartWaves();
-        dungeonDoor.isOpen = false;
+        ToggleAllDoors(false);
+        waveGenerator.OnAllWavesDone += EndFight;
+    }
+
+    void EndFight () {
+        ToggleAllDoors(true);
+        AddRewards();
+        rewardChest.isLocked = false;
+    }
+    
+    void AddRewards () {
+        rewardChest.ResetContainer();
+        rewardChest.defaultItemsInside.AddRange(rewards.GetLoot());
+    }
+
+    void ToggleAllDoors (bool open) {
+        dungeonEntranceDoor.isOpen = open;
+        foreach (DungeonDoor door in dungeonExitDoors) door.isOpen = open;
+    }
+
+    void OnValidate() {
+        rewards.OnValidate();
+        if (rewardChest) {
+            rewardChest.chestQuality = chestQuality;
+            rewardChest.UpdateMesh();
+        }
     }
 }

@@ -5,7 +5,16 @@ using UnityEngine.UI;
 using TMPro;
 
 [System.Serializable]
-public struct ItemAmountPair {public Item item1; public int amount1;}
+public struct ItemAmountPair {
+    public Item item1;
+    public int amount1;
+
+    public ItemAmountPair(Item item1, int amount1)
+    {
+        this.item1 = item1;
+        this.amount1 = amount1;
+    }
+}
 public class InventoryManager : MonoBehaviour, ISavable
 {
     public static InventoryManager instance;

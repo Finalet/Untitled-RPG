@@ -5,15 +5,8 @@ using UnityEngine.AI;
 
 public enum EnemyState {Idle, Approaching, Attacking, Returning, Celebrating, Stunned};
  
-[System.Serializable] public struct Loot {
-    public Item item;
-    public int amount;
-    [Range(0,1)] public float probability;
-    [Range(0,1)] public float amountVariability;
-}
-
 [RequireComponent(typeof (FieldOfView))] [SelectionBase]
-public abstract class Enemy : MonoBehaviour, IDamagable
+public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
 {
     public string enemyName;
     [Header("Stats")]
@@ -29,7 +22,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     [Space]
     public Vector3 localEnemyBounds;
     [Header("Loot")]
-    public Loot[] itemsLoot;
+    public RandomLoot loot;
     public int goldLootAmount;
 
     [Header("AI")]
@@ -269,19 +262,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable
         }
     }
 
-    protected virtual void DropLoot () {
-        for (int i = 0; i < itemsLoot.Length; i++) {
-            if (Random.value < itemsLoot[i].probability) {
-                float dropAmount = Random.Range(itemsLoot[i].amount * (1-itemsLoot[i].amountVariability), itemsLoot[i].amount * (1+itemsLoot[i].amountVariability));
-                if (dropAmount <= 0) continue;
-                LootManager.instance.DropItem(itemsLoot[i].item, Mathf.RoundToInt(dropAmount), transform.position);
-            }
-        }
-        if (goldLootAmount > 0) {
-            LootManager.instance.DropGold(goldLootAmount, transform.position);
-        }
-    }
-
     IEnumerator die (){
         yield return new WaitForSeconds (8);
         float x = 0;
@@ -299,7 +279,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
 
     protected IEnumerator HitStop (bool isCrit) {
         float timeStarted = Time.realtimeSinceStartup;
-        float time = isCrit ? 0.4f : 0.12f;
+        float time = isCrit ? 0.3f : 0.12f;
         Time.timeScale = 0.2f;
         Time.fixedDeltaTime = 0.006f;
         while(Time.realtimeSinceStartup - timeStarted < time) {
@@ -511,6 +491,10 @@ public abstract class Enemy : MonoBehaviour, IDamagable
 
     public virtual void OnWeakSpotHit() {}
 
+    void OnValidate() {
+        loot.OnValidate();
+    }
+
 #region IDamagable
 
     private List<RecurringEffect> _recurringEffects = new List<RecurringEffect>();
@@ -594,6 +578,33 @@ public abstract class Enemy : MonoBehaviour, IDamagable
             newEffect.vfx.Play();
         }
         recurringEffects.Add(newEffect);
+    }
+
+#endregion
+
+#region ILootable 
+
+    private bool _canDropLoot = true;
+    public bool canDropLoot {
+        get {
+            return _canDropLoot;
+        }
+        set {
+            _canDropLoot = value;
+        }
+    }
+
+    public virtual void DropLoot () {
+        if (!canDropLoot) return;
+
+        ItemAmountPair[] allLoot = loot.GetLoot();
+        foreach (ItemAmountPair ia in allLoot) {
+            LootManager.instance.DropItem(ia.item1, ia.amount1, transform.position);
+        }
+        
+        if (goldLootAmount > 0) {
+           LootManager.instance.DropGold(goldLootAmount, transform.position);
+        }
     }
 
 #endregion

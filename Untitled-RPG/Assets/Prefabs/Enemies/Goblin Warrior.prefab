@@ -7257,15 +7257,17 @@ MonoBehaviour:
   immuneToKnockDown: 0
   immuneToKickBack: 0
   localEnemyBounds: {x: 0.4, y: 1.9, z: 0.3}
-  itemsLoot:
-  - item: {fileID: 11400000, guid: bb310d68194c59043995d763197685aa, type: 2}
-    amount: 2
-    probability: 1
-    amountVariability: 0.5
-  - item: {fileID: 11400000, guid: 029e0d8f4ca12354fa9416b780e7f0a2, type: 2}
-    amount: 1
-    probability: 0.165
-    amountVariability: 0
+  loot:
+    possibleLoot:
+      WeightedEntries:
+      - item:
+          item: {fileID: 11400000, guid: bb310d68194c59043995d763197685aa, type: 2}
+          amount: 2
+          amountVariability: 0.5
+        weight: 1
+    minLoot: 1
+    maxLoot: 1
+    expectedValue: 34
   goldLootAmount: 0
   currentState: 0
   distanceToPlayer: 0
@@ -7292,17 +7294,6 @@ MonoBehaviour:
   stabSounds:
   - {fileID: 8300000, guid: c4126bd0c33f32e4aa6ced9c680d3573, type: 3}
   - {fileID: 8300000, guid: 2de8bd1b8491d7c43a5f500710e8ef18, type: 3}
-  stepsSounds:
-  - {fileID: 8300000, guid: 857e13957d17a074781d84f20553eea0, type: 3}
-  - {fileID: 8300000, guid: 81f63607ae7227a4bb5e2acbbe967145, type: 3}
-  - {fileID: 8300000, guid: 8dba3910bb7e7c942b965a1850ec68f3, type: 3}
-  - {fileID: 8300000, guid: 591a811fc84aee34d894c7e35caeffba, type: 3}
-  - {fileID: 8300000, guid: 65924f75ebafd2e488545a827cda978a, type: 3}
-  - {fileID: 8300000, guid: e362c74cfd324b44d80edf185f68cc50, type: 3}
-  - {fileID: 8300000, guid: 7e68f97217c637b49b01cf20e16bcf4b, type: 3}
-  - {fileID: 8300000, guid: f8fe682e84e6aab4fb32258ef745cebf, type: 3}
-  - {fileID: 8300000, guid: bc231bfca94633d4e995da1f9df359d7, type: 3}
-  - {fileID: 8300000, guid: 25efd9313d29599419553d1b3a86bb06, type: 3}
   attackSounds:
   - {fileID: 8300000, guid: 28c4cbe3766495a419ee76ea5777aa1a, type: 3}
   - {fileID: 8300000, guid: f417372b11fe024408b6595c67c0ba7b, type: 3}
@@ -8130,6 +8121,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3837d5dd524b1419aae4c0efae5592fe, type: 3}
   - {fileID: 8300000, guid: 79befa02037a648279a4aa461833bc86, type: 3}
   - {fileID: 8300000, guid: 167b6ae6cb1bd4b6183416b87a07b3b3, type: 3}
+  currentGroundType: 0
 --- !u!1001 &4459459236382167880
 PrefabInstance:
   m_ObjectHideFlags: 0

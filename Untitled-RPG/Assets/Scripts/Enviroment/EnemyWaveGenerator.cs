@@ -96,10 +96,13 @@ public class EnemyWave {
             if (Time.time - lastCleanTime > 1 / cleanFrequency) CleanSpawnedEnemies();
             yield return null;
         }
+
         while (numberOfActiveEnemies() > 0) {
             if (Time.time - lastCleanTime > 1 / cleanFrequency) CleanSpawnedEnemies();
             yield return null;
         }
+
+        yield return new WaitForSeconds(2);
 
         isActive = false;
         isDone = true;
@@ -127,6 +130,7 @@ public class EnemyWave {
     void InstanciateEnemy (int index, GameObject prefab, Vector3 pos) {
         Enemy en = Object.Instantiate(prefab, pos, getSpawnRot(pos), waveGenerator.transform).GetComponent<Enemy>();
         en.SetGroundType(GroundType.Stone);
+        en.canDropLoot = waveGenerator.canEnemiesDropLoot;
 
         spawnedEnemies[index].spawnedGameObjects.Add(en.gameObject);
         totalSpawnedEnemies ++;        
@@ -203,7 +207,13 @@ public class EnemyWave {
         int x = 0;
         for (int i = 0; i < spawnedEnemies.Count; i++) {
             for (int i1 = spawnedEnemies[i].spawnedGameObjects.Count - 1; i1 >= 0; i1--) {
-                if (spawnedEnemies[i].spawnedGameObjects[i1].gameObject != null) x++;
+                if (spawnedEnemies[i].spawnedGameObjects[i1].gameObject != null) {
+                    if (spawnedEnemies[i].spawnedGameObjects[i1].TryGetComponent(out Enemy en)) {
+                        if (!en.isDead) x++;
+                    } else {
+                        x++;   
+                    }
+                }
             }
         }
         return x;
@@ -212,8 +222,9 @@ public class EnemyWave {
 
 public class EnemyWaveGenerator : MonoBehaviour
 {
-    public float delayBetweenWaves = 5;
+    public float delayBetweenWaves = 3;
     public LayerMask groundLayers;
+    public bool canEnemiesDropLoot = true;
     
     [Space]
     public Vector3 SpawnVolumeSize;
@@ -244,7 +255,7 @@ public class EnemyWaveGenerator : MonoBehaviour
         }
     }
 
-    public bool isDone;
+    [DisplayWithoutEdit] public bool isDone;
 
     //Events
     public event System.Action OnAllWavesDone;
@@ -258,19 +269,20 @@ public class EnemyWaveGenerator : MonoBehaviour
     }
 
     IEnumerator LaunchWaves () {
-        Instantiate(waveUIPrefab, CanvasScript.instance.transform).GetComponent<EnemyWaveUI>().Init(this);
+        EnemyWaveUI UI = Instantiate(waveUIPrefab, CanvasScript.instance.transform).GetComponent<EnemyWaveUI>();
+        UI.Init(this);
 
         for (int i = 0; i < waves.Count; i++) {
-            
+            yield return new WaitForSeconds(delayBetweenWaves);
             currentWaveIndex = i;
             waves[currentWaveIndex].StartWave();
-            while (waves[currentWaveIndex].isActive) {
+            while (isActive) {
                 yield return null;
             }
-            yield return new WaitForSeconds(delayBetweenWaves);
         }
 
         isDone = true;
+        UI.End();
         OnAllWavesDone?.Invoke();
     }
 

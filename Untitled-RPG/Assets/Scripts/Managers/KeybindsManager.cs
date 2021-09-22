@@ -11,7 +11,7 @@ public class KeybindsManager : MonoBehaviour
         SetDefaultKeyBinds();
     }
     
-    public Dictionary<string, KeyCode> defaultKeyBinds  = new Dictionary< string, KeyCode> () {
+    public static Dictionary<string, KeyCode> defaultKeyBinds  = new Dictionary< string, KeyCode> () {
         {"Run", KeyCode.LeftShift},
         {"Roll", KeyCode.V},
         {"Crouch", KeyCode.C},

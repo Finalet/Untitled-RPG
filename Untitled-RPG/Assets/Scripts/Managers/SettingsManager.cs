@@ -154,9 +154,9 @@ public class SettingsManager : MonoBehaviour, ISavable
         int i = 0;
         Settings_KeybindsTemplate[] templatesArray = keyBindsGrid.GetComponentsInChildren<Settings_KeybindsTemplate>();
         keyBindsTemplate.SetActive(true);
-        foreach (KeyValuePair<string, KeyCode> keyBind in KeybindsManager.instance.defaultKeyBinds) {
+        foreach (KeyValuePair<string, KeyCode> keyBind in KeybindsManager.defaultKeyBinds) {
             Settings_KeybindsTemplate t;
-            if (templatesArray.Length == KeybindsManager.instance.defaultKeyBinds.Count) {
+            if (templatesArray.Length == KeybindsManager.defaultKeyBinds.Count) {
                 t = templatesArray[i];
             } else {
                 t = Instantiate(keyBindsTemplate, keyBindsGrid.transform).GetComponent<Settings_KeybindsTemplate>();
@@ -164,7 +164,7 @@ public class SettingsManager : MonoBehaviour, ISavable
             
             t.Init(keyBind.Key);
 
-            if (templatesArray.Length != KeybindsManager.instance.defaultKeyBinds.Count && isLastKeyInCategory(keyBind.Key)) {
+            if (templatesArray.Length != KeybindsManager.defaultKeyBinds.Count && isLastKeyInCategory(keyBind.Key)) {
                 GameObject spacer = new GameObject();
                 spacer.AddComponent<RectTransform>();
                 spacer.GetComponent<RectTransform>().SetParent(keyBindsGrid.transform);
