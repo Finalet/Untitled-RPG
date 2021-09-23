@@ -24,7 +24,6 @@ public class KeybindsManager : MonoBehaviour
         {"Quick access menu", KeyCode.Tab},
         {"Inventory", KeyCode.I},
         {"Skillbook", KeyCode.K},
-        {"Skip time", KeyCode.O},
         {"Interact", KeyCode.F},
 
         {"Increase Mount Speed", KeyCode.Alpha2},

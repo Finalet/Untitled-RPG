@@ -36,7 +36,7 @@ public class WaitTimeWindow : MonoBehaviour
         if (!TimeOfDayController.instance) return;
 
         PeaceCanvas.instance.openPanels++;
-        
+        PeaceCanvas.instance.CloseInventory();
         MatchCurrentTime();
         selectedTimeSlider.value = (currentTimeSlider.value + 0.1f) % 1;
         SetSelectedTime();

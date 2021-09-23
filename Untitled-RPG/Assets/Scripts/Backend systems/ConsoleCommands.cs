@@ -13,6 +13,7 @@ using AwesomeTechnologies.VegetationSystem;
 using Crest;
 using UnityEngine.SceneManagement;
 using Tayx.Graphy;
+using DG.Tweening;
 
 namespace Finale.ConsoleCommands {
 
@@ -238,7 +239,6 @@ public static class PlayerCommands {
         [Command("set-cooldown", "Set cooldown in seconds for a specified skill.")]
         static void SetCooldown (string skill, float value) {
             Skill s = assetHolder.getSkill(skill);
-            Debug.Log("got here");
             if (!s) throw new Exception($"Could not find \"{skill}\" skill.");
     
             s.coolDown = value;

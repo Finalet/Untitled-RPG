@@ -29,7 +29,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
     [DisplayWithoutEdit] public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
     [DisplayWithoutEdit] public EnemyState currentState;
     [DisplayWithoutEdit] [SerializeField] protected float distanceToPlayer;
-    [DisplayWithoutEdit] [SerializeField] protected float distanceToDestination;
     
     [Header("Attack")]
     public bool isCoolingDown;
@@ -120,7 +119,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         AttackCoolDown();
 
         distanceToPlayer = fieldOfView.distanceToTarget;
-        if (navAgent) distanceToDestination = navAgent.remainingDistance;
     
         CheckAgr();
     
@@ -165,7 +163,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
             }
 
         } else if (currentState != EnemyState.Celebrating || ( (Time.time - startedCelebratingTime > celebrationDuration) || distanceToPlayer > 20) ) {
-            currentState = navAgent.remainingDistance > enemyController.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
+            currentState = (navAgent.isActiveAndEnabled ? navAgent.remainingDistance : Vector3.Distance(navAgent.nextPosition, initialPos))  > enemyController.stoppingDistance ? EnemyState.Returning : EnemyState.Idle;
         }
 
         if (isStunned) currentState = EnemyState.Stunned;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Funly.SkyStudio;
 
 public class Tooltip : MonoBehaviour
 {
@@ -193,7 +194,9 @@ public class Tooltip : MonoBehaviour
             Skillbook sb = (Skillbook)item;
             stats = Combat.instanace.learnedSkills.Contains(AssetHolder.instance.getSkill(sb.learnedSkill.ID)) ? "<color=red>You already know this skill" : "";
         } else if (item is Resource) {
-            // do nothing;
+            if (item is WatchItem) {
+                stats += TimeOfDayController.instance ? "Current time: " + TimeOfDayController.instance.TimeStringFromPercent(TimeOfDayController.instance.timeOfDay) : "";
+            }
         } else if (item is Mount) {
             Mount m = (Mount)item;
             Mount mCompare = (Mount)compareItem;

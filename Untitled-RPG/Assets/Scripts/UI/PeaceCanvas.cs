@@ -81,12 +81,10 @@ public class PeaceCanvas : MonoBehaviour
 
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
-    public TextMeshProUGUI timeLabel;
     public WaitTimeWindow waitTimeWindow;
     public Image blackout;
     public TextMeshProUGUI inventoryKeySuggestionLabel;
     public TextMeshProUGUI skillbookKeySuggestionLabel;
-    public TextMeshProUGUI waittimeKeySuggestionLabel;
     public TextMeshProUGUI callmountKeySuggestionLabel;
 
     [Header("Debug")] 
@@ -135,14 +133,11 @@ public class PeaceCanvas : MonoBehaviour
                 notRequestedYet = true;
             }
         }
-
-        timeLabel.text = TimeOfDayController.instance ? TimeOfDayController.instance.TimeStringFromPercent(TimeOfDayController.instance.timeOfDay) : "";
     }
 
     public void SetSuggestionKeys () {
         inventoryKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Inventory"]];
         skillbookKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Skillbook"]];
-        waittimeKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Skip time"]];
         callmountKeySuggestionLabel.text = KeyCodeDictionary.keys[KeybindsManager.instance.currentKeyBinds["Call mount"]];
     }
 
@@ -164,13 +159,6 @@ public class PeaceCanvas : MonoBehaviour
                 CloseInventory();
         }
 
-        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Skip time"])) {
-            if (!waitTimeWindow.gameObject.activeInHierarchy)
-                waitTimeWindow.OpenWindow();
-            else 
-                waitTimeWindow.CloseWindow();
-        }
-
         if (Input.GetKeyDown(KeyCode.Escape)) {
             EscapeButton();
         }
@@ -183,6 +171,13 @@ public class PeaceCanvas : MonoBehaviour
         } else if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Hide interface"])) {
             UICamera.gameObject.SetActive(!UICamera.gameObject.activeInHierarchy);
         }
+    }
+
+    public void ToggleWaitTimeWindow() {
+        if (!waitTimeWindow.gameObject.activeInHierarchy) 
+            waitTimeWindow.OpenWindow();
+        else 
+            waitTimeWindow.CloseWindow();
     }
 
     IEnumerator noOpenPanels () { //Doing this cause otherwise on every mouse click player would attack.
