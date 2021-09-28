@@ -521,6 +521,11 @@ public static class UtilityCommands  {
         else GameObject.Destroy(GraphyManager.Instance.gameObject);
     }
 
+    [Command("teleport-to")]
+    public static void Teleport (Transform teleportee, Transform destination) {
+        teleportee.transform.position = destination.transform.position;
+    }
+
     static void ToggleCursor (bool visible, CursorLockMode lockMode) {
         Cursor.visible = visible;
         Cursor.lockState = lockMode;

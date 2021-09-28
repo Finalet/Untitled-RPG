@@ -81,6 +81,7 @@ public class PeaceCanvas : MonoBehaviour
 
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
+    public GameObject SpritePanel;
     public WaitTimeWindow waitTimeWindow;
     public Image blackout;
     public TextMeshProUGUI inventoryKeySuggestionLabel;
@@ -455,5 +456,10 @@ public class PeaceCanvas : MonoBehaviour
     void CloseDevConsole () {
         openPanels --;
         blockInput = false;
+    }
+
+    public void OpenSpritePanel (Sprite sprite) {
+        UI_SpritePanel s = Instantiate(SpritePanel, transform).GetComponent<UI_SpritePanel>();
+        s.Init(sprite);
     }
 }

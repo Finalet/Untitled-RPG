@@ -11,7 +11,7 @@ public class HittableObject : Enemy
 
     protected override void FaceTarget(bool instant = false)
     {
-        throw new System.NotImplementedException();
+        //
     }
 
     protected override void Update()

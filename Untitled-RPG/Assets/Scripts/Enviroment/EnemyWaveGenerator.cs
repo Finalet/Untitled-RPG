@@ -70,7 +70,7 @@ public class EnemyWave {
     public bool isBossWave  {
         get {
             for (int i = 0; i < enemies.Length; i++) {
-                if (enemies[i].enemyPrefab.TryGetComponent(out Boss b)) {
+                if (enemies[i].enemyPrefab.TryGetComponent(out NavAgentBoss b)) {
                     return true;
                 }
             }

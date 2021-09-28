@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Golem : Boss
+public class Golem : NavAgentBoss
 {
     bool isDefending;
     bool walkForward;
@@ -199,19 +199,9 @@ public class Golem : Boss
         navAgent.destination = target.position;
     }
 
-    protected override void FaceTarget(bool instant = false)
+    protected override bool blockFaceTarget()
     {
-        if (isAttacking || isStunned || isDefending)
-            return;
-
-        if (instant) {
-            StartCoroutine(InstantFaceTarget());
-            return;
-        }
-
-        Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+        return isAttacking || isStunned || isDefending;
     }
 
     public override void FootStep()
@@ -221,7 +211,7 @@ public class Golem : Boss
     }
 
     public override void Hit () {
-        DamageInfo enemyDamageInfo = CalculateDamage.enemyDamageInfo(baseDamage, enemyName);
+        DamageInfo enemyDamageInfo = CalculateDamage.enemyDamageInfo(finalDamage, enemyName);
         PlayerControlls.instance.GetComponent<Characteristics>().GetHit(enemyDamageInfo, hitType, 0.2f, 2.5f);
     }
 

@@ -2004,7 +2004,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4291713904636758138}
   - component: {fileID: 2318380894595867471}
-  - component: {fileID: 6523785488794940671}
+  - component: {fileID: 14616711588714079}
+  - component: {fileID: 3771955146169652793}
   m_Layer: 0
   m_Name: Controlling Position
   m_TagString: Untagged
@@ -2039,7 +2040,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.3705045, y: 1.6206903, z: 1.0413055}
   m_Center: {x: -3.3240283e-16, y: 1.0432744, z: 0.034173846}
---- !u!114 &6523785488794940671
+--- !u!114 &14616711588714079
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2048,10 +2049,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 2577630948542114070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d75a9e1e225d68349ba201f77a9ebe23, type: 3}
+  m_Script: {fileID: 11500000, guid: f5fe25da32c295646bb600103dd3cb4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllingPosition: {fileID: 4291713904636758138}
+  interactionKey: Interact
+  interactionLabel: 
+  interractionIcon: 8
+  holdKeyDuration: 0.5
+  playerTrigger: {fileID: 3771955146169652793}
+  InteractionEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1171466245827232421}
+        m_TargetAssemblyTypeName: ShipController, Assembly-CSharp
+        m_MethodName: TogglePlayerControl
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 4291713904636758138}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3771955146169652793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577630948542114070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56aae38d329374c4d9390686fcf026de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerDetected: 0
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3177712733246724780
 GameObject:
   m_ObjectHideFlags: 0
@@ -3888,7 +3927,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.718232, y: 1}
+    m_SensorSize: {x: 1.777907, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -4720,7 +4759,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.718232, y: 1}
+    m_SensorSize: {x: 1.777907, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -5171,7 +5210,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.718232, y: 1}
+    m_SensorSize: {x: 1.777907, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

@@ -33,13 +33,17 @@ public class UIAudioManager : MonoBehaviour
     public AudioClip UnequipMount;
     [Header("UI")]
     public AudioClip UI_Select;
+    [Header("Misc")]
+    public AudioClip OpenPage;
+    public AudioClip ClosePage;
 
     void Awake() {
         instance = this;
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void PlayUISound (AudioClip clip){
+    public void PlayUISound (AudioClip clip, float pitch = 1){
+        audioSource.pitch = pitch;
         audioSource.clip = clip;
         audioSource.Play();
     }

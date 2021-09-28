@@ -7247,12 +7247,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3361f9aab7813ae4d9d2cf3945b3c023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   enemyName: Goblin Warrior
   maxHealth: 3000
-  currentHealth: 0
-  baseDamage: 500
-  attackRange: 2
-  hitType: 0
+  attacks:
+  - attackName: Short
+    attackRange: 1.5
+    damage: 0
+    hitType: 0
+    animationID: 0
+    cooldown: 4
+  - attackName: Long
+    attackRange: 2.5
+    damage: 0
+    hitType: 0
+    animationID: 1
+    cooldown: 4
   immuneToInterrupt: 0
   immuneToKnockDown: 0
   immuneToKickBack: 0
@@ -7269,20 +7279,20 @@ MonoBehaviour:
     maxLoot: 1
     expectedValue: 34
   goldLootAmount: 0
+  currentHealth: 0
   agr: 0
   currentState: 0
   distanceToPlayer: 0
-  distanceToDestination: 0
+  plannedAttackName: 
   isCoolingDown: 0
-  attackCoolDown: 5
-  agrTime: 10
-  TargetSkillDamagePercentage: 0
+  attackCoolDown: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
   isKnockedDown: 0
   isRagdoll: 0
   isStunned: 0
+  isDefensing: 0
   canGetHit: 1
   healthBar: {fileID: 2670621119448169147}
   hitParticles: {fileID: 1682063558998294416}
@@ -7396,7 +7406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe833c2e53072e46b7e87383a82c282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3
+  _speed: 4
   _angularSpeed: 340
   _acceleration: 25
   _deceleration: 20
@@ -7416,7 +7426,7 @@ MonoBehaviour:
   _maxMidAirJumps: 1
   _useRootMotion: 0
   _rootMotionRotation: 0
-  _autoBraking: 0
+  _autoBraking: 1
   _brakingDistance: 2
   _stoppingDistance: 1
   groundMask:
@@ -7864,7 +7874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f20a09868f22419bd4eb791a1947b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 0}
+  enemy: {fileID: 154495484993145589}
   value: 1
 --- !u!65 &2413481049890888958
 BoxCollider:

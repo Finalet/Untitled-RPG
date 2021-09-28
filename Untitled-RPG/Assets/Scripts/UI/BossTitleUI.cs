@@ -7,7 +7,7 @@ using DG.Tweening;
 
 public class BossTitleUI : MonoBehaviour
 {
-    Boss relatedBoss;
+    NavAgentBoss relatedBoss;
     
     public Image healthLine;
     public TextMeshProUGUI healthNumberLabel;
@@ -18,7 +18,7 @@ public class BossTitleUI : MonoBehaviour
 
     float prevFill;
     float desFill;
-    public void Init(Boss _relatedBoss) {
+    public void Init(NavAgentBoss _relatedBoss) {
         canvasGroup = GetComponent<CanvasGroup>();
         healthLineMaterial = healthLine.material;
         relatedBoss = _relatedBoss;

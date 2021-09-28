@@ -105,6 +105,8 @@ public abstract class Skill : MonoBehaviour
             WeaponsController.instance.InstantUnsheathe();
         if (bowOutRequired && !WeaponsController.instance.isBowOut)
             WeaponsController.instance.InstantUnsheatheBow();
+        
+        playerControlls.TriggerBattle();
     }
 
     protected virtual void LocalUse () {

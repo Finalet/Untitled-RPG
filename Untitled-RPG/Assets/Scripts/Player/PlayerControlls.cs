@@ -544,10 +544,13 @@ public class PlayerControlls : MonoBehaviour, ISavable
             isAttacking = false;
     }
 
+    public void TriggerBattle() {
+        inBattle = true;
+        inBattleTimer = Time.time;
+    }
     void InBattleCheck () {
         if (isAttacking || isGettingHit || attackedByEnemies || cameraControl.isAiming || cameraControl.isShortAiming) {
-            inBattle = true;
-            inBattleTimer = Time.time;
+            TriggerBattle();
         } else if (Time.time - inBattleTimer >= inBattleExitTime && !WeaponsController.instance.sheathingUnsheathing) {
             if (WeaponsController.instance.isWeaponOut || WeaponsController.instance.isBowOut) {
                 StartCoroutine(WeaponsController.instance.Sheathe());

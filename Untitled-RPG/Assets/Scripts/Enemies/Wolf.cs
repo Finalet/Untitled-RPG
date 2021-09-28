@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Wolf : Enemy
+public class Wolf : NavAgentEnemy
 {
-    bool forceFaceTarget;
     float lastLookAround;
     public GameObject jawCollider;
 
@@ -71,17 +70,8 @@ public class Wolf : Enemy
         navAgent.destination = target.position;
     }
 
-    protected override void FaceTarget (bool instant = false) {
-        if (isAttacking && !forceFaceTarget)
-            return;
-
-        if (instant) {
-            StartCoroutine(InstantFaceTarget());
-            return;
-        }
-
-        Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+    protected override bool blockFaceTarget()
+    {
+        return isAttacking && !forceFaceTarget;
     }
 }

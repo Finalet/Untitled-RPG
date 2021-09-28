@@ -161,26 +161,6 @@ public class WeaponsController : MonoBehaviour
 
         animator.SetTrigger("UnSheath"); //Triggered to play animation of closed fist
 
-        /* if (bothHandsStatus == BothHandsStatus.DualOneHanded) { //Currently not all weapons types supported, add ELSE IF to add more support 
-            SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
-            SetParentAndTransorm(ref LeftHandEquipObj, LeftHandTrans);
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
-            animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
-        } else if (bothHandsStatus == BothHandsStatus.TwoHanded) {
-            SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
-            animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
-        } else if (bothHandsStatus == BothHandsStatus.OneHandedPlusShield) {
-            SetParentAndTransorm(ref RightHandEquipObj, RightHandTrans);
-            SetParentAndTransorm(ref LeftHandEquipObj, LeftHandShieldTrans);
-            if (LeftHandEquipObj.TryGetComponent<Shield>(out Shield shield)) {
-                shield.ShiftMeshPos();
-            } 
-            animator.SetLayerWeight((animator.GetLayerIndex("RightHand")), 1);
-            animator.SetLayerWeight((animator.GetLayerIndex("LeftHand")), 1);
-        } else {
-            Debug.LogError("Instant unsheathing for this type of weapon is not implemented yet");
-        } */
-
         switch (leftHandStatus) {
             case SingleHandStatus.OneHanded:
                 SetParentAndTransorm(ref LeftHandEquipObj, LeftHandTrans);
@@ -233,25 +213,6 @@ public class WeaponsController : MonoBehaviour
             isBowOut = false;
             return;
         }
-        /*
-        if (bothHandsStatus == BothHandsStatus.DualOneHanded) {
-            SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
-            SetParentAndTransorm(ref LeftHandEquipObj, rightHipSlot);
-        } else if (bothHandsStatus == BothHandsStatus.TwoHanded) {
-            Weapon w = (Weapon)EquipmentManager.instance.mainHand.itemInSlot;
-            if (w.weaponCategory == WeaponCategory.Sword)
-                SetParentAndTransorm(ref RightHandEquipObj, twohandedSwordSlot);
-            else if (w.weaponCategory == WeaponCategory.Staff)
-                SetParentAndTransorm(ref RightHandEquipObj, twohandedStaffSlot);
-        } if (bothHandsStatus == BothHandsStatus.OneHandedPlusShield) {
-            SetParentAndTransorm(ref RightHandEquipObj, leftHipSlot);
-            SetParentAndTransorm(ref LeftHandEquipObj, shieldBackSlot);
-            if (LeftHandEquipObj.TryGetComponent<Shield>(out Shield shield)) {
-                shield.ShiftMeshPos(true);
-            }
-        } else {
-            Debug.LogWarning("Sheathing for this type of weapon is not implemented yet");
-        } */
 
         switch (leftHandStatus) {
             case SingleHandStatus.OneHanded:

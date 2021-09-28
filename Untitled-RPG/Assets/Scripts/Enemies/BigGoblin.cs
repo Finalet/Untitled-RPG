@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BigGoblin : Enemy
+public class BigGoblin : NavAgentEnemy
 {
 
     public GameObject projectile;
     public ParticleSystem diggingVFX;
     public Transform boulderSpawnPos;
-    bool forceFaceTarget;
 
     public CapsuleCollider[] collidersToDisableWhenAttacking;
 
@@ -52,18 +51,9 @@ public class BigGoblin : Enemy
         navAgent.destination = target.position;
     }
 
-    protected override void FaceTarget (bool instant = false) {
-        if (isAttacking && !forceFaceTarget)
-            return;
-
-        if (instant) {
-            StartCoroutine(InstantFaceTarget());
-            return;
-        }
-
-        Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+    protected override bool blockFaceTarget()
+    {
+        return isAttacking && !forceFaceTarget;
     }
 
     protected override void AttackTarget () {
@@ -124,7 +114,7 @@ public class BigGoblin : Enemy
         GameObject go = Instantiate(projectile, boulderSpawnPos);
         go.SetActive(true);
         EnemyProjectile enProjectile = go.GetComponent<EnemyProjectile>();
-        enProjectile.enemyDamageInfo = CalculateDamage.enemyDamageInfo(Mathf.RoundToInt(baseDamage*1.5f), enemyName);
+        enProjectile.enemyDamageInfo = CalculateDamage.enemyDamageInfo(Mathf.RoundToInt(finalDamage*1.5f), enemyName);
         enProjectile.hitType = hitType;
         enProjectile.enemyName = enemyName;
         while (animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).normalizedTime < 0.3f) {

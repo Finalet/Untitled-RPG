@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class GoblinArcher : Enemy
+public class GoblinArcher : NavAgentEnemy
 {
     [Header("Custom vars")]
+    public bool huntPlayer;
     public GameObject arrowPrefab;
     public float shootStrength;
     public Transform bowTransform;
@@ -21,44 +22,33 @@ public class GoblinArcher : Enemy
         base.Start();
         agrDelay = 1.7f;
 
-        navAgent = GetComponent<NavMeshAgent>();
-        navAgent.avoidancePriority = 50 + Random.Range(-20, 20);
+        plannedAttack = attacks[0];
     }
 
     protected override void Update()
     {
-        animator.SetBool("Agr", agr);
-        animator.SetBool("KnockedDown", isKnockedDown);
-        
         base.Update();
 
-        if (isKnockedDown || isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
-            if (navAgent.enabled) navAgent.isStopped = true;
-            return;
+        if (isRagdoll || isKnockedDown || isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
+            navAgent.isStopped = true;
         }    
-        
-        animator.SetBool("Celebrating", currentState == EnemyState.Celebrating ? true : false);
     }
 
-    protected override void FaceTarget (bool instant = false) {
-        if (isAttacking)
-            return;
+    protected override void CalculateCurrentState()
+    {
+        base.CalculateCurrentState();
+        if (currentState == EnemyState.Approaching && !huntPlayer) currentState = EnemyState.Idle;
+    }
 
-        if (instant) {
-            StartCoroutine(InstantFaceTarget());
-            return;
-        }
-        
-        if (navAgent.enabled) navAgent.isStopped = isGettingInterrupted ? true : false;
+    protected override void ApproachTarget () {
+        base.ApproachTarget();
 
-        Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+        navAgent.isStopped = isGettingInterrupted ? true : false;
+        navAgent.destination = target.position;
     }
 
     protected override void AttackTarget () {
-        animator.SetTrigger("Attack");
-        hitType = HitType.Interrupt;
+        UseAttack(plannedAttack);
         grabBowstring = true;
         StartCoroutine(GrabBowstringIE());
         StartCoroutine(SpawnArrowIE());
@@ -72,8 +62,7 @@ public class GoblinArcher : Enemy
 
         shootPoint = PlayerControlls.instance.transform.position + Vector3.up * 1.5F + PlayerControlls.instance.rb.velocity * 0.5f * distanceToPlayer/30;
 
-        coolDownTimer = attackCoolDown;
-        newArrow.Shoot(shootStrength, shootPoint, CalculateDamage.enemyDamageInfo(baseDamage, enemyName));
+        newArrow.Shoot(shootStrength, shootPoint, CalculateDamage.enemyDamageInfo(finalDamage, enemyName));
         newArrow.hitType = hitType;
         bowTransform.GetComponent<Bow>().ReleaseString();
         grabBowstring = false;
@@ -81,11 +70,6 @@ public class GoblinArcher : Enemy
         newArrow = null;
 
         audioSource.PlayOneShot(attackSounds[Random.Range(0, attackSounds.Length-1)]);
-    }
-
-    protected override void Idle () {
-        base.Idle();
-        if (navAgent.enabled) navAgent.isStopped = true;
     }
 
     IEnumerator GrabBowstringIE () {

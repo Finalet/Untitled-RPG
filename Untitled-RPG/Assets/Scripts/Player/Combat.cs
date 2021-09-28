@@ -210,6 +210,12 @@ public class Combat : MonoBehaviour, ISavable
                 if (skillID.floatParameter == 0) 
                     skill.GetComponent<CaptainThrow>().ThrowShield();
                 break; 
+            case 102: 
+                if (skillID.floatParameter == 0) 
+                    skill.GetComponent<Dig>().DigHit();
+                else if (skillID.floatParameter == 1) 
+                    skill.GetComponent<Dig>().DigOut();
+                break; 
         }
     }
 

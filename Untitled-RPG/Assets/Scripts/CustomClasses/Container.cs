@@ -88,6 +88,13 @@ public class Container : MonoBehaviour
         return Mathf.RoundToInt(slotsGrid.padding.top + slotsGrid.padding.bottom + nRows * slotsGrid.cellSize.y + (nRows - 1) * slotsGrid.spacing.y + 20 + closeButton.GetComponent<RectTransform>().sizeDelta.y);
     }
 
+    public virtual void UnlockContrainer () {
+        isLocked = false;
+    }
+    public virtual void LockContainer () {
+        isLocked = true;
+    }
+
 #region Public methods
 
     /// <summary>
