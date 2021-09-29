@@ -5,9 +5,9 @@ using UnityEngine.AI;
 
 public class Golem : NavAgentBoss
 {
-    bool isDefending;
     bool walkForward;
 
+    float cooldown = 7;
     float defendingDuration = 3;
     float stunDuration = 5;
     float stunHitTime;
@@ -72,9 +72,6 @@ public class Golem : NavAgentBoss
     {
         base.Start();
 
-        navAgent = GetComponent<NavMeshAgent>();
-        navAgent.avoidancePriority = 50 + Random.Range(-20, 20);
-
         //Doing this cause otherwise it will trigger at start;
         stunHitTime -= stunDuration;
         startedDefending -= defendingDuration;
@@ -82,29 +79,17 @@ public class Golem : NavAgentBoss
 
     protected override void AttackTarget () {
         isAttacking = true;
-        if (distanceToPlayer < 3) {
-            StartCoroutine(HitGroundAttack());
-        } else if (distanceToPlayer < 4.5f) {
-            if (Random.value < 0.5f) {
-                StartCoroutine(PunchAttack());
-            } else {
-                StartCoroutine(DoublePunchAttack());
-            }
-        } else if (distanceToPlayer < 20) {
-            if (Random.value < 0.5) {
-                StartCoroutine(CastSpellAttack());
-            } else {
-                StartCoroutine(JumpAttack());
-            }
-            attackRange = 4.5f;
-        } else {
-            StartCoroutine(CastSpellAttack());
-        }
+        
+        if (plannedAttack.attackName == "HitGroundAttack") StartCoroutine(HitGroundAttack());
+        else if (plannedAttack.attackName == "PunchAttack") StartCoroutine(PunchAttack());
+        else if (plannedAttack.attackName == "DoublePunchAttack") StartCoroutine(DoublePunchAttack());
+        else if (plannedAttack.attackName == "CastSpellAttack") StartCoroutine(CastSpellAttack());
+        else if (plannedAttack.attackName == "JumpAttack") StartCoroutine(JumpAttack());
+        UseAttack(plannedAttack);
     }
     IEnumerator JumpAttack() {
         forceRigidbodyControl = true;
         animSwitched = false;
-        animator.SetTrigger("Jump");
         PlaySound(jumpSound, 0, 1, 0.6f);
         yield return new WaitForSeconds(1);
         enemyController.jump = true;
@@ -124,28 +109,24 @@ public class Golem : NavAgentBoss
         isAttacking = false;
     }
     IEnumerator CastSpellAttack() {
-        animator.SetTrigger("Cast Spell");
         yield return new WaitForSeconds(0.4f);
         ShootRockShard();
         yield return new WaitForSeconds(0.2f);
         isAttacking = false;
     }
     IEnumerator HitGroundAttack() {
-        animator.SetTrigger("Hit Ground Attack");
         yield return new WaitForSeconds(0.4f);
         PlaySound(hitGroundAttackSound);
         yield return new WaitForSeconds(0.2f);
         isAttacking = false;
     }
     IEnumerator PunchAttack() {
-        animator.SetTrigger("Punch Attack");
         yield return new WaitForSeconds(0.15f);
         PlaySound(attack1Sound);
         yield return new WaitForSeconds(0.2f);
         isAttacking = false;
     }
     IEnumerator DoublePunchAttack() {
-        animator.SetTrigger("Double Punch Attack");
         yield return new WaitForSeconds(0.15f);
         PlaySound(attack1Sound);
         yield return new WaitForSeconds(0.4f);
@@ -211,7 +192,7 @@ public class Golem : NavAgentBoss
     }
 
     public override void Hit () {
-        DamageInfo enemyDamageInfo = CalculateDamage.enemyDamageInfo(finalDamage, enemyName);
+        DamageInfo enemyDamageInfo = CalculateDamage.enemyDamageInfo(damage, enemyName);
         PlayerControlls.instance.GetComponent<Characteristics>().GetHit(enemyDamageInfo, hitType, 0.2f, 2.5f);
     }
 
@@ -237,5 +218,9 @@ public class Golem : NavAgentBoss
 
     public void ShakeCamera () {
         PlayerControlls.instance.playerCamera.GetComponent<CameraControll>().CameraShake(0.15f, 2.5f, 0.1f, transform.position);
+    }
+
+    protected override void SyncAnimator() {
+       
     }
 }

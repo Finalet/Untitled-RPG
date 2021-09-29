@@ -16574,7 +16574,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6063976787320910979}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
   m_Children:
@@ -16587,7 +16587,7 @@ Transform:
   - {fileID: 3482140176939294188}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6158502160637218373
 Animator:
   serializedVersion: 3
@@ -16768,12 +16768,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 015021fd71a22ff478751e884fb0ae1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   enemyName: Big Goblin
+  damage: 2000
   maxHealth: 20000
-  currentHealth: 0
-  baseDamage: 2000
-  attackRange: 10
-  hitType: 0
+  attacks:
+  - attackName: Close Attack
+    attackRange: 2
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 0
+    cooldown: 3
+    disallowRepetition: 0
+  - attackName: Medium Attack
+    attackRange: 4
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 1
+    cooldown: 4
+    disallowRepetition: 0
+  - attackName: Dash Attack
+    attackRange: 6
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 2
+    cooldown: 4
+    disallowRepetition: 0
+  - attackName: Throw Stone
+    attackRange: 10
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 3
+    cooldown: 10
+    disallowRepetition: 1
   immuneToInterrupt: 0
   immuneToKnockDown: 0
   immuneToKickBack: 1
@@ -16795,19 +16822,19 @@ MonoBehaviour:
     maxLoot: 2
     expectedValue: 222
   goldLootAmount: 0
+  currentHealth: 0
+  agr: 0
   currentState: 0
   distanceToPlayer: 0
-  agr: 0
   isCoolingDown: 0
   attackCoolDown: 5
-  agrTime: 20
-  TargetSkillDamagePercentage: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
   isKnockedDown: 0
   isRagdoll: 0
   isStunned: 0
+  isDefensing: 0
   canGetHit: 1
   healthBar: {fileID: 6062701134100217151}
   hitParticles: {fileID: 6241078763338755961}

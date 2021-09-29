@@ -39,6 +39,8 @@ using UnityEngine;
     }
 
     double GetExpectedValue () {
+        if (possibleLoot == null) return 0;
+        
         double ev = 0;
         double totalWeight = possibleLoot.totalWeight;
 

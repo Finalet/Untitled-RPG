@@ -25,14 +25,6 @@ public class GoblinArcher : NavAgentEnemy
         plannedAttack = attacks[0];
     }
 
-    protected override void Update()
-    {
-        base.Update();
-
-        if (isRagdoll || isKnockedDown || isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
-            navAgent.isStopped = true;
-        }    
-    }
 
     protected override void CalculateCurrentState()
     {

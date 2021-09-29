@@ -1932,12 +1932,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d1c72ec9a9d19b42b942df336bd8112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   enemyName: Wolf
+  damage: 500
   maxHealth: 2000
-  currentHealth: 0
-  baseDamage: 500
-  attackRange: 4
-  hitType: 0
+  attacks:
+  - attackName: Pound Attack
+    attackRange: 4.5
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 0
+    cooldown: 3
+    disallowRepetition: 0
+  - attackName: Bite Attack
+    attackRange: 2
+    damageMultiplier: 1
+    hitType: 0
+    animationID: 1
+    cooldown: 3
+    disallowRepetition: 0
   immuneToInterrupt: 0
   immuneToKnockDown: 0
   immuneToKickBack: 0
@@ -1949,19 +1962,19 @@ MonoBehaviour:
     maxLoot: 0
     expectedValue: 0
   goldLootAmount: 0
+  currentHealth: 0
   agr: 0
   currentState: 0
   distanceToPlayer: 0
   isCoolingDown: 0
   attackCoolDown: 3
-  agrTime: 10
-  TargetSkillDamagePercentage: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
   isKnockedDown: 0
   isRagdoll: 0
   isStunned: 0
+  isDefensing: 0
   canGetHit: 1
   healthBar: {fileID: 1688562339371453867}
   hitParticles: {fileID: 0}

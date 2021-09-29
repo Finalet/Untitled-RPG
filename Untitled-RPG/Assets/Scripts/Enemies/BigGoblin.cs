@@ -25,30 +25,8 @@ public class BigGoblin : NavAgentEnemy
     {   
         if (PlayerControlls.instance == null)
             return;
-
-        if (distanceToPlayer >= 10)
-            attackRange = 10;
-
-        animator.SetBool("Agr", agr);
-        animator.SetBool("KnockedDown", isKnockedDown);
         
         base.Update();
-
-        if (isKnockedDown || isDead || PlayerControlls.instance == null) { //Player instance is null when level is only loading.
-            if (navAgent.enabled) navAgent.isStopped = true;
-            return;
-        }
-  
-        animator.SetBool("Approaching", currentState == EnemyState.Approaching ? true : false);
-        animator.SetBool("Returning", currentState == EnemyState.Returning ? true : false);
-    }
-
-
-    protected override void ApproachTarget () {
-        base.ApproachTarget();
-
-        navAgent.isStopped = isGettingInterrupted ? true : false;
-        navAgent.destination = target.position;
     }
 
     protected override bool blockFaceTarget()
@@ -57,44 +35,39 @@ public class BigGoblin : NavAgentEnemy
     }
 
     protected override void AttackTarget () {
-        isAttacking = true;
-        animator.SetTrigger("Attack");
-        if (distanceToPlayer <= 2) { // Close attack
-            animator.SetInteger("AttackID", 0); 
-            hitType = HitType.Interrupt;
-            coolDownTimer = 3;
-            forceFaceTarget = false;
-        } else if (distanceToPlayer <= 4) { //Medium Attack
-            animator.SetInteger("AttackID", 1); //Medium attack
-            hitType = HitType.Interrupt;
-            coolDownTimer = 4;
-            forceFaceTarget = false;
-        } else if (distanceToPlayer <= 7) {
-            animator.SetInteger("AttackID", 2); //Dash attack
-            hitType = HitType.Interrupt;
-            coolDownTimer = 5;
+        if (plannedAttack.attackName == "Dash Attack") {
             forceFaceTarget = true;
-        } else if (distanceToPlayer <= 10) {
-            animator.SetInteger("AttackID", 3); //Throw stone attack
-            hitType = HitType.Interrupt;
-            coolDownTimer = 7;
+        } else if (plannedAttack.attackName == "Throw Stone") {
             StartCoroutine(YeetBoulder());
-            attackRange = 6;
         }
-        //play attack sound
+        StartCoroutine(DisableColliders());
+        UseAttack(plannedAttack);
     }
+
 
     protected override void Idle () {
         base.Idle();
         navAgent.isStopped = true;
     }
     
-    IEnumerator YeetBoulder () {
-        immuneToInterrupt = true;
-        immuneToKnockDown = true;
+    IEnumerator DisableColliders () {
         for (int i = 0; i < collidersToDisableWhenAttacking.Length; i++) {
             collidersToDisableWhenAttacking[i].enabled = false;
         }
+        while (!isAttacking) yield return null;
+        while (isAttacking) yield return null;
+            
+        for (int i = 0; i < collidersToDisableWhenAttacking.Length; i++) {
+            collidersToDisableWhenAttacking[i].enabled = true;
+        }
+    }
+
+    IEnumerator YeetBoulder () {
+        immuneToInterrupt = true;
+        immuneToKnockDown = true;
+        // for (int i = 0; i < collidersToDisableWhenAttacking.Length; i++) {
+        //     collidersToDisableWhenAttacking[i].enabled = false;
+        // }
         while(!animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Attacks")).IsName("Throw Stone")) {
             yield return null;
         }
@@ -143,9 +116,9 @@ public class BigGoblin : NavAgentEnemy
         enProjectile.shot = true;
         forceFaceTarget = false;
 
-        for (int i = 0; i < collidersToDisableWhenAttacking.Length; i++) {
-            collidersToDisableWhenAttacking[i].enabled = true;
-        }
+        // for (int i = 0; i < collidersToDisableWhenAttacking.Length; i++) {
+        //     collidersToDisableWhenAttacking[i].enabled = true;
+        // }
 
         immuneToInterrupt = false;
         immuneToKnockDown = false;

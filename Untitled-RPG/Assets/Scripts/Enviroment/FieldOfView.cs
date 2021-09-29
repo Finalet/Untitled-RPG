@@ -62,7 +62,6 @@ public class FieldOfView : MonoBehaviour
         return false;
 	}
 
-
 	public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal) {
 		if (!angleIsGlobal) {
 			angleInDegrees += transform.eulerAngles.y;

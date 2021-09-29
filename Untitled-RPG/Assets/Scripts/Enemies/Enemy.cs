@@ -5,16 +5,18 @@ using UnityEngine.AI;
 using TMPro;
 using NaughtyAttributes;
 
-public enum EnemyState {Idle, Approaching, Attacking, Returning, Celebrating, Stunned};
+public enum EnemyState {Idle, Approaching, Attacking, Returning, Stunned};
 
 [System.Serializable]
 public struct EnemyAttack {
     public string attackName;
     public float attackRange;
-    public int damage;
+    public float damageMultiplier;
     public HitType hitType;
     public int animationID;
     public float cooldown;
+    public bool disallowRepetition;
+    public bool forceFaceTarget;
 }
 
 
@@ -25,7 +27,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
     [Space, Space]
 
     public string enemyName;
-    
+    public int damage;
     public int maxHealth;
     public EnemyAttack[] attacks;
     
@@ -44,9 +46,9 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
     [Header("AI")]
     [DisplayWithoutEdit] public int currentHealth;
     [DisplayWithoutEdit] public bool agr; //Agressive - if true, then targets and attacks the player. if false then resting/idling
-    [DisplayWithoutEdit] public EnemyState currentState;
     [DisplayWithoutEdit, SerializeField] protected float distanceToPlayer;
-    [DisplayWithoutEdit, SerializeField] protected string plannedAttackName; 
+    [DisplayWithoutEdit] public EnemyState currentState;
+    protected EnemyState previousState;
     
     [Space]
     [DisplayWithoutEdit] public bool isCoolingDown;
@@ -62,7 +64,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
     [Foldout("States")] public bool isKnockedDown;
     [Foldout("States")] public bool isRagdoll;
     [Foldout("States")] public bool isStunned;
-    [Foldout("States")] public bool isDefensing;
+    [Foldout("States")] public bool isDefending;
     [Foldout("States")] public bool canGetHit = true;
 
     [Header("Setup")]
@@ -88,10 +90,10 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         }
         set {
             _plannedAttack = value;
-            plannedAttackName = value.attackName;
             attackRange = value.attackRange;
         }
     }
+    protected EnemyAttack previousAttack;
     protected float baseControllerSpeed;
 
     protected float agrTime = 20;
@@ -132,7 +134,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         initialPos = transform.position;
         //if spawned in the air - drop on the floor
         RaycastHit hit;
-        if (Physics.Raycast(initialPos + Vector3.up, -Vector3.up, out hit, 10f)) 
+        if (Physics.Raycast(initialPos + Vector3.up, -Vector3.up, out hit, 10f, LayerMask.GetMask("Terrain, StaticLevel, Default"))) 
             initialPos = hit.point + Vector3.up * 0.05f;
     }
 
@@ -175,7 +177,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
     protected virtual void SyncAnimator() {
         animator.SetBool("Agr", agr);
         animator.SetBool("KnockedDown", isKnockedDown);
-        animator.SetBool("Celebrating", currentState == EnemyState.Celebrating ? true : false);
         animator.SetBool("Approaching", currentState == EnemyState.Approaching ? true : false);
         animator.SetBool("Returning", currentState == EnemyState.Returning ? true : false);
     }
@@ -208,8 +209,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
             TryFaceTarget();
         } else if (currentState == EnemyState.Returning) {
             ReturnToPosition();
-        } else if (currentState == EnemyState.Celebrating) {
-            Celebrate();
         } else if (currentState == EnemyState.Stunned) {
             Stun();
         }
@@ -217,24 +216,25 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
 
     protected virtual void CalculateCurrentState () {
         if (!agr) {
-            if (currentState != EnemyState.Celebrating || ( (Time.time - startedCelebratingTime > celebrationDuration) || distanceToPlayer > 20))
-                currentState = RemainingDistanceToTarget() > StoppingDistance() ? EnemyState.Returning : EnemyState.Idle;
-        }
-
-        if (agr) {
-            if (distanceToPlayer > attackRange) currentState = isAttacking ? currentState : EnemyState.Approaching;
+            if (isAttacking) currentState = EnemyState.Attacking;
+            else currentState = DistanceToInitialPos() >= StoppingDistance() ? EnemyState.Returning : EnemyState.Idle;
+        } else {
+            if (distanceToPlayer > attackRange) currentState = isAttacking ? EnemyState.Attacking : EnemyState.Approaching;
             else currentState = EnemyState.Attacking;
 
-            if (Characteristics.instance.isDead && currentState != EnemyState.Celebrating){
-                currentState = EnemyState.Celebrating;
-                startedCelebratingTime = Time.time;
-                agrTimer = -10;
+            if (Characteristics.instance.isDead) {
+                agrTimer = -1;
             }
         }
 
         if (isStunned) currentState = EnemyState.Stunned;
+
+        if (previousState != currentState) OnStateChange();
+        previousState = currentState;
     }
-    protected virtual float RemainingDistanceToTarget() {
+    protected virtual void OnStateChange () {}
+
+    protected virtual float DistanceToInitialPos() {
         return Vector3.Distance(transform.position, initialPos);
     }
     protected virtual float StoppingDistance() {
@@ -292,7 +292,6 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
 
         RegenerateMaxHealth();
     }
-    protected virtual void Celebrate() {}
     protected virtual void Stun() {}
 
     protected virtual void Health () {
@@ -334,7 +333,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         Destroy(gameObject);
     }
 
-    protected int calculateActualDamage (int damage) {
+    protected virtual int calculateActualDamage (int damage) {
         return Mathf.RoundToInt( damage * (1 + TargetSkillDamagePercentage/100) );
     }
 
@@ -350,7 +349,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         Time.fixedDeltaTime = 0.02f;
     }
     
-    protected void KnockedDown () {
+    protected virtual void KnockedDown () {
         isKnockedDown = true;
         gettingUp = false;
         timeKnockedDown = Time.time;
@@ -550,7 +549,9 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         immuneToInterrupt = false;
     }
 
-    public virtual void OnWeakSpotHit() {}
+    public virtual void OnWeakSpotHit() {
+        Agr();
+    }
 
     void OnValidate() {
         loot.OnValidate();
@@ -558,35 +559,43 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
 
 
     TextMeshPro debugAIStateLabel;
-    void Debug () {
+    protected virtual void Debug () {
         if (debug) {
             if (!debugAIStateLabel) {
                 debugAIStateLabel = new GameObject().AddComponent<TextMeshPro>();
                 debugAIStateLabel.rectTransform.sizeDelta = new Vector2(1.5f, 1f);
                 debugAIStateLabel.transform.SetParent(transform);
-                debugAIStateLabel.fontSize = 1.5f;
+                debugAIStateLabel.fontSize = 1.2f;
                 debugAIStateLabel.color = Color.white;
                 debugAIStateLabel.outlineColor = Color.black;
-                debugAIStateLabel.outlineWidth = 0.3f;
+                debugAIStateLabel.outlineWidth = 0.2f;
                 debugAIStateLabel.alignment = TextAlignmentOptions.Center;
+                debugAIStateLabel.enableWordWrapping = false;
                 debugAIStateLabel.transform.localScale = new Vector3(-1, 1,1);
             }
 
             debugAIStateLabel.transform.position = transform.position + Vector3.up * 2.2f;
             debugAIStateLabel.transform.LookAt(PlayerControlls.instance.playerCamera.transform);
-            debugAIStateLabel.text = $"{currentState.ToString()}\nPlanning: {plannedAttackName}\nCooldown: {Mathf.Round(coolDownTimer*100)/100}";
+            debugAIStateLabel.text = $"<color=#7f7f7f>State: <color=white>{currentState.ToString()}\n" +
+               $"<color=#7f7f7f>Previous: <color=white>{previousAttack.attackName}\n" + 
+               $"<color=#7f7f7f>Next: <color=white>{plannedAttack.attackName}\n" + 
+               $"<color=#7f7f7f>Cooldown: <color=white>{System.Math.Round(coolDownTimer, 1)}"+
+               ExtraDebug();
         } else {
             if (debugAIStateLabel) {
                 Destroy(debugAIStateLabel.gameObject);
             }
         }
     }
+    protected virtual string ExtraDebug () {return "";}
 
-    protected EnemyAttack ClosestAttack () {
+    protected virtual EnemyAttack ClosestAttack () {
         float closestDistance = Mathf.Infinity;
         EnemyAttack chosenAttack = attacks[0];
 
         for (int i = 0; i < attacks.Length; i++) {
+            if (attacks[i].disallowRepetition && attacks[i].attackName == previousAttack.attackName) continue;
+            
             float dis = Mathf.Abs(distanceToPlayer - attacks[i].attackRange);
             if (dis < closestDistance) {
                 chosenAttack = attacks[i];
@@ -597,12 +606,15 @@ public abstract class Enemy : MonoBehaviour, IDamagable, ILootable
         return chosenAttack;
     }
 
-    protected void UseAttack (EnemyAttack attack) {
-        animator.SetTrigger("Attack");
-        animator.SetInteger("AttackID", attack.animationID);
+    protected virtual void UseAttack (EnemyAttack attack) {
+        if (attack.animationID >= 0) animator.SetTrigger("Attack");
+        if (attack.animationID >= 0) animator.SetInteger("AttackID", attack.animationID);
         hitType = attack.hitType;
-        finalDamage = attack.damage;
+        finalDamage = Mathf.RoundToInt(damage * attack.damageMultiplier);
         coolDownTimer = attack.cooldown;
+        previousAttack = plannedAttack;
+        plannedAttack = ClosestAttack();
+        forceFaceTarget = attack.forceFaceTarget;
     }
 
 

@@ -7249,20 +7249,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   enemyName: Goblin Warrior
+  damage: 500
   maxHealth: 3000
   attacks:
   - attackName: Short
     attackRange: 1.5
-    damage: 0
+    damageMultiplier: 1
     hitType: 0
     animationID: 0
     cooldown: 4
+    disallowRepetition: 0
+    forceFaceTarget: 0
   - attackName: Long
     attackRange: 2.5
-    damage: 0
+    damageMultiplier: 1
     hitType: 0
     animationID: 1
     cooldown: 4
+    disallowRepetition: 0
+    forceFaceTarget: 0
   immuneToInterrupt: 0
   immuneToKnockDown: 0
   immuneToKickBack: 0
@@ -7283,7 +7288,6 @@ MonoBehaviour:
   agr: 0
   currentState: 0
   distanceToPlayer: 0
-  plannedAttackName: 
   isCoolingDown: 0
   attackCoolDown: 0
   isAttacking: 0
@@ -7292,7 +7296,7 @@ MonoBehaviour:
   isKnockedDown: 0
   isRagdoll: 0
   isStunned: 0
-  isDefensing: 0
+  isDefending: 0
   canGetHit: 1
   healthBar: {fileID: 2670621119448169147}
   hitParticles: {fileID: 1682063558998294416}

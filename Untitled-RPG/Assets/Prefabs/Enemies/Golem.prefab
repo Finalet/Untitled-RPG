@@ -115199,6 +115199,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a33234bfda81743ba84803a2423e5bb2, type: 3}
   - {fileID: 8300000, guid: d9ca4829f77ea404a858dca0384cdd98, type: 3}
   - {fileID: 8300000, guid: f80f4e73c092d4af8864fb0cdfb108f9, type: 3}
+  currentGroundType: 0
 --- !u!1 &7732689777408774996
 GameObject:
   m_ObjectHideFlags: 0
@@ -116253,55 +116254,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 630f53e0a220a8f40ab4ae29a6dffd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   enemyName: Golem
+  damage: 5000
   maxHealth: 50000
-  currentHealth: 50000
-  baseDamage: 2000
-  attackRange: 20
-  hitType: 1
+  attacks:
+  - attackName: HitGroundAttack
+    attackRange: 3
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 0
+    cooldown: 5
+    disallowRepetition: 0
+  - attackName: PunchAttack
+    attackRange: 4.2
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 1
+    cooldown: 5
+    disallowRepetition: 0
+  - attackName: DoublePunchAttack
+    attackRange: 4.5
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 2
+    cooldown: 5
+    disallowRepetition: 0
+  - attackName: CastSpellAttack
+    attackRange: 20
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 3
+    cooldown: 3
+    disallowRepetition: 1
+  - attackName: JumpAttack
+    attackRange: 20
+    damageMultiplier: 1
+    hitType: 1
+    animationID: 4
+    cooldown: 3
+    disallowRepetition: 1
   immuneToInterrupt: 1
   immuneToKnockDown: 1
   immuneToKickBack: 1
   localEnemyBounds: {x: 1, y: 2.2, z: 1}
-  itemsLoot:
-  - item: {fileID: 11400000, guid: e47354288f0418548a5b1a7b14a6d7cf, type: 2}
-    amount: 1
-    probability: 0.5
-    amountVariability: 0
-  - item: {fileID: 11400000, guid: 8769254ce50726c478839fca54dcd53a, type: 2}
-    amount: 1
-    probability: 0.25
-    amountVariability: 0
-  - item: {fileID: 11400000, guid: 0b88a51979302574082dc0505ffb578e, type: 2}
-    amount: 1
-    probability: 0.25
-    amountVariability: 0
-  - item: {fileID: 11400000, guid: 4bbdfee0d65297347b51351fdc579824, type: 2}
-    amount: 1
-    probability: 0.25
-    amountVariability: 0
-  - item: {fileID: 11400000, guid: 9753325d18c493d4ca05488e75d01ce8, type: 2}
-    amount: 1
-    probability: 0.25
-    amountVariability: 0
-  - item: {fileID: 11400000, guid: 4b5a9cc39d81ab84fa93f51c07d68c91, type: 2}
-    amount: 1
-    probability: 0.25
-    amountVariability: 0
+  loot:
+    possibleLoot:
+      WeightedEntries: []
+    minLoot: 0
+    maxLoot: 0
+    expectedValue: 0
   goldLootAmount: 0
+  currentHealth: 50000
+  agr: 0
   currentState: 0
   distanceToPlayer: 0
-  agr: 0
   isCoolingDown: 0
   attackCoolDown: 10
-  agrTime: 20
-  TargetSkillDamagePercentage: 0
   isAttacking: 0
   isGettingInterrupted: 0
   isDead: 0
   isKnockedDown: 0
   isRagdoll: 0
   isStunned: 0
+  isDefensing: 0
   canGetHit: 1
   healthBar: {fileID: 0}
   hitParticles: {fileID: 6334105276239930869}
@@ -116312,11 +116328,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bc05562b4c553c54688c98a223424492, type: 3}
   - {fileID: 8300000, guid: 3a377f879eefd794b90e930e84c69bbf, type: 3}
   stabSounds: []
-  stepsSounds:
-  - {fileID: 8300000, guid: 5e18472d36c2f4d12bcc2ade6d3bd217, type: 3}
-  - {fileID: 8300000, guid: a33234bfda81743ba84803a2423e5bb2, type: 3}
-  - {fileID: 8300000, guid: d9ca4829f77ea404a858dca0384cdd98, type: 3}
-  - {fileID: 8300000, guid: f80f4e73c092d4af8864fb0cdfb108f9, type: 3}
   attackSounds: []
   healthBarPrefab: {fileID: 6694493394913997334, guid: ebf65d100b617994fb82ac307d017599,
     type: 3}
