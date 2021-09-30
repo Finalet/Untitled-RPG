@@ -7,6 +7,7 @@ public class SoldierTwohandedSword : NavAgentEnemy
     [Space]
     public ParticleSystem teleportStartVFX;
     public ParticleSystem teleportEndVFX;
+    public ParticleSystem hitGroundVFX;
     public SkinnedMeshRenderer meshRenderer;
     [Space]
     public Transform sword;
@@ -46,20 +47,24 @@ public class SoldierTwohandedSword : NavAgentEnemy
         }
     }
 
-    IEnumerator Teleport() {
+    IEnumerator Teleport(Vector3 destination = new Vector3()) {
         teleportStartVFX.Play();
         meshRenderer.enabled = false;
         yield return new WaitForSeconds(0.5f);
-        Vector3 teleportPos = PlayerControlls.instance.transform.position + PlayerControlls.instance.transform.forward * 1.5f;
-        Vector3 lookRot = PlayerControlls.instance.transform.position - teleportPos;
+
+        if (destination == Vector3.zero) destination = PlayerControlls.instance.transform.position + PlayerControlls.instance.rb.velocity * 0.5f;
+
+        Vector3 lookRot = PlayerControlls.instance.transform.position - destination;
         lookRot.y = 0;
-        transform.position = teleportPos;
+        transform.position = destination;
         transform.rotation = Quaternion.LookRotation(lookRot.normalized, Vector3.up);
         teleportEndVFX.Play();
+        if (destination == Vector3.zero) UseAttack(attacks[0]);
         yield return new WaitForSeconds(0.2f);
         meshRenderer.enabled = true;
 
         distanceToPlayer = Vector3.Distance(transform.position, PlayerControlls.instance.transform.position);
+        
         plannedAttack = ClosestAttack();
     }
 
@@ -80,6 +85,9 @@ public class SoldierTwohandedSword : NavAgentEnemy
     public void DisableTrails() {
         trails.Stop();
     }
+    public void GroundHitVFX() {
+        hitGroundVFX.Play();
+    }
 
     protected override void OnStateChange()
     {
@@ -91,5 +99,26 @@ public class SoldierTwohandedSword : NavAgentEnemy
         enemyController.useRootMotion = true;
         enemyController.useRootMotionRotation = false;
         enemyController.speed = enemyController.useRootMotion ? baseControllerSpeed * 50 : baseControllerSpeed;
+    }
+
+    protected override void OnHitAbuseDetected()
+    {
+        base.OnHitAbuseDetected();
+        Vector3 destination = PlayerControlls.instance.transform.position + PlayerControlls.instance.transform.forward * (10 + Random.value * 10) + Vector3.up * 1 + PlayerControlls.instance.transform.right * (Random.value-0.5f) * 10;
+        RaycastHit hit;
+        if (Physics.Raycast(destination, -Vector3.up, out hit, 20, LayerMask.GetMask("Terrain", "Static Level", "Default"))) {
+            destination.y = hit.point.y;
+        }
+        int numberOfTries = 0;
+        while(Physics.Raycast(destination, Vector3.up, out hit, 50)) {
+            destination = PlayerControlls.instance.transform.position + PlayerControlls.instance.transform.forward * (10 + Random.value * 10) + Vector3.up * 1 + PlayerControlls.instance.transform.right * (Random.value-0.5f) * 10;
+            RaycastHit hit1;
+            if (Physics.Raycast(destination, -Vector3.up, out hit1, 20, LayerMask.GetMask("Terrain", "Static Level", "Default"))) {
+                destination.y = hit1.point.y;
+            }
+            numberOfTries ++;
+            if (numberOfTries > 100) break;
+        }
+        StartCoroutine(Teleport(destination));
     }
 }

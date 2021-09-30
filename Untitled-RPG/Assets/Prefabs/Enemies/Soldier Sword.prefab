@@ -1385,7 +1385,7 @@ GameObject:
   - component: {fileID: 2838546822927502844}
   - component: {fileID: 6126320972272051215}
   m_Layer: 9
-  m_Name: SoldierSword
+  m_Name: Soldier Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1492,7 +1492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5c8e33a26dba4e902fb7d601a5ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  debug: 0
   enemyName: Soldier
   damage: 1000
   maxHealth: 10000
@@ -1521,6 +1521,11 @@ MonoBehaviour:
     cooldown: 6
     disallowRepetition: 0
     forceFaceTarget: 1
+  isFriendly: 0
+  detectKite: 0
+  kiteDistanceThreashold: 0
+  attackIndexIfKited: -1
+  detectHitAbuse: 0
   immuneToInterrupt: 0
   immuneToKnockDown: 0
   immuneToKickBack: 0
@@ -1545,6 +1550,7 @@ MonoBehaviour:
   isRagdoll: 0
   isStunned: 0
   isDefending: 0
+  isBeingKited: 0
   canGetHit: 1
   healthBar: {fileID: 692720195658673080}
   hitParticles: {fileID: 8597912763879355673}
@@ -1554,6 +1560,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 28c4cbe3766495a419ee76ea5777aa1a, type: 3}
   - {fileID: 8300000, guid: f417372b11fe024408b6595c67c0ba7b, type: 3}
   - {fileID: 8300000, guid: fa421a900aec35145a45b91887c71e46, type: 3}
+  sword: {fileID: 5256685584600214561}
+  swordHandSpot: {fileID: 7527737746306309613}
+  swordHipSpot: {fileID: 1581920114939144710}
 --- !u!114 &4954129230682696499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1566,7 +1575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd6c8d5137352274b9b4b4e85ebec9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 20
+  viewRadius: 0
   viewAngle: 120
   eyeLevel: 1.6
   target: {fileID: 0}
@@ -3659,6 +3668,7 @@ Transform:
   - {fileID: 4954129230682988499}
   - {fileID: 4954129230683027259}
   - {fileID: 4954129230682922019}
+  - {fileID: 1581920114939144710}
   m_Father: {fileID: 4954129230682971677}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3896,9 +3906,9 @@ Transform:
   m_GameObject: {fileID: 5256685584600413783}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 100.00004, z: 100}
   m_Children: []
-  m_Father: {fileID: 7527737746306309613}
+  m_Father: {fileID: 1581920114939144710}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5256685584603676643
@@ -3978,6 +3988,37 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.24404043, y: 1.2237993, z: 0.059882767}
   m_Center: {x: 0.0000004695992, y: 0.48798198, z: 0.00000006044178}
+--- !u!1 &6573517861946048059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1581920114939144710}
+  m_Layer: 9
+  m_Name: SwordHipSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1581920114939144710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6573517861946048059}
+  m_LocalRotation: {x: -0.000000014901161, y: 0.000000014901161, z: -0.9370713, w: 0.34913808}
+  m_LocalPosition: {x: -12.4, y: 11.3, z: 22.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5256685584600214561}
+  m_Father: {fileID: 4954129230682972401}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -139.131}
 --- !u!1 &6575623766660769564
 GameObject:
   m_ObjectHideFlags: 0
@@ -4086,8 +4127,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 6.8, y: 1.38, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 5256685584600214561}
+  m_Children: []
   m_Father: {fileID: 4954129230683029223}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}

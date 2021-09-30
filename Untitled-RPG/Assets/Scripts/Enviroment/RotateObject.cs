@@ -8,6 +8,6 @@ public class RotateObject : MonoBehaviour
     public float rotationSpeed;
     void Update()
     {
-        transform.Rotate(rotationDirection * rotationSpeed);
+        transform.Rotate(rotationDirection * rotationSpeed * Time.deltaTime);
     }
 }
