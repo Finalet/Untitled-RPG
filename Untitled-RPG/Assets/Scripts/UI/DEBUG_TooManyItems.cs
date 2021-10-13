@@ -28,6 +28,7 @@ public class DEBUG_TooManyItems : MonoBehaviour
         allItems.AddRange(AssetHolder.instance.resources);
         allItems.AddRange(AssetHolder.instance.mounts);
         allItems.AddRange(AssetHolder.instance.mountEquipment);
+        allItems.AddRange(AssetHolder.instance.shipAttachements);
 
         foreach (Item item in allItems) {
             DEBUG_UI_TooManyItemsSlot slot = Instantiate(slotPrefab, allGrid).GetComponent<DEBUG_UI_TooManyItemsSlot>();

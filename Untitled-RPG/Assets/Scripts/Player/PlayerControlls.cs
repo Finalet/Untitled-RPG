@@ -332,7 +332,7 @@ public class PlayerControlls : MonoBehaviour, ISavable
 
     public void InstantOverridePosRot (Transform _overrideTransform) {
         overridePos = Vector3.zero;
-        overrideRotAngle = 0;
+        overrideRotAngle = _overrideTransform.localRotation.y;
         overrideTransform = _overrideTransform;
         SetOverridePosRot(true);
     }

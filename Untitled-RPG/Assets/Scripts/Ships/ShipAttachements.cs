@@ -14,28 +14,40 @@ public class ShipAttachements : MonoBehaviour
 
     public Transform[] cannonPositions;
     public GameObject cannonDecoration;
-    public GameObject cannonPrefab;
     public GameObject cannonballPrefab;
+    GameObject cannonPrefab;
 
+    [Header("Setup")]
     public List<ShipCannon> allCannons = new List<ShipCannon>();
     public List<ShipCannon> leftCannons = new List<ShipCannon>();
     public List<ShipCannon> rightCannons = new List<ShipCannon>();
+    [Space]
+    [SerializeField] GameObject ShipAttachementsUI;
+    ShipAttachementUI instanciatedUI;
+    UI_ShipAttachementSlot cannonsSlot => instanciatedUI.cannonsSlot;
+    UI_ShipAttachementSlot sailsSlot => instanciatedUI.sailsSlot;
+    UI_ShipAttachementSlot helmSlot => instanciatedUI.helmSlot;
+    UI_ShipAttachementSlot flagSlot => instanciatedUI.flagSlot;
 
     public bool areCannonsInstalled {
         get { return allCannons.Count > 0; }
     }
+    
+    public bool attachementUIOpen {
+        get { return instanciatedUI.gameObject.activeInHierarchy; }
+    }
+
 
     void Awake() {
         shipController = GetComponent<ShipController>();
     }
 
     void Start() {
-        AddCannons();
+        InitUI();
     }
 
-    [Button("Add cannons")]
-    public void AddCannons () {
-        RemoveCannons();
+    void AddCannonsVisuals () {
+        RemoveCannonsVisuals();
 
         Transform cannonsParent = shipController.deckCollider.transform.Find("Cannons");
         cannonsParent = cannonsParent == null ? new GameObject().transform : cannonsParent;
@@ -51,8 +63,7 @@ public class ShipAttachements : MonoBehaviour
         }
         if (cannonDecoration) cannonDecoration.SetActive(true);
     }
-    [Button("Remove cannons")]
-    public void RemoveCannons () {
+    void RemoveCannonsVisuals () {
         for (int i = 0; i < cannonPositions.Length; i ++) {
             if (cannonPositions[i].childCount > 0) {
                 for (int i1=cannonPositions[i].childCount-1; i1>=0; i1--) {
@@ -94,5 +105,76 @@ public class ShipAttachements : MonoBehaviour
             cannonsToUse[randomOrderIndecies[i]].Shoot(cannonPower);
             yield return new WaitForSeconds (Random.Range(cannonsSequenceDelays * (1-cannonsSequenceVariation), cannonsSequenceDelays * (1+cannonsSequenceVariation)));
         }
+    }
+
+    void InitUI (){
+        if (!instanciatedUI) instanciatedUI = Instantiate(ShipAttachementsUI, PeaceCanvas.instance.transform).GetComponent<ShipAttachementUI>();
+        instanciatedUI.gameObject.SetActive(false);
+    }
+
+    public void OpenUI (){
+        instanciatedUI.Open();
+    }
+    public void CloseUI () {
+        instanciatedUI.Close();
+    }
+
+    public void AddAttachement(ShipAttachement attachement, UI_InventorySlot initialSlot) {
+        switch (attachement.attachementType) {
+            case ShipAttachementType.Cannons: 
+                AddCannons(attachement, initialSlot);
+                break;
+            case ShipAttachementType.Sails: 
+                sailsSlot.AddItem(attachement as Item, 1, initialSlot);
+                break;
+            case ShipAttachementType.Helm: 
+                helmSlot.AddItem(attachement as Item, 1, initialSlot);
+                break;
+            case ShipAttachementType.Flag: 
+                flagSlot.AddItem(attachement as Item, 1, initialSlot);
+                break;
+        }
+    }
+
+    public void RemoveAttachement (ShipAttachementType attachementType) {
+        switch (attachementType) {
+            case ShipAttachementType.Cannons: 
+                sailsSlot.ClearSlot();
+                RemoveCannonsVisuals();
+                break;
+            case ShipAttachementType.Sails: 
+                sailsSlot.ClearSlot();
+                break;
+            case ShipAttachementType.Helm: 
+                sailsSlot.ClearSlot();
+                break;
+            case ShipAttachementType.Flag: 
+                sailsSlot.ClearSlot();
+                break;
+        }
+    }
+
+    void AddCannons (ShipAttachement attachement, UI_InventorySlot initialSlot) {
+        cannonsSlot.AddItem(attachement as Item, 1, initialSlot);
+        cannonPrefab = attachement.prefab;
+        AddCannonsVisuals();
+    }
+
+    public bool isSlotEquiped (ShipAttachementType attachementType, out Item equipedItem) {
+        equipedItem = null;
+        if (attachementType == ShipAttachementType.Cannons) {
+            equipedItem = cannonsSlot.itemInSlot;
+            return cannonsSlot.itemInSlot;
+        } else if (attachementType == ShipAttachementType.Sails) {
+            equipedItem = sailsSlot.itemInSlot;
+            return sailsSlot.itemInSlot;
+        } else if (attachementType == ShipAttachementType.Helm) {
+            equipedItem = helmSlot.itemInSlot;
+            return helmSlot.itemInSlot;
+        } else if (attachementType == ShipAttachementType.Flag) {
+            equipedItem = flagSlot.itemInSlot;
+            return flagSlot.itemInSlot;
+        }
+        throw new System.Exception("Cannont check if ship slot is equipped. Wrong attachement type \"{attachementType}\".");
     }
 }

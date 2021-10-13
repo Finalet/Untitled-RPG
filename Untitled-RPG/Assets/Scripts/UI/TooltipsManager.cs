@@ -200,6 +200,14 @@ public class TooltipsManager : MonoBehaviour
             if (EquipmentManager.instance.isSlotEquiped(me.equipmentType, out comparedItem)) {
                 return true;
             }
+        } else if (item is ShipAttachement) {
+            if (!ShipController.instance) return false;
+            if (!ShipController.instance.shipAttachements.attachementUIOpen) return false;
+            
+            ShipAttachement sa = (ShipAttachement)item;
+            if (ShipController.instance.shipAttachements.isSlotEquiped(sa.attachementType, out comparedItem)) {
+                return true;
+            }
         }
         
         return false;

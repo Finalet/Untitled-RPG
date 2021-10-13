@@ -8,7 +8,7 @@ using DG.Tweening;
 using Funly.SkyStudio;
 using QFSW.QC;
 
-public enum InterractionIcons {Bag, Chest, Coins, Craft, Horse, HandPickup, HandShake,HandPray, Ship, Doors, Dungeon}
+public enum InterractionIcons {Bag, Chest, Coins, Craft, Horse, HandPickup, HandShake,HandPray, Ship, Doors, Dungeon, Settings}
 
 
 public class PeaceCanvas : MonoBehaviour
@@ -78,6 +78,7 @@ public class PeaceCanvas : MonoBehaviour
     public Sprite ship;
     public Sprite doors;
     public Sprite dungeon;
+    public Sprite settings;
 
     [Header("Misc")]
     public GameObject skillbookPreviewPanel;
@@ -427,6 +428,9 @@ public class PeaceCanvas : MonoBehaviour
                 break;
             case InterractionIcons.Dungeon:
                 buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = dungeon; //Action icon
+                break;
+            case InterractionIcons.Settings:
+                buttonSuggestionUI.transform.GetChild(1).GetComponent<Image>().sprite = settings; //Action icon
                 break;
         }
         buttonSuggestionUI.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = key; //Key label

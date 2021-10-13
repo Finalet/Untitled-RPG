@@ -67,4 +67,9 @@ public class SoldierSword : NavAgentEnemy
 
         if (currentState == EnemyState.Approaching && previousState == EnemyState.Idle) isDefending = true;
     }
+
+    protected override void KickBack(float kickBackStrength = 50)
+    {
+        base.KickBack(kickBackStrength/3);
+    }
 }

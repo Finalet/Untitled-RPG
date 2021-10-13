@@ -121,4 +121,9 @@ public class SoldierTwohandedSword : NavAgentEnemy
         }
         StartCoroutine(Teleport(destination));
     }
+
+    protected override void KickBack(float kickBackStrength = 50)
+    {
+        base.KickBack(kickBackStrength/3);
+    }
 }

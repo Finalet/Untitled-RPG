@@ -26,8 +26,8 @@ public class KeybindsManager : MonoBehaviour
         {"Skillbook", KeyCode.K},
         {"Interact", KeyCode.F},
 
-        {"Increase Mount Speed", KeyCode.Alpha2},
-        {"Decrease Mount Speed", KeyCode.Alpha1},
+        {"Increase Vehicle Speed", KeyCode.Alpha2},
+        {"Decrease Vehicle Speed", KeyCode.Alpha1},
         {"Toggle Mount Strafe", KeyCode.CapsLock},
         {"Toggle Mount Flight", KeyCode.Q},
 

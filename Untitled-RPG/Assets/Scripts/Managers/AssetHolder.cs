@@ -22,6 +22,7 @@ public class AssetHolder : MonoBehaviour
     public List<Item> resources = new List<Item>();
     public List<Item> mounts = new List<Item>();
     public List<Item> mountEquipment = new List<Item>();
+    public List<Item> shipAttachements = new List<Item>();
     [Space]
     public List<Consumable> consumablesCoolingDown = new List<Consumable>();
 
@@ -95,6 +96,13 @@ public class AssetHolder : MonoBehaviour
                     return mountEquipment[i];
             }
             Debug.LogError($"Mount Equipment with ID = {ID} not found");
+            return null;
+        } else if (ID >= 7000 && ID < 8000) { //Returns ship attachements
+            for (int i = 0; i < shipAttachements.Count; i ++) {
+                if (shipAttachements[i].ID == ID)
+                    return shipAttachements[i];
+            }
+            Debug.LogError($"Ship Attachement with ID = {ID} not found");
             return null;
         } else {
             Debug.LogError($"ID {ID} is out of range");

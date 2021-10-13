@@ -222,6 +222,28 @@ public class Tooltip : MonoBehaviour
                 compareText = compare ? $"{getCompareString(m.stamina, mCompare.stamina)}" : "";
                 stats += $"Stamina: <color={highlightColor}>{m.stamina}{compareText}</color>";
             }
+        } else if (item is ShipAttachement) {
+            ShipAttachement sa = (ShipAttachement)item;
+            ShipAttachement saCompare = (ShipAttachement)compareItem;
+            bool compare = compareItem != null ? true : false;
+            string compareText = "";
+            
+            if (sa.damage != 0) {
+                compareText = compare ? $"{getCompareString(sa.damage, saCompare.damage)}" : "";
+                stats += $"Damage: <color={highlightColor}>{sa.damage}</color>{compareText}\n";
+            }
+            if (sa.range != 0) {
+                compareText = compare ? $"{getCompareString(sa.range, saCompare.range)}" : "";
+                stats += $"Range: <color={highlightColor}>{sa.range}</color>{compareText}\n";
+            }
+            if (sa.speed != 0) {
+                compareText = compare ? $"{getCompareString(sa.speed, saCompare.speed)}" : "";
+                stats += $"Speed: <color={highlightColor}>{sa.speed}</color>{compareText}\n";
+            }
+            if (sa.turnPower != 0) {
+                compareText = compare ? $"{getCompareString(sa.turnPower, saCompare.turnPower)}" : "";
+                stats += $"Speed: <color={highlightColor}>{sa.turnPower}</color>{compareText}\n";
+            }
         } else {
             stats = "NOT IMPLEMENTED";
         }

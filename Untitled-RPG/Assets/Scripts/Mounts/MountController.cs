@@ -69,8 +69,8 @@ public class MountController : MonoBehaviour
     public void UpdateInputs () {
         animalInputs.FindInput("Jump").key = KeybindsManager.instance.currentKeyBinds["Jump"];
         animalInputs.FindInput("Sprint").key = KeybindsManager.instance.currentKeyBinds["Run"];
-        animalInputs.FindInput("Speed ++").key = KeybindsManager.instance.currentKeyBinds["Increase Mount Speed"];
-        animalInputs.FindInput("Speed --").key = KeybindsManager.instance.currentKeyBinds["Decrease Mount Speed"];
+        animalInputs.FindInput("Speed ++").key = KeybindsManager.instance.currentKeyBinds["Increase Vehicle Speed"];
+        animalInputs.FindInput("Speed --").key = KeybindsManager.instance.currentKeyBinds["Decrease Vehicle Speed"];
         animalInputs.FindInput("Strafe").key = KeybindsManager.instance.currentKeyBinds["Toggle Mount Strafe"];
 
         if (animalInputs.FindInput("Fly") != null) animalInputs.FindInput("Fly").key = KeybindsManager.instance.currentKeyBinds["Toggle Mount Flight"];

@@ -86,7 +86,7 @@ public class SoldierSwordShield : NavAgentEnemy
         if (isDefending) {
             StartCoroutine(BreakDefense());
         } else {
-            base.KickBack();
+            base.KickBack(kickBackStrength/3);
         }
     }
 

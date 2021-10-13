@@ -131,6 +131,10 @@ public class EnemyWave {
         Enemy en = Object.Instantiate(prefab, pos, getSpawnRot(pos), waveGenerator.transform).GetComponent<Enemy>();
         en.SetGroundType(GroundType.Stone);
         en.canDropLoot = waveGenerator.canEnemiesDropLoot;
+        en.isFriendly = false;
+        if (en.TryGetComponent<FieldOfView>(out FieldOfView fov)) {
+            fov.viewRadius = 100;
+        }
 
         spawnedEnemies[index].spawnedGameObjects.Add(en.gameObject);
         totalSpawnedEnemies ++;        
@@ -236,6 +240,7 @@ public class EnemyWaveGenerator : MonoBehaviour
     [Space, ReadOnly] public int currentWaveIndex;
 
     [Header("UI")]
+    public bool showUI = true;
     public GameObject waveUIPrefab;
 
     public float currentWaveProgress {
@@ -269,8 +274,11 @@ public class EnemyWaveGenerator : MonoBehaviour
     }
 
     IEnumerator LaunchWaves () {
-        EnemyWaveUI UI = Instantiate(waveUIPrefab, CanvasScript.instance.transform).GetComponent<EnemyWaveUI>();
-        UI.Init(this);
+        EnemyWaveUI UI = new EnemyWaveUI();
+        if (showUI) {
+            UI = Instantiate(waveUIPrefab, CanvasScript.instance.transform).GetComponent<EnemyWaveUI>();
+            UI.Init(this);    
+        }
 
         for (int i = 0; i < waves.Count; i++) {
             yield return new WaitForSeconds(delayBetweenWaves);
@@ -282,13 +290,14 @@ public class EnemyWaveGenerator : MonoBehaviour
         }
 
         isDone = true;
-        UI.End();
+        if (showUI) UI.End();
         OnAllWavesDone?.Invoke();
     }
 
     #if UNITY_EDITOR
     void OnDrawGizmos() {
-        Handles.DrawWireCube(transform.position + SpawnVolumeCenter, SpawnVolumeSize);
+        Gizmos.matrix = transform.localToWorldMatrix; 
+        Gizmos.DrawWireCube(SpawnVolumeCenter, SpawnVolumeSize);
     }
     #endif
 }

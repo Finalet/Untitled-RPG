@@ -13,6 +13,7 @@ public class ItemsDatabase : EditorWindow
     bool showResources;
     bool showMounts;
     bool showMountEquipment;
+    bool showShipAttachements;
 
     bool showAllWeapons;
     bool showSwords;
@@ -39,6 +40,12 @@ public class ItemsDatabase : EditorWindow
     bool showAllMountEquipment;
     bool showMountSaddles;
     bool showMountArmor;
+
+    bool showAllShipAttachements;
+    bool showCannons;
+    bool showSails;
+    bool showHelms;
+    bool showFlags;
 
     Vector2 scrollPos;
     Vector2 scrollPosSelection;
@@ -114,6 +121,13 @@ public class ItemsDatabase : EditorWindow
         showMountEquipment = EditorGUILayout.Foldout(showMountEquipment, "Mount Equipment");
         if (showMountEquipment) {
             DrawMountEquipmentList(ah);
+            EditorGUILayout.Space(5, false);
+        }
+
+        EditorGUI.indentLevel = 0;
+        showShipAttachements = EditorGUILayout.Foldout(showShipAttachements, "Ship Attachements");
+        if (showShipAttachements) {
+            DrawShipAttachementsList(ah);
             EditorGUILayout.Space(5, false);
         }
         
@@ -450,6 +464,62 @@ public class ItemsDatabase : EditorWindow
         }
     }
 
+    void DrawShipAttachementsList (AssetHolder ah) {
+        List<Item> Cannons = new List<Item>();
+        List<Item> Sails = new List<Item>();
+        List<Item> Helms = new List<Item>();
+        List<Item> Flags = new List<Item>();
+
+        ShipAttachement sa;
+        foreach (Item item in ah.shipAttachements){
+            sa = (ShipAttachement)item;
+            switch (sa.attachementType) {
+                case ShipAttachementType.Cannons:
+                    Cannons.Add(sa);
+                    break;
+                case ShipAttachementType.Sails:
+                    Sails.Add(sa);
+                    break;
+                case ShipAttachementType.Helm:
+                    Helms.Add(sa);
+                    break;
+                case ShipAttachementType.Flag:
+                    Flags.Add(sa);
+                    break;
+            }
+        }
+
+        EditorGUI.indentLevel = 2;
+        DrawTitles(ah.shipAttachements);
+        
+        EditorGUI.indentLevel = 1;
+        showAllShipAttachements = EditorGUILayout.Foldout(showAllShipAttachements, "All ship attachements");
+        if(showAllShipAttachements) {
+            DrawList(ah.shipAttachements, true);
+        }
+
+        EditorGUI.indentLevel = 1;
+        showCannons = EditorGUILayout.Foldout(showCannons, "Cannons");
+        if (showCannons) {
+            DrawList(Cannons, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showSails = EditorGUILayout.Foldout(showSails, "Sails");
+        if (showSails) {
+            DrawList(Sails, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showHelms = EditorGUILayout.Foldout(showHelms, "Helms");
+        if (showHelms) {
+            DrawList(Helms, true);
+        }
+        EditorGUI.indentLevel = 1;
+        showFlags = EditorGUILayout.Foldout(showFlags, "Flags");
+        if (showFlags) {
+            DrawList(Flags, true);
+        }
+    }
+
     void DrawAdditionalFieldsTitles (List<Item> list) {
         AssetHolder ah = GameObject.Find("Managers").GetComponent<AssetHolder>();
         
@@ -469,6 +539,8 @@ public class ItemsDatabase : EditorWindow
             EditorGUILayout.LabelField("Stamina", EditorStyles.boldLabel, GUILayout.Width(80));
         } else if (list[0] is MountEquipment) {
             EditorGUILayout.LabelField("Type", EditorStyles.boldLabel, GUILayout.Width(80));
+        } else if (list[0] is ShipAttachement) {
+            EditorGUILayout.LabelField("Type", EditorStyles.boldLabel, GUILayout.Width(100));
         }
     }
     void DrawAdditionalFields (Item item) {
@@ -495,6 +567,9 @@ public class ItemsDatabase : EditorWindow
         } else if (item is MountEquipment) {
             MountEquipment m = (MountEquipment)item;
             EditorGUILayout.LabelField(m.equipmentType.ToString(), GUILayout.Width(80));
+        } else if (item is ShipAttachement) {
+            ShipAttachement sa = (ShipAttachement)item;
+            EditorGUILayout.LabelField(sa.attachementType.ToString(), GUILayout.Width(100));
         }
     }
 

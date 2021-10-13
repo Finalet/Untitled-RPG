@@ -98,7 +98,10 @@ public static class UI_General
         } else if (item is MountEquipment) {
             MountEquipment me = (MountEquipment)item;
             return me.equipmentType.ToString();
-        } 
+        } else if (item is ShipAttachement) {
+            ShipAttachement sa = (ShipAttachement)item;
+            return sa.attachementType.ToString();
+        }  
         return $"NOT IMPLEMENTED";
     }
 

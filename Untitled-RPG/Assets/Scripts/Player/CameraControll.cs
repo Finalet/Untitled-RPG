@@ -123,6 +123,11 @@ public class CameraControll : MonoBehaviour
         CM_cam.m_YAxis.m_MaxSpeed = baseMouseYsensitivity;
         CM_cam.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
     }
+    public void MatchCameraSettings (ref CinemachinePOV CM_POV) {        
+        CM_POV.m_HorizontalAxis.m_MaxSpeed = baseMouseXsensitivity;
+        CM_POV.m_VerticalAxis.m_MaxSpeed = baseMouseYsensitivity;
+        CM_POV.m_VerticalAxis.m_InvertInput = !SettingsManager.instance.invertY;
+    }
 
     float rotationX;
     void FixedUpdate()

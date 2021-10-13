@@ -72,12 +72,7 @@ public class ShipController : MonoBehaviour
 
     BoatProbes boatProbe;
     CinemachineFreeLook CM_cam;
-    ShipAttachements shipAttachements;
-
-    KeyCode increaseSpeedIndex = KeyCode.Alpha2;
-    KeyCode decreaseSpeedIndex = KeyCode.Alpha1;
-    KeyCode shootAll = KeyCode.Mouse0;
-    KeyCode shootOne = KeyCode.Space;
+    [System.NonSerialized] public ShipAttachements shipAttachements;
 
     void Awake() {
         boatProbe = GetComponent<BoatProbes>();
@@ -86,6 +81,9 @@ public class ShipController : MonoBehaviour
 
         InitializeColliderDummy();
         SetInitialRotations();
+
+        if (ShipController.instance && ShipController.instance != this) Destroy(ShipController.instance.gameObject);
+        instance = this;
     }
 
     void Update() {
@@ -99,12 +97,12 @@ public class ShipController : MonoBehaviour
     void HandleInput () {
         if (!isControlled) return;
 
-        if (Input.GetKeyDown(increaseSpeedIndex)) IncreaseSpeed();
-        else if (Input.GetKeyDown(decreaseSpeedIndex)) DecreaseSpeed();
+        if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Increase Vehicle Speed"])) IncreaseSpeed();
+        else if (Input.GetKeyDown(KeybindsManager.instance.currentKeyBinds["Decrease Vehicle Speed"])) DecreaseSpeed();
 
         turnInput = !isControlled || currentSpeedIndex == 0 ? 0 : Input.GetKey(KeyCode.A) ? -1f : Input.GetKey(KeyCode.D) ? 1f : 0;
 
-        if (Input.GetKeyDown(shootAll) && shipAttachements.areCannonsInstalled) shipAttachements.ShootAll(); 
+        if (Input.GetKeyDown(KeyCode.Mouse0) && shipAttachements.areCannonsInstalled) shipAttachements.ShootAll(); 
     }
 
     void IncreaseSpeed () {
