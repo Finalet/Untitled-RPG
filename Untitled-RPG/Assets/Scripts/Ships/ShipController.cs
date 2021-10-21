@@ -102,7 +102,7 @@ public class ShipController : MonoBehaviour
 
         turnInput = !isControlled || currentSpeedIndex == 0 ? 0 : Input.GetKey(KeyCode.A) ? -1f : Input.GetKey(KeyCode.D) ? 1f : 0;
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && shipAttachements.areCannonsInstalled) shipAttachements.ShootAll(); 
+        if (shipAttachements) shipAttachements.HandleInput();
     }
 
     void IncreaseSpeed () {

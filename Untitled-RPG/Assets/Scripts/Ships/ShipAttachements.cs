@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using Cinemachine;
 
 [RequireComponent(typeof (ShipController))]
 public class ShipAttachements : MonoBehaviour
@@ -21,6 +22,13 @@ public class ShipAttachements : MonoBehaviour
     public List<ShipCannon> allCannons = new List<ShipCannon>();
     public List<ShipCannon> leftCannons = new List<ShipCannon>();
     public List<ShipCannon> rightCannons = new List<ShipCannon>();
+    public CinemachineVirtualCamera CM_LeftAim; CinemachinePOV CM_LeftAim_POV;
+    public CinemachineVirtualCamera CM_RightAim; CinemachinePOV CM_RightAim_POV;
+    public MeshRenderer leftAimingTrajectory;
+    public MeshRenderer rightAimingTrajectory;
+    Material leftAimingTrajectoryMat;
+    Material rightAimingTrajectoryMat;
+
     [Space]
     [SerializeField] GameObject ShipAttachementsUI;
     ShipAttachementUI instanciatedUI;
@@ -37,6 +45,16 @@ public class ShipAttachements : MonoBehaviour
         get { return instanciatedUI.gameObject.activeInHierarchy; }
     }
 
+    int aimingSide {
+        get {
+            return Vector3.SignedAngle(transform.forward, PlayerControlls.instance.playerCamera.transform.forward, Vector3.up) > 0 ? 1 : -1;
+        }
+    }
+    bool isAiming {
+        get {
+            return CM_LeftAim.m_Priority > 0 || CM_RightAim.m_Priority > 0;
+        }
+    }
 
     void Awake() {
         shipController = GetComponent<ShipController>();
@@ -44,6 +62,31 @@ public class ShipAttachements : MonoBehaviour
 
     void Start() {
         InitUI();
+
+
+        if (CM_LeftAim) {
+            leftAimingTrajectoryMat = new Material(leftAimingTrajectory.material);
+            leftAimingTrajectory.material = leftAimingTrajectoryMat;
+            CM_LeftAim_POV = CM_LeftAim.GetCinemachineComponent<CinemachinePOV>();
+
+            Mesh mesh = leftAimingTrajectory.GetComponent<MeshFilter>().mesh;
+            mesh.bounds = new Bounds( Vector3.zero, 100f * Vector3.one );
+        }
+        if (CM_RightAim) {
+            rightAimingTrajectoryMat = new Material(rightAimingTrajectory.material);
+            rightAimingTrajectory.material = rightAimingTrajectoryMat;
+            CM_RightAim_POV = CM_RightAim.GetCinemachineComponent<CinemachinePOV>();
+
+            Mesh mesh = rightAimingTrajectory.GetComponent<MeshFilter>().mesh;
+            mesh.bounds = new Bounds( Vector3.zero, 100f * Vector3.one );
+        }
+    }
+
+    public void HandleInput () {
+        if (Input.GetKeyDown(KeyCode.Mouse1) && !isAiming) Aim();
+        else if (Input.GetKeyUp(KeyCode.Mouse1) && isAiming) CancelAim();
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && areCannonsInstalled && isAiming) ShootAll(); 
     }
 
     void AddCannonsVisuals () {
@@ -86,7 +129,7 @@ public class ShipAttachements : MonoBehaviour
     }
 
     IEnumerator shootAll () {
-        List<ShipCannon> cannonsToUse = Vector3.SignedAngle(transform.forward, PlayerControlls.instance.playerCamera.transform.forward, Vector3.up) > 0 ? rightCannons : leftCannons;
+        List<ShipCannon> cannonsToUse = aimingSide == 1 ? rightCannons : leftCannons;
         int[] randomOrderIndecies = new int[cannonsToUse.Count];
         
         for (int i = 0; i < randomOrderIndecies.Length; i++) {
@@ -105,6 +148,51 @@ public class ShipAttachements : MonoBehaviour
             cannonsToUse[randomOrderIndecies[i]].Shoot(cannonPower);
             yield return new WaitForSeconds (Random.Range(cannonsSequenceDelays * (1-cannonsSequenceVariation), cannonsSequenceDelays * (1+cannonsSequenceVariation)));
         }
+    }
+
+    void Aim() {
+        int aims = aimingSide;
+
+        if (aims == -1) { //Aiming left
+            CM_LeftAim.m_Priority = 100;
+            CM_RightAim.m_Priority = 0;
+        } else if (aims == 1) {//Aiming right
+            CM_LeftAim.m_Priority = 0;
+            CM_RightAim.m_Priority = 100;
+        }
+        StartCoroutine(AimTrajectory(aims));
+    }
+    void CancelAim () {
+        CM_LeftAim.m_Priority = 0;
+        CM_RightAim.m_Priority = 0;
+    }
+
+    IEnumerator AimTrajectory (int aimingSide) {
+        if (aimingSide == 1) {
+            leftAimingTrajectory.gameObject.SetActive(false);
+            rightAimingTrajectory.gameObject.SetActive(true);
+        } else if (aimingSide == -1) {
+            leftAimingTrajectory.gameObject.SetActive(true);
+            rightAimingTrajectory.gameObject.SetActive(false);
+        }
+        
+        while (isAiming) {
+            if (aimingSide == 1) {
+                SetAimingTrajectory(ref rightAimingTrajectoryMat, ref CM_RightAim_POV);
+
+            } else if (aimingSide == -1) {
+                SetAimingTrajectory(ref leftAimingTrajectoryMat, ref CM_LeftAim_POV);
+            }
+            yield return null;
+        }
+
+        leftAimingTrajectory.gameObject.SetActive(false);
+        rightAimingTrajectory.gameObject.SetActive(false);
+    }
+
+    void SetAimingTrajectory (ref Material material, ref CinemachinePOV cam) {
+        material.SetFloat("Vertical_Axis", Mathf.InverseLerp(cam.m_VerticalAxis.m_MaxValue, cam.m_VerticalAxis.m_MinValue, cam.m_VerticalAxis.Value)); //Need negative value here because for some reason m_MaxValue is the lowest point, m_MinValue is the highest point
+        material.SetFloat("Horizontal_Axis", Mathf.InverseLerp(cam.m_HorizontalAxis.m_MinValue, cam.m_HorizontalAxis.m_MaxValue, cam.m_HorizontalAxis.Value));
     }
 
     void InitUI (){

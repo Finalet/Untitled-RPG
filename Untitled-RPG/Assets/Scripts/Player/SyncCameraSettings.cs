@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using NaughtyAttributes;
 
 public class SyncCameraSettings : MonoBehaviour
 {
+    public float sensitivityMultiplier = 1;
+    public bool overrideInvertY = false;
+    [ShowIf("overrideInvertY")] public bool overrideInvertYValue;
+
     CinemachineFreeLook CM_freelook;
 
     CinemachineVirtualCamera CM_virtualCamera;
@@ -20,12 +25,12 @@ public class SyncCameraSettings : MonoBehaviour
 
     void Update() {
         if (CM_freelook && CinemachineCore.Instance.IsLive(CM_freelook)) {
-            PlayerControlls.instance.cameraControl.MatchCameraSettings(ref CM_freelook);
+            PlayerControlls.instance.cameraControl.MatchCameraSettings(ref CM_freelook, sensitivityMultiplier, overrideInvertY, overrideInvertYValue);
             return;
         }
         
         if (CM_POV && CinemachineCore.Instance.IsLive(CM_virtualCamera))  {
-            PlayerControlls.instance.cameraControl.MatchCameraSettings(ref CM_POV);
+            PlayerControlls.instance.cameraControl.MatchCameraSettings(ref CM_POV, sensitivityMultiplier, overrideInvertY, overrideInvertYValue);
             return;
         }
     }

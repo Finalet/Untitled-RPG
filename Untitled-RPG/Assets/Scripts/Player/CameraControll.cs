@@ -118,15 +118,19 @@ public class CameraControll : MonoBehaviour
         if (CM_mounted == null) CM_mounted = PlayerControlls.instance.rider.Montura.Animal.GetComponentInChildren<CinemachineFreeLook>();
         MatchCameraSettings (ref CM_mounted);
     }
-    public void MatchCameraSettings (ref CinemachineFreeLook CM_cam) {
-        CM_cam.m_XAxis.m_MaxSpeed = baseMouseXsensitivity;
-        CM_cam.m_YAxis.m_MaxSpeed = baseMouseYsensitivity;
-        CM_cam.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
+    public void MatchCameraSettings (ref CinemachineFreeLook CM_cam, float sensitivityMultiplier = 1, bool overrideInvertY = false, bool overrideInvertYValue = false) {
+        CM_cam.m_XAxis.m_MaxSpeed = baseMouseXsensitivity * sensitivityMultiplier;
+        CM_cam.m_YAxis.m_MaxSpeed = baseMouseYsensitivity * sensitivityMultiplier;
+        
+        if (!overrideInvertY) CM_cam.m_YAxis.m_InvertInput = !SettingsManager.instance.invertY;
+        else CM_cam.m_YAxis.m_InvertInput = overrideInvertYValue;
     }
-    public void MatchCameraSettings (ref CinemachinePOV CM_POV) {        
-        CM_POV.m_HorizontalAxis.m_MaxSpeed = baseMouseXsensitivity;
-        CM_POV.m_VerticalAxis.m_MaxSpeed = baseMouseYsensitivity;
-        CM_POV.m_VerticalAxis.m_InvertInput = !SettingsManager.instance.invertY;
+    public void MatchCameraSettings (ref CinemachinePOV CM_POV, float sensitivityMultiplier = 1, bool overrideInvertY = false, bool overrideInvertYValue = false) {        
+        CM_POV.m_HorizontalAxis.m_MaxSpeed = baseMouseXsensitivity * sensitivityMultiplier;
+        CM_POV.m_VerticalAxis.m_MaxSpeed = baseMouseXsensitivity * sensitivityMultiplier; //mouseX sensitivity here is correct, beucase both POV axis move at the same speed.
+        
+        if (!overrideInvertY) CM_POV.m_VerticalAxis.m_InvertInput = !SettingsManager.instance.invertY;
+        else CM_POV.m_VerticalAxis.m_InvertInput = overrideInvertYValue;
     }
 
     float rotationX;
